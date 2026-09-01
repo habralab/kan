@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { parseDurationToSeconds } from "./timeTracking";
+import {
+  formatDuration,
+  formatTimerDuration,
+  parseDurationToSeconds,
+} from "./timeTracking";
 
 describe("parseDurationToSeconds", () => {
   it.each([
@@ -21,4 +25,19 @@ describe("parseDurationToSeconds", () => {
       expect(parseDurationToSeconds(input)).toBeNull();
     },
   );
+});
+
+describe("formatDuration", () => {
+  it("formats totals without seconds", () => {
+    expect(formatDuration(90)).toBe("1m");
+    expect(formatDuration(3600)).toBe("1h");
+    expect(formatDuration(5400)).toBe("1h 30m");
+  });
+});
+
+describe("formatTimerDuration", () => {
+  it("formats a running timer as hours, minutes, and seconds", () => {
+    expect(formatTimerDuration(0)).toBe("00:00:00");
+    expect(formatTimerDuration(3661)).toBe("01:01:01");
+  });
 });

@@ -219,9 +219,29 @@ describe("time tracking router", () => {
     expect(result).toMatchObject({
       totalSeconds: 3600,
       canCreate: true,
+      canStartTimer: true,
       canManage: true,
     });
     expect(result.memberTotals[0]).not.toHaveProperty("memberUserId");
+  });
+
+  it("does not offer a timer to managers without create permission", async () => {
+    mockHasPermission.mockImplementation(
+      (_db, _userId, _workspaceId, permission) =>
+        Promise.resolve(permission === "worklog:manage"),
+    );
+    mockRepo.getCardWorklogSummary.mockResolvedValue({
+      totalSeconds: 0,
+      memberTotals: [],
+    });
+
+    const result = await timeTrackingRouter.createCaller(ctx).getCardSummary({
+      cardPublicId: cardContext.cardPublicId,
+    });
+
+    expect(result.canCreate).toBe(true);
+    expect(result.canStartTimer).toBe(false);
+    expect(result.canManage).toBe(true);
   });
 
   it("only returns the current member without worklog:manage", async () => {

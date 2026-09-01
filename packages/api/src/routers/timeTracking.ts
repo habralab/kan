@@ -458,6 +458,8 @@ export const timeTrackingRouter = createTRPCRouter({
           (canCreate || canManage) &&
           card.settingsEnabled === true &&
           !card.isArchived,
+        canStartTimer:
+          canCreate && card.settingsEnabled === true && !card.isArchived,
         canManage,
       };
     }),

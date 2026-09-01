@@ -24,3 +24,23 @@ export const parseDurationToSeconds = (input: string): number | null => {
 
   return isPositiveDuration(seconds) ? seconds : null;
 };
+
+export const formatDuration = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  if (hours === 0) return `${minutes}m`;
+  if (minutes === 0) return `${hours}h`;
+  return `${hours}h ${minutes}m`;
+};
+
+export const formatTimerDuration = (seconds: number) => {
+  const safeSeconds = Math.max(0, Math.floor(seconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const remainingSeconds = safeSeconds % 60;
+
+  return [hours, minutes, remainingSeconds]
+    .map((value) => value.toString().padStart(2, "0"))
+    .join(":");
+};

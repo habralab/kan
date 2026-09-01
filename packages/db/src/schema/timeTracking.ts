@@ -142,6 +142,7 @@ export const timeTrackingWorklogs = pgTable(
     index("time_tracking_worklogs_board_card_idx")
       .on(table.boardId, table.cardId)
       .where(sql`${table.deletedAt} IS NULL`),
+    index("time_tracking_worklogs_board_all_idx").on(table.boardId),
   ],
 ).enableRLS();
 

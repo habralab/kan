@@ -847,6 +847,29 @@ export const getBoardCardTotals = async (db: dbClient, boardId: number) => {
     .groupBy(cards.id);
 };
 
+export const getBoardTimeTrackingMoveBlockers = async (
+  db: dbClient,
+  boardId: number,
+) => {
+  const [worklog, activeTimer] = await Promise.all([
+    db
+      .select({ id: timeTrackingWorklogs.id })
+      .from(timeTrackingWorklogs)
+      .where(eq(timeTrackingWorklogs.boardId, boardId))
+      .limit(1),
+    db
+      .select({ id: timeTrackingActiveTimers.id })
+      .from(timeTrackingActiveTimers)
+      .where(eq(timeTrackingActiveTimers.boardId, boardId))
+      .limit(1),
+  ]);
+
+  return {
+    hasWorklogs: worklog.length > 0,
+    hasActiveTimers: activeTimer.length > 0,
+  };
+};
+
 export const getBoardWorklogGroups = async (
   db: dbClient,
   boardId: number,

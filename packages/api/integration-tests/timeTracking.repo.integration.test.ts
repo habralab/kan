@@ -179,6 +179,8 @@ describe("time tracking repository", () => {
       cardPublicId,
       limit: 25,
     });
+    const moveBlockers =
+      await timeTrackingRepo.getBoardTimeTrackingMoveBlockers(db, boardId);
 
     expect(updated).toMatchObject({
       durationSeconds: 5400,
@@ -188,6 +190,10 @@ describe("time tracking repository", () => {
     expect(firstDelete.deleted).toBe(true);
     expect(secondDelete.deleted).toBe(false);
     expect(page.items).toEqual([]);
+    expect(moveBlockers).toEqual({
+      hasWorklogs: true,
+      hasActiveTimers: false,
+    });
   });
 
   it("paginates by work date and numeric id without skipping ties", async () => {
@@ -588,6 +594,8 @@ describe("time tracking repository", () => {
       startedAt: new Date("2026-09-01T10:05:00.000Z"),
     });
     const active = await timeTrackingRepo.getActiveTimer(db, userId);
+    const moveBlockers =
+      await timeTrackingRepo.getBoardTimeTrackingMoveBlockers(db, boardId);
 
     expect(first.unchanged).toBe(false);
     expect(second.unchanged).toBe(true);
@@ -597,6 +605,10 @@ describe("time tracking repository", () => {
       cardPublicId,
       comment: "Focus time",
       startedAt,
+    });
+    expect(moveBlockers).toEqual({
+      hasWorklogs: false,
+      hasActiveTimers: true,
     });
   });
 
@@ -695,6 +707,39 @@ describe("time tracking repository", () => {
       .update(workspaceMembers)
       .set({ status: "paused" })
       .where(eq(workspaceMembers.userId, userId));
+
+    const result = await timeTrackingRepo.stopTimer(db, {
+      userId,
+      timezone: "UTC",
+      stoppedAt: new Date("2026-09-01T10:00:31.000Z"),
+    });
+
+    expect(result.stopped).toBe(true);
+    expect(result.worklog?.durationSeconds).toBe(60);
+  });
+
+  it("allows recovery stop after the feature is disabled and board archived", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "UTC",
+      comment: null,
+      startedAt: new Date("2026-09-01T10:00:00.000Z"),
+    });
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: false,
+      actorUserId: userId,
+    });
+    await db
+      .update(boards)
+      .set({ isArchived: true })
+      .where(eq(boards.id, boardId));
 
     const result = await timeTrackingRepo.stopTimer(db, {
       userId,

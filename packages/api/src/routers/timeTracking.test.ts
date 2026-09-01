@@ -97,6 +97,29 @@ describe("time tracking router", () => {
     createdByUser: { name: "Test User" },
     updatedByUser: null,
   };
+  const inaccessibleTimer = {
+    id: 1,
+    publicId: "timer1234567",
+    startedAt: new Date("2026-09-01T10:00:00Z"),
+    startTimezone: "Europe/Lisbon",
+    comment: "Sensitive card",
+    workspaceMemberId: 7,
+    memberUserId: user.id,
+    memberStatus: "removed" as const,
+    memberDeletedAt: null,
+    workspaceId: 42,
+    workspaceDeletedAt: null,
+    cardPublicId: "card12345678",
+    cardTitle: "Sensitive card",
+    cardNumber: 10,
+    cardDeletedAt: null,
+    listDeletedAt: null,
+    boardPublicId: "board1234567",
+    boardName: "Private board",
+    boardDeletedAt: null,
+    workspacePublicId: "space1234567",
+    workspaceName: "Private workspace",
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -117,6 +140,98 @@ describe("time tracking router", () => {
         .createCaller({ db, user: null } as never)
         .getActiveTimer(),
     ).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("protects every procedure family from unauthenticated callers", async () => {
+    const caller = timeTrackingRouter.createCaller({ db, user: null } as never);
+    const results = await Promise.allSettled([
+      caller.getSettings({ boardPublicId: cardContext.boardPublicId }),
+      caller.listWorklogs({ cardPublicId: cardContext.cardPublicId }),
+      caller.getBoardCardTotals({ boardPublicId: cardContext.boardPublicId }),
+      caller.getReportSummary({
+        boardPublicId: cardContext.boardPublicId,
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+      }),
+      caller.createWorklog({
+        cardPublicId: cardContext.cardPublicId,
+        workDate: "2026-09-01",
+        durationSeconds: 60,
+      }),
+      caller.updateWorklog({
+        worklogPublicId: worklog.publicId,
+        durationSeconds: 60,
+      }),
+      caller.deleteWorklog({ worklogPublicId: worklog.publicId }),
+      caller.startTimer({
+        cardPublicId: cardContext.cardPublicId,
+        timezone: "UTC",
+      }),
+      caller.stopTimer({ timezone: "UTC" }),
+      caller.discardTimer(),
+    ]);
+
+    for (const result of results) {
+      expect(result.status).toBe("rejected");
+      if (result.status === "rejected")
+        expect(result.reason).toMatchObject({ code: "UNAUTHORIZED" });
+    }
+  });
+
+  it("rejects invalid dates, durations, comments, timezones and page sizes", async () => {
+    const caller = timeTrackingRouter.createCaller(ctx);
+    const results = await Promise.allSettled([
+      caller.createWorklog({
+        cardPublicId: cardContext.cardPublicId,
+        workDate: "2026-02-30",
+        durationSeconds: 60,
+      }),
+      caller.createWorklog({
+        cardPublicId: cardContext.cardPublicId,
+        workDate: "2026-09-01",
+        durationSeconds: 0,
+      }),
+      caller.createWorklog({
+        cardPublicId: cardContext.cardPublicId,
+        workDate: "2026-09-01",
+        durationSeconds: 2_147_483_648,
+      }),
+      caller.createWorklog({
+        cardPublicId: cardContext.cardPublicId,
+        workDate: "2026-09-01",
+        durationSeconds: 60,
+        comment: "x".repeat(10_001),
+      }),
+      caller.startTimer({
+        cardPublicId: cardContext.cardPublicId,
+        timezone: "not/a-timezone",
+      }),
+      caller.stopTimer({ timezone: "not/a-timezone" }),
+      caller.listWorklogs({
+        cardPublicId: cardContext.cardPublicId,
+        limit: 101,
+      }),
+    ]);
+
+    for (const result of results) {
+      expect(result.status).toBe("rejected");
+      if (result.status === "rejected")
+        expect(result.reason).toMatchObject({ code: "BAD_REQUEST" });
+    }
+    expect(mockRepo.createManualWorklog).not.toHaveBeenCalled();
+    expect(mockRepo.startTimer).not.toHaveBeenCalled();
+    expect(mockRepo.stopTimer).not.toHaveBeenCalled();
+    expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid opaque cursor before querying worklogs", async () => {
+    await expect(
+      timeTrackingRouter.createCaller(ctx).listWorklogs({
+        cardPublicId: cardContext.cardPublicId,
+        cursor: "not-a-cursor",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
   });
 
   it("uses the board edit rule for settings", async () => {
@@ -593,30 +708,73 @@ describe("time tracking router", () => {
     expect(mockRepo.updateWorklog).not.toHaveBeenCalled();
   });
 
-  it("returns only recovery-safe fields for an inaccessible timer", async () => {
-    mockRepo.getActiveTimer.mockResolvedValue({
-      id: 1,
-      publicId: "timer1234567",
-      startedAt: new Date("2026-09-01T10:00:00Z"),
-      startTimezone: "Europe/Lisbon",
-      comment: "Sensitive card",
-      workspaceMemberId: 7,
-      memberUserId: user.id,
-      memberStatus: "removed",
-      memberDeletedAt: null,
+  it("normalizes an owner's update with worklog:edit", async () => {
+    mockRepo.getWorklogContext.mockResolvedValue({
       workspaceId: 42,
-      workspaceDeletedAt: null,
-      cardPublicId: "card12345678",
-      cardTitle: "Sensitive card",
-      cardNumber: 10,
-      cardDeletedAt: null,
-      listDeletedAt: null,
-      boardPublicId: "board1234567",
-      boardName: "Private board",
-      boardDeletedAt: null,
-      workspacePublicId: "space1234567",
-      workspaceName: "Private workspace",
+      memberUserId: user.id,
+      memberStatus: "active",
+      memberDeletedAt: null,
+      deletedAt: null,
     });
+    mockHasPermission.mockImplementation(
+      (_db, _userId, _workspaceId, permission) =>
+        Promise.resolve(permission === "worklog:edit"),
+    );
+    mockRepo.updateWorklog.mockResolvedValue(worklog as never);
+
+    await timeTrackingRouter.createCaller(ctx).updateWorklog({
+      worklogPublicId: worklog.publicId,
+      comment: "   ",
+    });
+
+    expect(mockRepo.updateWorklog).toHaveBeenCalledWith(db, {
+      worklogPublicId: worklog.publicId,
+      workspaceId: 42,
+      workspaceMemberPublicId: undefined,
+      workDate: undefined,
+      durationSeconds: undefined,
+      comment: null,
+      actorUserId: user.id,
+    });
+  });
+
+  it("does not delete another member's entry without worklog:manage", async () => {
+    mockRepo.getWorklogContext.mockResolvedValue({
+      workspaceId: 42,
+      memberUserId: "00000000-0000-0000-0000-000000000002",
+      memberStatus: "active",
+      memberDeletedAt: null,
+      deletedAt: null,
+    });
+    mockHasPermission.mockImplementation(
+      (_db, _userId, _workspaceId, permission) =>
+        Promise.resolve(permission === "worklog:delete"),
+    );
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).deleteWorklog({
+        worklogPublicId: worklog.publicId,
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mockRepo.deleteWorklog).not.toHaveBeenCalled();
+  });
+
+  it("does not start a timer without worklog:create", async () => {
+    mockAssertPermission
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new TRPCError({ code: "FORBIDDEN" }));
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).startTimer({
+        cardPublicId: cardContext.cardPublicId,
+        timezone: "UTC",
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mockRepo.startTimer).not.toHaveBeenCalled();
+  });
+
+  it("returns only recovery-safe fields for an inaccessible timer", async () => {
+    mockRepo.getActiveTimer.mockResolvedValue(inaccessibleTimer);
 
     const result = await timeTrackingRouter.createCaller(ctx).getActiveTimer();
 
@@ -626,6 +784,22 @@ describe("time tracking router", () => {
       startTimezone: "Europe/Lisbon",
       inaccessible: true,
     });
+    expect(mockHasPermission).not.toHaveBeenCalled();
+  });
+
+  it("stops an inaccessible timer without returning protected worklog data", async () => {
+    mockRepo.getActiveTimer.mockResolvedValue(inaccessibleTimer);
+    mockRepo.stopTimer.mockResolvedValue({
+      stopped: true,
+      worklog: { publicId: worklog.publicId },
+    } as never);
+
+    const result = await timeTrackingRouter.createCaller(ctx).stopTimer({
+      timezone: "UTC",
+    });
+
+    expect(result).toEqual({ stopped: true, worklog: null });
+    expect(mockRepo.getWorklogByPublicId).not.toHaveBeenCalled();
     expect(mockHasPermission).not.toHaveBeenCalled();
   });
 

@@ -26,7 +26,7 @@ import {
 } from "../utils/permissions";
 
 const MAX_DURATION_SECONDS = 2_147_483_647;
-const publicIdSchema = z.string().min(12);
+const publicIdSchema = z.string().length(12);
 const workDateSchema = z.string().refine(isValidWorkDate, "Invalid work date");
 const timezoneSchema = z
   .string()
@@ -178,7 +178,9 @@ const formatWorklog = (
         showEmail,
       ),
       email,
-      status: worklog.workspaceMember.status,
+      status: worklog.workspaceMember.deletedAt
+        ? "removed"
+        : worklog.workspaceMember.status,
     },
     card: {
       publicId: worklog.card.publicId,
@@ -213,6 +215,7 @@ const formatMember = (member: {
   publicId: string;
   email: string;
   status: "invited" | "active" | "removed" | "paused";
+  deletedAt?: Date | null;
   displayName: string | null;
   userEmail: string | null;
   showEmailsToMembers: boolean;
@@ -225,7 +228,7 @@ const formatMember = (member: {
     member.showEmailsToMembers,
   ),
   email: member.showEmailsToMembers ? (member.userEmail ?? member.email) : null,
-  status: member.status,
+  status: member.deletedAt ? "removed" : member.status,
 });
 
 const getCapabilities = async (
@@ -512,6 +515,7 @@ export const timeTrackingRouter = createTRPCRouter({
             publicId: member.memberPublicId,
             email: member.memberEmail,
             status: member.memberStatus,
+            deletedAt: member.memberDeletedAt,
             displayName: member.memberDisplayName,
             userEmail: member.userEmail,
             showEmailsToMembers: member.showEmailsToMembers,

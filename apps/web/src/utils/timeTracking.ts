@@ -1,5 +1,7 @@
 const MAX_TIME_ENTRY_DURATION_SECONDS = 2_147_483_647;
 
+export const TIME_TRACKING_CHANNEL_NAME = "kan-time-tracking";
+
 const isPositiveDuration = (seconds: number) =>
   Number.isInteger(seconds) &&
   seconds > 0 &&

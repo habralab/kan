@@ -43,6 +43,9 @@ export {
   timeTrackingCardSummarySchema,
   timeTrackingMemberOptionsSchema,
   timeTrackingMemberSchema,
+  timeTrackingReportOptionsSchema,
+  timeTrackingReportSummarySchema,
+  timeTrackingReportWorklogSchema,
   timeTrackingSettingsSchema,
   timeTrackingWorklogSchema,
 } from "./timeTracking";

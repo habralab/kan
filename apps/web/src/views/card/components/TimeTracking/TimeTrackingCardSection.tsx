@@ -8,12 +8,14 @@ import LoadingSpinner from "~/components/LoadingSpinner";
 import Modal from "~/components/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
-import { formatDuration, formatTimerDuration } from "~/utils/timeTracking";
+import {
+  formatDuration,
+  formatTimerDuration,
+  TIME_TRACKING_CHANNEL_NAME,
+} from "~/utils/timeTracking";
 import { TimeEntryForm } from "./TimeEntryForm";
 
 const PAGE_SIZE = 25;
-const CHANNEL_NAME = "kan-time-tracking";
-
 type Worklog = RouterOutputs["timeTracking"]["listWorklogs"]["items"][number];
 
 const getTimezone = () =>
@@ -84,18 +86,21 @@ export function TimeTrackingCardSection({
 
   useEffect(() => {
     if (!("BroadcastChannel" in window)) return;
-    const channel = new BroadcastChannel(CHANNEL_NAME);
+    const channel = new BroadcastChannel(TIME_TRACKING_CHANNEL_NAME);
     channel.onmessage = () => {
       void utils.timeTracking.getActiveTimer.invalidate();
       void utils.timeTracking.getCardSummary.invalidate();
       void utils.timeTracking.listWorklogs.invalidate();
+      void utils.timeTracking.getReportSummary.invalidate();
+      void utils.timeTracking.listReportWorklogs.invalidate();
+      void utils.timeTracking.getReportOptions.invalidate();
     };
     return () => channel.close();
   }, [cardPublicId, utils.timeTracking]);
 
   const broadcastChange = () => {
     if (!("BroadcastChannel" in window)) return;
-    const channel = new BroadcastChannel(CHANNEL_NAME);
+    const channel = new BroadcastChannel(TIME_TRACKING_CHANNEL_NAME);
     channel.postMessage({ cardPublicId });
     channel.close();
   };
@@ -105,6 +110,9 @@ export function TimeTrackingCardSection({
       utils.timeTracking.getActiveTimer.invalidate(),
       utils.timeTracking.getCardSummary.invalidate(),
       utils.timeTracking.listWorklogs.invalidate(),
+      utils.timeTracking.getReportSummary.invalidate(),
+      utils.timeTracking.listReportWorklogs.invalidate(),
+      utils.timeTracking.getReportOptions.invalidate(),
     ]);
     broadcastChange();
   };

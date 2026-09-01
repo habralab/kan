@@ -20,6 +20,9 @@ vi.mock("@kan/db/repository/timeTracking.repo", () => ({
   getCardTimeTrackingContext: vi.fn(),
   getCardWorklogSummary: vi.fn(),
   getTimeTrackingMemberOptions: vi.fn(),
+  getBoardReportOptions: vi.fn(),
+  getBoardWorklogSummary: vi.fn(),
+  listBoardWorklogs: vi.fn(),
   getActiveWorkspaceMemberForUser: vi.fn(),
   getWorklogContext: vi.fn(),
   getWorklogByPublicId: vi.fn(),
@@ -117,6 +120,7 @@ describe("time tracking router", () => {
     const settings = {
       boardId: 10,
       boardPublicId: "board1234567",
+      boardName: "Test board",
       workspaceId: 42,
       isArchived: false,
       type: "regular" as const,
@@ -148,6 +152,7 @@ describe("time tracking router", () => {
     const settings = {
       boardId: 10,
       boardPublicId: "board1234567",
+      boardName: "Test board",
       workspaceId: 42,
       isArchived: false,
       type: "regular" as const,
@@ -290,6 +295,84 @@ describe("time tracking router", () => {
       ],
       canManage: false,
     });
+  });
+
+  it("returns a filtered board report without internal IDs", async () => {
+    mockHasPermission.mockResolvedValue(true);
+    mockRepo.getBoardSettings.mockResolvedValue({
+      boardId: 10,
+      boardPublicId: cardContext.boardPublicId,
+      boardName: "Test board",
+      workspaceId: cardContext.workspaceId,
+      isArchived: false,
+      type: "regular",
+      createdBy: user.id,
+      enabled: true,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    });
+    mockRepo.listBoardWorklogs.mockResolvedValue({
+      items: [
+        {
+          ...worklog,
+          id: 1,
+          createdBy: user.id,
+          updatedBy: null,
+          card: {
+            ...worklog.card,
+            labels: [
+              {
+                label: {
+                  publicId: "label1234567",
+                  name: "Migration",
+                  deletedAt: null,
+                },
+              },
+            ],
+          },
+        },
+      ],
+      nextCursor: { workDate: "2026-09-01", id: 1 },
+    });
+
+    const result = await timeTrackingRouter
+      .createCaller(ctx)
+      .listReportWorklogs({
+        boardPublicId: cardContext.boardPublicId,
+        fromDate: "2026-09-01",
+        toDate: "2026-09-30",
+        labelPublicId: "label1234567",
+        limit: 50,
+      });
+
+    expect(mockRepo.listBoardWorklogs).toHaveBeenCalledWith(db, {
+      boardId: 10,
+      filters: {
+        fromDate: "2026-09-01",
+        toDate: "2026-09-30",
+        labelPublicId: "label1234567",
+      },
+      limit: 50,
+      cursor: undefined,
+    });
+    expect(result.items[0]?.labels).toEqual([
+      { publicId: "label1234567", name: "Migration" },
+    ]);
+    expect(result.items[0]).not.toHaveProperty("id");
+    expect(result.nextCursor).not.toContain("2026-09-01");
+  });
+
+  it("rejects an inverted report date range", async () => {
+    await expect(
+      timeTrackingRouter.createCaller(ctx).getReportSummary({
+        boardPublicId: cardContext.boardPublicId,
+        fromDate: "2026-09-30",
+        toDate: "2026-09-01",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mockRepo.getBoardWorklogSummary).not.toHaveBeenCalled();
   });
 
   it("creates an entry for the current member with worklog:create", async () => {

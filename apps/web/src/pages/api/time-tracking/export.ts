@@ -8,7 +8,14 @@ import { withRateLimit } from "@kan/api/utils/rateLimit";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import { isValidWorkDate } from "@kan/db/repository/timeTracking.utils";
 
-import { encodeCsvRow, formatCsvDuration } from "~/server/timeTrackingCsv";
+import {
+  encodeCsvRow,
+  encodeTimeTrackingSummaryCsvRow,
+  getTimeTrackingCsvMemberDisplayName,
+  getTimeTrackingCsvMemberEmail,
+  TIME_TRACKING_DETAILED_CSV_HEADERS,
+  TIME_TRACKING_SUMMARY_CSV_HEADERS,
+} from "~/server/timeTrackingCsv";
 
 const EXPORT_PAGE_SIZE = 500;
 
@@ -23,27 +30,34 @@ const getQueryStrings = (value: string | string[] | undefined) => {
 const deduplicate = (values: string[] | undefined) =>
   values?.length ? [...new Set(values)] : undefined;
 
-const getDisplayName = (member: {
-  publicId: string;
-  email: string;
-  user: { name: string | null; email: string } | null;
-  workspace: { showEmailsToMembers: boolean };
-}) => {
-  const name = member.user?.name?.trim();
-  if (name) return name;
-  if (member.workspace.showEmailsToMembers)
-    return member.user?.email ?? member.email;
-  return `anonymous_${member.publicId}`;
+const isExportGroupBy = (
+  value: string | undefined,
+): value is timeTrackingRepo.TimeTrackingExportGroupBy =>
+  value === "member" ||
+  value === "card" ||
+  value === "list" ||
+  value === "date";
+
+type WorklogGroup = Awaited<
+  ReturnType<typeof timeTrackingRepo.getBoardWorklogGroups>
+>[number];
+
+const getGroupLabel = (group: WorklogGroup) => {
+  if (!group.member) return group.label;
+  return getTimeTrackingCsvMemberDisplayName(group.member);
 };
 
-const getVisibleEmail = (member: {
-  email: string;
-  user: { email: string } | null;
-  workspace: { showEmailsToMembers: boolean };
-}) =>
-  member.workspace.showEmailsToMembers
-    ? (member.user?.email ?? member.email)
-    : null;
+const getWorklogMember = (
+  member: Awaited<
+    ReturnType<typeof timeTrackingRepo.listBoardWorklogs>
+  >["items"][number]["workspaceMember"],
+) => ({
+  publicId: member.publicId,
+  email: member.email,
+  displayName: member.user?.name ?? null,
+  userEmail: member.user?.email ?? null,
+  showEmailsToMembers: member.workspace.showEmailsToMembers,
+});
 
 const getLabels = (
   row: Awaited<
@@ -72,6 +86,7 @@ export default withRateLimit(
       const dateFrom = getQueryString(req.query.dateFrom);
       const dateTo = getQueryString(req.query.dateTo);
       const profile = getQueryString(req.query.profile);
+      const groupBy = getQueryString(req.query.groupBy);
       if (
         !boardPublicId ||
         boardPublicId.length < 12 ||
@@ -83,6 +98,11 @@ export default withRateLimit(
         (profile !== "summary" && profile !== "detailed")
       )
         return res.status(400).json({ error: "Invalid export parameters" });
+      if (
+        (profile === "summary" && !isExportGroupBy(groupBy)) ||
+        (profile === "detailed" && groupBy !== undefined)
+      )
+        return res.status(400).json({ error: "Invalid export grouping" });
 
       const rawPublicIdFilters = {
         memberPublicIds: getQueryStrings(req.query.memberPublicIds),
@@ -123,7 +143,18 @@ export default withRateLimit(
       }
 
       const filters = { dateFrom, dateTo, ...publicIdFilters };
-      const filename = `kan-time-${boardPublicId}-${dateFrom}-${dateTo}-${profile}.csv`;
+      const summaryGroups =
+        profile === "summary" && isExportGroupBy(groupBy)
+          ? await timeTrackingRepo.getBoardWorklogGroups(
+              db,
+              board.boardId,
+              filters,
+              groupBy,
+            )
+          : null;
+      const profileName =
+        profile === "summary" ? `${profile}-${groupBy}` : profile;
+      const filename = `kan-time-${boardPublicId}-${dateFrom}-${dateTo}-${profileName}.csv`;
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/csv; charset=utf-8");
       res.setHeader(
@@ -134,50 +165,30 @@ export default withRateLimit(
       res.flushHeaders();
 
       await writeChunk(res, "\uFEFF");
-      await writeChunk(
-        res,
-        profile === "summary"
-          ? encodeCsvRow([
-              "Date",
-              "Duration",
-              "Seconds",
-              "Member",
-              "Board",
-              "Card",
-              "List",
-              "Labels",
-              "Comment",
-            ])
-          : encodeCsvRow([
-              "Worklog ID",
-              "Date",
-              "Duration seconds",
-              "Member ID",
-              "Member",
-              "Member email",
-              "Board ID",
-              "Board",
-              "Card ID",
-              "Card",
-              "Card number",
-              "List ID",
-              "List",
-              "Label IDs",
-              "Labels",
-              "Entry method",
-              "Timer started at",
-              "Timer stopped at",
-              "Timer timezone",
-              "Raw elapsed seconds",
-              "Comment",
-              "Created at",
-              "Created by user ID",
-              "Created by",
-              "Updated at",
-              "Updated by user ID",
-              "Updated by",
-            ]),
-      );
+
+      if (profile === "summary") {
+        if (!isExportGroupBy(groupBy) || !summaryGroups)
+          throw new Error("Validated export grouping is missing");
+        await writeChunk(res, encodeCsvRow(TIME_TRACKING_SUMMARY_CSV_HEADERS));
+        for (const group of summaryGroups) {
+          await writeChunk(
+            res,
+            encodeTimeTrackingSummaryCsvRow({
+              groupBy,
+              groupPublicId: group.publicId,
+              groupLabel: getGroupLabel(group),
+              durationSeconds: group.durationSeconds,
+              entryCount: group.entryCount,
+              boardName: board.boardName,
+              boardPublicId: board.boardPublicId,
+            }),
+          );
+        }
+        res.end();
+        return;
+      }
+
+      await writeChunk(res, encodeCsvRow(TIME_TRACKING_DETAILED_CSV_HEADERS));
 
       let cursor: timeTrackingRepo.WorklogCursor | undefined;
       do {
@@ -189,50 +200,38 @@ export default withRateLimit(
         });
         for (const row of page.items) {
           const labels = getLabels(row);
-          const displayName = getDisplayName(row.workspaceMember);
+          const member = getWorklogMember(row.workspaceMember);
           await writeChunk(
             res,
-            profile === "summary"
-              ? encodeCsvRow([
-                  row.workDate,
-                  formatCsvDuration(row.durationSeconds),
-                  row.durationSeconds,
-                  displayName,
-                  board.boardName,
-                  row.card.title,
-                  row.card.list.name,
-                  labels.map((label) => label.name).join("; "),
-                  row.comment,
-                ])
-              : encodeCsvRow([
-                  row.publicId,
-                  row.workDate,
-                  row.durationSeconds,
-                  row.workspaceMember.publicId,
-                  displayName,
-                  getVisibleEmail(row.workspaceMember),
-                  board.boardPublicId,
-                  board.boardName,
-                  row.card.publicId,
-                  row.card.title,
-                  row.card.cardNumber,
-                  row.card.list.publicId,
-                  row.card.list.name,
-                  labels.map((label) => label.publicId).join(";"),
-                  labels.map((label) => label.name).join("; "),
-                  row.entryMethod,
-                  row.timerStartedAt,
-                  row.timerStoppedAt,
-                  row.timerTimezone,
-                  row.rawElapsedSeconds,
-                  row.comment,
-                  row.createdAt,
-                  row.createdBy,
-                  row.createdByUser?.name,
-                  row.updatedAt,
-                  row.updatedBy,
-                  row.updatedByUser?.name,
-                ]),
+            encodeCsvRow([
+              row.publicId,
+              row.workDate,
+              row.durationSeconds,
+              row.workspaceMember.publicId,
+              getTimeTrackingCsvMemberDisplayName(member),
+              getTimeTrackingCsvMemberEmail(member),
+              board.boardPublicId,
+              board.boardName,
+              row.card.publicId,
+              row.card.title,
+              row.card.cardNumber,
+              row.card.list.publicId,
+              row.card.list.name,
+              labels.map((label) => label.publicId).join(";"),
+              labels.map((label) => label.name).join("; "),
+              row.entryMethod,
+              row.timerStartedAt,
+              row.timerStoppedAt,
+              row.timerTimezone,
+              row.rawElapsedSeconds,
+              row.comment,
+              row.createdAt,
+              row.createdBy,
+              row.createdByUser?.name,
+              row.updatedAt,
+              row.updatedBy,
+              row.updatedByUser?.name,
+            ]),
           );
         }
         cursor = page.nextCursor ?? undefined;

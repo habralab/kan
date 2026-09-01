@@ -152,6 +152,7 @@ export function TimeTrackingReportModal({
     if (cardPublicId) params.append("cardPublicIds", cardPublicId);
     if (listPublicId) params.append("listPublicIds", listPublicId);
     if (labelPublicId) params.append("labelPublicIds", labelPublicId);
+    if (profile === "summary" && groupBy) params.set("groupBy", groupBy);
     return `/api/time-tracking/export?${params.toString()}`;
   };
 
@@ -385,11 +386,18 @@ export function TimeTrackingReportModal({
                 </h3>
                 <div className="flex gap-2">
                   <Button
-                    href={validRange ? exportUrl("summary") : undefined}
+                    href={
+                      validRange && groupBy ? exportUrl("summary") : undefined
+                    }
                     openInNewTab
                     size="xs"
                     variant="secondary"
-                    disabled={!validRange}
+                    disabled={!validRange || !groupBy}
+                    title={
+                      groupBy
+                        ? undefined
+                        : t`Choose a grouping to export a summary`
+                    }
                   >
                     {t`Export summary CSV`}
                   </Button>

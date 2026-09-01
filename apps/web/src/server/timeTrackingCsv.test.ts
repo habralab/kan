@@ -3,7 +3,12 @@ import { describe, expect, it } from "vitest";
 import {
   encodeCsvCell,
   encodeCsvRow,
+  encodeTimeTrackingSummaryCsvRow,
   formatCsvDuration,
+  getTimeTrackingCsvMemberDisplayName,
+  getTimeTrackingCsvMemberEmail,
+  TIME_TRACKING_DETAILED_CSV_HEADERS,
+  TIME_TRACKING_SUMMARY_CSV_HEADERS,
 } from "./timeTrackingCsv";
 
 describe("time tracking CSV", () => {
@@ -22,5 +27,81 @@ describe("time tracking CSV", () => {
 
   it("formats duration without losing seconds", () => {
     expect(formatCsvDuration(3661)).toBe("01:01:01");
+  });
+
+  it("encodes one aggregated summary row", () => {
+    expect(
+      encodeTimeTrackingSummaryCsvRow({
+        groupBy: "card",
+        groupPublicId: "card12345678",
+        groupLabel: "Migration, phase 2",
+        durationSeconds: 3661,
+        entryCount: 3,
+        boardName: "Operations",
+        boardPublicId: "board1234567",
+      }),
+    ).toBe(
+      '"card","card12345678","Migration, phase 2",3661,"01:01:01",3,"Operations","board1234567"\r\n',
+    );
+  });
+
+  it("does not expose a hidden member email", () => {
+    const member = {
+      publicId: "member123456",
+      email: "hidden@example.com",
+      displayName: null,
+      userEmail: "account@example.com",
+      showEmailsToMembers: false,
+    };
+
+    expect(getTimeTrackingCsvMemberDisplayName(member)).toBe(
+      "anonymous_member123456",
+    );
+    expect(getTimeTrackingCsvMemberEmail(member)).toBeNull();
+  });
+
+  it("keeps stable summary headers", () => {
+    expect(TIME_TRACKING_SUMMARY_CSV_HEADERS).toEqual([
+      "Group by",
+      "Group ID",
+      "Group",
+      "Duration seconds",
+      "Duration",
+      "Entry count",
+      "Board",
+      "Board ID",
+    ]);
+  });
+
+  it("keeps stable detailed headers", () => {
+    expect(TIME_TRACKING_DETAILED_CSV_HEADERS).toEqual([
+      "Worklog ID",
+      "Date",
+      "Duration seconds",
+      "Member ID",
+      "Member",
+      "Member email",
+      "Board ID",
+      "Board",
+      "Card ID",
+      "Card",
+      "Card number",
+      "List ID",
+      "List",
+      "Label IDs",
+      "Labels",
+      "Entry method",
+      "Timer started at",
+      "Timer stopped at",
+      "Timer timezone",
+      "Raw elapsed seconds",
+      "Comment",
+      "Created at",
+      "Created by user ID",
+      "Created by",
+      "Updated at",
+      "Updated by user ID",
+      "Updated by",
+    ]);
   });
 });

@@ -72,6 +72,7 @@ export interface TimeTrackingReportFilters {
 }
 
 export type TimeTrackingReportGroupBy = "member" | "card" | "list";
+export type TimeTrackingExportGroupBy = TimeTrackingReportGroupBy | "date";
 
 const getReportConditions = (
   db: dbClient,
@@ -850,7 +851,7 @@ export const getBoardWorklogGroups = async (
   db: dbClient,
   boardId: number,
   filters: TimeTrackingReportFilters,
-  groupBy: TimeTrackingReportGroupBy,
+  groupBy: TimeTrackingExportGroupBy,
 ) => {
   const durationSeconds =
     sql<number>`SUM(${timeTrackingWorklogs.durationSeconds})`.mapWith(Number);
@@ -902,6 +903,22 @@ export const getBoardWorklogGroups = async (
       .where(conditions)
       .groupBy(cards.id)
       .orderBy(desc(durationSeconds), cards.title);
+
+    return rows.map((row) => ({ ...row, member: null }));
+  }
+
+  if (groupBy === "date") {
+    const rows = await db
+      .select({
+        publicId: timeTrackingWorklogs.workDate,
+        label: timeTrackingWorklogs.workDate,
+        durationSeconds,
+        entryCount,
+      })
+      .from(timeTrackingWorklogs)
+      .where(conditions)
+      .groupBy(timeTrackingWorklogs.workDate)
+      .orderBy(desc(timeTrackingWorklogs.workDate));
 
     return rows.map((row) => ({ ...row, member: null }));
   }

@@ -896,7 +896,29 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "card_activity_card_created_at_idx": {
+          "name": "card_activity_card_created_at_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "card_activity_cardId_card_id_fk": {
           "name": "card_activity_cardId_card_id_fk",
@@ -1102,7 +1124,29 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "card_attachment_card_created_at_idx": {
+          "name": "card_attachment_card_created_at_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "card_attachment_cardId_card_id_fk": {
           "name": "card_attachment_cardId_card_id_fk",
@@ -1506,7 +1550,23 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "card_comments_card_id_idx": {
+          "name": "card_comments_card_id_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "card_comments_cardId_card_id_fk": {
           "name": "card_comments_cardId_card_id_fk",
@@ -1635,7 +1695,29 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "card_checklist_item_checklist_index_idx": {
+          "name": "card_checklist_item_checklist_index_idx",
+          "columns": [
+            {
+              "expression": "checklistId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "index",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "card_checklist_item_checklistId_card_checklist_id_fk": {
           "name": "card_checklist_item_checklistId_card_checklist_id_fk",
@@ -1757,7 +1839,29 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "card_checklist_card_index_idx": {
+          "name": "card_checklist_card_index_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "index",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "card_checklist_cardId_card_id_fk": {
           "name": "card_checklist_cardId_card_id_fk",

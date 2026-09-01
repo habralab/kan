@@ -21,6 +21,9 @@ import { cards } from "./cards";
 import { users } from "./users";
 import { workspaceMembers } from "./workspaces";
 
+export const DEFAULT_TIME_ROUNDING_INTERVAL_SECONDS = 60;
+export const DEFAULT_MINIMUM_TIME_ENTRY_SECONDS = 60;
+
 export const timeTrackingEntryMethods = ["manual", "timer"] as const;
 export type TimeTrackingEntryMethod = (typeof timeTrackingEntryMethods)[number];
 export const timeTrackingEntryMethodEnum = pgEnum(
@@ -37,10 +40,10 @@ export const timeTrackingBoardSettings = pgTable(
     enabled: boolean("enabled").notNull().default(false),
     roundingIntervalSeconds: integer("roundingIntervalSeconds")
       .notNull()
-      .default(60),
+      .default(DEFAULT_TIME_ROUNDING_INTERVAL_SECONDS),
     minimumDurationSeconds: integer("minimumDurationSeconds")
       .notNull()
-      .default(60),
+      .default(DEFAULT_MINIMUM_TIME_ENTRY_SECONDS),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     createdBy: uuid("createdBy").references(() => users.id, {
       onDelete: "set null",

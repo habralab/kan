@@ -195,6 +195,57 @@ describe("time tracking repository", () => {
     expect(secondPage.nextCursor).toBeNull();
   });
 
+  it("returns public worklog and authorization projections", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    const created = await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: memberPublicId,
+      workDate: "2026-09-01",
+      durationSeconds: 3600,
+      comment: "Projection test",
+      actorUserId: userId,
+    });
+    if (!created) throw new Error("Unable to create test worklog");
+
+    const [cardContext, member, worklogContext, worklog] = await Promise.all([
+      timeTrackingRepo.getCardTimeTrackingContext(db, cardPublicId),
+      timeTrackingRepo.getActiveWorkspaceMemberForUser(db, workspaceId, userId),
+      timeTrackingRepo.getWorklogContext(db, created.publicId),
+      timeTrackingRepo.getWorklogByPublicId(db, created.publicId),
+    ]);
+
+    expect(cardContext).toMatchObject({
+      cardPublicId,
+      boardPublicId,
+      workspaceId,
+      settingsEnabled: true,
+    });
+    expect(member).toMatchObject({ publicId: memberPublicId });
+    expect(worklogContext).toMatchObject({
+      workspaceId,
+      memberUserId: userId,
+      deletedAt: null,
+    });
+    expect(worklog).toMatchObject({
+      publicId: created.publicId,
+      workspaceMember: {
+        publicId: memberPublicId,
+        userId,
+        workspace: { showEmailsToMembers: true },
+      },
+      card: {
+        publicId: cardPublicId,
+        title: "Implement time tracking",
+        list: { publicId: "listtime0001", name: "Doing" },
+      },
+    });
+    expect(worklog).not.toHaveProperty("id");
+  });
+
   it("does not credit an inactive member", async () => {
     const [foreignMember] = await db
       .insert(workspaceMembers)

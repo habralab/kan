@@ -765,12 +765,17 @@ export const boardRouter = createTRPCRouter({
       }
 
       // Move the board
-      await boardRepo.moveToWorkspace(
+      const moveResult = await boardRepo.moveToWorkspace(
         ctx.db,
         board.id,
         targetWorkspace.id,
         slug,
       );
+      if (!moveResult.moved)
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: `Boards with time entries or active timers cannot be moved between workspaces`,
+        });
 
       return { success: true };
     }),

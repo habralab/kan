@@ -10,7 +10,7 @@ function formatRoleLabel(role: Role) {
   return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
-const permissionLabels: Record<Permission, string> = {
+const permissionLabels: Partial<Record<Permission, string>> = {
   "workspace:view": t`Can view workspace`,
   "workspace:edit": t`Can edit workspace`,
   "workspace:delete": t`Can delete workspace`,
@@ -150,7 +150,7 @@ export function RolePermissions() {
               {category.permissions.map((permission) => (
                 <tr key={permission}>
                   <td className="w-1/2 px-4 py-2 text-sm text-light-900 dark:text-dark-900">
-                    {permissionLabels[permission]}
+                    {permissionLabels[permission] ?? permission}
                   </td>
                   {orderedRoleNames.map((roleName) => {
                     const role = systemRoles.find((r) => r.name === roleName);

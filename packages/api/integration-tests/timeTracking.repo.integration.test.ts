@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
@@ -11,6 +12,7 @@ describe("time tracking repository", () => {
   let userId: string;
   let workspaceId: number;
   let memberPublicId: string;
+  let listId: number;
 
   const boardPublicId = "boardtime001";
   const cardPublicId = "cardtime0001";
@@ -49,6 +51,7 @@ describe("time tracking repository", () => {
       })
       .returning();
     if (!list) throw new Error("Unable to create test list");
+    listId = list.id;
     await db.insert(cards).values({
       publicId: cardPublicId,
       title: "Implement time tracking",
@@ -221,5 +224,171 @@ describe("time tracking repository", () => {
         actorUserId: userId,
       }),
     ).rejects.toMatchObject({ code: "MEMBER_NOT_FOUND" });
+  });
+
+  it("starts one global timer and keeps repeated start idempotent", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    const startedAt = new Date("2026-09-01T10:00:00.000Z");
+    const first = await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "Europe/Lisbon",
+      comment: "Focus time",
+      startedAt,
+    });
+    const second = await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "UTC",
+      comment: "Ignored on idempotent start",
+      startedAt: new Date("2026-09-01T10:05:00.000Z"),
+    });
+    const active = await timeTrackingRepo.getActiveTimer(db, userId);
+
+    expect(first.unchanged).toBe(false);
+    expect(second.unchanged).toBe(true);
+    expect(second.timer.publicId).toBe(first.timer.publicId);
+    expect(active).toMatchObject({
+      publicId: first.timer.publicId,
+      cardPublicId,
+      comment: "Focus time",
+      startedAt,
+    });
+  });
+
+  it("stops a timer once and persists its rounded duration", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "Europe/Lisbon",
+      comment: null,
+      startedAt: new Date("2026-08-31T23:30:00.000Z"),
+    });
+
+    const firstStop = await timeTrackingRepo.stopTimer(db, {
+      userId,
+      timezone: "Europe/Lisbon",
+      stoppedAt: new Date("2026-08-31T23:31:31.000Z"),
+    });
+    const secondStop = await timeTrackingRepo.stopTimer(db, {
+      userId,
+      timezone: "Europe/Lisbon",
+      stoppedAt: new Date("2026-08-31T23:32:00.000Z"),
+    });
+
+    expect(firstStop.stopped).toBe(true);
+    expect(firstStop.worklog).toMatchObject({
+      workDate: "2026-09-01",
+      durationSeconds: 120,
+      entryMethod: "timer",
+      timerTimezone: "Europe/Lisbon",
+      rawElapsedSeconds: 91,
+    });
+    expect(secondStop).toEqual({ stopped: false, worklog: null });
+    expect(await timeTrackingRepo.getActiveTimer(db, userId)).toBeNull();
+  });
+
+  it("auto-stops the current timer when another card is started", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await db.insert(cards).values({
+      publicId: "cardtime0002",
+      title: "Review time tracking",
+      index: 1,
+      listId,
+      createdBy: userId,
+    });
+    await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "UTC",
+      comment: "First card",
+      startedAt: new Date("2026-09-01T10:00:00.000Z"),
+    });
+
+    const switched = await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId: "cardtime0002",
+      timezone: "UTC",
+      comment: "Second card",
+      startedAt: new Date("2026-09-01T10:01:31.000Z"),
+    });
+    const active = await timeTrackingRepo.getActiveTimer(db, userId);
+
+    expect(switched.autoStoppedWorklog).toMatchObject({
+      comment: "First card",
+      durationSeconds: 120,
+      rawElapsedSeconds: 91,
+    });
+    expect(active).toMatchObject({
+      cardPublicId: "cardtime0002",
+      comment: "Second card",
+    });
+  });
+
+  it("allows recovery stop after the member becomes inactive", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "UTC",
+      comment: null,
+      startedAt: new Date("2026-09-01T10:00:00.000Z"),
+    });
+    await db
+      .update(workspaceMembers)
+      .set({ status: "paused" })
+      .where(eq(workspaceMembers.userId, userId));
+
+    const result = await timeTrackingRepo.stopTimer(db, {
+      userId,
+      timezone: "UTC",
+      stoppedAt: new Date("2026-09-01T10:00:31.000Z"),
+    });
+
+    expect(result.stopped).toBe(true);
+    expect(result.worklog?.durationSeconds).toBe(60);
+  });
+
+  it("discards a timer without creating a worklog", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "UTC",
+      comment: null,
+    });
+
+    expect(await timeTrackingRepo.discardTimer(db, userId)).toEqual({
+      discarded: true,
+    });
+    expect(await timeTrackingRepo.discardTimer(db, userId)).toEqual({
+      discarded: false,
+    });
+    const page = await timeTrackingRepo.listWorklogsByCard(db, {
+      cardPublicId,
+      limit: 25,
+    });
+    expect(page.items).toEqual([]);
   });
 });

@@ -10,9 +10,16 @@ import {
   timeTrackingActiveTimers,
   timeTrackingBoardSettings,
   timeTrackingWorklogs,
+  users,
   workspaceMembers,
+  workspaces,
 } from "@kan/db/schema";
 import { generateUID } from "@kan/shared/utils";
+
+import {
+  getWorkDateInTimezone,
+  roundTimerDuration,
+} from "./timeTracking.utils";
 
 export const timeTrackingRepositoryErrorCodes = [
   "BOARD_NOT_FOUND",
@@ -20,6 +27,7 @@ export const timeTrackingRepositoryErrorCodes = [
   "BOARD_DISABLED",
   "CARD_NOT_FOUND",
   "MEMBER_NOT_FOUND",
+  "TIMER_CONFLICT",
   "WORKLOG_NOT_FOUND",
 ] as const;
 
@@ -398,4 +406,299 @@ export const listWorklogsByCard = async (
     nextCursor:
       hasMore && last ? { workDate: last.workDate, id: last.id } : null,
   };
+};
+
+const hasDatabaseErrorCode = (error: unknown, code: string): boolean => {
+  if (!error || typeof error !== "object") return false;
+
+  if ("code" in error && error.code === code) return true;
+  return "cause" in error && hasDatabaseErrorCode(error.cause, code);
+};
+
+export const getActiveTimer = async (db: dbClient, userId: string) => {
+  const [timer] = await db
+    .select({
+      id: timeTrackingActiveTimers.id,
+      publicId: timeTrackingActiveTimers.publicId,
+      startedAt: timeTrackingActiveTimers.startedAt,
+      startTimezone: timeTrackingActiveTimers.startTimezone,
+      comment: timeTrackingActiveTimers.comment,
+      workspaceMemberId: timeTrackingActiveTimers.workspaceMemberId,
+      memberUserId: workspaceMembers.userId,
+      memberStatus: workspaceMembers.status,
+      memberDeletedAt: workspaceMembers.deletedAt,
+      cardPublicId: cards.publicId,
+      cardTitle: cards.title,
+      cardNumber: cards.cardNumber,
+      boardPublicId: boards.publicId,
+      boardName: boards.name,
+      workspacePublicId: workspaces.publicId,
+      workspaceName: workspaces.name,
+    })
+    .from(timeTrackingActiveTimers)
+    .innerJoin(cards, eq(timeTrackingActiveTimers.cardId, cards.id))
+    .innerJoin(boards, eq(timeTrackingActiveTimers.boardId, boards.id))
+    .innerJoin(workspaces, eq(boards.workspaceId, workspaces.id))
+    .innerJoin(
+      workspaceMembers,
+      eq(timeTrackingActiveTimers.workspaceMemberId, workspaceMembers.id),
+    )
+    .where(eq(timeTrackingActiveTimers.userId, userId))
+    .limit(1);
+
+  return timer ?? null;
+};
+
+export const startTimer = async (
+  db: dbClient,
+  input: {
+    userId: string;
+    cardPublicId: string;
+    timezone: string;
+    comment: string | null;
+    startedAt?: Date;
+  },
+) => {
+  const requestedStartedAt = input.startedAt ?? new Date();
+  const observedTimer = await db.query.timeTrackingActiveTimers.findFirst({
+    columns: { id: true },
+    where: eq(timeTrackingActiveTimers.userId, input.userId),
+  });
+
+  try {
+    return await db.transaction(async (tx) => {
+      await tx
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.id, input.userId))
+        .for("update");
+
+      const [card] = await tx
+        .select({
+          id: cards.id,
+          boardId: boards.id,
+          workspaceId: boards.workspaceId,
+          boardArchived: boards.isArchived,
+          settingsEnabled: timeTrackingBoardSettings.enabled,
+        })
+        .from(cards)
+        .innerJoin(lists, eq(cards.listId, lists.id))
+        .innerJoin(boards, eq(lists.boardId, boards.id))
+        .leftJoin(
+          timeTrackingBoardSettings,
+          eq(boards.id, timeTrackingBoardSettings.boardId),
+        )
+        .where(
+          and(
+            eq(cards.publicId, input.cardPublicId),
+            isNull(cards.deletedAt),
+            isNull(lists.deletedAt),
+            isNull(boards.deletedAt),
+          ),
+        )
+        .limit(1);
+
+      if (!card) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
+      if (card.boardArchived)
+        throw new TimeTrackingRepositoryError("BOARD_ARCHIVED");
+      if (!card.settingsEnabled)
+        throw new TimeTrackingRepositoryError("BOARD_DISABLED");
+
+      const [member] = await tx
+        .select({ id: workspaceMembers.id })
+        .from(workspaceMembers)
+        .where(
+          and(
+            eq(workspaceMembers.userId, input.userId),
+            eq(workspaceMembers.workspaceId, card.workspaceId),
+            eq(workspaceMembers.status, "active"),
+            isNull(workspaceMembers.deletedAt),
+          ),
+        )
+        .limit(1);
+
+      if (!member) throw new TimeTrackingRepositoryError("MEMBER_NOT_FOUND");
+
+      const [currentTimer] = await tx
+        .select()
+        .from(timeTrackingActiveTimers)
+        .where(eq(timeTrackingActiveTimers.userId, input.userId))
+        .limit(1)
+        .for("update");
+
+      if (currentTimer?.cardId === card.id) {
+        return {
+          timer: currentTimer,
+          autoStoppedWorklog: null,
+          unchanged: true,
+        };
+      }
+      if ((currentTimer?.id ?? null) !== (observedTimer?.id ?? null))
+        throw new TimeTrackingRepositoryError("TIMER_CONFLICT");
+
+      let autoStoppedWorklog: typeof timeTrackingWorklogs.$inferSelect | null =
+        null;
+
+      if (currentTimer) {
+        const [settings] = await tx
+          .select({
+            roundingIntervalSeconds:
+              timeTrackingBoardSettings.roundingIntervalSeconds,
+            minimumDurationSeconds:
+              timeTrackingBoardSettings.minimumDurationSeconds,
+          })
+          .from(timeTrackingBoardSettings)
+          .where(eq(timeTrackingBoardSettings.boardId, currentTimer.boardId))
+          .limit(1);
+        const stoppedAt =
+          requestedStartedAt < currentTimer.startedAt
+            ? currentTimer.startedAt
+            : requestedStartedAt;
+        const rawElapsedSeconds = Math.floor(
+          (stoppedAt.getTime() - currentTimer.startedAt.getTime()) / 1000,
+        );
+
+        const [completedWorklog] = await tx
+          .insert(timeTrackingWorklogs)
+          .values({
+            publicId: generateUID(),
+            boardId: currentTimer.boardId,
+            cardId: currentTimer.cardId,
+            workspaceMemberId: currentTimer.workspaceMemberId,
+            workDate: getWorkDateInTimezone(stoppedAt, input.timezone),
+            durationSeconds: roundTimerDuration({
+              rawElapsedSeconds,
+              roundingIntervalSeconds: settings?.roundingIntervalSeconds,
+              minimumDurationSeconds: settings?.minimumDurationSeconds,
+            }),
+            comment: currentTimer.comment,
+            entryMethod: "timer",
+            timerStartedAt: currentTimer.startedAt,
+            timerStoppedAt: stoppedAt,
+            timerTimezone: input.timezone,
+            rawElapsedSeconds,
+            createdBy: input.userId,
+          })
+          .returning();
+        autoStoppedWorklog = completedWorklog ?? null;
+
+        await tx
+          .delete(timeTrackingActiveTimers)
+          .where(eq(timeTrackingActiveTimers.id, currentTimer.id));
+      }
+
+      const [timer] = await tx
+        .insert(timeTrackingActiveTimers)
+        .values({
+          publicId: generateUID(),
+          userId: input.userId,
+          workspaceMemberId: member.id,
+          boardId: card.boardId,
+          cardId: card.id,
+          startedAt: requestedStartedAt,
+          startTimezone: input.timezone,
+          comment: input.comment,
+        })
+        .returning();
+
+      if (!timer) throw new TimeTrackingRepositoryError("TIMER_CONFLICT");
+
+      return { timer, autoStoppedWorklog, unchanged: false };
+    });
+  } catch (error) {
+    if (hasDatabaseErrorCode(error, "23505"))
+      throw new TimeTrackingRepositoryError("TIMER_CONFLICT");
+    throw error;
+  }
+};
+
+export const stopTimer = async (
+  db: dbClient,
+  input: {
+    userId: string;
+    timezone: string;
+    stoppedAt?: Date;
+  },
+) =>
+  db.transaction(async (tx) => {
+    await tx
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, input.userId))
+      .for("update");
+
+    const [timer] = await tx
+      .select()
+      .from(timeTrackingActiveTimers)
+      .where(eq(timeTrackingActiveTimers.userId, input.userId))
+      .limit(1)
+      .for("update");
+
+    if (!timer) return { stopped: false, worklog: null } as const;
+
+    const requestedStoppedAt = input.stoppedAt ?? new Date();
+    const stoppedAt =
+      requestedStoppedAt < timer.startedAt
+        ? timer.startedAt
+        : requestedStoppedAt;
+    const rawElapsedSeconds = Math.floor(
+      (stoppedAt.getTime() - timer.startedAt.getTime()) / 1000,
+    );
+    const [settings] = await tx
+      .select({
+        roundingIntervalSeconds:
+          timeTrackingBoardSettings.roundingIntervalSeconds,
+        minimumDurationSeconds:
+          timeTrackingBoardSettings.minimumDurationSeconds,
+      })
+      .from(timeTrackingBoardSettings)
+      .where(eq(timeTrackingBoardSettings.boardId, timer.boardId))
+      .limit(1);
+    const [worklog] = await tx
+      .insert(timeTrackingWorklogs)
+      .values({
+        publicId: generateUID(),
+        boardId: timer.boardId,
+        cardId: timer.cardId,
+        workspaceMemberId: timer.workspaceMemberId,
+        workDate: getWorkDateInTimezone(stoppedAt, input.timezone),
+        durationSeconds: roundTimerDuration({
+          rawElapsedSeconds,
+          roundingIntervalSeconds: settings?.roundingIntervalSeconds,
+          minimumDurationSeconds: settings?.minimumDurationSeconds,
+        }),
+        comment: timer.comment,
+        entryMethod: "timer",
+        timerStartedAt: timer.startedAt,
+        timerStoppedAt: stoppedAt,
+        timerTimezone: input.timezone,
+        rawElapsedSeconds,
+        createdBy: input.userId,
+      })
+      .returning();
+
+    await tx
+      .delete(timeTrackingActiveTimers)
+      .where(eq(timeTrackingActiveTimers.id, timer.id));
+
+    return { stopped: true, worklog: worklog ?? null } as const;
+  });
+
+export const discardTimer = async (db: dbClient, userId: string) => {
+  const discarded = await db.transaction(async (tx) => {
+    await tx
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, userId))
+      .for("update");
+
+    const [timer] = await tx
+      .delete(timeTrackingActiveTimers)
+      .where(eq(timeTrackingActiveTimers.userId, userId))
+      .returning({ publicId: timeTrackingActiveTimers.publicId });
+
+    return timer;
+  });
+
+  return { discarded: Boolean(discarded) };
 };

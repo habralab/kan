@@ -33,16 +33,38 @@ const timezoneSchema = z
   .refine(isValidIanaTimezone, "Invalid IANA timezone");
 const durationSchema = z.number().int().positive().max(MAX_DURATION_SECONDS);
 const commentSchema = z.string().max(10_000).nullable().optional();
+const publicIdFilterSchema = z.array(publicIdSchema).max(100).optional();
 const reportFilterShape = {
-  fromDate: workDateSchema,
-  toDate: workDateSchema,
-  workspaceMemberPublicId: publicIdSchema.optional(),
-  cardPublicId: publicIdSchema.optional(),
-  listPublicId: publicIdSchema.optional(),
-  labelPublicId: publicIdSchema.optional(),
+  dateFrom: workDateSchema,
+  dateTo: workDateSchema,
+  memberPublicIds: publicIdFilterSchema,
+  cardPublicIds: publicIdFilterSchema,
+  listPublicIds: publicIdFilterSchema,
+  labelPublicIds: publicIdFilterSchema,
 };
-const hasValidReportDateRange = (input: { fromDate: string; toDate: string }) =>
-  input.fromDate <= input.toDate;
+const hasValidReportDateRange = (input: { dateFrom: string; dateTo: string }) =>
+  input.dateFrom <= input.dateTo;
+
+const normalizePublicIds = (publicIds: string[] | undefined) => {
+  if (!publicIds?.length) return undefined;
+  return [...new Set(publicIds)];
+};
+
+const normalizeReportFilters = (filters: {
+  dateFrom: string;
+  dateTo: string;
+  memberPublicIds?: string[];
+  cardPublicIds?: string[];
+  listPublicIds?: string[];
+  labelPublicIds?: string[];
+}) => ({
+  dateFrom: filters.dateFrom,
+  dateTo: filters.dateTo,
+  memberPublicIds: normalizePublicIds(filters.memberPublicIds),
+  cardPublicIds: normalizePublicIds(filters.cardPublicIds),
+  listPublicIds: normalizePublicIds(filters.listPublicIds),
+  labelPublicIds: normalizePublicIds(filters.labelPublicIds),
+});
 
 const normalizeComment = (comment: string | null | undefined) => {
   if (comment === undefined) return undefined;
@@ -586,9 +608,13 @@ export const timeTrackingRouter = createTRPCRouter({
     })
     .input(
       z
-        .object({ boardPublicId: publicIdSchema, ...reportFilterShape })
+        .object({
+          boardPublicId: publicIdSchema,
+          ...reportFilterShape,
+          groupBy: z.enum(["member", "card", "list"]).optional(),
+        })
         .refine(hasValidReportDateRange, {
-          message: "fromDate must not be after toDate",
+          message: "dateFrom must not be after dateTo",
         }),
     )
     .output(timeTrackingReportSummarySchema)
@@ -599,12 +625,30 @@ export const timeTrackingRouter = createTRPCRouter({
         userId,
         input.boardPublicId,
       );
-      const { boardPublicId: _boardPublicId, ...filters } = input;
-      return timeTrackingRepo.getBoardWorklogSummary(
-        ctx.db,
-        board.boardId,
-        filters,
-      );
+      const { boardPublicId: _boardPublicId, groupBy, ...rawFilters } = input;
+      const filters = normalizeReportFilters(rawFilters);
+      const [summary, groups] = await Promise.all([
+        timeTrackingRepo.getBoardWorklogSummary(ctx.db, board.boardId, filters),
+        groupBy
+          ? timeTrackingRepo.getBoardWorklogGroups(
+              ctx.db,
+              board.boardId,
+              filters,
+              groupBy,
+            )
+          : [],
+      ]);
+      return {
+        ...summary,
+        groups: groups.map((group) => ({
+          publicId: group.publicId,
+          label: group.member
+            ? formatMember(group.member).displayName
+            : group.label,
+          durationSeconds: group.durationSeconds,
+          entryCount: group.entryCount,
+        })),
+      };
     }),
 
   listReportWorklogs: protectedProcedure
@@ -626,7 +670,7 @@ export const timeTrackingRouter = createTRPCRouter({
           cursor: z.string().optional(),
         })
         .refine(hasValidReportDateRange, {
-          message: "fromDate must not be after toDate",
+          message: "dateFrom must not be after dateTo",
         }),
     )
     .output(
@@ -646,8 +690,9 @@ export const timeTrackingRouter = createTRPCRouter({
         boardPublicId: _boardPublicId,
         limit,
         cursor,
-        ...filters
+        ...rawFilters
       } = input;
+      const filters = normalizeReportFilters(rawFilters);
       const [result, capabilities] = await Promise.all([
         timeTrackingRepo.listBoardWorklogs(ctx.db, {
           boardId: board.boardId,

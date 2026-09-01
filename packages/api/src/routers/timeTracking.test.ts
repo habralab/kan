@@ -22,6 +22,7 @@ vi.mock("@kan/db/repository/timeTracking.repo", () => ({
   getTimeTrackingMemberOptions: vi.fn(),
   getBoardReportOptions: vi.fn(),
   getBoardWorklogSummary: vi.fn(),
+  getBoardWorklogGroups: vi.fn(),
   listBoardWorklogs: vi.fn(),
   getActiveWorkspaceMemberForUser: vi.fn(),
   getWorklogContext: vi.fn(),
@@ -341,18 +342,18 @@ describe("time tracking router", () => {
       .createCaller(ctx)
       .listReportWorklogs({
         boardPublicId: cardContext.boardPublicId,
-        fromDate: "2026-09-01",
-        toDate: "2026-09-30",
-        labelPublicId: "label1234567",
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+        labelPublicIds: ["label1234567", "label1234567"],
         limit: 50,
       });
 
     expect(mockRepo.listBoardWorklogs).toHaveBeenCalledWith(db, {
       boardId: 10,
       filters: {
-        fromDate: "2026-09-01",
-        toDate: "2026-09-30",
-        labelPublicId: "label1234567",
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+        labelPublicIds: ["label1234567"],
       },
       limit: 50,
       cursor: undefined,
@@ -368,11 +369,90 @@ describe("time tracking router", () => {
     await expect(
       timeTrackingRouter.createCaller(ctx).getReportSummary({
         boardPublicId: cardContext.boardPublicId,
-        fromDate: "2026-09-30",
-        toDate: "2026-09-01",
+        dateFrom: "2026-09-30",
+        dateTo: "2026-09-01",
       }),
     ).rejects.toMatchObject({ code: "BAD_REQUEST" });
     expect(mockRepo.getBoardWorklogSummary).not.toHaveBeenCalled();
+  });
+
+  it("bounds report filters to 100 values per dimension", async () => {
+    await expect(
+      timeTrackingRouter.createCaller(ctx).getReportSummary({
+        boardPublicId: cardContext.boardPublicId,
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+        cardPublicIds: Array.from({ length: 101 }, () => "card12345678"),
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mockRepo.getBoardWorklogSummary).not.toHaveBeenCalled();
+  });
+
+  it("returns one requested grouping without exposing a hidden email", async () => {
+    mockHasPermission.mockResolvedValue(true);
+    mockRepo.getBoardSettings.mockResolvedValue({
+      boardId: 10,
+      boardPublicId: cardContext.boardPublicId,
+      boardName: "Test board",
+      workspaceId: cardContext.workspaceId,
+      isArchived: false,
+      type: "regular",
+      createdBy: user.id,
+      enabled: true,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    });
+    mockRepo.getBoardWorklogSummary.mockResolvedValue({
+      totalSeconds: 3600,
+      entryCount: 1,
+      memberCount: 1,
+      cardCount: 1,
+    });
+    mockRepo.getBoardWorklogGroups.mockResolvedValue([
+      {
+        publicId: "member123456",
+        label: null,
+        member: {
+          publicId: "member123456",
+          email: "hidden@example.com",
+          status: "active",
+          displayName: null,
+          userEmail: "hidden@example.com",
+          showEmailsToMembers: false,
+          durationSeconds: 3600,
+          entryCount: 1,
+        },
+        durationSeconds: 3600,
+        entryCount: 1,
+      },
+    ]);
+
+    const result = await timeTrackingRouter.createCaller(ctx).getReportSummary({
+      boardPublicId: cardContext.boardPublicId,
+      dateFrom: "2026-09-01",
+      dateTo: "2026-09-30",
+      groupBy: "member",
+    });
+
+    expect(mockRepo.getBoardWorklogGroups).toHaveBeenCalledWith(
+      db,
+      10,
+      expect.objectContaining({
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+      }),
+      "member",
+    );
+    expect(result.groups).toEqual([
+      {
+        publicId: "member123456",
+        label: "anonymous_member123456",
+        durationSeconds: 3600,
+        entryCount: 1,
+      },
+    ]);
   });
 
   it("creates an entry for the current member with worklog:create", async () => {

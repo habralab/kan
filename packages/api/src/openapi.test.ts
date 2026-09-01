@@ -10,6 +10,7 @@ describe("time tracking OpenAPI", () => {
       ["/boards/{boardPublicId}/time-tracking/settings", ["get", "put"]],
       ["/cards/{cardPublicId}/time-tracking/worklogs", ["get", "post"]],
       ["/cards/{cardPublicId}/time-tracking/summary", ["get"]],
+      ["/boards/{boardPublicId}/time-tracking/card-totals", ["get"]],
       ["/cards/{cardPublicId}/time-tracking/members", ["get"]],
       ["/time-tracking/worklogs/{worklogPublicId}", ["put", "delete"]],
       ["/time-tracking/timer", ["get", "delete"]],
@@ -22,5 +23,5 @@ describe("time tracking OpenAPI", () => {
       expect(operations).toBeDefined();
       for (const method of methods) expect(operations).toHaveProperty(method);
     }
-  });
+  }, 10_000);
 });

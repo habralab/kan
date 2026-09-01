@@ -11,6 +11,9 @@ import {
   timeTrackingActiveTimerSchema,
   timeTrackingCardSummarySchema,
   timeTrackingMemberOptionsSchema,
+  timeTrackingReportOptionsSchema,
+  timeTrackingReportSummarySchema,
+  timeTrackingReportWorklogSchema,
   timeTrackingSettingsSchema,
   timeTrackingWorklogSchema,
 } from "../schemas";
@@ -30,6 +33,16 @@ const timezoneSchema = z
   .refine(isValidIanaTimezone, "Invalid IANA timezone");
 const durationSchema = z.number().int().positive().max(MAX_DURATION_SECONDS);
 const commentSchema = z.string().max(10_000).nullable().optional();
+const reportFilterShape = {
+  fromDate: workDateSchema,
+  toDate: workDateSchema,
+  workspaceMemberPublicId: publicIdSchema.optional(),
+  cardPublicId: publicIdSchema.optional(),
+  listPublicId: publicIdSchema.optional(),
+  labelPublicId: publicIdSchema.optional(),
+};
+const hasValidReportDateRange = (input: { fromDate: string; toDate: string }) =>
+  input.fromDate <= input.toDate;
 
 const normalizeComment = (comment: string | null | undefined) => {
   if (comment === undefined) return undefined;
@@ -84,6 +97,9 @@ const runRepositoryMutation = async <T>(mutation: () => Promise<T>) => {
 type ListedWorklog = Awaited<
   ReturnType<typeof timeTrackingRepo.listWorklogsByCard>
 >["items"][number];
+type ReportWorklog = Awaited<
+  ReturnType<typeof timeTrackingRepo.listBoardWorklogs>
+>["items"][number];
 type Worklog = NonNullable<
   Awaited<ReturnType<typeof timeTrackingRepo.getWorklogByPublicId>>
 >;
@@ -100,7 +116,7 @@ const getMemberDisplayName = (
 };
 
 const formatWorklog = (
-  worklog: ListedWorklog | Worklog,
+  worklog: ListedWorklog | ReportWorklog | Worklog,
   capabilities: { canManage: boolean; canEdit: boolean; canDelete: boolean },
   userId: string,
 ) => {
@@ -159,6 +175,17 @@ const formatWorklog = (
   };
 };
 
+const formatReportWorklog = (
+  worklog: ReportWorklog,
+  capabilities: { canManage: boolean; canEdit: boolean; canDelete: boolean },
+  userId: string,
+) => ({
+  ...formatWorklog(worklog, capabilities, userId),
+  labels: worklog.card.labels
+    .filter(({ label }) => label.deletedAt === null)
+    .map(({ label }) => ({ publicId: label.publicId, name: label.name })),
+});
+
 const formatMember = (member: {
   publicId: string;
   email: string;
@@ -213,6 +240,20 @@ const requireActiveWorkspaceMember = async (
   if (!member)
     throw new TRPCError({ code: "FORBIDDEN", message: "MEMBER_NOT_FOUND" });
   return member;
+};
+
+const getReportBoardContext = async (
+  db: Parameters<typeof hasPermission>[0],
+  userId: string,
+  boardPublicId: string,
+) => {
+  const board = await timeTrackingRepo.getBoardSettings(db, boardPublicId);
+  if (!board)
+    throw new TRPCError({ code: "NOT_FOUND", message: "BOARD_NOT_FOUND" });
+  await requireActiveWorkspaceMember(db, board.workspaceId, userId);
+  await assertPermission(db, userId, board.workspaceId, "board:view");
+  await assertPermission(db, userId, board.workspaceId, "worklog:view");
+  return board;
 };
 
 const canAccessTimerMetadata = async (
@@ -501,6 +542,126 @@ export const timeTrackingRouter = createTRPCRouter({
           .filter((member) => canManage || member.userId === userId)
           .map(formatMember),
         canManage,
+      };
+    }),
+
+  getReportOptions: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Get board time report filter options",
+        method: "GET",
+        path: "/boards/{boardPublicId}/time-tracking/report/options",
+        tags: ["Time Tracking"],
+        protect: true,
+      },
+    })
+    .input(z.object({ boardPublicId: publicIdSchema }))
+    .output(timeTrackingReportOptionsSchema)
+    .query(async ({ ctx, input }) => {
+      const userId = requireUserId(ctx.user?.id);
+      const board = await getReportBoardContext(
+        ctx.db,
+        userId,
+        input.boardPublicId,
+      );
+      const options = await timeTrackingRepo.getBoardReportOptions(
+        ctx.db,
+        board.boardId,
+      );
+      return {
+        ...options,
+        members: options.members.map(formatMember),
+      };
+    }),
+
+  getReportSummary: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Get board time report summary",
+        method: "GET",
+        path: "/boards/{boardPublicId}/time-tracking/report/summary",
+        tags: ["Time Tracking"],
+        protect: true,
+      },
+    })
+    .input(
+      z
+        .object({ boardPublicId: publicIdSchema, ...reportFilterShape })
+        .refine(hasValidReportDateRange, {
+          message: "fromDate must not be after toDate",
+        }),
+    )
+    .output(timeTrackingReportSummarySchema)
+    .query(async ({ ctx, input }) => {
+      const userId = requireUserId(ctx.user?.id);
+      const board = await getReportBoardContext(
+        ctx.db,
+        userId,
+        input.boardPublicId,
+      );
+      const { boardPublicId: _boardPublicId, ...filters } = input;
+      return timeTrackingRepo.getBoardWorklogSummary(
+        ctx.db,
+        board.boardId,
+        filters,
+      );
+    }),
+
+  listReportWorklogs: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "List board time report entries",
+        method: "GET",
+        path: "/boards/{boardPublicId}/time-tracking/report/worklogs",
+        tags: ["Time Tracking"],
+        protect: true,
+      },
+    })
+    .input(
+      z
+        .object({
+          boardPublicId: publicIdSchema,
+          ...reportFilterShape,
+          limit: z.number().int().min(1).max(100).default(50),
+          cursor: z.string().optional(),
+        })
+        .refine(hasValidReportDateRange, {
+          message: "fromDate must not be after toDate",
+        }),
+    )
+    .output(
+      z.object({
+        items: z.array(timeTrackingReportWorklogSchema),
+        nextCursor: z.string().nullable(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = requireUserId(ctx.user?.id);
+      const board = await getReportBoardContext(
+        ctx.db,
+        userId,
+        input.boardPublicId,
+      );
+      const {
+        boardPublicId: _boardPublicId,
+        limit,
+        cursor,
+        ...filters
+      } = input;
+      const [result, capabilities] = await Promise.all([
+        timeTrackingRepo.listBoardWorklogs(ctx.db, {
+          boardId: board.boardId,
+          filters,
+          limit,
+          cursor: cursor ? decodeCursor(cursor) : undefined,
+        }),
+        getCapabilities(ctx.db, userId, board.workspaceId),
+      ]);
+      return {
+        items: result.items.map((item) =>
+          formatReportWorklog(item, capabilities, userId),
+        ),
+        nextCursor: result.nextCursor ? encodeCursor(result.nextCursor) : null,
       };
     }),
 

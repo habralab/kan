@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
 import {
+  HiOutlineClock,
   HiOutlinePlusSmall,
   HiOutlineRectangleStack,
   HiOutlineSquare3Stack3D,
@@ -53,6 +54,7 @@ import { MoveBoardForm } from "./components/MoveBoardForm";
 import { NewCardForm } from "./components/NewCardForm";
 import { NewListForm } from "./components/NewListForm";
 import { NewTemplateForm } from "./components/NewTemplateForm";
+import { TimeTrackingReportModal } from "./components/TimeTrackingReportModal";
 import { TimeTrackingSettingsForm } from "./components/TimeTrackingSettingsForm";
 import UpdateBoardSlugButton from "./components/UpdateBoardSlugButton";
 import { UpdateBoardSlugForm } from "./components/UpdateBoardSlugForm";
@@ -153,6 +155,11 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     enabled: !!boardId,
     placeholderData: keepPreviousData,
   });
+
+  const timeTrackingSettings = api.timeTracking.getSettings.useQuery(
+    { boardPublicId: boardId ?? "" },
+    { enabled: !!boardId && !isTemplate },
+  );
 
   // Redirect to 404 if board doesn't exist
   useEffect(() => {
@@ -483,6 +490,10 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
           </Modal>
         )}
 
+        {isOpen && modalContentType === "TIME_TRACKING_REPORT" && (
+          <TimeTrackingReportModal boardPublicId={boardId ?? ""} />
+        )}
+
         <Modal
           modalSize="sm"
           isVisible={isOpen && modalContentType === "CREATE_TEMPLATE"}
@@ -591,6 +602,15 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
             )}
             {!isTemplate && (
               <>
+                {timeTrackingSettings.data?.enabled && (
+                  <Button
+                    iconLeft={<HiOutlineClock className="h-5 w-5" />}
+                    variant="secondary"
+                    onClick={() => openModal("TIME_TRACKING_REPORT")}
+                  >
+                    {t`Time`}
+                  </Button>
+                )}
                 <UpdateBoardSlugButton
                   handleOnClick={() => openModal("UPDATE_BOARD_SLUG")}
                   isLoading={isLoading}

@@ -81,6 +81,7 @@ export const timeTrackingCardSummarySchema = z.object({
     }),
   ),
   canCreate: z.boolean(),
+  canStartTimer: z.boolean(),
   canManage: z.boolean(),
 });
 

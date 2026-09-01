@@ -53,6 +53,7 @@ import { MoveBoardForm } from "./components/MoveBoardForm";
 import { NewCardForm } from "./components/NewCardForm";
 import { NewListForm } from "./components/NewListForm";
 import { NewTemplateForm } from "./components/NewTemplateForm";
+import { TimeTrackingSettingsForm } from "./components/TimeTrackingSettingsForm";
 import UpdateBoardSlugButton from "./components/UpdateBoardSlugButton";
 import { UpdateBoardSlugForm } from "./components/UpdateBoardSlugForm";
 import VisibilityButton from "./components/VisibilityButton";
@@ -472,6 +473,15 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
         >
           <MoveBoardForm boardPublicId={boardId ?? ""} />
         </Modal>
+
+        {isOpen && modalContentType === "TIME_TRACKING_SETTINGS" && (
+          <Modal modalSize="sm" isVisible>
+            <TimeTrackingSettingsForm
+              boardPublicId={boardId ?? ""}
+              isArchived={boardData?.isArchived ?? false}
+            />
+          </Modal>
+        )}
 
         <Modal
           modalSize="sm"

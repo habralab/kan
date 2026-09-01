@@ -84,6 +84,7 @@ describe("time tracking router", () => {
       publicId: "member123456",
       email: "test@example.com",
       status: "active" as const,
+      deletedAt: null,
       userId: user.id,
       user: { name: "Test User", email: "test@example.com" },
       workspace: { showEmailsToMembers: true },
@@ -211,6 +212,7 @@ describe("time tracking router", () => {
         cardPublicId: cardContext.cardPublicId,
         limit: 101,
       }),
+      caller.getSettings({ boardPublicId: `${cardContext.boardPublicId}x` }),
     ]);
 
     for (const result of results) {
@@ -323,6 +325,7 @@ describe("time tracking router", () => {
           memberPublicId: "member123456",
           memberEmail: "test@example.com",
           memberStatus: "active",
+          memberDeletedAt: null,
           memberUserId: user.id,
           memberDisplayName: "Test User",
           userEmail: "test@example.com",
@@ -441,6 +444,7 @@ describe("time tracking router", () => {
         publicId: "member123456",
         email: "test@example.com",
         status: "active",
+        deletedAt: null,
         userId: user.id,
         displayName: "Test User",
         userEmail: "test@example.com",
@@ -450,6 +454,7 @@ describe("time tracking router", () => {
         publicId: "another12345",
         email: "another@example.com",
         status: "active",
+        deletedAt: null,
         userId: "00000000-0000-0000-0000-000000000002",
         displayName: "Another User",
         userEmail: "another@example.com",
@@ -479,6 +484,35 @@ describe("time tracking router", () => {
     });
   });
 
+  it("marks a soft-deleted historical member as removed for managers", async () => {
+    mockHasPermission.mockResolvedValue(true);
+    mockRepo.getTimeTrackingMemberOptions.mockResolvedValue([
+      {
+        publicId: "deletedmem01",
+        email: "former@example.com",
+        status: "active",
+        deletedAt: new Date("2026-08-01T00:00:00.000Z"),
+        userId: "00000000-0000-0000-0000-000000000002",
+        displayName: "Former User",
+        userEmail: "former@example.com",
+        showEmailsToMembers: true,
+      },
+    ]);
+
+    const result = await timeTrackingRouter.createCaller(ctx).getMemberOptions({
+      cardPublicId: cardContext.cardPublicId,
+    });
+
+    expect(result.members).toEqual([
+      {
+        publicId: "deletedmem01",
+        displayName: "Former User",
+        email: "former@example.com",
+        status: "removed",
+      },
+    ]);
+  });
+
   it("returns a filtered board report without internal IDs", async () => {
     mockHasPermission.mockResolvedValue(true);
     mockRepo.getBoardSettings.mockResolvedValue({
@@ -500,8 +534,6 @@ describe("time tracking router", () => {
         {
           ...worklog,
           id: 1,
-          createdBy: user.id,
-          updatedBy: null,
           card: {
             ...worklog.card,
             labels: [
@@ -599,6 +631,7 @@ describe("time tracking router", () => {
           publicId: "member123456",
           email: "hidden@example.com",
           status: "active",
+          deletedAt: null,
           displayName: null,
           userEmail: "hidden@example.com",
           showEmailsToMembers: false,

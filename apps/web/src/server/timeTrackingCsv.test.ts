@@ -7,6 +7,7 @@ import {
   formatCsvDuration,
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
+  getTimeTrackingExportFilename,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
 } from "./timeTrackingCsv";
@@ -27,6 +28,32 @@ describe("time tracking CSV", () => {
 
   it("formats duration without losing seconds", () => {
     expect(formatCsvDuration(3661)).toBe("01:01:01");
+  });
+
+  it("builds a safe filename from the board name", () => {
+    expect(
+      getTimeTrackingExportFilename({
+        boardName: "Marketing / Q3 🚀",
+        boardPublicId: "board1234567",
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+        profileName: "summary-card",
+      }),
+    ).toBe(
+      "kan-time-marketing-q3-board1234567-2026-09-01-2026-09-30-summary-card.csv",
+    );
+  });
+
+  it("keeps non-ASCII board names out of the response header", () => {
+    expect(
+      getTimeTrackingExportFilename({
+        boardName: "Общая доска маркетинга",
+        boardPublicId: "board1234567",
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+        profileName: "detailed",
+      }),
+    ).toBe("kan-time-board-board1234567-2026-09-01-2026-09-30-detailed.csv");
   });
 
   it("encodes one aggregated summary row", () => {
@@ -97,10 +124,8 @@ describe("time tracking CSV", () => {
       "Raw elapsed seconds",
       "Comment",
       "Created at",
-      "Created by user ID",
       "Created by",
       "Updated at",
-      "Updated by user ID",
       "Updated by",
     ]);
   });

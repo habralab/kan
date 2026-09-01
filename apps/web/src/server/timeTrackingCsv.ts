@@ -34,12 +34,28 @@ export const TIME_TRACKING_DETAILED_CSV_HEADERS = [
   "Raw elapsed seconds",
   "Comment",
   "Created at",
-  "Created by user ID",
   "Created by",
   "Updated at",
-  "Updated by user ID",
   "Updated by",
 ] as const;
+
+export const getTimeTrackingExportFilename = (input: {
+  boardName: string;
+  boardPublicId: string;
+  dateFrom: string;
+  dateTo: string;
+  profileName: string;
+}) => {
+  const boardToken =
+    input.boardName
+      .normalize("NFKD")
+      .replace(/[^a-zA-Z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .toLowerCase()
+      .slice(0, 80) || "board";
+
+  return `kan-time-${boardToken}-${input.boardPublicId}-${input.dateFrom}-${input.dateTo}-${input.profileName}.csv`;
+};
 
 interface CsvMember {
   publicId: string;

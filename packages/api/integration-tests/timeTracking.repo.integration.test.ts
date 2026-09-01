@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import * as boardRepo from "@kan/db/repository/board.repo";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import {
   boards,
@@ -10,6 +11,7 @@ import {
   lists,
   timeTrackingWorklogs,
   workspaceMembers,
+  workspaces,
 } from "@kan/db/schema";
 
 import type { TestDbClient } from "./test-db";
@@ -512,6 +514,16 @@ describe("time tracking repository", () => {
           role: "member" as const,
           status: "removed" as const,
         },
+        {
+          publicId: "deletedmem01",
+          email: "deleted@example.com",
+          userId,
+          workspaceId,
+          createdBy: userId,
+          role: "member" as const,
+          status: "active" as const,
+          deletedAt: new Date("2026-08-01T00:00:00.000Z"),
+        },
       ])
       .returning();
     const [invitedMember] = await db
@@ -525,7 +537,7 @@ describe("time tracking repository", () => {
         status: "invited",
       })
       .returning();
-    if (historicalMembers.length !== 2 || !invitedMember)
+    if (historicalMembers.length !== 3 || !invitedMember)
       throw new Error("Unable to create historical test members");
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,
@@ -564,12 +576,65 @@ describe("time tracking repository", () => {
     );
     expect(
       page.items.map((item) => item.workspaceMember.status).sort(),
-    ).toEqual(["paused", "removed"]);
+    ).toEqual(["active", "paused", "removed"]);
     expect(memberOptions.map((member) => member.status).sort()).toEqual([
+      "active",
       "active",
       "paused",
       "removed",
     ]);
+    expect(
+      memberOptions.find((member) => member.publicId === "deletedmem01")
+        ?.deletedAt,
+    ).toEqual(new Date("2026-08-01T00:00:00.000Z"));
+  });
+
+  it("rechecks time data while holding the board move lock", async () => {
+    const [targetWorkspace] = await db
+      .insert(workspaces)
+      .values({
+        publicId: "targetspace1",
+        name: "Target workspace",
+        slug: "target-workspace",
+        createdBy: userId,
+      })
+      .returning();
+    if (!targetWorkspace) throw new Error("Unable to create target workspace");
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    const worklog = await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: memberPublicId,
+      workDate: "2026-09-01",
+      durationSeconds: 60,
+      comment: null,
+      actorUserId: userId,
+    });
+    if (!worklog) throw new Error("Unable to create move blocker");
+    await timeTrackingRepo.deleteWorklog(db, {
+      worklogPublicId: worklog.publicId,
+      workspaceId,
+      actorUserId: userId,
+    });
+
+    const result = await boardRepo.moveToWorkspace(
+      db,
+      boardId,
+      targetWorkspace.id,
+      "moved-time-tracking-board",
+    );
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+    });
+
+    expect(result).toEqual({
+      moved: false,
+      reason: "time_tracking_data",
+    });
+    expect(board?.workspaceId).toBe(workspaceId);
   });
 
   it("starts one global timer and keeps repeated start idempotent", async () => {

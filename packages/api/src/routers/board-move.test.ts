@@ -108,6 +108,10 @@ describe("board.move", () => {
       hasWorklogs: false,
       hasActiveTimers: false,
     });
+    mockMoveToWorkspace.mockResolvedValue({
+      moved: true,
+      board: { publicId: mockInput.boardPublicId, name: mockBoard.name },
+    });
   });
 
   it("throws UNAUTHORIZED when user is not authenticated", async () => {
@@ -266,7 +270,6 @@ describe("board.move", () => {
     mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
     mockWorkspaceGetByPublicId.mockResolvedValueOnce(mockTargetWorkspace);
     mockIsBoardSlugAvailable.mockResolvedValueOnce(false);
-    mockMoveToWorkspace.mockResolvedValueOnce(undefined);
 
     const ctx = { user: mockUser, db: mockDb } as never;
 
@@ -285,7 +288,6 @@ describe("board.move", () => {
     mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
     mockWorkspaceGetByPublicId.mockResolvedValueOnce(mockTargetWorkspace);
     mockIsBoardSlugAvailable.mockResolvedValueOnce(true);
-    mockMoveToWorkspace.mockResolvedValueOnce(undefined);
 
     const ctx = { user: mockUser, db: mockDb } as never;
 
@@ -298,5 +300,22 @@ describe("board.move", () => {
       mockTargetWorkspace.id,
       "my-board",
     );
+  });
+
+  it("returns CONFLICT when the transactional guard catches a concurrent entry", async () => {
+    const { boardRouter } = await import("./board");
+    mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
+    mockWorkspaceGetByPublicId.mockResolvedValueOnce(mockTargetWorkspace);
+    mockIsBoardSlugAvailable.mockResolvedValueOnce(true);
+    mockMoveToWorkspace.mockResolvedValueOnce({
+      moved: false,
+      reason: "time_tracking_data",
+    });
+
+    const ctx = { user: mockUser, db: mockDb } as never;
+
+    await expect(
+      boardRouter.createCaller(ctx).move(mockInput),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
   });
 });

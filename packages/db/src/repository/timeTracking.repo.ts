@@ -178,6 +178,7 @@ export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
       memberPublicId: workspaceMembers.publicId,
       memberEmail: workspaceMembers.email,
       memberStatus: workspaceMembers.status,
+      memberDeletedAt: workspaceMembers.deletedAt,
       memberUserId: workspaceMembers.userId,
       memberDisplayName: users.name,
       userEmail: users.email,
@@ -218,6 +219,7 @@ export const getTimeTrackingMemberOptions = (
       publicId: workspaceMembers.publicId,
       email: workspaceMembers.email,
       status: workspaceMembers.status,
+      deletedAt: workspaceMembers.deletedAt,
       userId: workspaceMembers.userId,
       displayName: users.name,
       userEmail: users.email,
@@ -233,7 +235,7 @@ export const getTimeTrackingMemberOptions = (
           workspaceMembers.status,
           includeHistorical ? ["active", "paused", "removed"] : ["active"],
         ),
-        isNull(workspaceMembers.deletedAt),
+        includeHistorical ? undefined : isNull(workspaceMembers.deletedAt),
       ),
     )
     .orderBy(users.name, workspaceMembers.email);
@@ -313,6 +315,7 @@ export const getWorklogByPublicId = (db: dbClient, publicId: string) =>
           publicId: true,
           email: true,
           status: true,
+          deletedAt: true,
           userId: true,
         },
         with: {
@@ -463,7 +466,8 @@ export const createManualWorklog = async (
           isNull(boards.deletedAt),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for("share", { of: boards });
 
     if (!card) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
     if (card.boardType !== "regular")
@@ -481,7 +485,6 @@ export const createManualWorklog = async (
           eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
           eq(workspaceMembers.workspaceId, card.workspaceId),
           inArray(workspaceMembers.status, ["active", "paused", "removed"]),
-          isNull(workspaceMembers.deletedAt),
         ),
       )
       .limit(1);
@@ -546,7 +549,6 @@ export const updateWorklog = async (
             eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
             eq(workspaceMembers.workspaceId, input.workspaceId),
             inArray(workspaceMembers.status, ["active", "paused", "removed"]),
-            isNull(workspaceMembers.deletedAt),
           ),
         )
         .limit(1);
@@ -665,9 +667,7 @@ export const listWorklogsByCard = async (
       timerTimezone: true,
       rawElapsedSeconds: true,
       createdAt: true,
-      createdBy: true,
       updatedAt: true,
-      updatedBy: true,
     },
     with: {
       workspaceMember: {
@@ -675,6 +675,7 @@ export const listWorklogsByCard = async (
           publicId: true,
           email: true,
           status: true,
+          deletedAt: true,
           userId: true,
         },
         with: {
@@ -741,9 +742,7 @@ export const listBoardWorklogs = async (
       timerTimezone: true,
       rawElapsedSeconds: true,
       createdAt: true,
-      createdBy: true,
       updatedAt: true,
-      updatedBy: true,
     },
     with: {
       workspaceMember: {
@@ -751,6 +750,7 @@ export const listBoardWorklogs = async (
           publicId: true,
           email: true,
           status: true,
+          deletedAt: true,
           userId: true,
         },
         with: {
@@ -889,6 +889,7 @@ export const getBoardWorklogGroups = async (
         entryCount,
         email: workspaceMembers.email,
         status: workspaceMembers.status,
+        deletedAt: workspaceMembers.deletedAt,
         displayName: users.name,
         userEmail: users.email,
         showEmailsToMembers: workspaces.showEmailsToMembers,
@@ -974,6 +975,7 @@ export const getBoardReportOptions = async (db: dbClient, boardId: number) => {
         publicId: workspaceMembers.publicId,
         email: workspaceMembers.email,
         status: workspaceMembers.status,
+        deletedAt: workspaceMembers.deletedAt,
         userId: workspaceMembers.userId,
         displayName: users.name,
         userEmail: users.email,
@@ -1122,7 +1124,8 @@ export const startTimer = async (
             isNull(boards.deletedAt),
           ),
         )
-        .limit(1);
+        .limit(1)
+        .for("share", { of: boards });
 
       if (!card) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
       if (card.boardType !== "regular")

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
+import { Plural, Trans } from "@lingui/react/macro";
 import { Fragment, useEffect, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 
@@ -374,7 +375,13 @@ export function TimeTrackingReportModal({
                             {group.label}
                           </p>
                           <p className="text-xs text-light-900 dark:text-dark-900">
-                            {t`${group.entryCount} entries`}
+                            <Trans>
+                              <Plural
+                                value={group.entryCount}
+                                one="1 entry"
+                                other={`${group.entryCount} entries`}
+                              />
+                            </Trans>
                           </p>
                         </div>
                         <span className="whitespace-nowrap text-sm font-semibold text-light-1000 dark:text-dark-1000">

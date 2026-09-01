@@ -1,4 +1,5 @@
 import { t } from "@lingui/core/macro";
+import { Plural, Trans } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 
@@ -110,7 +111,13 @@ export function TimeTrackingSettingsForm({
 
           {settings.data.activeTimerCount > 0 && (
             <p className="mt-3 text-xs text-light-900 dark:text-dark-900">
-              {t`${settings.data.activeTimerCount} active timers can still be stopped or discarded if time tracking is disabled.`}
+              <Trans>
+                <Plural
+                  value={settings.data.activeTimerCount}
+                  one="1 active timer can still be stopped or discarded if time tracking is disabled."
+                  other={`${settings.data.activeTimerCount} active timers can still be stopped or discarded if time tracking is disabled.`}
+                />
+              </Trans>
             </p>
           )}
 

@@ -1,4 +1,599 @@
 {
+  "VEnTjc": {
+    "message": "{0, plural, one {1 active timer can still be stopped or discarded if time tracking is disabled.} other {{1} active timers can still be stopped or discarded if time tracking is disabled.}}",
+    "placeholders": {
+      "0": ["settings.data.activeTimerCount"],
+      "1": ["settings.data.activeTimerCount"]
+    },
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",114]],
+    "translation": "{0, plural, one {{1} активный таймер всё ещё можно остановить или сбросить, если учёт времени отключён.} few {{1} активных таймера всё ещё можно остановить или сбросить, если учёт времени отключён.} many {{1} активных таймеров всё ещё можно остановить или сбросить, если учёт времени отключён.} other {{1} активного таймера всё ещё можно остановить или сбросить, если учёт времени отключён.}}"
+  },
+  "INSeGm": {
+    "message": "{0, plural, one {1 entry} other {{1} entries}}",
+    "placeholders": {
+      "0": ["group.entryCount"],
+      "1": ["group.entryCount"]
+    },
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",378]],
+    "translation": "{0, plural, one {{1} запись} few {{1} записи} many {{1} записей} other {{1} записи}}"
+  },
+  "PqP8GL": {
+    "message": "1h 30m",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeEntryForm.tsx",136]],
+    "translation": "1h 30m"
+  },
+  "MdyqML": {
+    "message": "Add time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx",99],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",326]
+    ],
+    "translation": "Добавить время"
+  },
+  "4upC5z": {
+    "message": "All cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",287]],
+    "translation": "Все карточки"
+  },
+  "zDDU1o": {
+    "message": "All labels",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",307]],
+    "translation": "Все метки"
+  },
+  "qe9rVr": {
+    "message": "All lists",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",272]],
+    "translation": "Все списки"
+  },
+  "RevbX8": {
+    "message": "All members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",254]],
+    "translation": "Все участники"
+  },
+  "VPUvtP": {
+    "message": "Can add time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx",151],
+      ["src/views/settings/components/RolePermissions.tsx",40]
+    ],
+    "translation": "Можно добавлять записи времени"
+  },
+  "2BD2mA": {
+    "message": "Can delete own time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx",153],
+      ["src/views/settings/components/RolePermissions.tsx",42]
+    ],
+    "translation": "Можно удалять свои записи времени"
+  },
+  "kImq1u": {
+    "message": "Can edit own time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx",152],
+      ["src/views/settings/components/RolePermissions.tsx",41]
+    ],
+    "translation": "Можно редактировать свои записи времени"
+  },
+  "xLuBnq": {
+    "message": "Can manage all time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx",154],
+      ["src/views/settings/components/RolePermissions.tsx",43]
+    ],
+    "translation": "Можно управлять всеми записями времени"
+  },
+  "DgC8eZ": {
+    "message": "Can view time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx",150],
+      ["src/views/settings/components/RolePermissions.tsx",39]
+    ],
+    "translation": "Можно просматривать записи времени"
+  },
+  "Ccpbzh": {
+    "message": "Cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",331]],
+    "translation": "Карточки"
+  },
+  "WQ5uca": {
+    "message": "Choose a grouping to export a summary",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",412]],
+    "translation": "Выберите группировку для экспорта сводки"
+  },
+  "NBdIgR": {
+    "message": "Comment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",471],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx",165]
+    ],
+    "translation": "Комментарий"
+  },
+  "8rZVt4": {
+    "message": "Current month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",208]],
+    "translation": "Текущий месяц"
+  },
+  "mYGY3B": {
+    "message": "Date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",462],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx",152]
+    ],
+    "translation": "Дата"
+  },
+  "AmfkGS": {
+    "message": "Delete this time entry?",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",503]],
+    "translation": "Удалить эту запись времени?"
+  },
+  "bzSI52": {
+    "message": "Discard",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",254]],
+    "translation": "Сбросить"
+  },
+  "CtkaqE": {
+    "message": "Edit time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeEntryForm.tsx",99]],
+    "translation": "Редактировать запись времени"
+  },
+  "WY7Cmx": {
+    "message": "Enable time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx",93],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx",102]
+    ],
+    "translation": "Включить учёт времени"
+  },
+  "vJiLfv": {
+    "message": "Enter a duration such as 2h, 90m, or 1:30.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeEntryForm.tsx",147]],
+    "translation": "Введите длительность, например 2h, 90m или 1:30."
+  },
+  "ef6vAZ": {
+    "message": "Entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",329]],
+    "translation": "Записи"
+  },
+  "Gi0db4": {
+    "message": "Export detailed CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",424]],
+    "translation": "Экспорт подробного CSV"
+  },
+  "o7dpgY": {
+    "message": "Export summary CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",415]],
+    "translation": "Экспорт сводного CSV"
+  },
+  "ejVYRQ": {
+    "message": "From",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",228]],
+    "translation": "С"
+  },
+  "ALoP4W": {
+    "message": "Group by",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",349]],
+    "translation": "Группировать по"
+  },
+  "Dn4OyV": {
+    "message": "Invited",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeEntryForm.tsx",43]],
+    "translation": "Приглашён"
+  },
+  "87a/t/": {
+    "message": "Label",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",301]],
+    "translation": "Метка"
+  },
+  "uq2BmQ": {
+    "message": "Last 30 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",222]],
+    "translation": "Последние 30 дней"
+  },
+  "yQ2kGp": {
+    "message": "Load more",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",526],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",539]
+    ],
+    "translation": "Загрузить ещё"
+  },
+  "BWTzAb": {
+    "message": "Manual",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",503]],
+    "translation": "Вручную"
+  },
+  "bNv3ig": {
+    "message": "Members can add time entries and run timers on cards. Disabling this feature keeps existing history.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",96]],
+    "translation": "Участники могут добавлять записи времени и запускать таймеры на карточках. При отключении функции история сохраняется."
+  },
+  "fiPesM": {
+    "message": "Method",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",467]],
+    "translation": "Способ"
+  },
+  "dNhH8G": {
+    "message": "No grouping",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",359]],
+    "translation": "Без группировки"
+  },
+  "3M/nm+": {
+    "message": "No time entries match these filters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",455]],
+    "translation": "Нет записей времени, соответствующих этим фильтрам."
+  },
+  "L2Mlhd": {
+    "message": "No time has been logged on this card yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",452]],
+    "translation": "На этой карточке пока нет записей времени."
+  },
+  "1xwZj/": {
+    "message": "Previous month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",215]],
+    "translation": "Предыдущий месяц"
+  },
+  "eps54V": {
+    "message": "Removed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeEntryForm.tsx",42]],
+    "translation": "Удалён"
+  },
+  "RiQMUh": {
+    "message": "Running",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/Card.tsx",148]],
+    "translation": "Идёт"
+  },
+  "ZQyeYU": {
+    "message": "Running on this card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",226]],
+    "translation": "Таймер запущен на этой карточке"
+  },
+  "E5eC82": {
+    "message": "Select a member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeEntryForm.tsx",112]],
+    "translation": "Выберите участника"
+  },
+  "UBj8RW": {
+    "message": "Start timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",334]],
+    "translation": "Запустить таймер"
+  },
+  "IzcP+r": {
+    "message": "Starting this timer will stop the timer on “{0}” and save its elapsed time.",
+    "placeholders": {
+      "0": ["timer.card.title"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",348]],
+    "translation": "При запуске этого таймера таймер на карточке «{0}» будет остановлен, а затраченное время сохранено."
+  },
+  "Gwsani": {
+    "message": "Starting this timer will stop the timer on the inaccessible card and save its elapsed time.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",347]],
+    "translation": "При запуске этого таймера таймер на недоступной карточке будет остановлен, а затраченное время сохранено."
+  },
+  "ygCKqB": {
+    "message": "Stop",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",245]],
+    "translation": "Остановить"
+  },
+  "hQk1gv": {
+    "message": "Stop and start",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",365]],
+    "translation": "Остановить и запустить"
+  },
+  "t24lpS": {
+    "message": "The start date must not be after the end date.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",319]],
+    "translation": "Дата начала не может быть позже даты окончания."
+  },
+  "LhMjLm": {
+    "message": "Time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",469],
+      ["src/views/board/index.tsx",647],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx",127]
+    ],
+    "translation": "Время"
+  },
+  "Ebh8y/": {
+    "message": "Time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",398]],
+    "translation": "Записи времени"
+  },
+  "5YFXV7": {
+    "message": "Time report",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",189]],
+    "translation": "Отчёт по времени"
+  },
+  "SMjp8F": {
+    "message": "Time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/BoardDropdown.tsx",116],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx",63],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",311]
+    ],
+    "translation": "Учёт времени"
+  },
+  "EMqDFj": {
+    "message": "Time tracking has been disabled. Existing history is preserved.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",42]],
+    "translation": "Учёт времени отключён. Существующая история сохранена."
+  },
+  "Vvl2CI": {
+    "message": "Time tracking is now available on this board.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",41]],
+    "translation": "Учёт времени теперь доступен на этой доске."
+  },
+  "zHHNK3": {
+    "message": "Time tracking updated",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",39]],
+    "translation": "Учёт времени обновлён"
+  },
+  "obwKN+": {
+    "message": "Timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",502]],
+    "translation": "Таймер"
+  },
+  "dMbLQM": {
+    "message": "Timer on an inaccessible card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",224]],
+    "translation": "Таймер на недоступной карточке"
+  },
+  "/jQctM": {
+    "message": "To",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",237]],
+    "translation": "По"
+  },
+  "/kXBrK": {
+    "message": "Total time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",326]],
+    "translation": "Общее время"
+  },
+  "KDw4GX": {
+    "message": "Try again",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",446],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx",85],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",280],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",298],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",407],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",445]
+    ],
+    "translation": "Повторить"
+  },
+  "zvcXZs": {
+    "message": "Unable to add time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",131]],
+    "translation": "Не удалось добавить время"
+  },
+  "Q9E45Q": {
+    "message": "Unable to delete time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",145]],
+    "translation": "Не удалось удалить запись времени"
+  },
+  "4IUsF2": {
+    "message": "Unable to discard timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",160]],
+    "translation": "Не удалось сбросить таймер"
+  },
+  "IIaGLD": {
+    "message": "Unable to load members.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",396]],
+    "translation": "Не удалось загрузить участников."
+  },
+  "ZvZ7/B": {
+    "message": "Unable to load more time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",136],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",207]
+    ],
+    "translation": "Не удалось загрузить дополнительные записи времени"
+  },
+  "vsYAKj": {
+    "message": "Unable to load the active timer.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",273]],
+    "translation": "Не удалось загрузить активный таймер."
+  },
+  "ka1erB": {
+    "message": "Unable to load the time report.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",435]],
+    "translation": "Не удалось загрузить отчёт по времени."
+  },
+  "EK8TGG": {
+    "message": "Unable to load time entries.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",435]],
+    "translation": "Не удалось загрузить записи времени."
+  },
+  "ZfaaiP": {
+    "message": "Unable to load time tracking settings.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",82]],
+    "translation": "Не удалось загрузить настройки учёта времени."
+  },
+  "563CZw": {
+    "message": "Unable to load time tracking.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",291]],
+    "translation": "Не удалось загрузить учёт времени."
+  },
+  "VyfeA+": {
+    "message": "Unable to start timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",152]],
+    "translation": "Не удалось запустить таймер"
+  },
+  "Je4xFx": {
+    "message": "Unable to stop timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",156]],
+    "translation": "Не удалось остановить таймер"
+  },
+  "cdvzpG": {
+    "message": "Unable to update time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",138]],
+    "translation": "Не удалось обновить запись времени"
+  },
+  "MKM8bX": {
+    "message": "Unable to update time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",48]],
+    "translation": "Не удалось обновить учёт времени"
+  },
+  "x0vUTB": {
+    "message": "Unarchive this board before enabling time tracking.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",126]],
+    "translation": "Разархивируйте доску перед включением учёта времени."
+  },
+  "rfdrJY": {
+    "message": "You don't have permission to change this setting.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx",132]],
+    "translation": "У вас нет прав на изменение этой настройки."
+  },
   "X0N0PA": {
     "message": " (edited)",
     "placeholders": {},

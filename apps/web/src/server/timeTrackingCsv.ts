@@ -1,5 +1,84 @@
 type CsvValue = string | number | Date | null | undefined;
 
+export const TIME_TRACKING_SUMMARY_CSV_HEADERS = [
+  "Group by",
+  "Group ID",
+  "Group",
+  "Duration seconds",
+  "Duration",
+  "Entry count",
+  "Board",
+  "Board ID",
+] as const;
+
+export const TIME_TRACKING_DETAILED_CSV_HEADERS = [
+  "Worklog ID",
+  "Date",
+  "Duration seconds",
+  "Member ID",
+  "Member",
+  "Member email",
+  "Board ID",
+  "Board",
+  "Card ID",
+  "Card",
+  "Card number",
+  "List ID",
+  "List",
+  "Label IDs",
+  "Labels",
+  "Entry method",
+  "Timer started at",
+  "Timer stopped at",
+  "Timer timezone",
+  "Raw elapsed seconds",
+  "Comment",
+  "Created at",
+  "Created by user ID",
+  "Created by",
+  "Updated at",
+  "Updated by user ID",
+  "Updated by",
+] as const;
+
+interface CsvMember {
+  publicId: string;
+  email: string;
+  displayName: string | null;
+  userEmail: string | null;
+  showEmailsToMembers: boolean;
+}
+
+export const getTimeTrackingCsvMemberDisplayName = (member: CsvMember) => {
+  const name = member.displayName?.trim();
+  if (name) return name;
+  if (member.showEmailsToMembers) return member.userEmail ?? member.email;
+  return `anonymous_${member.publicId}`;
+};
+
+export const getTimeTrackingCsvMemberEmail = (member: CsvMember) =>
+  member.showEmailsToMembers ? (member.userEmail ?? member.email) : null;
+
+export const encodeTimeTrackingSummaryCsvRow = (input: {
+  groupBy: string;
+  groupPublicId: string;
+  groupLabel: string;
+  durationSeconds: number;
+  entryCount: number;
+  boardName: string;
+  boardPublicId: string;
+}) =>
+  encodeCsvRow([
+    input.groupBy,
+    input.groupPublicId,
+    input.groupLabel,
+    input.durationSeconds,
+    formatCsvDuration(input.durationSeconds),
+    input.entryCount,
+    input.boardName,
+    input.boardPublicId,
+  ]);
+
 const protectSpreadsheetFormula = (value: string) =>
   /^[=+\-@]/.test(value) ? `'${value}` : value;
 

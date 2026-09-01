@@ -282,15 +282,23 @@ describe("time tracking repository", () => {
       limit: 1,
       cursor: firstPage.nextCursor,
     });
-    const [summary, options, cardTotals, memberGroups, cardGroups, listGroups] =
-      await Promise.all([
-        timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
-        timeTrackingRepo.getBoardReportOptions(db, boardId),
-        timeTrackingRepo.getBoardCardTotals(db, boardId),
-        timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "member"),
-        timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "card"),
-        timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "list"),
-      ]);
+    const [
+      summary,
+      options,
+      cardTotals,
+      memberGroups,
+      cardGroups,
+      listGroups,
+      dateGroups,
+    ] = await Promise.all([
+      timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
+      timeTrackingRepo.getBoardReportOptions(db, boardId),
+      timeTrackingRepo.getBoardCardTotals(db, boardId),
+      timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "member"),
+      timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "card"),
+      timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "list"),
+      timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "date"),
+    ]);
 
     expect(firstPage.items[0]).toMatchObject({
       workDate: "2026-09-02",
@@ -342,6 +350,22 @@ describe("time tracking repository", () => {
         member: null,
         durationSeconds: 180,
         entryCount: 2,
+      },
+    ]);
+    expect(dateGroups).toEqual([
+      {
+        publicId: "2026-09-02",
+        label: "2026-09-02",
+        member: null,
+        durationSeconds: 120,
+        entryCount: 1,
+      },
+      {
+        publicId: "2026-09-01",
+        label: "2026-09-01",
+        member: null,
+        durationSeconds: 60,
+        entryCount: 1,
       },
     ]);
   });

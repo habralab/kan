@@ -260,6 +260,13 @@
       "when": 1788275243454,
       "tag": "20260901150723_AddTimeTrackingPermissions",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1788289322947,
+      "tag": "20260901190202_AddTimeTrackingMoveGuardIndex",
+      "breakpoints": true
     }
   ]
 }

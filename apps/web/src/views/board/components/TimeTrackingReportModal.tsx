@@ -63,24 +63,28 @@ export function TimeTrackingReportModal({
   const [cardPublicId, setCardPublicId] = useState("");
   const [listPublicId, setListPublicId] = useState("");
   const [labelPublicId, setLabelPublicId] = useState("");
+  const [groupBy, setGroupBy] = useState<"member" | "card" | "list" | "">("");
   const [entries, setEntries] = useState<ReportWorklog[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const filters = {
     boardPublicId,
-    fromDate,
-    toDate,
-    workspaceMemberPublicId: workspaceMemberPublicId || undefined,
-    cardPublicId: cardPublicId || undefined,
-    listPublicId: listPublicId || undefined,
-    labelPublicId: labelPublicId || undefined,
+    dateFrom: fromDate,
+    dateTo: toDate,
+    memberPublicIds: workspaceMemberPublicId
+      ? [workspaceMemberPublicId]
+      : undefined,
+    cardPublicIds: cardPublicId ? [cardPublicId] : undefined,
+    listPublicIds: listPublicId ? [listPublicId] : undefined,
+    labelPublicIds: labelPublicId ? [labelPublicId] : undefined,
   };
   const validRange = fromDate <= toDate;
   const options = api.timeTracking.getReportOptions.useQuery({ boardPublicId });
-  const summary = api.timeTracking.getReportSummary.useQuery(filters, {
-    enabled: validRange,
-  });
+  const summary = api.timeTracking.getReportSummary.useQuery(
+    { ...filters, groupBy: groupBy === "" ? undefined : groupBy },
+    { enabled: validRange },
+  );
   const firstPage = api.timeTracking.listReportWorklogs.useQuery(
     { ...filters, limit: PAGE_SIZE },
     { enabled: validRange },
@@ -139,15 +143,15 @@ export function TimeTrackingReportModal({
   const exportUrl = (profile: "summary" | "detailed") => {
     const params = new URLSearchParams({
       boardPublicId,
-      fromDate,
-      toDate,
+      dateFrom: fromDate,
+      dateTo: toDate,
       profile,
     });
     if (workspaceMemberPublicId)
-      params.set("workspaceMemberPublicId", workspaceMemberPublicId);
-    if (cardPublicId) params.set("cardPublicId", cardPublicId);
-    if (listPublicId) params.set("listPublicId", listPublicId);
-    if (labelPublicId) params.set("labelPublicId", labelPublicId);
+      params.append("memberPublicIds", workspaceMemberPublicId);
+    if (cardPublicId) params.append("cardPublicIds", cardPublicId);
+    if (listPublicId) params.append("listPublicIds", listPublicId);
+    if (labelPublicId) params.append("labelPublicIds", labelPublicId);
     return `/api/time-tracking/export?${params.toString()}`;
   };
 
@@ -330,6 +334,49 @@ export function TimeTrackingReportModal({
                     </p>
                   </div>
                 ))}
+              </div>
+
+              <div className="mb-6">
+                <label className="block max-w-64 text-xs text-light-900 dark:text-dark-900">
+                  {t`Group by`}
+                  <select
+                    value={groupBy}
+                    onChange={(event) =>
+                      setGroupBy(
+                        event.target.value as "member" | "card" | "list" | "",
+                      )
+                    }
+                    className={inputClassName}
+                  >
+                    <option value="">{t`No grouping`}</option>
+                    <option value="member">{t`Member`}</option>
+                    <option value="card">{t`Card`}</option>
+                    <option value="list">{t`List`}</option>
+                  </select>
+                </label>
+
+                {groupBy && summary.data && summary.data.groups.length > 0 && (
+                  <div className="mt-3 overflow-hidden rounded-md border border-light-300 dark:border-dark-300">
+                    {summary.data.groups.map((group) => (
+                      <div
+                        key={group.publicId}
+                        className="flex items-center justify-between gap-4 border-b border-light-300 px-3 py-2 last:border-b-0 dark:border-dark-300"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-light-1000 dark:text-dark-1000">
+                            {group.label}
+                          </p>
+                          <p className="text-xs text-light-900 dark:text-dark-900">
+                            {t`${group.entryCount} entries`}
+                          </p>
+                        </div>
+                        <span className="whitespace-nowrap text-sm font-semibold text-light-1000 dark:text-dark-1000">
+                          {formatDuration(group.durationSeconds)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

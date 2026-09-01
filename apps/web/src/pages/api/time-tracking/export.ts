@@ -15,6 +15,14 @@ const EXPORT_PAGE_SIZE = 500;
 const getQueryString = (value: string | string[] | undefined) =>
   typeof value === "string" ? value : undefined;
 
+const getQueryStrings = (value: string | string[] | undefined) => {
+  if (value === undefined) return undefined;
+  return Array.isArray(value) ? value : [value];
+};
+
+const deduplicate = (values: string[] | undefined) =>
+  values?.length ? [...new Set(values)] : undefined;
+
 const getDisplayName = (member: {
   publicId: string;
   email: string;
@@ -61,35 +69,43 @@ export default withRateLimit(
       if (!user) return res.status(401).json({ error: "Unauthorized" });
 
       const boardPublicId = getQueryString(req.query.boardPublicId);
-      const fromDate = getQueryString(req.query.fromDate);
-      const toDate = getQueryString(req.query.toDate);
+      const dateFrom = getQueryString(req.query.dateFrom);
+      const dateTo = getQueryString(req.query.dateTo);
       const profile = getQueryString(req.query.profile);
       if (
         !boardPublicId ||
         boardPublicId.length < 12 ||
-        !fromDate ||
-        !toDate ||
-        !isValidWorkDate(fromDate) ||
-        !isValidWorkDate(toDate) ||
-        fromDate > toDate ||
+        !dateFrom ||
+        !dateTo ||
+        !isValidWorkDate(dateFrom) ||
+        !isValidWorkDate(dateTo) ||
+        dateFrom > dateTo ||
         (profile !== "summary" && profile !== "detailed")
       )
         return res.status(400).json({ error: "Invalid export parameters" });
 
-      const optionalPublicIds = {
-        workspaceMemberPublicId: getQueryString(
-          req.query.workspaceMemberPublicId,
-        ),
-        cardPublicId: getQueryString(req.query.cardPublicId),
-        listPublicId: getQueryString(req.query.listPublicId),
-        labelPublicId: getQueryString(req.query.labelPublicId),
+      const rawPublicIdFilters = {
+        memberPublicIds: getQueryStrings(req.query.memberPublicIds),
+        cardPublicIds: getQueryStrings(req.query.cardPublicIds),
+        listPublicIds: getQueryStrings(req.query.listPublicIds),
+        labelPublicIds: getQueryStrings(req.query.labelPublicIds),
       };
       if (
-        Object.values(optionalPublicIds).some(
-          (publicId) => publicId !== undefined && publicId.length < 12,
+        Object.values(rawPublicIdFilters).some(
+          (publicIds) =>
+            publicIds !== undefined &&
+            (publicIds.length > 100 ||
+              publicIds.some((publicId) => publicId.length < 12)),
         )
       )
         return res.status(400).json({ error: "Invalid filter identifier" });
+
+      const publicIdFilters = {
+        memberPublicIds: deduplicate(rawPublicIdFilters.memberPublicIds),
+        cardPublicIds: deduplicate(rawPublicIdFilters.cardPublicIds),
+        listPublicIds: deduplicate(rawPublicIdFilters.listPublicIds),
+        labelPublicIds: deduplicate(rawPublicIdFilters.labelPublicIds),
+      };
 
       const board = await timeTrackingRepo.getBoardSettings(db, boardPublicId);
       if (!board) return res.status(404).json({ error: "Board not found" });
@@ -106,8 +122,8 @@ export default withRateLimit(
         return res.status(403).json({ error: "Permission denied" });
       }
 
-      const filters = { fromDate, toDate, ...optionalPublicIds };
-      const filename = `kan-time-${boardPublicId}-${fromDate}-${toDate}-${profile}.csv`;
+      const filters = { dateFrom, dateTo, ...publicIdFilters };
+      const filename = `kan-time-${boardPublicId}-${dateFrom}-${dateTo}-${profile}.csv`;
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/csv; charset=utf-8");
       res.setHeader(

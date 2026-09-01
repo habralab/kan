@@ -266,9 +266,9 @@ describe("time tracking repository", () => {
     }
 
     const filters = {
-      fromDate: "2026-09-01",
-      toDate: "2026-09-30",
-      labelPublicId: label.publicId,
+      dateFrom: "2026-09-01",
+      dateTo: "2026-09-30",
+      labelPublicIds: [label.publicId, "missing00001"],
     };
     const firstPage = await timeTrackingRepo.listBoardWorklogs(db, {
       boardId,
@@ -282,10 +282,14 @@ describe("time tracking repository", () => {
       limit: 1,
       cursor: firstPage.nextCursor,
     });
-    const [summary, options] = await Promise.all([
-      timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
-      timeTrackingRepo.getBoardReportOptions(db, boardId),
-    ]);
+    const [summary, options, memberGroups, cardGroups, listGroups] =
+      await Promise.all([
+        timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
+        timeTrackingRepo.getBoardReportOptions(db, boardId),
+        timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "member"),
+        timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "card"),
+        timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "list"),
+      ]);
 
     expect(firstPage.items[0]).toMatchObject({
       workDate: "2026-09-02",
@@ -317,6 +321,27 @@ describe("time tracking repository", () => {
       lists: [{ publicId: "listtime0001" }],
       labels: [{ publicId: label.publicId }],
     });
+    expect(memberGroups).toMatchObject([
+      { publicId: memberPublicId, durationSeconds: 180, entryCount: 2 },
+    ]);
+    expect(cardGroups).toEqual([
+      {
+        publicId: cardPublicId,
+        label: "Implement time tracking",
+        member: null,
+        durationSeconds: 180,
+        entryCount: 2,
+      },
+    ]);
+    expect(listGroups).toEqual([
+      {
+        publicId: "listtime0001",
+        label: "Doing",
+        member: null,
+        durationSeconds: 180,
+        entryCount: 2,
+      },
+    ]);
   });
 
   it("queries a production-sized board report without loading every row", async () => {
@@ -341,7 +366,7 @@ describe("time tracking repository", () => {
       );
     }
 
-    const filters = { fromDate: "2026-09-01", toDate: "2026-09-30" };
+    const filters = { dateFrom: "2026-09-01", dateTo: "2026-09-30" };
     const startedAt = performance.now();
     const [summary, firstPage] = await Promise.all([
       timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),

@@ -65,6 +65,14 @@ export const timeTrackingReportSummarySchema = z.object({
   entryCount: z.number().int().nonnegative(),
   memberCount: z.number().int().nonnegative(),
   cardCount: z.number().int().nonnegative(),
+  groups: z.array(
+    z.object({
+      publicId: z.string(),
+      label: z.string(),
+      durationSeconds: z.number().int().positive(),
+      entryCount: z.number().int().positive(),
+    }),
+  ),
 });
 
 export const timeTrackingReportOptionsSchema = z.object({

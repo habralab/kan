@@ -125,6 +125,13 @@ export const timeTrackingCardSummarySchema = z.object({
   canManage: z.boolean(),
 });
 
+export const timeTrackingCardTotalsSchema = z.array(
+  z.object({
+    cardPublicId: z.string(),
+    totalSeconds: z.number().int().positive(),
+  }),
+);
+
 export const timeTrackingMemberOptionsSchema = z.object({
   members: z.array(timeTrackingMemberSchema),
   canManage: z.boolean(),

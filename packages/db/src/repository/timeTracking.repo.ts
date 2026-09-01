@@ -825,6 +825,27 @@ export const getBoardWorklogSummary = async (
   };
 };
 
+export const getBoardCardTotals = async (db: dbClient, boardId: number) => {
+  const totalSeconds =
+    sql<number>`SUM(${timeTrackingWorklogs.durationSeconds})`.mapWith(Number);
+
+  return db
+    .select({
+      cardPublicId: cards.publicId,
+      totalSeconds,
+    })
+    .from(timeTrackingWorklogs)
+    .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
+    .where(
+      and(
+        eq(timeTrackingWorklogs.boardId, boardId),
+        isNull(timeTrackingWorklogs.deletedAt),
+        isNull(cards.deletedAt),
+      ),
+    )
+    .groupBy(cards.id);
+};
+
 export const getBoardWorklogGroups = async (
   db: dbClient,
   boardId: number,

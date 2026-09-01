@@ -13,7 +13,11 @@ import {
   timeTrackingWorklogSchema,
 } from "../schemas";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { assertPermission, hasPermission } from "../utils/permissions";
+import {
+  assertCanEdit,
+  assertPermission,
+  hasPermission,
+} from "../utils/permissions";
 
 const MAX_DURATION_SECONDS = 2_147_483_647;
 const publicIdSchema = z.string().min(12);
@@ -159,6 +163,21 @@ const requireUserId = (userId: string | undefined) => {
   return userId;
 };
 
+const requireActiveWorkspaceMember = async (
+  db: Parameters<typeof hasPermission>[0],
+  workspaceId: number,
+  userId: string,
+) => {
+  const member = await timeTrackingRepo.getActiveWorkspaceMemberForUser(
+    db,
+    workspaceId,
+    userId,
+  );
+  if (!member)
+    throw new TRPCError({ code: "FORBIDDEN", message: "MEMBER_NOT_FOUND" });
+  return member;
+};
+
 const canAccessTimerMetadata = async (
   db: Parameters<typeof hasPermission>[0],
   userId: string,
@@ -242,6 +261,7 @@ export const timeTrackingRouter = createTRPCRouter({
       );
       if (!settings)
         throw new TRPCError({ code: "NOT_FOUND", message: "BOARD_NOT_FOUND" });
+      await requireActiveWorkspaceMember(ctx.db, settings.workspaceId, userId);
       await assertPermission(
         ctx.db,
         userId,
@@ -252,9 +272,12 @@ export const timeTrackingRouter = createTRPCRouter({
         ctx.db,
         userId,
         settings.workspaceId,
-        "worklog:manage",
+        "board:edit",
       );
-      return { ...settings, canUpdate };
+      return {
+        ...settings,
+        canUpdate: canUpdate || settings.createdBy === userId,
+      };
     }),
 
   updateSettings: protectedProcedure
@@ -277,12 +300,14 @@ export const timeTrackingRouter = createTRPCRouter({
       );
       if (!current)
         throw new TRPCError({ code: "NOT_FOUND", message: "BOARD_NOT_FOUND" });
+      await requireActiveWorkspaceMember(ctx.db, current.workspaceId, userId);
       await assertPermission(ctx.db, userId, current.workspaceId, "board:view");
-      await assertPermission(
+      await assertCanEdit(
         ctx.db,
         userId,
         current.workspaceId,
-        "worklog:manage",
+        "board:edit",
+        current.createdBy,
       );
       try {
         await timeTrackingRepo.updateBoardSettings(ctx.db, {
@@ -332,6 +357,7 @@ export const timeTrackingRouter = createTRPCRouter({
       );
       if (!card)
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
+      await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
       await assertPermission(ctx.db, userId, card.workspaceId, "worklog:view");
       const [result, capabilities] = await Promise.all([
@@ -379,13 +405,11 @@ export const timeTrackingRouter = createTRPCRouter({
       if (!card)
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
-      const member = await timeTrackingRepo.getActiveWorkspaceMemberForUser(
+      const member = await requireActiveWorkspaceMember(
         ctx.db,
         card.workspaceId,
         userId,
       );
-      if (!member)
-        throw new TRPCError({ code: "FORBIDDEN", message: "MEMBER_NOT_FOUND" });
       const targetMemberPublicId =
         input.workspaceMemberPublicId ?? member.publicId;
       if (targetMemberPublicId === member.publicId)
@@ -463,6 +487,7 @@ export const timeTrackingRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "WORKLOG_NOT_FOUND",
         });
+      await requireActiveWorkspaceMember(ctx.db, context.workspaceId, userId);
       await assertPermission(ctx.db, userId, context.workspaceId, "board:view");
       const capabilities = await getCapabilities(
         ctx.db,
@@ -521,6 +546,7 @@ export const timeTrackingRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "WORKLOG_NOT_FOUND",
         });
+      await requireActiveWorkspaceMember(ctx.db, context.workspaceId, userId);
       await assertPermission(ctx.db, userId, context.workspaceId, "board:view");
       const capabilities = await getCapabilities(
         ctx.db,
@@ -549,7 +575,7 @@ export const timeTrackingRouter = createTRPCRouter({
         protect: true,
       },
     })
-    .input(z.object({}))
+    .input(z.void())
     .output(timeTrackingActiveTimerSchema.nullable())
     .query(({ ctx }) => {
       const userId = requireUserId(ctx.user?.id);
@@ -588,6 +614,7 @@ export const timeTrackingRouter = createTRPCRouter({
       );
       if (!card)
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
+      await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
       await assertPermission(
         ctx.db,
@@ -613,6 +640,11 @@ export const timeTrackingRouter = createTRPCRouter({
         );
         if (
           worklogContext &&
+          (await timeTrackingRepo.getActiveWorkspaceMemberForUser(
+            ctx.db,
+            worklogContext.workspaceId,
+            userId,
+          )) &&
           (await hasPermission(
             ctx.db,
             userId,
@@ -680,7 +712,7 @@ export const timeTrackingRouter = createTRPCRouter({
         protect: true,
       },
     })
-    .input(z.object({}))
+    .input(z.void())
     .output(z.object({ discarded: z.boolean() }))
     .mutation(({ ctx }) => {
       const userId = requireUserId(ctx.user?.id);

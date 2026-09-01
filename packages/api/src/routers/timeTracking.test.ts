@@ -2,7 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 
-import { assertPermission, hasPermission } from "../utils/permissions";
+import {
+  assertCanEdit,
+  assertPermission,
+  hasPermission,
+} from "../utils/permissions";
 import { timeTrackingRouter } from "./timeTracking";
 
 vi.mock("@kan/db/repository/timeTracking.repo", () => ({
@@ -28,11 +32,13 @@ vi.mock("@kan/db/repository/timeTracking.repo", () => ({
 }));
 
 vi.mock("../utils/permissions", () => ({
+  assertCanEdit: vi.fn(),
   assertPermission: vi.fn(),
   hasPermission: vi.fn(),
 }));
 
 const mockRepo = vi.mocked(timeTrackingRepo);
+const mockAssertCanEdit = vi.mocked(assertCanEdit);
 const mockAssertPermission = vi.mocked(assertPermission);
 const mockHasPermission = vi.mocked(hasPermission);
 
@@ -85,6 +91,7 @@ describe("time tracking router", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockAssertCanEdit.mockResolvedValue(undefined);
     mockAssertPermission.mockResolvedValue(undefined);
     mockHasPermission.mockResolvedValue(false);
     mockRepo.getCardTimeTrackingContext.mockResolvedValue(cardContext);
@@ -99,8 +106,85 @@ describe("time tracking router", () => {
     await expect(
       timeTrackingRouter
         .createCaller({ db, user: null } as never)
-        .getActiveTimer({}),
+        .getActiveTimer(),
     ).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("uses the board edit rule for settings", async () => {
+    const settings = {
+      boardId: 10,
+      boardPublicId: "board1234567",
+      workspaceId: 42,
+      isArchived: false,
+      type: "regular" as const,
+      createdBy: user.id,
+      enabled: false,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    };
+    mockRepo.getBoardSettings.mockResolvedValue(settings);
+
+    const result = await timeTrackingRouter.createCaller(ctx).getSettings({
+      boardPublicId: settings.boardPublicId,
+    });
+
+    expect(mockHasPermission).toHaveBeenCalledWith(
+      db,
+      user.id,
+      settings.workspaceId,
+      "board:edit",
+    );
+    expect(result.canUpdate).toBe(true);
+    expect(result).not.toHaveProperty("createdBy");
+    expect(result).not.toHaveProperty("workspaceId");
+  });
+
+  it("checks board edit or creator access when updating settings", async () => {
+    const settings = {
+      boardId: 10,
+      boardPublicId: "board1234567",
+      workspaceId: 42,
+      isArchived: false,
+      type: "regular" as const,
+      createdBy: user.id,
+      enabled: false,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    };
+    mockRepo.getBoardSettings
+      .mockResolvedValueOnce(settings)
+      .mockResolvedValueOnce({ ...settings, enabled: true });
+    mockRepo.updateBoardSettings.mockResolvedValue({ enabled: true } as never);
+
+    await timeTrackingRouter.createCaller(ctx).updateSettings({
+      boardPublicId: settings.boardPublicId,
+      enabled: true,
+    });
+
+    expect(mockAssertCanEdit).toHaveBeenCalledWith(
+      db,
+      user.id,
+      settings.workspaceId,
+      "board:edit",
+      user.id,
+    );
+  });
+
+  it("rejects normal reads after workspace membership becomes inactive", async () => {
+    mockRepo.getActiveWorkspaceMemberForUser.mockResolvedValue(null);
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).listWorklogs({
+        cardPublicId: cardContext.cardPublicId,
+        limit: 25,
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mockAssertPermission).not.toHaveBeenCalled();
+    expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
   });
 
   it("creates an entry for the current member with worklog:create", async () => {
@@ -200,9 +284,7 @@ describe("time tracking router", () => {
       workspaceName: "Private workspace",
     });
 
-    const result = await timeTrackingRouter
-      .createCaller(ctx)
-      .getActiveTimer({});
+    const result = await timeTrackingRouter.createCaller(ctx).getActiveTimer();
 
     expect(result).toEqual({
       publicId: "timer1234567",
@@ -217,7 +299,7 @@ describe("time tracking router", () => {
     mockRepo.discardTimer.mockResolvedValue({ discarded: true });
 
     await expect(
-      timeTrackingRouter.createCaller(ctx).discardTimer({}),
+      timeTrackingRouter.createCaller(ctx).discardTimer(),
     ).resolves.toEqual({ discarded: true });
     expect(mockAssertPermission).not.toHaveBeenCalled();
     expect(mockHasPermission).not.toHaveBeenCalled();

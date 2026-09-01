@@ -63,13 +63,15 @@ export interface WorklogCursor {
 }
 
 export interface TimeTrackingReportFilters {
-  fromDate: string;
-  toDate: string;
-  workspaceMemberPublicId?: string;
-  cardPublicId?: string;
-  listPublicId?: string;
-  labelPublicId?: string;
+  dateFrom: string;
+  dateTo: string;
+  memberPublicIds?: string[];
+  cardPublicIds?: string[];
+  listPublicIds?: string[];
+  labelPublicIds?: string[];
 }
+
+export type TimeTrackingReportGroupBy = "member" | "card" | "list";
 
 const getReportConditions = (
   db: dbClient,
@@ -79,46 +81,44 @@ const getReportConditions = (
 ) => [
   eq(timeTrackingWorklogs.boardId, boardId),
   isNull(timeTrackingWorklogs.deletedAt),
-  gte(timeTrackingWorklogs.workDate, filters.fromDate),
-  lte(timeTrackingWorklogs.workDate, filters.toDate),
-  filters.workspaceMemberPublicId
+  gte(timeTrackingWorklogs.workDate, filters.dateFrom),
+  lte(timeTrackingWorklogs.workDate, filters.dateTo),
+  filters.memberPublicIds?.length
     ? inArray(
         timeTrackingWorklogs.workspaceMemberId,
         db
           .select({ id: workspaceMembers.id })
           .from(workspaceMembers)
-          .where(
-            eq(workspaceMembers.publicId, filters.workspaceMemberPublicId),
-          ),
+          .where(inArray(workspaceMembers.publicId, filters.memberPublicIds)),
       )
     : undefined,
-  filters.cardPublicId
+  filters.cardPublicIds?.length
     ? inArray(
         timeTrackingWorklogs.cardId,
         db
           .select({ id: cards.id })
           .from(cards)
-          .where(eq(cards.publicId, filters.cardPublicId)),
+          .where(inArray(cards.publicId, filters.cardPublicIds)),
       )
     : undefined,
-  filters.listPublicId
+  filters.listPublicIds?.length
     ? inArray(
         timeTrackingWorklogs.cardId,
         db
           .select({ id: cards.id })
           .from(cards)
           .innerJoin(lists, eq(cards.listId, lists.id))
-          .where(eq(lists.publicId, filters.listPublicId)),
+          .where(inArray(lists.publicId, filters.listPublicIds)),
       )
     : undefined,
-  filters.labelPublicId
+  filters.labelPublicIds?.length
     ? inArray(
         timeTrackingWorklogs.cardId,
         db
           .select({ id: cardsToLabels.cardId })
           .from(cardsToLabels)
           .innerJoin(labels, eq(cardsToLabels.labelId, labels.id))
-          .where(eq(labels.publicId, filters.labelPublicId)),
+          .where(inArray(labels.publicId, filters.labelPublicIds)),
       )
     : undefined,
   cursor
@@ -823,6 +823,83 @@ export const getBoardWorklogSummary = async (
     memberCount: summary?.memberCount ?? 0,
     cardCount: summary?.cardCount ?? 0,
   };
+};
+
+export const getBoardWorklogGroups = async (
+  db: dbClient,
+  boardId: number,
+  filters: TimeTrackingReportFilters,
+  groupBy: TimeTrackingReportGroupBy,
+) => {
+  const durationSeconds =
+    sql<number>`SUM(${timeTrackingWorklogs.durationSeconds})`.mapWith(Number);
+  const entryCount = count();
+  const conditions = and(...getReportConditions(db, boardId, filters));
+
+  if (groupBy === "member") {
+    const rows = await db
+      .select({
+        publicId: workspaceMembers.publicId,
+        durationSeconds,
+        entryCount,
+        email: workspaceMembers.email,
+        status: workspaceMembers.status,
+        displayName: users.name,
+        userEmail: users.email,
+        showEmailsToMembers: workspaces.showEmailsToMembers,
+      })
+      .from(timeTrackingWorklogs)
+      .innerJoin(
+        workspaceMembers,
+        eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
+      )
+      .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
+      .leftJoin(users, eq(workspaceMembers.userId, users.id))
+      .where(conditions)
+      .groupBy(workspaceMembers.id, users.id, workspaces.showEmailsToMembers)
+      .orderBy(desc(durationSeconds), workspaceMembers.email);
+
+    return rows.map((row) => ({
+      publicId: row.publicId,
+      label: null,
+      member: row,
+      durationSeconds: row.durationSeconds,
+      entryCount: row.entryCount,
+    }));
+  }
+
+  if (groupBy === "card") {
+    const rows = await db
+      .select({
+        publicId: cards.publicId,
+        label: cards.title,
+        durationSeconds,
+        entryCount,
+      })
+      .from(timeTrackingWorklogs)
+      .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
+      .where(conditions)
+      .groupBy(cards.id)
+      .orderBy(desc(durationSeconds), cards.title);
+
+    return rows.map((row) => ({ ...row, member: null }));
+  }
+
+  const rows = await db
+    .select({
+      publicId: lists.publicId,
+      label: lists.name,
+      durationSeconds,
+      entryCount,
+    })
+    .from(timeTrackingWorklogs)
+    .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
+    .innerJoin(lists, eq(cards.listId, lists.id))
+    .where(conditions)
+    .groupBy(lists.id)
+    .orderBy(desc(durationSeconds), lists.name);
+
+  return rows.map((row) => ({ ...row, member: null }));
 };
 
 export const getBoardReportOptions = async (db: dbClient, boardId: number) => {

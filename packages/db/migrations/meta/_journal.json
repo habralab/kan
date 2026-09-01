@@ -253,6 +253,13 @@
       "when": 1788273191457,
       "tag": "20260901143311_AddTimeTracking",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1788275243454,
+      "tag": "20260901150723_AddTimeTrackingPermissions",
+      "breakpoints": true
     }
   ]
 }

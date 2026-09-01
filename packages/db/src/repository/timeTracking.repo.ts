@@ -46,6 +46,135 @@ interface WorklogCursor {
   id: number;
 }
 
+export const getCardTimeTrackingContext = async (
+  db: dbClient,
+  cardPublicId: string,
+) => {
+  const [card] = await db
+    .select({
+      cardPublicId: cards.publicId,
+      boardPublicId: boards.publicId,
+      workspaceId: boards.workspaceId,
+      isArchived: boards.isArchived,
+      settingsEnabled: timeTrackingBoardSettings.enabled,
+      showEmailsToMembers: workspaces.showEmailsToMembers,
+    })
+    .from(cards)
+    .innerJoin(lists, eq(cards.listId, lists.id))
+    .innerJoin(boards, eq(lists.boardId, boards.id))
+    .innerJoin(workspaces, eq(boards.workspaceId, workspaces.id))
+    .leftJoin(
+      timeTrackingBoardSettings,
+      eq(boards.id, timeTrackingBoardSettings.boardId),
+    )
+    .where(
+      and(
+        eq(cards.publicId, cardPublicId),
+        isNull(cards.deletedAt),
+        isNull(lists.deletedAt),
+        isNull(boards.deletedAt),
+        isNull(workspaces.deletedAt),
+      ),
+    )
+    .limit(1);
+
+  return card ?? null;
+};
+
+export const getActiveWorkspaceMemberForUser = async (
+  db: dbClient,
+  workspaceId: number,
+  userId: string,
+) => {
+  const [member] = await db
+    .select({
+      id: workspaceMembers.id,
+      publicId: workspaceMembers.publicId,
+    })
+    .from(workspaceMembers)
+    .where(
+      and(
+        eq(workspaceMembers.workspaceId, workspaceId),
+        eq(workspaceMembers.userId, userId),
+        eq(workspaceMembers.status, "active"),
+        isNull(workspaceMembers.deletedAt),
+      ),
+    )
+    .limit(1);
+
+  return member ?? null;
+};
+
+export const getWorklogContext = async (
+  db: dbClient,
+  worklogPublicId: string,
+) => {
+  const [worklog] = await db
+    .select({
+      workspaceId: boards.workspaceId,
+      memberUserId: workspaceMembers.userId,
+      memberStatus: workspaceMembers.status,
+      memberDeletedAt: workspaceMembers.deletedAt,
+      deletedAt: timeTrackingWorklogs.deletedAt,
+    })
+    .from(timeTrackingWorklogs)
+    .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
+    .innerJoin(
+      workspaceMembers,
+      eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
+    )
+    .where(
+      and(
+        eq(timeTrackingWorklogs.publicId, worklogPublicId),
+        isNull(boards.deletedAt),
+      ),
+    )
+    .limit(1);
+
+  return worklog ?? null;
+};
+
+export const getWorklogByPublicId = (db: dbClient, publicId: string) =>
+  db.query.timeTrackingWorklogs.findFirst({
+    columns: {
+      publicId: true,
+      workDate: true,
+      durationSeconds: true,
+      comment: true,
+      entryMethod: true,
+      timerStartedAt: true,
+      timerStoppedAt: true,
+      timerTimezone: true,
+      rawElapsedSeconds: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
+    with: {
+      workspaceMember: {
+        columns: {
+          publicId: true,
+          email: true,
+          status: true,
+          userId: true,
+        },
+        with: {
+          user: { columns: { name: true, email: true } },
+          workspace: { columns: { showEmailsToMembers: true } },
+        },
+      },
+      card: {
+        columns: { publicId: true, title: true, cardNumber: true },
+        with: {
+          list: { columns: { publicId: true, name: true } },
+        },
+      },
+      createdByUser: { columns: { name: true } },
+      updatedByUser: { columns: { name: true } },
+    },
+    where: eq(timeTrackingWorklogs.publicId, publicId),
+  });
+
 const getBoardByPublicId = (db: dbClient, boardPublicId: string) =>
   db
     .select({
@@ -374,6 +503,7 @@ export const listWorklogsByCard = async (
           publicId: true,
           email: true,
           status: true,
+          userId: true,
         },
         with: {
           user: {
@@ -382,8 +512,17 @@ export const listWorklogsByCard = async (
               email: true,
             },
           },
+          workspace: { columns: { showEmailsToMembers: true } },
         },
       },
+      card: {
+        columns: { publicId: true, title: true, cardNumber: true },
+        with: {
+          list: { columns: { publicId: true, name: true } },
+        },
+      },
+      createdByUser: { columns: { name: true } },
+      updatedByUser: { columns: { name: true } },
     },
     where: and(
       eq(timeTrackingWorklogs.cardId, card.id),
@@ -427,16 +566,22 @@ export const getActiveTimer = async (db: dbClient, userId: string) => {
       memberUserId: workspaceMembers.userId,
       memberStatus: workspaceMembers.status,
       memberDeletedAt: workspaceMembers.deletedAt,
+      workspaceId: boards.workspaceId,
+      workspaceDeletedAt: workspaces.deletedAt,
       cardPublicId: cards.publicId,
       cardTitle: cards.title,
       cardNumber: cards.cardNumber,
+      cardDeletedAt: cards.deletedAt,
+      listDeletedAt: lists.deletedAt,
       boardPublicId: boards.publicId,
       boardName: boards.name,
+      boardDeletedAt: boards.deletedAt,
       workspacePublicId: workspaces.publicId,
       workspaceName: workspaces.name,
     })
     .from(timeTrackingActiveTimers)
     .innerJoin(cards, eq(timeTrackingActiveTimers.cardId, cards.id))
+    .innerJoin(lists, eq(cards.listId, lists.id))
     .innerJoin(boards, eq(timeTrackingActiveTimers.boardId, boards.id))
     .innerJoin(workspaces, eq(boards.workspaceId, workspaces.id))
     .innerJoin(

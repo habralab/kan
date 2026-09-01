@@ -89,6 +89,7 @@ export function TimeTrackingCardSection({
     const channel = new BroadcastChannel(TIME_TRACKING_CHANNEL_NAME);
     channel.onmessage = () => {
       void utils.timeTracking.getActiveTimer.invalidate();
+      void utils.timeTracking.getBoardCardTotals.invalidate();
       void utils.timeTracking.getCardSummary.invalidate();
       void utils.timeTracking.listWorklogs.invalidate();
       void utils.timeTracking.getReportSummary.invalidate();
@@ -108,6 +109,7 @@ export function TimeTrackingCardSection({
   const refresh = async () => {
     await Promise.all([
       utils.timeTracking.getActiveTimer.invalidate(),
+      utils.timeTracking.getBoardCardTotals.invalidate(),
       utils.timeTracking.getCardSummary.invalidate(),
       utils.timeTracking.listWorklogs.invalidate(),
       utils.timeTracking.getReportSummary.invalidate(),

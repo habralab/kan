@@ -282,10 +282,11 @@ describe("time tracking repository", () => {
       limit: 1,
       cursor: firstPage.nextCursor,
     });
-    const [summary, options, memberGroups, cardGroups, listGroups] =
+    const [summary, options, cardTotals, memberGroups, cardGroups, listGroups] =
       await Promise.all([
         timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
         timeTrackingRepo.getBoardReportOptions(db, boardId),
+        timeTrackingRepo.getBoardCardTotals(db, boardId),
         timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "member"),
         timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "card"),
         timeTrackingRepo.getBoardWorklogGroups(db, boardId, filters, "list"),
@@ -321,6 +322,7 @@ describe("time tracking repository", () => {
       lists: [{ publicId: "listtime0001" }],
       labels: [{ publicId: label.publicId }],
     });
+    expect(cardTotals).toEqual([{ cardPublicId, totalSeconds: 480 }]);
     expect(memberGroups).toMatchObject([
       { publicId: memberPublicId, durationSeconds: 180, entryCount: 2 },
     ]);
@@ -368,13 +370,14 @@ describe("time tracking repository", () => {
 
     const filters = { dateFrom: "2026-09-01", dateTo: "2026-09-30" };
     const startedAt = performance.now();
-    const [summary, firstPage] = await Promise.all([
+    const [summary, firstPage, cardTotals] = await Promise.all([
       timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
       timeTrackingRepo.listBoardWorklogs(db, {
         boardId,
         filters,
         limit: 50,
       }),
+      timeTrackingRepo.getBoardCardTotals(db, boardId),
     ]);
     const elapsedMs = performance.now() - startedAt;
 
@@ -386,6 +389,9 @@ describe("time tracking repository", () => {
     });
     expect(firstPage.items).toHaveLength(50);
     expect(firstPage.nextCursor).not.toBeNull();
+    expect(cardTotals).toEqual([
+      { cardPublicId, totalSeconds: worklogCount * 60 },
+    ]);
     expect(elapsedMs).toBeLessThan(2_000);
   });
 

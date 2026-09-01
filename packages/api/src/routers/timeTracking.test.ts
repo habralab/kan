@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
@@ -19,6 +20,7 @@ vi.mock("@kan/db/repository/timeTracking.repo", () => ({
   updateBoardSettings: vi.fn(),
   getCardTimeTrackingContext: vi.fn(),
   getCardWorklogSummary: vi.fn(),
+  getBoardCardTotals: vi.fn(),
   getTimeTrackingMemberOptions: vi.fn(),
   getBoardReportOptions: vi.fn(),
   getBoardWorklogSummary: vi.fn(),
@@ -248,6 +250,70 @@ describe("time tracking router", () => {
     expect(result.canCreate).toBe(true);
     expect(result.canStartTimer).toBe(false);
     expect(result.canManage).toBe(true);
+  });
+
+  it("returns board card totals in one authorized query", async () => {
+    mockRepo.getBoardSettings.mockResolvedValue({
+      boardId: 10,
+      boardPublicId: cardContext.boardPublicId,
+      boardName: "Test board",
+      workspaceId: cardContext.workspaceId,
+      isArchived: false,
+      type: "regular",
+      createdBy: user.id,
+      enabled: true,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    });
+    mockRepo.getBoardCardTotals.mockResolvedValue([
+      { cardPublicId: cardContext.cardPublicId, totalSeconds: 3600 },
+    ]);
+
+    const result = await timeTrackingRouter
+      .createCaller(ctx)
+      .getBoardCardTotals({
+        boardPublicId: cardContext.boardPublicId,
+      });
+
+    expect(mockAssertPermission).toHaveBeenCalledWith(
+      db,
+      user.id,
+      cardContext.workspaceId,
+      "worklog:view",
+    );
+    expect(mockRepo.getBoardCardTotals).toHaveBeenCalledWith(db, 10);
+    expect(result).toEqual([
+      { cardPublicId: cardContext.cardPublicId, totalSeconds: 3600 },
+    ]);
+  });
+
+  it("does not return board card totals without worklog view access", async () => {
+    mockRepo.getBoardSettings.mockResolvedValue({
+      boardId: 10,
+      boardPublicId: cardContext.boardPublicId,
+      boardName: "Test board",
+      workspaceId: cardContext.workspaceId,
+      isArchived: false,
+      type: "regular",
+      createdBy: user.id,
+      enabled: true,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    });
+    mockAssertPermission
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new TRPCError({ code: "FORBIDDEN" }));
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).getBoardCardTotals({
+        boardPublicId: cardContext.boardPublicId,
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mockRepo.getBoardCardTotals).not.toHaveBeenCalled();
   });
 
   it("only returns the current member without worklog:manage", async () => {

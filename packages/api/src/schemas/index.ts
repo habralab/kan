@@ -41,6 +41,7 @@ export { attachmentConfirmResponseSchema } from "./attachment";
 export {
   timeTrackingActiveTimerSchema,
   timeTrackingCardSummarySchema,
+  timeTrackingCardTotalsSchema,
   timeTrackingMemberOptionsSchema,
   timeTrackingMemberSchema,
   timeTrackingReportOptionsSchema,

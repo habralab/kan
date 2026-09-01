@@ -26,6 +26,10 @@ vi.mock("@kan/db/repository/workspace.repo", () => ({
   getByPublicId: vi.fn(),
 }));
 
+vi.mock("@kan/db/repository/timeTracking.repo", () => ({
+  getBoardTimeTrackingMoveBlockers: vi.fn(),
+}));
+
 vi.mock("@kan/db/repository/card.repo", () => ({
   getByPublicId: vi.fn(),
   create: vi.fn(),
@@ -65,6 +69,7 @@ vi.mock("@kan/shared/constants", () => ({
 }));
 
 import * as boardRepo from "@kan/db/repository/board.repo";
+import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { assertCanEdit, assertPermission } from "../utils/permissions";
 
@@ -72,6 +77,8 @@ const mockGetBoardForMove = boardRepo.getBoardForMove as ReturnType<typeof vi.fn
 const mockIsBoardSlugAvailable = boardRepo.isBoardSlugAvailable as ReturnType<typeof vi.fn>;
 const mockMoveToWorkspace = boardRepo.moveToWorkspace as ReturnType<typeof vi.fn>;
 const mockWorkspaceGetByPublicId = workspaceRepo.getByPublicId as ReturnType<typeof vi.fn>;
+const mockGetTimeTrackingMoveBlockers =
+  timeTrackingRepo.getBoardTimeTrackingMoveBlockers as ReturnType<typeof vi.fn>;
 const mockAssertCanEdit = assertCanEdit as ReturnType<typeof vi.fn>;
 const mockAssertPermission = assertPermission as ReturnType<typeof vi.fn>;
 
@@ -97,6 +104,10 @@ describe("board.move", () => {
     vi.clearAllMocks();
     mockAssertCanEdit.mockResolvedValue(undefined);
     mockAssertPermission.mockResolvedValue(undefined);
+    mockGetTimeTrackingMoveBlockers.mockResolvedValue({
+      hasWorklogs: false,
+      hasActiveTimers: false,
+    });
   });
 
   it("throws UNAUTHORIZED when user is not authenticated", async () => {
@@ -173,6 +184,29 @@ describe("board.move", () => {
     await expect(
       boardRouter.createCaller(ctx).move(mockInput),
     ).rejects.toThrow(TRPCError);
+  });
+
+  it.each([
+    {
+      blockers: { hasWorklogs: true, hasActiveTimers: false },
+      label: "worklogs",
+    },
+    {
+      blockers: { hasWorklogs: false, hasActiveTimers: true },
+      label: "active timers",
+    },
+  ])("blocks a cross-workspace move with $label", async ({ blockers }) => {
+    const { boardRouter } = await import("./board");
+    mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
+    mockGetTimeTrackingMoveBlockers.mockResolvedValueOnce(blockers);
+
+    const ctx = { user: mockUser, db: mockDb } as never;
+
+    await expect(
+      boardRouter.createCaller(ctx).move(mockInput),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(mockWorkspaceGetByPublicId).not.toHaveBeenCalled();
+    expect(mockMoveToWorkspace).not.toHaveBeenCalled();
   });
 
   it("throws NOT_FOUND when target workspace is soft-deleted", async () => {

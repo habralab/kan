@@ -6,6 +6,7 @@ import * as cardRepo from "@kan/db/repository/card.repo";
 import * as activityRepo from "@kan/db/repository/cardActivity.repo";
 import * as labelRepo from "@kan/db/repository/label.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
+import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { colours } from "@kan/shared/constants";
 import {
@@ -706,6 +707,20 @@ export const boardRouter = createTRPCRouter({
         "board:edit",
         board.createdBy ?? null,
       );
+
+      const timeTrackingBlockers =
+        await timeTrackingRepo.getBoardTimeTrackingMoveBlockers(
+          ctx.db,
+          board.id,
+        );
+      if (
+        timeTrackingBlockers.hasWorklogs ||
+        timeTrackingBlockers.hasActiveTimers
+      )
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: `Boards with time entries or active timers cannot be moved between workspaces`,
+        });
 
       // Get target workspace. workspaceRepo.getByPublicId does not yet
       // filter soft-deleted workspaces (legacy: same is true for several

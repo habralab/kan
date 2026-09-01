@@ -77,7 +77,7 @@ export function TimeTrackingSettingsForm({
         </div>
       ) : settings.isError ? (
         <div className="space-y-4">
-          <p className="text-sm text-red-700 dark:text-red-500">
+          <p role="alert" className="text-sm text-red-700 dark:text-red-500">
             {t`Unable to load time tracking settings.`}
           </p>
           <Button variant="secondary" onClick={() => void settings.refetch()}>
@@ -132,8 +132,12 @@ export function TimeTrackingSettingsForm({
             </Button>
             <Button
               onClick={() => updateSettings.mutate({ boardPublicId, enabled })}
-              isLoading={updateSettings.isPending}
-              disabled={!settings.data.canUpdate || !hasChanges}
+              isLoading={updateSettings.isPending ? true : undefined}
+              disabled={
+                updateSettings.isPending ||
+                !settings.data.canUpdate ||
+                !hasChanges
+              }
             >
               {t`Save`}
             </Button>

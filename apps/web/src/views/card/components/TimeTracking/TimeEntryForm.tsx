@@ -1,5 +1,5 @@
 import { t } from "@lingui/core/macro";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 import type { RouterOutputs } from "~/utils/api";
 import Button from "~/components/Button";
@@ -35,6 +35,15 @@ const durationValue = (seconds: number) => {
   return `${hours}h ${minutes}m`;
 };
 
+const memberStatusLabel = (
+  status: MemberOptions["members"][number]["status"],
+) => {
+  if (status === "paused") return t`Paused`;
+  if (status === "removed") return t`Removed`;
+  if (status === "invited") return t`Invited`;
+  return t`Active`;
+};
+
 export function TimeEntryForm({
   entry,
   memberOptions,
@@ -51,6 +60,8 @@ export function TimeEntryForm({
   const [workDate, setWorkDate] = useState(entry?.workDate ?? today());
   const [comment, setComment] = useState(entry?.comment ?? "");
   const [durationError, setDurationError] = useState(false);
+  const fieldId = useId();
+  const durationErrorId = `${fieldId}-duration-error`;
 
   useEffect(() => {
     if (!memberPublicId && memberOptions.members.length === 1) {
@@ -83,7 +94,7 @@ export function TimeEntryForm({
     "mt-1 block w-full rounded-md border border-light-600 bg-light-50 px-3 py-2 text-sm text-light-1000 focus:border-light-1000 focus:outline-none dark:border-dark-600 dark:bg-dark-200 dark:text-dark-1000";
 
   return (
-    <form onSubmit={submit} className="space-y-4 p-5">
+    <form onSubmit={submit} className="space-y-4 p-5" aria-busy={isSaving}>
       <h3 className="text-sm font-medium text-light-1000 dark:text-dark-1000">
         {entry ? t`Edit time entry` : t`Add time`}
       </h3>
@@ -92,6 +103,7 @@ export function TimeEntryForm({
         <label className="block text-xs text-light-900 dark:text-dark-900">
           {t`Member`}
           <select
+            id={`${fieldId}-member`}
             value={memberPublicId}
             onChange={(event) => setMemberPublicId(event.target.value)}
             className={inputClassName}
@@ -101,17 +113,20 @@ export function TimeEntryForm({
             {memberOptions.members.map((member) => (
               <option key={member.publicId} value={member.publicId}>
                 {member.displayName}
-                {member.status !== "active" ? ` (${member.status})` : ""}
+                {member.status !== "active"
+                  ? ` (${memberStatusLabel(member.status)})`
+                  : ""}
               </option>
             ))}
           </select>
         </label>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="block text-xs text-light-900 dark:text-dark-900">
           {t`Time`}
           <input
+            id={`${fieldId}-duration`}
             value={duration}
             onChange={(event) => {
               setDuration(event.target.value);
@@ -120,9 +135,15 @@ export function TimeEntryForm({
             className={inputClassName}
             placeholder={t`1h 30m`}
             required
+            aria-invalid={durationError}
+            aria-describedby={durationError ? durationErrorId : undefined}
           />
           {durationError && (
-            <span className="mt-1 block text-red-700 dark:text-red-500">
+            <span
+              id={durationErrorId}
+              role="alert"
+              className="mt-1 block text-red-700 dark:text-red-500"
+            >
               {t`Enter a duration such as 2h, 90m, or 1:30.`}
             </span>
           )}
@@ -130,6 +151,7 @@ export function TimeEntryForm({
         <label className="block text-xs text-light-900 dark:text-dark-900">
           {t`Date`}
           <input
+            id={`${fieldId}-date`}
             type="date"
             value={workDate}
             onChange={(event) => setWorkDate(event.target.value)}
@@ -142,6 +164,7 @@ export function TimeEntryForm({
       <label className="block text-xs text-light-900 dark:text-dark-900">
         {t`Comment`}
         <textarea
+          id={`${fieldId}-comment`}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           className={inputClassName}
@@ -157,8 +180,8 @@ export function TimeEntryForm({
         <Button
           type="submit"
           size="sm"
-          isLoading={isSaving}
-          disabled={memberOptions.canManage && !memberPublicId}
+          isLoading={isSaving ? true : undefined}
+          disabled={isSaving || (memberOptions.canManage && !memberPublicId)}
         >
           {t`Save`}
         </Button>

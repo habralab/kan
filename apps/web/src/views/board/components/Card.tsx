@@ -107,7 +107,7 @@ const Card = ({
                   <HiBars3BottomLeft className="h-4 w-4" />
                 </div>
               )}
-              {dueDate && (
+              {hasDueDate && dueDate && (
                 <div
                   className={twMerge(
                     "flex items-center gap-1",

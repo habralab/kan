@@ -13,6 +13,7 @@ import {
   encodeTimeTrackingSummaryCsvRow,
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
+  getTimeTrackingExportFilename,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
 } from "~/server/timeTrackingCsv";
@@ -89,7 +90,7 @@ export default withRateLimit(
       const groupBy = getQueryString(req.query.groupBy);
       if (
         !boardPublicId ||
-        boardPublicId.length < 12 ||
+        boardPublicId.length !== 12 ||
         !dateFrom ||
         !dateTo ||
         !isValidWorkDate(dateFrom) ||
@@ -115,7 +116,7 @@ export default withRateLimit(
           (publicIds) =>
             publicIds !== undefined &&
             (publicIds.length > 100 ||
-              publicIds.some((publicId) => publicId.length < 12)),
+              publicIds.some((publicId) => publicId.length !== 12)),
         )
       )
         return res.status(400).json({ error: "Invalid filter identifier" });
@@ -154,7 +155,13 @@ export default withRateLimit(
           : null;
       const profileName =
         profile === "summary" ? `${profile}-${groupBy}` : profile;
-      const filename = `kan-time-${boardPublicId}-${dateFrom}-${dateTo}-${profileName}.csv`;
+      const filename = getTimeTrackingExportFilename({
+        boardName: board.boardName,
+        boardPublicId: board.boardPublicId,
+        dateFrom,
+        dateTo,
+        profileName,
+      });
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/csv; charset=utf-8");
       res.setHeader(
@@ -226,10 +233,8 @@ export default withRateLimit(
               row.rawElapsedSeconds,
               row.comment,
               row.createdAt,
-              row.createdBy,
               row.createdByUser?.name,
               row.updatedAt,
-              row.updatedBy,
               row.updatedByUser?.name,
             ]),
           );

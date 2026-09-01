@@ -37,6 +37,7 @@ import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import { formatToArray } from "~/utils/helpers";
+import { TIME_TRACKING_CHANNEL_NAME } from "~/utils/timeTracking";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
 import BoardDropdown from "./components/BoardDropdown";
 import Card from "./components/Card";
@@ -160,6 +161,41 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     { boardPublicId: boardId ?? "" },
     { enabled: !!boardId && !isTemplate },
   );
+  const timeTrackingCardTotals = api.timeTracking.getBoardCardTotals.useQuery(
+    { boardPublicId: boardId ?? "" },
+    { enabled: !!boardId && timeTrackingSettings.data?.enabled === true },
+  );
+  const activeTimer = api.timeTracking.getActiveTimer.useQuery(undefined, {
+    enabled: !isTemplate,
+  });
+  const timeTrackingTotalsByCard = useMemo(
+    () =>
+      timeTrackingSettings.data?.enabled === true
+        ? new Map(
+            timeTrackingCardTotals.data?.map((total) => [
+              total.cardPublicId,
+              total.totalSeconds,
+            ]),
+          )
+        : new Map<string, number>(),
+    [timeTrackingCardTotals.data, timeTrackingSettings.data?.enabled],
+  );
+  const runningCardPublicId =
+    activeTimer.data &&
+    !activeTimer.data.inaccessible &&
+    activeTimer.data.board.publicId === boardId
+      ? activeTimer.data.card.publicId
+      : null;
+
+  useEffect(() => {
+    if (!("BroadcastChannel" in window)) return;
+    const channel = new BroadcastChannel(TIME_TRACKING_CHANNEL_NAME);
+    channel.onmessage = () => {
+      void utils.timeTracking.getActiveTimer.invalidate();
+      void utils.timeTracking.getBoardCardTotals.invalidate();
+    };
+    return () => channel.close();
+  }, [utils.timeTracking]);
 
   // Redirect to 404 if board doesn't exist
   useEffect(() => {
@@ -815,6 +851,13 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                             comments={card.comments ?? []}
                                             attachments={card.attachments}
                                             dueDate={card.dueDate ?? null}
+                                            timeTrackingTotalSeconds={timeTrackingTotalsByCard.get(
+                                              card.publicId,
+                                            )}
+                                            isTimerRunning={
+                                              runningCardPublicId ===
+                                              card.publicId
+                                            }
                                           />
                                         </Link>
                                       )}

@@ -10,6 +10,7 @@ import {
 import {
   timeTrackingActiveTimerSchema,
   timeTrackingCardSummarySchema,
+  timeTrackingCardTotalsSchema,
   timeTrackingMemberOptionsSchema,
   timeTrackingReportOptionsSchema,
   timeTrackingReportSummarySchema,
@@ -525,6 +526,28 @@ export const timeTrackingRouter = createTRPCRouter({
           canCreate && card.settingsEnabled === true && !card.isArchived,
         canManage,
       };
+    }),
+
+  getBoardCardTotals: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Get persisted time totals for board cards",
+        method: "GET",
+        path: "/boards/{boardPublicId}/time-tracking/card-totals",
+        tags: ["Time Tracking"],
+        protect: true,
+      },
+    })
+    .input(z.object({ boardPublicId: publicIdSchema }))
+    .output(timeTrackingCardTotalsSchema)
+    .query(async ({ ctx, input }) => {
+      const userId = requireUserId(ctx.user?.id);
+      const board = await getReportBoardContext(
+        ctx.db,
+        userId,
+        input.boardPublicId,
+      );
+      return timeTrackingRepo.getBoardCardTotals(ctx.db, board.boardId);
     }),
 
   getMemberOptions: protectedProcedure

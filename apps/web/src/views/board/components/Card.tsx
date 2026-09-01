@@ -1,9 +1,11 @@
+import { t } from "@lingui/core/macro";
 import { format, isBefore, isSameYear, startOfDay } from "date-fns";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import {
   HiBars3BottomLeft,
   HiChatBubbleLeft,
   HiOutlineClock,
+  HiOutlinePlayCircle,
 } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
@@ -13,6 +15,7 @@ import CircularProgress from "~/components/CircularProgress";
 import LabelIcon from "~/components/LabelIcon";
 import { useLocalisation } from "~/hooks/useLocalisation";
 import { getAvatarUrl } from "~/utils/helpers";
+import { formatDuration } from "~/utils/timeTracking";
 
 const Card = ({
   title,
@@ -24,6 +27,8 @@ const Card = ({
   comments,
   attachments,
   dueDate,
+  timeTrackingTotalSeconds,
+  isTimerRunning,
 }: {
   title: string;
   ticketNumber?: string | null;
@@ -47,6 +52,8 @@ const Card = ({
   comments: { publicId: string }[];
   attachments?: { publicId: string }[];
   dueDate?: Date | null;
+  timeTrackingTotalSeconds?: number;
+  isTimerRunning?: boolean;
 }) => {
   const { dateLocale } = useLocalisation();
   const showYear = dueDate ? !isSameYear(dueDate, new Date()) : false;
@@ -81,7 +88,9 @@ const Card = ({
       hasDescription ||
       comments.length > 0 ||
       hasDueDate ||
-      hasAttachments ? (
+      hasAttachments ||
+      timeTrackingTotalSeconds ||
+      isTimerRunning ? (
         <div className="mt-2 flex flex-col justify-end">
           <div className="space-x-0.5">
             {labels.map((label) => (
@@ -98,7 +107,7 @@ const Card = ({
                   <HiBars3BottomLeft className="h-4 w-4" />
                 </div>
               )}
-              {hasDueDate && dueDate && (
+              {dueDate && (
                 <div
                   className={twMerge(
                     "flex items-center gap-1",
@@ -123,6 +132,20 @@ const Card = ({
               {hasAttachments && (
                 <div className="flex items-center gap-1 text-light-700 dark:text-dark-800">
                   <HiOutlinePaperClip className="h-4 w-4" />
+                </div>
+              )}
+              {timeTrackingTotalSeconds ? (
+                <div className="flex items-center gap-1 text-light-800 dark:text-dark-800">
+                  <HiOutlineClock className="h-4 w-4" />
+                  <span className="text-[11px]">
+                    {formatDuration(timeTrackingTotalSeconds)}
+                  </span>
+                </div>
+              ) : null}
+              {isTimerRunning && (
+                <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400">
+                  <HiOutlinePlayCircle className="h-4 w-4" />
+                  <span className="text-[11px]">{t`Running`}</span>
                 </div>
               )}
             </div>

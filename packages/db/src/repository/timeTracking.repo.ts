@@ -1,4 +1,14 @@
-import { and, count, eq, inArray, isNull, lt, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNull,
+  lt,
+  or,
+  sql,
+} from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
 import {
@@ -53,6 +63,7 @@ export const getCardTimeTrackingContext = async (
 ) => {
   const [card] = await db
     .select({
+      cardId: cards.id,
       cardPublicId: cards.publicId,
       boardPublicId: boards.publicId,
       workspaceId: boards.workspaceId,
@@ -81,6 +92,75 @@ export const getCardTimeTrackingContext = async (
 
   return card ?? null;
 };
+
+export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
+  const durationSeconds =
+    sql<number>`SUM(${timeTrackingWorklogs.durationSeconds})`.mapWith(Number);
+  const memberTotals = await db
+    .select({
+      durationSeconds,
+      memberPublicId: workspaceMembers.publicId,
+      memberEmail: workspaceMembers.email,
+      memberStatus: workspaceMembers.status,
+      memberUserId: workspaceMembers.userId,
+      memberDisplayName: users.name,
+      userEmail: users.email,
+      showEmailsToMembers: workspaces.showEmailsToMembers,
+    })
+    .from(timeTrackingWorklogs)
+    .innerJoin(
+      workspaceMembers,
+      eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
+    )
+    .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
+    .leftJoin(users, eq(workspaceMembers.userId, users.id))
+    .where(
+      and(
+        eq(timeTrackingWorklogs.cardId, cardId),
+        isNull(timeTrackingWorklogs.deletedAt),
+      ),
+    )
+    .groupBy(workspaceMembers.id, users.id, workspaces.showEmailsToMembers)
+    .orderBy(desc(durationSeconds), workspaceMembers.email);
+
+  return {
+    totalSeconds: memberTotals.reduce(
+      (total, member) => total + member.durationSeconds,
+      0,
+    ),
+    memberTotals,
+  };
+};
+
+export const getTimeTrackingMemberOptions = (
+  db: dbClient,
+  workspaceId: number,
+  includeHistorical: boolean,
+) =>
+  db
+    .select({
+      publicId: workspaceMembers.publicId,
+      email: workspaceMembers.email,
+      status: workspaceMembers.status,
+      userId: workspaceMembers.userId,
+      displayName: users.name,
+      userEmail: users.email,
+      showEmailsToMembers: workspaces.showEmailsToMembers,
+    })
+    .from(workspaceMembers)
+    .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
+    .leftJoin(users, eq(workspaceMembers.userId, users.id))
+    .where(
+      and(
+        eq(workspaceMembers.workspaceId, workspaceId),
+        inArray(
+          workspaceMembers.status,
+          includeHistorical ? ["active", "paused", "removed"] : ["active"],
+        ),
+        isNull(workspaceMembers.deletedAt),
+      ),
+    )
+    .orderBy(users.name, workspaceMembers.email);
 
 export const getActiveWorkspaceMemberForUser = async (
   db: dbClient,

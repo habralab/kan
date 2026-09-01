@@ -97,7 +97,7 @@ export function EditMemberPermissionsModal() {
   });
 
   const effectivePermissions = (data?.permissions ?? []) as Permission[];
-  const hasOverrides = (data?.overrides?.length ?? 0) > 0;
+  const hasOverrides = (data?.overrides.length ?? 0) > 0;
   const isBusy =
     grantMutation.isPending ||
     revokeMutation.isPending ||
@@ -147,6 +147,12 @@ export function EditMemberPermissionsModal() {
     "comment:edit": t`Can edit comments`,
     "comment:delete": t`Can delete comments`,
 
+    "worklog:view": t`Can view time entries`,
+    "worklog:create": t`Can add time entries`,
+    "worklog:edit": t`Can edit own time entries`,
+    "worklog:delete": t`Can delete own time entries`,
+    "worklog:manage": t`Can manage all time entries`,
+
     "member:view": t`Can view members`,
     "member:invite": t`Can invite members`,
     "member:edit": t`Can edit member roles and permissions`,
@@ -195,8 +201,7 @@ export function EditMemberPermissionsModal() {
                 </div>
                 <div className="space-y-1.5">
                   {category.permissions.map((permission) => {
-                    const label =
-                      permissionLabels[permission] ?? (permission as string);
+                    const label = permissionLabels[permission];
 
                     return (
                       <div
@@ -249,5 +254,4 @@ export function EditMemberPermissionsModal() {
     </div>
   );
 }
-
 

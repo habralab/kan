@@ -18,6 +18,8 @@ vi.mock("@kan/db/repository/timeTracking.repo", () => ({
   getBoardSettings: vi.fn(),
   updateBoardSettings: vi.fn(),
   getCardTimeTrackingContext: vi.fn(),
+  getCardWorklogSummary: vi.fn(),
+  getTimeTrackingMemberOptions: vi.fn(),
   getActiveWorkspaceMemberForUser: vi.fn(),
   getWorklogContext: vi.fn(),
   getWorklogByPublicId: vi.fn(),
@@ -51,6 +53,7 @@ describe("time tracking router", () => {
   };
   const ctx = { db, user } as never;
   const cardContext = {
+    cardId: 11,
     cardPublicId: "card12345678",
     boardPublicId: "board1234567",
     workspaceId: 42,
@@ -185,6 +188,88 @@ describe("time tracking router", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mockAssertPermission).not.toHaveBeenCalled();
     expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
+  });
+
+  it("returns card and member totals without internal IDs", async () => {
+    mockHasPermission.mockResolvedValue(true);
+    mockRepo.getCardWorklogSummary.mockResolvedValue({
+      totalSeconds: 3600,
+      memberTotals: [
+        {
+          durationSeconds: 3600,
+          memberPublicId: "member123456",
+          memberEmail: "test@example.com",
+          memberStatus: "active",
+          memberUserId: user.id,
+          memberDisplayName: "Test User",
+          userEmail: "test@example.com",
+          showEmailsToMembers: true,
+        },
+      ],
+    });
+
+    const result = await timeTrackingRouter.createCaller(ctx).getCardSummary({
+      cardPublicId: cardContext.cardPublicId,
+    });
+
+    expect(mockRepo.getCardWorklogSummary).toHaveBeenCalledWith(
+      db,
+      cardContext.cardId,
+    );
+    expect(result).toMatchObject({
+      totalSeconds: 3600,
+      canCreate: true,
+      canManage: true,
+    });
+    expect(result.memberTotals[0]).not.toHaveProperty("memberUserId");
+  });
+
+  it("only returns the current member without worklog:manage", async () => {
+    mockHasPermission.mockImplementation(
+      (_db, _userId, _workspaceId, permission) =>
+        Promise.resolve(permission === "worklog:create"),
+    );
+    mockRepo.getTimeTrackingMemberOptions.mockResolvedValue([
+      {
+        publicId: "member123456",
+        email: "test@example.com",
+        status: "active",
+        userId: user.id,
+        displayName: "Test User",
+        userEmail: "test@example.com",
+        showEmailsToMembers: true,
+      },
+      {
+        publicId: "another12345",
+        email: "another@example.com",
+        status: "active",
+        userId: "00000000-0000-0000-0000-000000000002",
+        displayName: "Another User",
+        userEmail: "another@example.com",
+        showEmailsToMembers: true,
+      },
+    ]);
+
+    const result = await timeTrackingRouter.createCaller(ctx).getMemberOptions({
+      cardPublicId: cardContext.cardPublicId,
+    });
+
+    expect(mockRepo.getTimeTrackingMemberOptions).toHaveBeenCalledWith(
+      db,
+      cardContext.workspaceId,
+      false,
+    );
+    expect(result).toEqual({
+      members: [
+        {
+          publicId: "member123456",
+          displayName: "Test User",
+          email: "test@example.com",
+          status: "active",
+        },
+      ],
+      canManage: false,
+    });
   });
 
   it("creates an entry for the current member with worklog:create", async () => {

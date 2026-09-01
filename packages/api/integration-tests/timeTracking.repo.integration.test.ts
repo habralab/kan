@@ -2,7 +2,15 @@ import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
-import { boards, cards, lists, workspaceMembers } from "@kan/db/schema";
+import {
+  boards,
+  cards,
+  cardsToLabels,
+  labels,
+  lists,
+  timeTrackingWorklogs,
+  workspaceMembers,
+} from "@kan/db/schema";
 
 import type { TestDbClient } from "./test-db";
 import { createTestDb, seedTestData } from "./test-db";
@@ -11,7 +19,9 @@ describe("time tracking repository", () => {
   let db: TestDbClient;
   let userId: string;
   let workspaceId: number;
+  let workspaceMemberId: number;
   let memberPublicId: string;
+  let boardId: number;
   let listId: number;
   let cardId: number;
 
@@ -28,6 +38,7 @@ describe("time tracking repository", () => {
       where: (members, { eq }) => eq(members.userId, userId),
     });
     if (!member) throw new Error("Seeded workspace member not found");
+    workspaceMemberId = member.id;
     memberPublicId = member.publicId;
 
     const [board] = await db
@@ -41,6 +52,7 @@ describe("time tracking repository", () => {
       })
       .returning();
     if (!board) throw new Error("Unable to create test board");
+    boardId = board.id;
     const [list] = await db
       .insert(lists)
       .values({
@@ -218,6 +230,138 @@ describe("time tracking repository", () => {
     expect(firstPage.nextCursor).not.toBeNull();
     expect(secondPage.items.map((item) => item.durationSeconds)).toEqual([180]);
     expect(secondPage.nextCursor).toBeNull();
+  });
+
+  it("filters and summarizes a paginated board report", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    const [label] = await db
+      .insert(labels)
+      .values({
+        publicId: "labeltime001",
+        name: "Research",
+        boardId,
+        createdBy: userId,
+      })
+      .returning();
+    if (!label) throw new Error("Unable to create test label");
+    await db.insert(cardsToLabels).values({ cardId, labelId: label.id });
+
+    for (const [workDate, durationSeconds] of [
+      ["2026-09-02", 120],
+      ["2026-09-01", 60],
+      ["2026-08-31", 300],
+    ] as const) {
+      await timeTrackingRepo.createManualWorklog(db, {
+        cardPublicId,
+        workspaceMemberPublicId: memberPublicId,
+        workDate,
+        durationSeconds,
+        comment: null,
+        actorUserId: userId,
+      });
+    }
+
+    const filters = {
+      fromDate: "2026-09-01",
+      toDate: "2026-09-30",
+      labelPublicId: label.publicId,
+    };
+    const firstPage = await timeTrackingRepo.listBoardWorklogs(db, {
+      boardId,
+      filters,
+      limit: 1,
+    });
+    if (!firstPage.nextCursor) throw new Error("Expected a report cursor");
+    const secondPage = await timeTrackingRepo.listBoardWorklogs(db, {
+      boardId,
+      filters,
+      limit: 1,
+      cursor: firstPage.nextCursor,
+    });
+    const [summary, options] = await Promise.all([
+      timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
+      timeTrackingRepo.getBoardReportOptions(db, boardId),
+    ]);
+
+    expect(firstPage.items[0]).toMatchObject({
+      workDate: "2026-09-02",
+      durationSeconds: 120,
+      card: {
+        labels: [
+          {
+            label: {
+              publicId: label.publicId,
+              name: label.name,
+            },
+          },
+        ],
+      },
+    });
+    expect(secondPage.items[0]).toMatchObject({
+      workDate: "2026-09-01",
+      durationSeconds: 60,
+    });
+    expect(summary).toEqual({
+      totalSeconds: 180,
+      entryCount: 2,
+      memberCount: 1,
+      cardCount: 1,
+    });
+    expect(options).toMatchObject({
+      members: [{ publicId: memberPublicId }],
+      cards: [{ publicId: cardPublicId }],
+      lists: [{ publicId: "listtime0001" }],
+      labels: [{ publicId: label.publicId }],
+    });
+  });
+
+  it("queries a production-sized board report without loading every row", async () => {
+    const worklogCount = 25_002;
+    const batchSize = 1_000;
+    for (let offset = 0; offset < worklogCount; offset += batchSize) {
+      const size = Math.min(batchSize, worklogCount - offset);
+      await db.insert(timeTrackingWorklogs).values(
+        Array.from({ length: size }, (_, index) => {
+          const sequence = offset + index;
+          return {
+            publicId: `perf${sequence.toString().padStart(8, "0")}`,
+            boardId,
+            cardId,
+            workspaceMemberId,
+            workDate: sequence % 2 === 0 ? "2026-09-01" : "2026-09-02",
+            durationSeconds: 60,
+            entryMethod: "manual" as const,
+            createdBy: userId,
+          };
+        }),
+      );
+    }
+
+    const filters = { fromDate: "2026-09-01", toDate: "2026-09-30" };
+    const startedAt = performance.now();
+    const [summary, firstPage] = await Promise.all([
+      timeTrackingRepo.getBoardWorklogSummary(db, boardId, filters),
+      timeTrackingRepo.listBoardWorklogs(db, {
+        boardId,
+        filters,
+        limit: 50,
+      }),
+    ]);
+    const elapsedMs = performance.now() - startedAt;
+
+    expect(summary).toEqual({
+      totalSeconds: worklogCount * 60,
+      entryCount: worklogCount,
+      memberCount: 1,
+      cardCount: 1,
+    });
+    expect(firstPage.items).toHaveLength(50);
+    expect(firstPage.nextCursor).not.toBeNull();
+    expect(elapsedMs).toBeLessThan(2_000);
   });
 
   it("returns public worklog and authorization projections", async () => {

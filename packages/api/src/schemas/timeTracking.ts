@@ -49,6 +49,38 @@ export const timeTrackingWorklogSchema = z.object({
   canDelete: z.boolean(),
 });
 
+export const timeTrackingReportWorklogSchema = timeTrackingWorklogSchema.extend(
+  {
+    labels: z.array(
+      z.object({
+        publicId: z.string(),
+        name: z.string(),
+      }),
+    ),
+  },
+);
+
+export const timeTrackingReportSummarySchema = z.object({
+  totalSeconds: z.number().int().nonnegative(),
+  entryCount: z.number().int().nonnegative(),
+  memberCount: z.number().int().nonnegative(),
+  cardCount: z.number().int().nonnegative(),
+});
+
+export const timeTrackingReportOptionsSchema = z.object({
+  members: z.array(timeTrackingMemberSchema),
+  cards: z.array(
+    z.object({
+      publicId: z.string(),
+      title: z.string(),
+      cardNumber: z.number().int().nullable(),
+      listPublicId: z.string(),
+    }),
+  ),
+  lists: z.array(z.object({ publicId: z.string(), name: z.string() })),
+  labels: z.array(z.object({ publicId: z.string(), name: z.string() })),
+});
+
 export const timeTrackingActiveTimerSchema = z.union([
   z.object({
     publicId: z.string(),

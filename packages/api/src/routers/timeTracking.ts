@@ -9,6 +9,8 @@ import {
 
 import {
   timeTrackingActiveTimerSchema,
+  timeTrackingCardSummarySchema,
+  timeTrackingMemberOptionsSchema,
   timeTrackingSettingsSchema,
   timeTrackingWorklogSchema,
 } from "../schemas";
@@ -86,16 +88,28 @@ type Worklog = NonNullable<
   Awaited<ReturnType<typeof timeTrackingRepo.getWorklogByPublicId>>
 >;
 
+const getMemberDisplayName = (
+  displayName: string | null | undefined,
+  email: string,
+  publicId: string,
+  showEmail: boolean,
+) => {
+  const normalizedDisplayName = displayName?.trim();
+  if (normalizedDisplayName) return normalizedDisplayName;
+  return showEmail ? email : `anonymous_${publicId}`;
+};
+
 const formatWorklog = (
   worklog: ListedWorklog | Worklog,
   capabilities: { canManage: boolean; canEdit: boolean; canDelete: boolean },
   userId: string,
 ) => {
   const own = worklog.workspaceMember.userId === userId;
-  const email =
-    worklog.workspaceMember.workspace.showEmailsToMembers === true
-      ? (worklog.workspaceMember.user?.email ?? worklog.workspaceMember.email)
-      : null;
+  const showEmail =
+    worklog.workspaceMember.workspace.showEmailsToMembers === true;
+  const email = showEmail
+    ? (worklog.workspaceMember.user?.email ?? worklog.workspaceMember.email)
+    : null;
 
   return {
     publicId: worklog.publicId,
@@ -118,8 +132,12 @@ const formatWorklog = (
         : null,
     member: {
       publicId: worklog.workspaceMember.publicId,
-      displayName:
-        worklog.workspaceMember.user?.name ?? worklog.workspaceMember.email,
+      displayName: getMemberDisplayName(
+        worklog.workspaceMember.user?.name,
+        worklog.workspaceMember.email,
+        worklog.workspaceMember.publicId,
+        showEmail,
+      ),
       email,
       status: worklog.workspaceMember.status,
     },
@@ -140,6 +158,25 @@ const formatWorklog = (
     canDelete: capabilities.canManage || (own && capabilities.canDelete),
   };
 };
+
+const formatMember = (member: {
+  publicId: string;
+  email: string;
+  status: "invited" | "active" | "removed" | "paused";
+  displayName: string | null;
+  userEmail: string | null;
+  showEmailsToMembers: boolean;
+}) => ({
+  publicId: member.publicId,
+  displayName: getMemberDisplayName(
+    member.displayName,
+    member.email,
+    member.publicId,
+    member.showEmailsToMembers,
+  ),
+  email: member.showEmailsToMembers ? (member.userEmail ?? member.email) : null,
+  status: member.status,
+});
 
 const getCapabilities = async (
   db: Parameters<typeof hasPermission>[0],
@@ -373,6 +410,95 @@ export const timeTrackingRouter = createTRPCRouter({
           formatWorklog(item, capabilities, userId),
         ),
         nextCursor: result.nextCursor ? encodeCursor(result.nextCursor) : null,
+      };
+    }),
+
+  getCardSummary: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Get time tracking summary for a card",
+        method: "GET",
+        path: "/cards/{cardPublicId}/time-tracking/summary",
+        tags: ["Time Tracking"],
+        protect: true,
+      },
+    })
+    .input(z.object({ cardPublicId: publicIdSchema }))
+    .output(timeTrackingCardSummarySchema)
+    .query(async ({ ctx, input }) => {
+      const userId = requireUserId(ctx.user?.id);
+      const card = await timeTrackingRepo.getCardTimeTrackingContext(
+        ctx.db,
+        input.cardPublicId,
+      );
+      if (!card)
+        throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
+      await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
+      await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      await assertPermission(ctx.db, userId, card.workspaceId, "worklog:view");
+      const [summary, canCreate, canManage] = await Promise.all([
+        timeTrackingRepo.getCardWorklogSummary(ctx.db, card.cardId),
+        hasPermission(ctx.db, userId, card.workspaceId, "worklog:create"),
+        hasPermission(ctx.db, userId, card.workspaceId, "worklog:manage"),
+      ]);
+      return {
+        totalSeconds: summary.totalSeconds,
+        memberTotals: summary.memberTotals.map((member) => ({
+          member: formatMember({
+            publicId: member.memberPublicId,
+            email: member.memberEmail,
+            status: member.memberStatus,
+            displayName: member.memberDisplayName,
+            userEmail: member.userEmail,
+            showEmailsToMembers: member.showEmailsToMembers,
+          }),
+          durationSeconds: member.durationSeconds,
+        })),
+        canCreate:
+          (canCreate || canManage) &&
+          card.settingsEnabled === true &&
+          !card.isArchived,
+        canManage,
+      };
+    }),
+
+  getMemberOptions: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "List members available for time entries",
+        method: "GET",
+        path: "/cards/{cardPublicId}/time-tracking/members",
+        tags: ["Time Tracking"],
+        protect: true,
+      },
+    })
+    .input(z.object({ cardPublicId: publicIdSchema }))
+    .output(timeTrackingMemberOptionsSchema)
+    .query(async ({ ctx, input }) => {
+      const userId = requireUserId(ctx.user?.id);
+      const card = await timeTrackingRepo.getCardTimeTrackingContext(
+        ctx.db,
+        input.cardPublicId,
+      );
+      if (!card)
+        throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
+      await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
+      await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      const [canCreate, canManage] = await Promise.all([
+        hasPermission(ctx.db, userId, card.workspaceId, "worklog:create"),
+        hasPermission(ctx.db, userId, card.workspaceId, "worklog:manage"),
+      ]);
+      if (!canCreate && !canManage) throw new TRPCError({ code: "FORBIDDEN" });
+      const members = await timeTrackingRepo.getTimeTrackingMemberOptions(
+        ctx.db,
+        card.workspaceId,
+        canManage,
+      );
+      return {
+        members: members
+          .filter((member) => canManage || member.userId === userId)
+          .map(formatMember),
+        canManage,
       };
     }),
 

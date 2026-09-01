@@ -13,6 +13,7 @@ describe("time tracking repository", () => {
   let workspaceId: number;
   let memberPublicId: string;
   let listId: number;
+  let cardId: number;
 
   const boardPublicId = "boardtime001";
   const cardPublicId = "cardtime0001";
@@ -52,13 +53,18 @@ describe("time tracking repository", () => {
       .returning();
     if (!list) throw new Error("Unable to create test list");
     listId = list.id;
-    await db.insert(cards).values({
-      publicId: cardPublicId,
-      title: "Implement time tracking",
-      index: 0,
-      listId: list.id,
-      createdBy: userId,
-    });
+    const [card] = await db
+      .insert(cards)
+      .values({
+        publicId: cardPublicId,
+        title: "Implement time tracking",
+        index: 0,
+        listId: list.id,
+        createdBy: userId,
+      })
+      .returning({ id: cards.id });
+    if (!card) throw new Error("Unable to create test card");
+    cardId = card.id;
   });
 
   it("returns effective defaults before settings are persisted", async () => {
@@ -230,12 +236,18 @@ describe("time tracking repository", () => {
     });
     if (!created) throw new Error("Unable to create test worklog");
 
-    const [cardContext, member, worklogContext, worklog] = await Promise.all([
-      timeTrackingRepo.getCardTimeTrackingContext(db, cardPublicId),
-      timeTrackingRepo.getActiveWorkspaceMemberForUser(db, workspaceId, userId),
-      timeTrackingRepo.getWorklogContext(db, created.publicId),
-      timeTrackingRepo.getWorklogByPublicId(db, created.publicId),
-    ]);
+    const [cardContext, member, worklogContext, worklog, summary] =
+      await Promise.all([
+        timeTrackingRepo.getCardTimeTrackingContext(db, cardPublicId),
+        timeTrackingRepo.getActiveWorkspaceMemberForUser(
+          db,
+          workspaceId,
+          userId,
+        ),
+        timeTrackingRepo.getWorklogContext(db, created.publicId),
+        timeTrackingRepo.getWorklogByPublicId(db, created.publicId),
+        timeTrackingRepo.getCardWorklogSummary(db, cardId),
+      ]);
 
     expect(cardContext).toMatchObject({
       cardPublicId,
@@ -263,6 +275,16 @@ describe("time tracking repository", () => {
       },
     });
     expect(worklog).not.toHaveProperty("id");
+    expect(summary).toMatchObject({
+      totalSeconds: 3600,
+      memberTotals: [
+        {
+          durationSeconds: 3600,
+          memberPublicId,
+          memberUserId: userId,
+        },
+      ],
+    });
   });
 
   it("credits historical members but rejects invited members", async () => {
@@ -330,9 +352,19 @@ describe("time tracking repository", () => {
       cardPublicId,
       limit: 25,
     });
+    const memberOptions = await timeTrackingRepo.getTimeTrackingMemberOptions(
+      db,
+      workspaceId,
+      true,
+    );
     expect(
       page.items.map((item) => item.workspaceMember.status).sort(),
     ).toEqual(["paused", "removed"]);
+    expect(memberOptions.map((member) => member.status).sort()).toEqual([
+      "active",
+      "paused",
+      "removed",
+    ]);
   });
 
   it("starts one global timer and keeps repeated start idempotent", async () => {

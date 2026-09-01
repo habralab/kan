@@ -10,6 +10,13 @@ export const timeTrackingSettingsSchema = z.object({
   canUpdate: z.boolean(),
 });
 
+export const timeTrackingMemberSchema = z.object({
+  publicId: z.string(),
+  displayName: z.string(),
+  email: z.string().nullable(),
+  status: z.enum(["invited", "active", "removed", "paused"]),
+});
+
 export const timeTrackingWorklogSchema = z.object({
   publicId: z.string(),
   workDate: z.string(),
@@ -24,12 +31,7 @@ export const timeTrackingWorklogSchema = z.object({
       rawElapsedSeconds: z.number().int().nonnegative(),
     })
     .nullable(),
-  member: z.object({
-    publicId: z.string(),
-    displayName: z.string(),
-    email: z.string().nullable(),
-    status: z.enum(["invited", "active", "removed", "paused"]),
-  }),
+  member: timeTrackingMemberSchema,
   card: z.object({
     publicId: z.string(),
     title: z.string(),
@@ -69,3 +71,20 @@ export const timeTrackingActiveTimerSchema = z.union([
     workspace: z.object({ publicId: z.string(), name: z.string() }),
   }),
 ]);
+
+export const timeTrackingCardSummarySchema = z.object({
+  totalSeconds: z.number().int().nonnegative(),
+  memberTotals: z.array(
+    z.object({
+      member: timeTrackingMemberSchema,
+      durationSeconds: z.number().int().positive(),
+    }),
+  ),
+  canCreate: z.boolean(),
+  canManage: z.boolean(),
+});
+
+export const timeTrackingMemberOptionsSchema = z.object({
+  members: z.array(timeTrackingMemberSchema),
+  canManage: z.boolean(),
+});

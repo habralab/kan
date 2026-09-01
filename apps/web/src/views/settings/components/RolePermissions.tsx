@@ -36,6 +36,12 @@ const permissionLabels: Record<Permission, string> = {
   "comment:edit": t`Can edit comments`,
   "comment:delete": t`Can delete comments`,
 
+  "worklog:view": t`Can view time entries`,
+  "worklog:create": t`Can add time entries`,
+  "worklog:edit": t`Can edit own time entries`,
+  "worklog:delete": t`Can delete own time entries`,
+  "worklog:manage": t`Can manage all time entries`,
+
   "member:view": t`Can view members`,
   "member:invite": t`Can invite members`,
   "member:edit": t`Can edit member roles and permissions`,
@@ -144,7 +150,7 @@ export function RolePermissions() {
               {category.permissions.map((permission) => (
                 <tr key={permission}>
                   <td className="w-1/2 px-4 py-2 text-sm text-light-900 dark:text-dark-900">
-                    {permissionLabels[permission] ?? permission}
+                    {permissionLabels[permission]}
                   </td>
                   {orderedRoleNames.map((roleName) => {
                     const role = systemRoles.find((r) => r.name === roleName);
@@ -193,4 +199,3 @@ export function RolePermissions() {
     </div>
   );
 }
-

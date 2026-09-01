@@ -1,4 +1,4 @@
-import { and, count, eq, isNull, lt, or } from "drizzle-orm";
+import { and, count, eq, inArray, isNull, lt, or } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
 import {
@@ -23,6 +23,7 @@ import {
 
 export const timeTrackingRepositoryErrorCodes = [
   "BOARD_NOT_FOUND",
+  "BOARD_NOT_REGULAR",
   "BOARD_ARCHIVED",
   "BOARD_DISABLED",
   "CARD_NOT_FOUND",
@@ -182,6 +183,8 @@ const getBoardByPublicId = (db: dbClient, boardPublicId: string) =>
       publicId: boards.publicId,
       workspaceId: boards.workspaceId,
       isArchived: boards.isArchived,
+      type: boards.type,
+      createdBy: boards.createdBy,
     })
     .from(boards)
     .where(and(eq(boards.publicId, boardPublicId), isNull(boards.deletedAt)))
@@ -206,6 +209,8 @@ export const getBoardSettings = async (db: dbClient, boardPublicId: string) => {
     boardPublicId: board.publicId,
     workspaceId: board.workspaceId,
     isArchived: board.isArchived,
+    type: board.type,
+    createdBy: board.createdBy,
     enabled: settings?.enabled ?? false,
     roundingIntervalSeconds:
       settings?.roundingIntervalSeconds ??
@@ -227,7 +232,11 @@ export const updateBoardSettings = async (
 ) =>
   db.transaction(async (tx) => {
     const [board] = await tx
-      .select({ id: boards.id, isArchived: boards.isArchived })
+      .select({
+        id: boards.id,
+        type: boards.type,
+        isArchived: boards.isArchived,
+      })
       .from(boards)
       .where(
         and(eq(boards.publicId, input.boardPublicId), isNull(boards.deletedAt)),
@@ -235,6 +244,8 @@ export const updateBoardSettings = async (
       .limit(1);
 
     if (!board) throw new TimeTrackingRepositoryError("BOARD_NOT_FOUND");
+    if (board.type !== "regular" && input.enabled)
+      throw new TimeTrackingRepositoryError("BOARD_NOT_REGULAR");
     if (board.isArchived && input.enabled)
       throw new TimeTrackingRepositoryError("BOARD_ARCHIVED");
 
@@ -276,6 +287,7 @@ export const createManualWorklog = async (
         boardId: boards.id,
         workspaceId: boards.workspaceId,
         boardArchived: boards.isArchived,
+        boardType: boards.type,
         settingsEnabled: timeTrackingBoardSettings.enabled,
       })
       .from(cards)
@@ -296,6 +308,8 @@ export const createManualWorklog = async (
       .limit(1);
 
     if (!card) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
+    if (card.boardType !== "regular")
+      throw new TimeTrackingRepositoryError("BOARD_NOT_REGULAR");
     if (card.boardArchived)
       throw new TimeTrackingRepositoryError("BOARD_ARCHIVED");
     if (!card.settingsEnabled)
@@ -308,7 +322,7 @@ export const createManualWorklog = async (
         and(
           eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
           eq(workspaceMembers.workspaceId, card.workspaceId),
-          eq(workspaceMembers.status, "active"),
+          inArray(workspaceMembers.status, ["active", "paused", "removed"]),
           isNull(workspaceMembers.deletedAt),
         ),
       )
@@ -373,7 +387,7 @@ export const updateWorklog = async (
           and(
             eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
             eq(workspaceMembers.workspaceId, input.workspaceId),
-            eq(workspaceMembers.status, "active"),
+            inArray(workspaceMembers.status, ["active", "paused", "removed"]),
             isNull(workspaceMembers.deletedAt),
           ),
         )
@@ -624,6 +638,7 @@ export const startTimer = async (
           boardId: boards.id,
           workspaceId: boards.workspaceId,
           boardArchived: boards.isArchived,
+          boardType: boards.type,
           settingsEnabled: timeTrackingBoardSettings.enabled,
         })
         .from(cards)
@@ -644,6 +659,8 @@ export const startTimer = async (
         .limit(1);
 
       if (!card) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
+      if (card.boardType !== "regular")
+        throw new TimeTrackingRepositoryError("BOARD_NOT_REGULAR");
       if (card.boardArchived)
         throw new TimeTrackingRepositoryError("BOARD_ARCHIVED");
       if (!card.settingsEnabled)

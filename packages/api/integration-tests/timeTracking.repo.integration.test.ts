@@ -92,6 +92,25 @@ describe("time tracking repository", () => {
     expect(updated?.updatedAt).toBeInstanceOf(Date);
   });
 
+  it("does not enable time tracking on a template", async () => {
+    await db.insert(boards).values({
+      publicId: "template0001",
+      name: "Time tracking template",
+      slug: "time-tracking-template",
+      type: "template",
+      workspaceId,
+      createdBy: userId,
+    });
+
+    await expect(
+      timeTrackingRepo.updateBoardSettings(db, {
+        boardPublicId: "template0001",
+        enabled: true,
+        actorUserId: userId,
+      }),
+    ).rejects.toMatchObject({ code: "BOARD_NOT_REGULAR" });
+  });
+
   it("rejects manual entries while time tracking is disabled", async () => {
     await expect(
       timeTrackingRepo.createManualWorklog(db, {
@@ -246,35 +265,74 @@ describe("time tracking repository", () => {
     expect(worklog).not.toHaveProperty("id");
   });
 
-  it("does not credit an inactive member", async () => {
-    const [foreignMember] = await db
+  it("credits historical members but rejects invited members", async () => {
+    const historicalMembers = await db
+      .insert(workspaceMembers)
+      .values([
+        {
+          publicId: "pausedmem001",
+          email: "paused@example.com",
+          workspaceId,
+          createdBy: userId,
+          role: "member" as const,
+          status: "paused" as const,
+        },
+        {
+          publicId: "removedmem01",
+          email: "removed@example.com",
+          workspaceId,
+          createdBy: userId,
+          role: "member" as const,
+          status: "removed" as const,
+        },
+      ])
+      .returning();
+    const [invitedMember] = await db
       .insert(workspaceMembers)
       .values({
-        publicId: "foreignmem01",
-        email: "foreign@example.com",
+        publicId: "invitedmem01",
+        email: "invited@example.com",
         workspaceId,
         createdBy: userId,
         role: "member",
-        status: "removed",
+        status: "invited",
       })
       .returning();
-    if (!foreignMember) throw new Error("Unable to create inactive member");
+    if (historicalMembers.length !== 2 || !invitedMember)
+      throw new Error("Unable to create historical test members");
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,
       enabled: true,
       actorUserId: userId,
     });
 
+    for (const member of historicalMembers) {
+      await timeTrackingRepo.createManualWorklog(db, {
+        cardPublicId,
+        workspaceMemberPublicId: member.publicId,
+        workDate: "2026-09-01",
+        durationSeconds: 60,
+        comment: null,
+        actorUserId: userId,
+      });
+    }
     await expect(
       timeTrackingRepo.createManualWorklog(db, {
         cardPublicId,
-        workspaceMemberPublicId: foreignMember.publicId,
+        workspaceMemberPublicId: invitedMember.publicId,
         workDate: "2026-09-01",
         durationSeconds: 60,
         comment: null,
         actorUserId: userId,
       }),
     ).rejects.toMatchObject({ code: "MEMBER_NOT_FOUND" });
+    const page = await timeTrackingRepo.listWorklogsByCard(db, {
+      cardPublicId,
+      limit: 25,
+    });
+    expect(
+      page.items.map((item) => item.workspaceMember.status).sort(),
+    ).toEqual(["paused", "removed"]);
   });
 
   it("starts one global timer and keeps repeated start idempotent", async () => {

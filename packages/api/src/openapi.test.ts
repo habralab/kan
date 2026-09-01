@@ -9,6 +9,8 @@ describe("time tracking OpenAPI", () => {
     const routes = [
       ["/boards/{boardPublicId}/time-tracking/settings", ["get", "put"]],
       ["/cards/{cardPublicId}/time-tracking/worklogs", ["get", "post"]],
+      ["/cards/{cardPublicId}/time-tracking/summary", ["get"]],
+      ["/cards/{cardPublicId}/time-tracking/members", ["get"]],
       ["/time-tracking/worklogs/{worklogPublicId}", ["put", "delete"]],
       ["/time-tracking/timer", ["get", "delete"]],
       ["/cards/{cardPublicId}/time-tracking/timer", ["post"]],

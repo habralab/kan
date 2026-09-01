@@ -214,7 +214,7 @@ export function TimeTrackingCardSection({
 
   const activeTimerPanel = timer ? (
     <div className="mb-4 rounded-md border border-light-600 bg-light-100 p-3 dark:border-dark-600 dark:bg-dark-200">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div className="min-w-0">
           <p className="font-mono text-lg font-semibold text-light-1000 dark:text-dark-1000">
             {formatTimerDuration(elapsedSeconds)}
@@ -239,7 +239,7 @@ export function TimeTrackingCardSection({
             size="sm"
             variant="danger"
             onClick={() => stopTimer.mutate({ timezone: getTimezone() })}
-            isLoading={stopTimer.isPending}
+            isLoading={stopTimer.isPending ? true : undefined}
             disabled={isMutatingTimer}
           >
             {t`Stop`}
@@ -248,7 +248,7 @@ export function TimeTrackingCardSection({
             size="sm"
             variant="secondary"
             onClick={() => discardTimer.mutate()}
-            isLoading={discardTimer.isPending}
+            isLoading={discardTimer.isPending ? true : undefined}
             disabled={isMutatingTimer}
           >
             {t`Discard`}
@@ -266,11 +266,28 @@ export function TimeTrackingCardSection({
     );
   }
 
+  if (activeTimer.isError) {
+    return (
+      <div className="mb-8 space-y-3 border-t border-light-300 pt-6 dark:border-dark-300">
+        <p role="alert" className="text-sm text-red-700 dark:text-red-500">
+          {t`Unable to load the active timer.`}
+        </p>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => void activeTimer.refetch()}
+        >
+          {t`Try again`}
+        </Button>
+      </div>
+    );
+  }
+
   if (settings.isError) {
     return (
       <div className="mb-8 space-y-3 border-t border-light-300 pt-6 dark:border-dark-300">
         {activeTimerPanel}
-        <p className="text-sm text-red-700 dark:text-red-500">
+        <p role="alert" className="text-sm text-red-700 dark:text-red-500">
           {t`Unable to load time tracking.`}
         </p>
         <Button
@@ -300,7 +317,7 @@ export function TimeTrackingCardSection({
           </p>
         </div>
         {summary.data?.canCreate && (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             <Button
               size="sm"
               variant="secondary"

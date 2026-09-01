@@ -91,6 +91,12 @@ export function TimeTrackingReportModal({
   );
 
   useEffect(() => {
+    if (validRange) return;
+    setEntries([]);
+    setNextCursor(null);
+  }, [validRange]);
+
+  useEffect(() => {
     if (!firstPage.data) return;
     setEntries(firstPage.data.items);
     setNextCursor(firstPage.data.nextCursor);
@@ -415,7 +421,10 @@ export function TimeTrackingReportModal({
 
               {hasError ? (
                 <div className="space-y-3 rounded-md border border-red-500 p-4">
-                  <p className="text-sm text-red-700 dark:text-red-500">
+                  <p
+                    role="alert"
+                    className="text-sm text-red-700 dark:text-red-500"
+                  >
                     {t`Unable to load the time report.`}
                   </p>
                   <Button

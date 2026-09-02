@@ -389,6 +389,11 @@ export const importTimeTrackingWorklogBatch = (
           sourceId: timeTrackingWorklogSources.id,
           worklogId: timeTrackingWorklogs.id,
           worklogPublicId: timeTrackingWorklogs.publicId,
+          worklogBoardId: timeTrackingWorklogs.boardId,
+          worklogCardId: timeTrackingWorklogs.cardId,
+          worklogWorkspaceMemberId: timeTrackingWorklogs.workspaceMemberId,
+          worklogUpdatedBy: timeTrackingWorklogs.updatedBy,
+          worklogDeletedAt: timeTrackingWorklogs.deletedAt,
         })
         .from(timeTrackingWorklogSources)
         .innerJoin(
@@ -422,7 +427,22 @@ export const importTimeTrackingWorklogBatch = (
       quarantinedRecords.map((record) => [record.externalId, record]),
     );
 
-    const candidates = input.records.filter((record) => {
+    const resolvedRecords = await resolveTimeTrackingImportMappings(
+      tx,
+      input.records,
+    );
+    const resolvedByExternalId = new Map(
+      resolvedRecords.map((resolved) => [resolved.record.externalId, resolved]),
+    );
+    const mappingChanged = (
+      existing: (typeof existingSources)[number],
+      resolved: (typeof resolvedRecords)[number],
+    ) =>
+      existing.worklogBoardId !== resolved.board.id ||
+      existing.worklogCardId !== (resolved.card?.id ?? null) ||
+      existing.worklogWorkspaceMemberId !== (resolved.member?.id ?? null);
+    const resolvedCandidates = resolvedRecords.filter((resolved) => {
+      const { record } = resolved;
       const existing = existingByExternalId.get(record.externalId);
       const quarantined = quarantineByExternalId.has(record.externalId);
       return (
@@ -430,14 +450,10 @@ export const importTimeTrackingWorklogBatch = (
         (input.updateExisting === true &&
           existing !== undefined &&
           (existing.sourceHash !== record.sourceHash ||
-            hasSourceMetadataChanged(existing, record)))
+            hasSourceMetadataChanged(existing, record) ||
+            mappingChanged(existing, resolved)))
       );
     });
-
-    const resolvedCandidates = await resolveTimeTrackingImportMappings(
-      tx,
-      candidates,
-    );
 
     const resultsByExternalId = new Map<string, TimeTrackingImportResult>();
     const newCandidates = resolvedCandidates.filter(
@@ -527,20 +543,39 @@ export const importTimeTrackingWorklogBatch = (
       }
     }
 
-    for (const { record, board, card, member } of resolvedCandidates) {
+    for (const resolved of resolvedCandidates) {
+      const { record, board, card, member } = resolved;
       const existing = existingByExternalId.get(record.externalId);
       if (!existing) continue;
 
-      if (existing.sourceHash !== record.sourceHash)
+      const sourceChanged = existing.sourceHash !== record.sourceHash;
+      const resolvedMappingChanged = mappingChanged(existing, resolved);
+      const worklogChanged = sourceChanged || resolvedMappingChanged;
+      const locallyChanged =
+        existing.worklogUpdatedBy !== null ||
+        existing.worklogDeletedAt !== null;
+
+      if (worklogChanged && locallyChanged) {
+        resultsByExternalId.set(record.externalId, {
+          externalId: record.externalId,
+          disposition: "conflict",
+          worklogPublicId: existing.worklogPublicId,
+        });
+        continue;
+      }
+
+      if (worklogChanged)
         await tx
           .update(timeTrackingWorklogs)
           .set({
             boardId: board.id,
             cardId: card?.id ?? null,
             workspaceMemberId: member?.id ?? null,
-            workDate: record.workDate,
-            durationSeconds: record.durationSeconds,
-            comment: record.comment,
+            ...(sourceChanged && {
+              workDate: record.workDate,
+              durationSeconds: record.durationSeconds,
+              comment: record.comment,
+            }),
             updatedAt: new Date(),
             updatedBy: null,
           })
@@ -578,10 +613,16 @@ export const importTimeTrackingWorklogBatch = (
     for (const record of input.records) {
       if (resultsByExternalId.has(record.externalId)) continue;
       const existing = existingByExternalId.get(record.externalId);
+      const resolved = resolvedByExternalId.get(record.externalId);
+      const changed =
+        existing !== undefined &&
+        resolved !== undefined &&
+        (existing.sourceHash !== record.sourceHash ||
+          hasSourceMetadataChanged(existing, record) ||
+          mappingChanged(existing, resolved));
       resultsByExternalId.set(record.externalId, {
         externalId: record.externalId,
-        disposition:
-          existing?.sourceHash === record.sourceHash ? "skipped" : "conflict",
+        disposition: existing && !changed ? "skipped" : "conflict",
         worklogPublicId: existing?.worklogPublicId,
       });
     }

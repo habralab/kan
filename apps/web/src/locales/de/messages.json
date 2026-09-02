@@ -7872,12 +7872,19 @@
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 329]],
     "translation": "Einträge"
   },
-  "Gi0db4": {
-    "message": "Export detailed CSV",
+  "WoSfea": {
+    "message": "Export entries CSV",
     "placeholders": {},
     "comments": [],
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 424]],
-    "translation": "Detaillierte CSV exportieren"
+    "translation": "Zeiteinträge als CSV exportieren"
+  },
+  "85rIwg": {
+    "message": "Export full CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 449]],
+    "translation": "Vollständige CSV exportieren"
   },
   "o7dpgY": {
     "message": "Export summary CSV",
@@ -8212,31 +8219,6 @@
       ]
     ],
     "translation": "Erneut versuchen"
-  },
-  "6/Ns5U": {
-    "message": "Deleted card",
-    "placeholders": {},
-    "comments": [],
-    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 493]],
-    "translation": "Gelöschte Karte"
-  },
-  "aGbZ2d": {
-    "message": "Unavailable member",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      ["src/views/board/components/TimeTrackingReportModal.tsx", 375],
-      ["src/views/board/components/TimeTrackingReportModal.tsx", 481],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        425
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        472
-      ]
-    ],
-    "translation": "Nicht verfügbares Mitglied"
   },
   "zvcXZs": {
     "message": "Unable to add time",

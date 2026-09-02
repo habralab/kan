@@ -643,6 +643,7 @@ export const listWorklogsByCard = async (
     cursor?: WorklogCursor;
     dateFrom?: string;
     dateTo?: string;
+    workspaceMemberPublicId?: string;
   },
 ) => {
   const [card] = await db
@@ -723,6 +724,17 @@ export const listWorklogsByCard = async (
         : undefined,
       input.dateTo
         ? lte(timeTrackingWorklogs.workDate, input.dateTo)
+        : undefined,
+      input.workspaceMemberPublicId
+        ? inArray(
+            timeTrackingWorklogs.workspaceMemberId,
+            db
+              .select({ id: workspaceMembers.id })
+              .from(workspaceMembers)
+              .where(
+                eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
+              ),
+          )
         : undefined,
       cursorCondition,
     ),

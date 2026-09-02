@@ -92,6 +92,104 @@ export interface TimeTrackingImportResult {
   worklogPublicId?: string;
 }
 
+export interface TimeTrackingImportMappingSummary {
+  boards: number;
+  cards: number;
+  workspaceMembers: number;
+}
+
+type TimeTrackingImportMappingRecord = Pick<
+  TimeTrackingImportedWorklogInput,
+  "boardPublicId" | "cardPublicId" | "workspaceMemberPublicId"
+>;
+
+const resolveTimeTrackingImportMappings = async <
+  Record extends TimeTrackingImportMappingRecord,
+>(
+  db: Pick<dbClient, "select">,
+  records: Record[],
+) => {
+  const boardPublicIds = [
+    ...new Set(records.map((record) => record.boardPublicId)),
+  ];
+  const cardPublicIds = [
+    ...new Set(
+      records.flatMap((record) =>
+        record.cardPublicId ? [record.cardPublicId] : [],
+      ),
+    ),
+  ];
+  const memberPublicIds = [
+    ...new Set(
+      records.flatMap((record) =>
+        record.workspaceMemberPublicId ? [record.workspaceMemberPublicId] : [],
+      ),
+    ),
+  ];
+  const [boardRows, cardRows, memberRows] = await Promise.all([
+    boardPublicIds.length
+      ? db
+          .select({
+            id: boards.id,
+            publicId: boards.publicId,
+            workspaceId: boards.workspaceId,
+          })
+          .from(boards)
+          .where(
+            and(
+              inArray(boards.publicId, boardPublicIds),
+              isNull(boards.deletedAt),
+            ),
+          )
+      : [],
+    cardPublicIds.length
+      ? db
+          .select({
+            id: cards.id,
+            publicId: cards.publicId,
+            boardId: lists.boardId,
+          })
+          .from(cards)
+          .innerJoin(lists, eq(cards.listId, lists.id))
+          .where(inArray(cards.publicId, cardPublicIds))
+      : [],
+    memberPublicIds.length
+      ? db
+          .select({
+            id: workspaceMembers.id,
+            publicId: workspaceMembers.publicId,
+            workspaceId: workspaceMembers.workspaceId,
+          })
+          .from(workspaceMembers)
+          .where(inArray(workspaceMembers.publicId, memberPublicIds))
+      : [],
+  ]);
+  const boardsByPublicId = new Map(boardRows.map((row) => [row.publicId, row]));
+  const cardsByPublicId = new Map(cardRows.map((row) => [row.publicId, row]));
+  const membersByPublicId = new Map(
+    memberRows.map((row) => [row.publicId, row]),
+  );
+
+  return records.map((record) => {
+    const board = boardsByPublicId.get(record.boardPublicId);
+    if (!board) throw new TimeTrackingImportRepositoryError("BOARD_NOT_FOUND");
+    const card = record.cardPublicId
+      ? cardsByPublicId.get(record.cardPublicId)
+      : null;
+    if (record.cardPublicId && (!card || card.boardId !== board.id))
+      throw new TimeTrackingImportRepositoryError("CARD_NOT_IN_BOARD");
+    const member = record.workspaceMemberPublicId
+      ? membersByPublicId.get(record.workspaceMemberPublicId)
+      : null;
+    if (
+      record.workspaceMemberPublicId &&
+      (!member || member.workspaceId !== board.workspaceId)
+    )
+      throw new TimeTrackingImportRepositoryError("MEMBER_NOT_IN_WORKSPACE");
+    return { record, board, card, member };
+  });
+};
+
 const assertBatch = (records: TimeTrackingImportSourceInput[]) => {
   if (records.length > 500)
     throw new TimeTrackingImportRepositoryError("BATCH_TOO_LARGE");
@@ -152,6 +250,22 @@ export const startTimeTrackingImportRun = (
     })
     .returning()
     .then((rows) => rows[0] ?? null);
+
+export const validateTimeTrackingImportMappings = async (
+  db: dbClient,
+  records: TimeTrackingImportMappingRecord[],
+): Promise<TimeTrackingImportMappingSummary> => {
+  const resolved = await resolveTimeTrackingImportMappings(db, records);
+
+  return {
+    boards: new Set(resolved.map(({ board }) => board.id)).size,
+    cards: new Set(resolved.flatMap(({ card }) => (card ? [card.id] : [])))
+      .size,
+    workspaceMembers: new Set(
+      resolved.flatMap(({ member }) => (member ? [member.id] : [])),
+    ).size,
+  };
+};
 
 export const completeTimeTrackingImportRun = async (
   db: dbClient,
@@ -273,94 +387,10 @@ export const importTimeTrackingWorklogBatch = (
       );
     });
 
-    const boardPublicIds = [
-      ...new Set(candidates.map((record) => record.boardPublicId)),
-    ];
-    const cardPublicIds = [
-      ...new Set(
-        candidates.flatMap((record) =>
-          record.cardPublicId ? [record.cardPublicId] : [],
-        ),
-      ),
-    ];
-    const memberPublicIds = [
-      ...new Set(
-        candidates.flatMap((record) =>
-          record.workspaceMemberPublicId
-            ? [record.workspaceMemberPublicId]
-            : [],
-        ),
-      ),
-    ];
-
-    const [boardRows, cardRows, memberRows] = await Promise.all([
-      boardPublicIds.length
-        ? tx
-            .select({
-              id: boards.id,
-              publicId: boards.publicId,
-              workspaceId: boards.workspaceId,
-            })
-            .from(boards)
-            .where(
-              and(
-                inArray(boards.publicId, boardPublicIds),
-                isNull(boards.deletedAt),
-              ),
-            )
-        : [],
-      cardPublicIds.length
-        ? tx
-            .select({
-              id: cards.id,
-              publicId: cards.publicId,
-              boardId: lists.boardId,
-            })
-            .from(cards)
-            .innerJoin(lists, eq(cards.listId, lists.id))
-            .where(inArray(cards.publicId, cardPublicIds))
-        : [],
-      memberPublicIds.length
-        ? tx
-            .select({
-              id: workspaceMembers.id,
-              publicId: workspaceMembers.publicId,
-              workspaceId: workspaceMembers.workspaceId,
-            })
-            .from(workspaceMembers)
-            .where(inArray(workspaceMembers.publicId, memberPublicIds))
-        : [],
-    ]);
-    const boardsByPublicId = new Map(
-      boardRows.map((row) => [row.publicId, row]),
+    const resolvedCandidates = await resolveTimeTrackingImportMappings(
+      tx,
+      candidates,
     );
-    const cardsByPublicId = new Map(cardRows.map((row) => [row.publicId, row]));
-    const membersByPublicId = new Map(
-      memberRows.map((row) => [row.publicId, row]),
-    );
-
-    const resolvedCandidates = candidates.map((record) => {
-      const board = boardsByPublicId.get(record.boardPublicId);
-      if (!board)
-        throw new TimeTrackingImportRepositoryError("BOARD_NOT_FOUND");
-
-      const card = record.cardPublicId
-        ? cardsByPublicId.get(record.cardPublicId)
-        : null;
-      if (record.cardPublicId && (!card || card.boardId !== board.id))
-        throw new TimeTrackingImportRepositoryError("CARD_NOT_IN_BOARD");
-
-      const member = record.workspaceMemberPublicId
-        ? membersByPublicId.get(record.workspaceMemberPublicId)
-        : null;
-      if (
-        record.workspaceMemberPublicId &&
-        (!member || member.workspaceId !== board.workspaceId)
-      )
-        throw new TimeTrackingImportRepositoryError("MEMBER_NOT_IN_WORKSPACE");
-
-      return { record, board, card, member };
-    });
 
     const resultsByExternalId = new Map<string, TimeTrackingImportResult>();
     const newCandidates = resolvedCandidates.filter(

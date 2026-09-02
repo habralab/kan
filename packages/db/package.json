@@ -16,6 +16,10 @@
       "types": "./src/schema/index.ts",
       "default": "./src/schema/index.ts"
     },
+    "./timeTrackingImportPlan": {
+      "types": "./src/timeTrackingImportPlan.ts",
+      "default": "./src/timeTrackingImportPlan.ts"
+    },
     "./types/*": {
       "types": "./src/types/*",
       "default": "./src/types/*"

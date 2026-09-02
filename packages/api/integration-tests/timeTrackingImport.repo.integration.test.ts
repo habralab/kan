@@ -21,6 +21,7 @@ describe("time tracking import repository", () => {
   let db: TestDbClient;
   let boardPublicId: string;
   let boardId: number;
+  let workspaceId: number;
   let cardPublicId: string;
   let memberPublicId: string;
   let userId: string;
@@ -67,6 +68,7 @@ describe("time tracking import repository", () => {
     db = await createTestDb();
     const seeded = await seedTestData(db);
     userId = seeded.user.id;
+    workspaceId = seeded.workspace.id;
     const member = await db.query.workspaceMembers.findFirst({
       where: (members, { eq }) => eq(members.userId, seeded.user.id),
     });
@@ -209,6 +211,48 @@ describe("time tracking import repository", () => {
     ).rejects.toMatchObject({ code: "CARD_NOT_IN_BOARD" });
     expect(await db.select().from(timeTrackingImportRuns)).toHaveLength(0);
     expect(await db.select().from(timeTrackingWorklogs)).toHaveLength(0);
+  });
+
+  it("lets managers maintain orphan history without granting owner access", async () => {
+    const run = await startRun();
+    if (!run) throw new Error("Unable to create import run");
+    const [result] = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [
+        source("orphan-entry", {
+          cardPublicId: null,
+          workspaceMemberPublicId: null,
+        }),
+      ],
+    });
+    if (!result?.worklogPublicId)
+      throw new Error("Unable to create orphan worklog");
+
+    await expect(
+      timeTrackingRepo.updateWorklog(db, {
+        worklogPublicId: result.worklogPublicId,
+        workspaceId,
+        comment: "Manager correction",
+        actorUserId: userId,
+      }),
+    ).resolves.toMatchObject({ comment: "Manager correction" });
+    await expect(
+      timeTrackingRepo.updateWorklog(db, {
+        worklogPublicId: result.worklogPublicId,
+        workspaceId,
+        comment: "Owner correction",
+        actorUserId: userId,
+        expectedMemberUserId: userId,
+      }),
+    ).rejects.toMatchObject({ code: "WORKLOG_NOT_FOUND" });
+    await expect(
+      timeTrackingRepo.deleteWorklog(db, {
+        worklogPublicId: result.worklogPublicId,
+        workspaceId,
+        actorUserId: userId,
+      }),
+    ).resolves.toEqual({ publicId: result.worklogPublicId, deleted: true });
   });
 
   it("is insert-only by default and requires explicit updates", async () => {

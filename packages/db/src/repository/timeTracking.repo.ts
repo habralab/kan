@@ -565,7 +565,7 @@ export const updateWorklog = async (
       .select({ id: timeTrackingWorklogs.id })
       .from(timeTrackingWorklogs)
       .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
-      .innerJoin(
+      .leftJoin(
         workspaceMembers,
         eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
       )
@@ -641,7 +641,7 @@ export const deleteWorklog = async (
       .select({ id: timeTrackingWorklogs.id })
       .from(timeTrackingWorklogs)
       .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
-      .innerJoin(
+      .leftJoin(
         workspaceMembers,
         eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
       )

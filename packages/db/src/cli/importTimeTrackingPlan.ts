@@ -1,13 +1,4 @@
-import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { z } from "zod";
-
-import type {
-  TimeTrackingImportedWorklogInput,
-  TimeTrackingImportResult,
-  TimeTrackingQuarantineInput,
-} from "@kan/db/repository/timeTrackingImport.repo";
+import type { TimeTrackingImportResult } from "@kan/db/repository/timeTrackingImport.repo";
 import { createDrizzleClient } from "@kan/db/client";
 import {
   completeTimeTrackingImportRun,
@@ -18,98 +9,11 @@ import {
   startTimeTrackingImportRun,
   validateTimeTrackingImportMappings,
 } from "@kan/db/repository/timeTrackingImport.repo";
-
-const hashSchema = z.string().regex(/^[0-9a-f]{64}$/);
-const nullableTimestampSchema = z
-  .string()
-  .datetime({ offset: true })
-  .transform((value) => new Date(value))
-  .nullable();
-const optionalNullableString = (max: number) =>
-  z
-    .string()
-    .min(1)
-    .max(max)
-    .nullable()
-    .optional()
-    .transform((value) => value ?? null);
-const sourceSchema = z.object({
-  externalId: z.string().min(1).max(255),
-  externalBoardId: z.string().min(1).max(255),
-  externalCardId: z.string().min(1).max(255).nullable(),
-  externalMemberId: z.string().min(1).max(255).nullable(),
-  sourceCreatedAt: nullableTimestampSchema,
-  sourceUpdatedAt: nullableTimestampSchema,
-  sourceCreatedAtRaw: optionalNullableString(128),
-  sourceUpdatedAtRaw: optionalNullableString(128),
-  sourceTimestampTimezone: optionalNullableString(64),
-  sourceCreatedByExternalMemberId: optionalNullableString(255),
-  sourceCreatedByDisplayName: optionalNullableString(255),
-  sourceUpdatedByExternalMemberId: optionalNullableString(255),
-  sourceUpdatedByDisplayName: optionalNullableString(255),
-  billable: z.boolean().nullable(),
-  invoiced: z.boolean().nullable(),
-  sourceHash: hashSchema,
-});
-const worklogSchema = sourceSchema.extend({
-  boardPublicId: z.string().length(12),
-  cardPublicId: z.string().length(12).nullable(),
-  workspaceMemberPublicId: z.string().length(12).nullable(),
-  workDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  durationSeconds: z.number().int().positive(),
-  comment: z.string().nullable(),
-});
-const quarantineSchema = sourceSchema.extend({
-  reason: z.string().min(1).max(128),
-  durationSeconds: z.number().int().positive().nullable(),
-  normalizedRecord: z.record(z.string(), z.unknown()),
-  overrideReference: z.string().nullable().optional(),
-});
-const manifestSchema = z.object({
-  format: z.literal("kan-time-tracking-import-plan-v1"),
-  schemaVersion: z.union([z.literal(1), z.literal(2)]),
-  planId: z.string().min(1),
-  provider: z.string().min(1).max(64),
-  bundleVersion: z.string().min(1).max(128),
-  counters: z
-    .object({
-      inputRecords: z.number().int().nonnegative(),
-      inputSeconds: z.number().int().nonnegative(),
-      importableRecords: z.number().int().nonnegative(),
-      importableSeconds: z.number().int().nonnegative(),
-      quarantinedRecords: z.number().int().nonnegative(),
-      quarantinedSeconds: z.number().int().nonnegative(),
-    })
-    .passthrough(),
-  files: z.array(
-    z.object({
-      name: z.string().min(1),
-      bytes: z.number().int().nonnegative(),
-      sha256: hashSchema,
-    }),
-  ),
-});
-
-const sha256 = (contents: Buffer | string) =>
-  createHash("sha256").update(contents).digest("hex");
-
-const readJsonLines = <Output, Input>(
-  file: string,
-  schema: z.ZodType<Output, z.ZodTypeDef, Input>,
-): Output[] =>
-  readFileSync(file, "utf8")
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .map((line, index) => {
-      const result = schema.safeParse(JSON.parse(line));
-      if (!result.success)
-        throw new Error(
-          `${file}:${index + 1}: ${result.error.issues
-            .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-            .join("; ")}`,
-        );
-      return result.data;
-    });
+import {
+  loadTimeTrackingImportPlan,
+  parseTimeTrackingImportPlanArguments,
+  sha256,
+} from "@kan/db/timeTrackingImportPlan";
 
 const batches = <T>(records: T[], size = 500) => {
   const result: T[][] = [];
@@ -117,9 +21,6 @@ const batches = <T>(records: T[], size = 500) => {
     result.push(records.slice(index, index + size));
   return result;
 };
-
-const sumSeconds = (records: { durationSeconds: number | null }[]) =>
-  records.reduce((sum, record) => sum + (record.durationSeconds ?? 0), 0);
 
 const addResults = (
   counters: ReturnType<typeof createEmptyTimeTrackingImportCounters>,
@@ -142,56 +43,17 @@ const addResults = (
   }
 };
 
-const planRootArgument = process.argv[2];
-if (!planRootArgument) {
+if (process.argv.length < 3) {
   console.error(
     "Usage: pnpm time-tracking:import-plan <plan-directory> [--preflight|--apply] [--update-existing]",
   );
   process.exit(2);
 }
-const planRoot = resolve(planRootArgument);
-const apply = process.argv.includes("--apply");
-const preflight = process.argv.includes("--preflight");
-const updateExisting = process.argv.includes("--update-existing");
-if (updateExisting && !apply)
-  throw new Error("--update-existing requires --apply");
+const { planRootArgument, apply, preflight, updateExisting } =
+  parseTimeTrackingImportPlanArguments(process.argv.slice(2));
 
-const manifestPath = resolve(planRoot, "manifest.json");
-const manifestContents = readFileSync(manifestPath);
-const manifest = manifestSchema.parse(JSON.parse(manifestContents.toString()));
-for (const expected of manifest.files) {
-  const contents = readFileSync(resolve(planRoot, expected.name));
-  if (contents.byteLength !== expected.bytes)
-    throw new Error(`Size mismatch for ${expected.name}`);
-  if (sha256(contents) !== expected.sha256)
-    throw new Error(`Checksum mismatch for ${expected.name}`);
-}
-
-const worklogs: TimeTrackingImportedWorklogInput[] = readJsonLines(
-  resolve(planRoot, "worklogs.jsonl"),
-  worklogSchema,
-);
-const quarantine: TimeTrackingQuarantineInput[] = readJsonLines(
-  resolve(planRoot, "quarantine.jsonl"),
-  quarantineSchema,
-);
-const externalIds = new Set<string>();
-for (const record of [...worklogs, ...quarantine]) {
-  if (externalIds.has(record.externalId))
-    throw new Error(`Duplicate externalId in plan: ${record.externalId}`);
-  externalIds.add(record.externalId);
-}
-
-if (
-  worklogs.length !== manifest.counters.importableRecords ||
-  sumSeconds(worklogs) !== manifest.counters.importableSeconds ||
-  quarantine.length !== manifest.counters.quarantinedRecords ||
-  sumSeconds(quarantine) !== manifest.counters.quarantinedSeconds ||
-  worklogs.length + quarantine.length !== manifest.counters.inputRecords ||
-  sumSeconds(worklogs) + sumSeconds(quarantine) !==
-    manifest.counters.inputSeconds
-)
-  throw new Error("Plan counters do not match JSONL records");
+const { manifest, manifestContents, worklogs, quarantine } =
+  loadTimeTrackingImportPlan(planRootArgument);
 
 console.log(
   `Validated ${worklogs.length} worklogs and ${quarantine.length} quarantined records from ${manifest.planId}`,

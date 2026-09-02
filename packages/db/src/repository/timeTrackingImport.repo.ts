@@ -57,6 +57,13 @@ export interface TimeTrackingImportSourceInput {
   externalMemberId: string | null;
   sourceCreatedAt: Date | null;
   sourceUpdatedAt: Date | null;
+  sourceCreatedAtRaw: string | null;
+  sourceUpdatedAtRaw: string | null;
+  sourceTimestampTimezone: string | null;
+  sourceCreatedByExternalMemberId: string | null;
+  sourceCreatedByDisplayName: string | null;
+  sourceUpdatedByExternalMemberId: string | null;
+  sourceUpdatedByDisplayName: string | null;
   billable: boolean | null;
   invoiced: boolean | null;
   sourceHash: string;
@@ -97,6 +104,25 @@ export interface TimeTrackingImportMappingSummary {
   cards: number;
   workspaceMembers: number;
 }
+
+const nullableDatesEqual = (left: Date | null, right: Date | null) =>
+  left?.getTime() === right?.getTime();
+
+const hasSourceMetadataChanged = (
+  existing: TimeTrackingImportSourceInput,
+  record: TimeTrackingImportSourceInput,
+) =>
+  !nullableDatesEqual(existing.sourceCreatedAt, record.sourceCreatedAt) ||
+  !nullableDatesEqual(existing.sourceUpdatedAt, record.sourceUpdatedAt) ||
+  existing.sourceCreatedAtRaw !== record.sourceCreatedAtRaw ||
+  existing.sourceUpdatedAtRaw !== record.sourceUpdatedAtRaw ||
+  existing.sourceTimestampTimezone !== record.sourceTimestampTimezone ||
+  existing.sourceCreatedByExternalMemberId !==
+    record.sourceCreatedByExternalMemberId ||
+  existing.sourceCreatedByDisplayName !== record.sourceCreatedByDisplayName ||
+  existing.sourceUpdatedByExternalMemberId !==
+    record.sourceUpdatedByExternalMemberId ||
+  existing.sourceUpdatedByDisplayName !== record.sourceUpdatedByDisplayName;
 
 type TimeTrackingImportMappingRecord = Pick<
   TimeTrackingImportedWorklogInput,
@@ -340,6 +366,25 @@ export const importTimeTrackingWorklogBatch = (
       tx
         .select({
           externalId: timeTrackingWorklogSources.externalId,
+          externalBoardId: timeTrackingWorklogSources.externalBoardId,
+          externalCardId: timeTrackingWorklogSources.externalCardId,
+          externalMemberId: timeTrackingWorklogSources.externalMemberId,
+          sourceCreatedAt: timeTrackingWorklogSources.sourceCreatedAt,
+          sourceUpdatedAt: timeTrackingWorklogSources.sourceUpdatedAt,
+          sourceCreatedAtRaw: timeTrackingWorklogSources.sourceCreatedAtRaw,
+          sourceUpdatedAtRaw: timeTrackingWorklogSources.sourceUpdatedAtRaw,
+          sourceTimestampTimezone:
+            timeTrackingWorklogSources.sourceTimestampTimezone,
+          sourceCreatedByExternalMemberId:
+            timeTrackingWorklogSources.sourceCreatedByExternalMemberId,
+          sourceCreatedByDisplayName:
+            timeTrackingWorklogSources.sourceCreatedByDisplayName,
+          sourceUpdatedByExternalMemberId:
+            timeTrackingWorklogSources.sourceUpdatedByExternalMemberId,
+          sourceUpdatedByDisplayName:
+            timeTrackingWorklogSources.sourceUpdatedByDisplayName,
+          billable: timeTrackingWorklogSources.billable,
+          invoiced: timeTrackingWorklogSources.invoiced,
           sourceHash: timeTrackingWorklogSources.sourceHash,
           sourceId: timeTrackingWorklogSources.id,
           worklogId: timeTrackingWorklogs.id,
@@ -383,7 +428,9 @@ export const importTimeTrackingWorklogBatch = (
       return (
         (!existing && (!quarantined || input.updateExisting === true)) ||
         (input.updateExisting === true &&
-          existing?.sourceHash !== record.sourceHash)
+          existing !== undefined &&
+          (existing.sourceHash !== record.sourceHash ||
+            hasSourceMetadataChanged(existing, record)))
       );
     });
 
@@ -444,6 +491,15 @@ export const importTimeTrackingWorklogBatch = (
             externalMemberId: record.externalMemberId,
             sourceCreatedAt: record.sourceCreatedAt,
             sourceUpdatedAt: record.sourceUpdatedAt,
+            sourceCreatedAtRaw: record.sourceCreatedAtRaw,
+            sourceUpdatedAtRaw: record.sourceUpdatedAtRaw,
+            sourceTimestampTimezone: record.sourceTimestampTimezone,
+            sourceCreatedByExternalMemberId:
+              record.sourceCreatedByExternalMemberId,
+            sourceCreatedByDisplayName: record.sourceCreatedByDisplayName,
+            sourceUpdatedByExternalMemberId:
+              record.sourceUpdatedByExternalMemberId,
+            sourceUpdatedByDisplayName: record.sourceUpdatedByDisplayName,
             billable: record.billable,
             invoiced: record.invoiced,
             sourceHash: record.sourceHash,
@@ -473,21 +529,22 @@ export const importTimeTrackingWorklogBatch = (
 
     for (const { record, board, card, member } of resolvedCandidates) {
       const existing = existingByExternalId.get(record.externalId);
-      if (!existing || existing.sourceHash === record.sourceHash) continue;
+      if (!existing) continue;
 
-      await tx
-        .update(timeTrackingWorklogs)
-        .set({
-          boardId: board.id,
-          cardId: card?.id ?? null,
-          workspaceMemberId: member?.id ?? null,
-          workDate: record.workDate,
-          durationSeconds: record.durationSeconds,
-          comment: record.comment,
-          updatedAt: new Date(),
-          updatedBy: null,
-        })
-        .where(eq(timeTrackingWorklogs.id, existing.worklogId));
+      if (existing.sourceHash !== record.sourceHash)
+        await tx
+          .update(timeTrackingWorklogs)
+          .set({
+            boardId: board.id,
+            cardId: card?.id ?? null,
+            workspaceMemberId: member?.id ?? null,
+            workDate: record.workDate,
+            durationSeconds: record.durationSeconds,
+            comment: record.comment,
+            updatedAt: new Date(),
+            updatedBy: null,
+          })
+          .where(eq(timeTrackingWorklogs.id, existing.worklogId));
       await tx
         .update(timeTrackingWorklogSources)
         .set({
@@ -497,6 +554,15 @@ export const importTimeTrackingWorklogBatch = (
           externalMemberId: record.externalMemberId,
           sourceCreatedAt: record.sourceCreatedAt,
           sourceUpdatedAt: record.sourceUpdatedAt,
+          sourceCreatedAtRaw: record.sourceCreatedAtRaw,
+          sourceUpdatedAtRaw: record.sourceUpdatedAtRaw,
+          sourceTimestampTimezone: record.sourceTimestampTimezone,
+          sourceCreatedByExternalMemberId:
+            record.sourceCreatedByExternalMemberId,
+          sourceCreatedByDisplayName: record.sourceCreatedByDisplayName,
+          sourceUpdatedByExternalMemberId:
+            record.sourceUpdatedByExternalMemberId,
+          sourceUpdatedByDisplayName: record.sourceUpdatedByDisplayName,
           billable: record.billable,
           invoiced: record.invoiced,
           sourceHash: record.sourceHash,

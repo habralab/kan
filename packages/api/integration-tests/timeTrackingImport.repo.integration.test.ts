@@ -35,6 +35,13 @@ describe("time tracking import repository", () => {
     externalMemberId: "external-member-1",
     sourceCreatedAt: new Date("2026-08-29T08:46:00Z"),
     sourceUpdatedAt: new Date("2026-08-29T09:00:00Z"),
+    sourceCreatedAtRaw: "2026-08-29 11:46:00",
+    sourceUpdatedAtRaw: "2026-08-29 12:00:00",
+    sourceTimestampTimezone: "unspecified_by_source",
+    sourceCreatedByExternalMemberId: "external-creator-1",
+    sourceCreatedByDisplayName: "Import Creator",
+    sourceUpdatedByExternalMemberId: "external-updater-1",
+    sourceUpdatedByDisplayName: "Import Updater",
     billable: false,
     invoiced: null,
     sourceHash: createHash("sha256").update(externalId).digest("hex"),
@@ -149,6 +156,9 @@ describe("time tracking import repository", () => {
           provider: "external-time",
           externalCardId: "missing-card",
           externalMemberId: "missing-member",
+          sourceCreatedByExternalMemberId: "external-creator-1",
+          sourceCreatedByDisplayName: "Import Creator",
+          sourceTimestampTimezone: "unspecified_by_source",
           sourceHash: createHash("sha256").update("entry-2").digest("hex"),
         }),
       ]),
@@ -252,6 +262,48 @@ describe("time tracking import repository", () => {
     expect(await db.select().from(timeTrackingWorklogs)).toHaveLength(1);
   });
 
+  it("backfills source provenance without changing the imported worklog", async () => {
+    const run = await startRun();
+    if (!run) throw new Error("Unable to create import run");
+    const withoutProvenance = source("entry-1", {
+      sourceCreatedAtRaw: null,
+      sourceTimestampTimezone: null,
+      sourceCreatedByExternalMemberId: null,
+      sourceCreatedByDisplayName: null,
+    });
+    await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [withoutProvenance],
+    });
+
+    const enriched = source("entry-1");
+    const updated = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [enriched],
+      updateExisting: true,
+    });
+    const skipped = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [enriched],
+      updateExisting: true,
+    });
+    const [worklog] = await db.select().from(timeTrackingWorklogs);
+    const [storedSource] = await db.select().from(timeTrackingWorklogSources);
+
+    expect(updated[0]?.disposition).toBe("updated");
+    expect(skipped[0]?.disposition).toBe("skipped");
+    expect(worklog?.updatedAt).toBeNull();
+    expect(storedSource).toMatchObject({
+      sourceCreatedAtRaw: "2026-08-29 11:46:00",
+      sourceTimestampTimezone: "unspecified_by_source",
+      sourceCreatedByExternalMemberId: "external-creator-1",
+      sourceCreatedByDisplayName: "Import Creator",
+    });
+  });
+
   it("quarantines invalid records idempotently and protects source identity", async () => {
     const run = await startRun();
     if (!run) throw new Error("Unable to create import run");
@@ -262,6 +314,13 @@ describe("time tracking import repository", () => {
       externalMemberId: "external-member-1",
       sourceCreatedAt: null,
       sourceUpdatedAt: null,
+      sourceCreatedAtRaw: null,
+      sourceUpdatedAtRaw: null,
+      sourceTimestampTimezone: null,
+      sourceCreatedByExternalMemberId: null,
+      sourceCreatedByDisplayName: null,
+      sourceUpdatedByExternalMemberId: null,
+      sourceUpdatedByDisplayName: null,
       billable: null,
       invoiced: null,
       sourceHash: "c".repeat(64),

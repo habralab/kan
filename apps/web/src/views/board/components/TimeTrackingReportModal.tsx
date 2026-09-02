@@ -383,7 +383,11 @@ export function TimeTrackingReportModal({
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium text-light-1000 dark:text-dark-1000">
-                            {group.label}
+                            {group.publicId === "unavailable-member"
+                              ? t`Unavailable member`
+                              : group.publicId === "deleted-card"
+                                ? t`Deleted card`
+                                : group.label}
                           </p>
                           <p className="text-xs text-light-900 dark:text-dark-900">
                             <Trans>
@@ -498,10 +502,12 @@ export function TimeTrackingReportModal({
                             {entry.workDate}
                           </td>
                           <td className="px-3 py-2">
-                            {entry.member.displayName}
+                            {entry.member?.displayName ?? t`Unavailable member`}
                           </td>
                           <td className="max-w-64 truncate px-3 py-2">
-                            {entry.card.deletedAt ? (
+                            {!entry.card ? (
+                              t`Deleted card`
+                            ) : entry.card.deletedAt ? (
                               <span>
                                 {entry.card.title}{" "}
                                 <span className="text-xs text-light-700 dark:text-dark-700">
@@ -518,7 +524,9 @@ export function TimeTrackingReportModal({
                               </Link>
                             )}
                           </td>
-                          <td className="px-3 py-2">{entry.card.list.name}</td>
+                          <td className="px-3 py-2">
+                            {entry.card?.list.name ?? "—"}
+                          </td>
                           <td className="max-w-48 truncate px-3 py-2">
                             {entry.labels.length > 0
                               ? entry.labels
@@ -529,7 +537,9 @@ export function TimeTrackingReportModal({
                           <td className="px-3 py-2">
                             {entry.entryMethod === "timer"
                               ? t`Timer`
-                              : t`Manual`}
+                              : entry.entryMethod === "import"
+                                ? t`Import`
+                                : t`Manual`}
                           </td>
                           <td className="whitespace-nowrap px-3 py-2 text-right font-medium">
                             {formatDuration(entry.durationSeconds)}

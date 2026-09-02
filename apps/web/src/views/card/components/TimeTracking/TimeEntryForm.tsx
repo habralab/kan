@@ -52,7 +52,9 @@ export function TimeEntryForm({
   onSave,
 }: TimeEntryFormProps) {
   const [memberPublicId, setMemberPublicId] = useState(
-    entry ? entry.member.publicId : memberOptions.defaultMemberPublicId,
+    entry
+      ? (entry.member?.publicId ?? "")
+      : memberOptions.defaultMemberPublicId,
   );
   const [duration, setDuration] = useState(
     entry ? durationValue(entry.durationSeconds) : "",
@@ -75,7 +77,7 @@ export function TimeEntryForm({
       workspaceMemberPublicId:
         memberOptions.canManage &&
         memberPublicId &&
-        memberPublicId !== entry?.member.publicId
+        memberPublicId !== entry?.member?.publicId
           ? memberPublicId
           : entry
             ? undefined

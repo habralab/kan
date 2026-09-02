@@ -8227,6 +8227,31 @@
     ],
     "translation": "Opnieuw proberen"
   },
+  "6/Ns5U": {
+    "message": "Deleted card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 493]],
+    "translation": "Verwijderde kaart"
+  },
+  "aGbZ2d": {
+    "message": "Unavailable member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 375],
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 481],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        425
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        472
+      ]
+    ],
+    "translation": "Niet-beschikbaar lid"
+  },
   "zvcXZs": {
     "message": "Unable to add time",
     "placeholders": {},

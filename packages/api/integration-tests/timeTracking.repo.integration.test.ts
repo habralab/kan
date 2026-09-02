@@ -240,6 +240,52 @@ describe("time tracking repository", () => {
     expect(secondPage.nextCursor).toBeNull();
   });
 
+  it("filters card worklog pages and summaries by an inclusive date range", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+
+    for (const [workDate, durationSeconds] of [
+      ["2026-08-31", 60],
+      ["2026-09-01", 120],
+      ["2026-09-30", 180],
+      ["2026-10-01", 240],
+    ] as const) {
+      await timeTrackingRepo.createManualWorklog(db, {
+        cardPublicId,
+        workspaceMemberPublicId: memberPublicId,
+        workDate,
+        durationSeconds,
+        comment: null,
+        actorUserId: userId,
+      });
+    }
+
+    const dateRange = { dateFrom: "2026-09-01", dateTo: "2026-09-30" };
+    const [page, summary] = await Promise.all([
+      timeTrackingRepo.listWorklogsByCard(db, {
+        cardPublicId,
+        limit: 10,
+        ...dateRange,
+      }),
+      timeTrackingRepo.getCardWorklogSummary(db, cardId, dateRange),
+    ]);
+
+    expect(page.items.map((item) => item.durationSeconds)).toEqual([180, 120]);
+    expect(page.nextCursor).toBeNull();
+    expect(summary).toMatchObject({
+      totalSeconds: 300,
+      entryCount: 2,
+    });
+    expect(summary.memberTotals).toHaveLength(1);
+    expect(summary.memberTotals[0]).toMatchObject({
+      durationSeconds: 300,
+      entryCount: 2,
+    });
+  });
+
   it("filters and summarizes a paginated board report", async () => {
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,

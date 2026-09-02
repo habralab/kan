@@ -274,6 +274,13 @@
       "when": 1788289322947,
       "tag": "20260901190202_AddTimeTrackingMoveGuardIndex",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1788305908913,
+      "tag": "20260901233828_AddTimeTrackingImportSupport",
+      "breakpoints": true
     }
   ]
 }

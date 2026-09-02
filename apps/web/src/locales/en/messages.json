@@ -493,6 +493,25 @@
     ],
     "translation": "Try again"
   },
+  "6/Ns5U": {
+    "message": "Deleted card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",493]],
+    "translation": "Deleted card"
+  },
+  "aGbZ2d": {
+    "message": "Unavailable member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx",375],
+      ["src/views/board/components/TimeTrackingReportModal.tsx",481],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",425],
+      ["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",472]
+    ],
+    "translation": "Unavailable member"
+  },
   "zvcXZs": {
     "message": "Unable to add time",
     "placeholders": {},

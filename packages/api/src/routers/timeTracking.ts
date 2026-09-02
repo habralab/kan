@@ -918,6 +918,7 @@ export const timeTrackingRouter = createTRPCRouter({
           durationSeconds: input.durationSeconds,
           comment: normalizeComment(input.comment),
           actorUserId: userId,
+          expectedMemberUserId: capabilities.canManage ? undefined : userId,
         });
       } catch (error) {
         handleRepositoryError(error);
@@ -964,6 +965,7 @@ export const timeTrackingRouter = createTRPCRouter({
           ...input,
           workspaceId: context.workspaceId,
           actorUserId: userId,
+          expectedMemberUserId: capabilities.canManage ? undefined : userId,
         }),
       );
     }),

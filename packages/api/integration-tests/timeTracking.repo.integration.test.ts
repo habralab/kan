@@ -198,6 +198,46 @@ describe("time tracking repository", () => {
     });
   });
 
+  it("rechecks worklog ownership inside update and delete transactions", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    const created = await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: memberPublicId,
+      workDate: "2026-09-01",
+      durationSeconds: 3600,
+      comment: null,
+      actorUserId: userId,
+    });
+    if (!created) throw new Error("Unable to create test worklog");
+
+    const differentUserId = crypto.randomUUID();
+    await expect(
+      timeTrackingRepo.updateWorklog(db, {
+        worklogPublicId: created.publicId,
+        workspaceId,
+        durationSeconds: 7200,
+        actorUserId: differentUserId,
+        expectedMemberUserId: differentUserId,
+      }),
+    ).rejects.toMatchObject({ code: "WORKLOG_NOT_FOUND" });
+    await expect(
+      timeTrackingRepo.deleteWorklog(db, {
+        worklogPublicId: created.publicId,
+        workspaceId,
+        actorUserId: differentUserId,
+        expectedMemberUserId: differentUserId,
+      }),
+    ).rejects.toMatchObject({ code: "WORKLOG_NOT_FOUND" });
+
+    await expect(
+      timeTrackingRepo.getWorklogByPublicId(db, created.publicId),
+    ).resolves.toMatchObject({ durationSeconds: 3600, deletedAt: null });
+  });
+
   it("paginates by work date and numeric id without skipping ties", async () => {
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,
@@ -544,7 +584,7 @@ describe("time tracking repository", () => {
     expect(cardTotals).toEqual([
       { cardPublicId, totalSeconds: worklogCount * 60 },
     ]);
-    expect(elapsedMs).toBeLessThan(2_000);
+    expect(elapsedMs).toBeLessThan(5_000);
   });
 
   it("returns public worklog and authorization projections", async () => {

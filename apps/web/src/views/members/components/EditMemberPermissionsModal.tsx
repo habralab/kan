@@ -97,7 +97,7 @@ export function EditMemberPermissionsModal() {
   });
 
   const effectivePermissions = (data?.permissions ?? []) as Permission[];
-  const hasOverrides = (data?.overrides.length ?? 0) > 0;
+  const hasOverrides = (data?.overrides?.length ?? 0) > 0;
   const isBusy =
     grantMutation.isPending ||
     revokeMutation.isPending ||
@@ -201,7 +201,8 @@ export function EditMemberPermissionsModal() {
                 </div>
                 <div className="space-y-1.5">
                   {category.permissions.map((permission) => {
-                    const label = permissionLabels[permission];
+                    const label =
+                      permissionLabels[permission] ?? (permission as string);
 
                     return (
                       <div
@@ -254,4 +255,3 @@ export function EditMemberPermissionsModal() {
     </div>
   );
 }
-

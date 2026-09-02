@@ -1,0 +1,80 @@
+---
+title: "Time tracking"
+description: "Track time on cards and report on work across a board."
+---
+
+Time tracking is enabled separately for each board. It supports manual time
+entries, a personal timer, card totals, board-wide reports, and CSV export.
+
+## Enable time tracking
+
+Open a regular board, select **Board options** (`…`), and choose **Time
+tracking**. Turn on **Enable time tracking** and save the setting.
+
+You need permission to edit the board. Time tracking cannot be enabled on a
+template or an archived board.
+
+## Record time on a card
+
+Open a card and use one of these actions:
+
+- **Add time** records a member, duration, work date, and optional comment.
+- **Start timer** starts your personal timer. Stop it to create a time entry, or
+  discard it without saving time.
+
+Only one timer can run for a user across the Kan instance. Starting a timer on
+another card stops the current timer, saves its elapsed time, and starts the new
+one. A running timer survives page reloads and application restarts.
+
+The card shows its total and totals by member. Use the period selector to
+recalculate those totals and filter the entry history. When several members
+have entries, select a member chip to filter the history without changing the
+displayed totals.
+
+## View a board report
+
+Select **Time** in the board header to open the report. You can filter by date,
+member, card, list, and label, and group results by member, card, or list.
+
+The report offers three CSV profiles:
+
+- **Summary** contains grouped totals and entry counts.
+- **Entries** contains analysis-friendly business fields such as date,
+  duration, member, card, list, labels, and comment.
+- **Detailed** also contains stable identifiers, timer metadata, and audit
+  timestamps for integrations and troubleshooting.
+
+CSV exports neutralize values that spreadsheet applications could otherwise
+interpret as formulas. Member email addresses follow the workspace's email
+visibility setting.
+
+## Permissions
+
+Time tracking uses its own workspace permissions:
+
+| Permission       | Allows                                                 |
+| ---------------- | ------------------------------------------------------ |
+| `worklog:view`   | View entries, totals, reports, and exports             |
+| `worklog:create` | Add time and run a timer for yourself                  |
+| `worklog:edit`   | Edit your own entries                                  |
+| `worklog:delete` | Delete your own entries                                |
+| `worklog:manage` | Add entries for other active members and edit or delete any member's entries |
+
+Workspace administrators receive all permissions by default. Members receive
+view, create, edit, and delete permissions; guests receive none. Custom roles
+can be configured in workspace settings.
+
+All time tracking routes require an authenticated, active workspace member and
+board access. A public board link does not expose time data.
+
+## Disabled boards and historical entries
+
+Disabling time tracking hides its normal board and card controls but preserves
+existing history. Timers that were already running can still be stopped or
+discarded, including after the board is disabled or archived or the member
+loses active status. This prevents timers from becoming impossible to close.
+
+Paused and removed members remain visible in historical reports. New entries
+can only be assigned to active members. Boards with time entries or active
+timers cannot be moved to another workspace because their member attribution
+would become ambiguous.

@@ -10,7 +10,7 @@ function formatRoleLabel(role: Role) {
   return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
-const permissionLabels: Partial<Record<Permission, string>> = {
+const permissionLabels: Record<Permission, string> = {
   "workspace:view": t`Can view workspace`,
   "workspace:edit": t`Can edit workspace`,
   "workspace:delete": t`Can delete workspace`,

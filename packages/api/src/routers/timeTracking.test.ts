@@ -68,6 +68,7 @@ describe("time tracking router", () => {
     showEmailsToMembers: true,
   };
   const worklog = {
+    id: 1,
     publicId: "worklog12345",
     workDate: "2026-09-01",
     durationSeconds: 3600,
@@ -236,6 +237,50 @@ describe("time tracking router", () => {
     expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
   });
 
+  it("rejects incomplete and reversed card date ranges", async () => {
+    const caller = timeTrackingRouter.createCaller(ctx);
+    const results = await Promise.allSettled([
+      caller.listWorklogs({
+        cardPublicId: cardContext.cardPublicId,
+        dateFrom: "2026-09-01",
+      }),
+      caller.getCardSummary({
+        cardPublicId: cardContext.cardPublicId,
+        dateFrom: "2026-09-30",
+        dateTo: "2026-09-01",
+      }),
+    ]);
+
+    for (const result of results) {
+      expect(result.status).toBe("rejected");
+      if (result.status === "rejected")
+        expect(result.reason).toMatchObject({ code: "BAD_REQUEST" });
+    }
+    expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
+    expect(mockRepo.getCardWorklogSummary).not.toHaveBeenCalled();
+  });
+
+  it("forwards a card date range to the worklog page", async () => {
+    mockRepo.listWorklogsByCard.mockResolvedValue({
+      items: [worklog],
+      nextCursor: null,
+    });
+
+    await timeTrackingRouter.createCaller(ctx).listWorklogs({
+      cardPublicId: cardContext.cardPublicId,
+      dateFrom: "2026-09-01",
+      dateTo: "2026-09-30",
+    });
+
+    expect(mockRepo.listWorklogsByCard).toHaveBeenCalledWith(db, {
+      cardPublicId: cardContext.cardPublicId,
+      limit: 25,
+      cursor: undefined,
+      dateFrom: "2026-09-01",
+      dateTo: "2026-09-30",
+    });
+  });
+
   it("uses the board edit rule for settings", async () => {
     const settings = {
       boardId: 10,
@@ -338,11 +383,14 @@ describe("time tracking router", () => {
 
     const result = await timeTrackingRouter.createCaller(ctx).getCardSummary({
       cardPublicId: cardContext.cardPublicId,
+      dateFrom: "2026-09-01",
+      dateTo: "2026-09-30",
     });
 
     expect(mockRepo.getCardWorklogSummary).toHaveBeenCalledWith(
       db,
       cardContext.cardId,
+      { dateFrom: "2026-09-01", dateTo: "2026-09-30" },
     );
     expect(result).toMatchObject({
       totalSeconds: 3600,

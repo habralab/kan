@@ -202,6 +202,7 @@ const formatWorklog = (
       publicId: worklog.card.publicId,
       title: worklog.card.title,
       cardNumber: worklog.card.cardNumber,
+      deletedAt: worklog.card.deletedAt,
       list: {
         publicId: worklog.card.list.publicId,
         name: worklog.card.list.name,

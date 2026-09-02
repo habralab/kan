@@ -335,7 +335,12 @@ export const getWorklogByPublicId = (db: dbClient, publicId: string) =>
         },
       },
       card: {
-        columns: { publicId: true, title: true, cardNumber: true },
+        columns: {
+          publicId: true,
+          title: true,
+          cardNumber: true,
+          deletedAt: true,
+        },
         with: {
           list: { columns: { publicId: true, name: true } },
         },
@@ -735,7 +740,12 @@ export const listWorklogsByCard = async (
         },
       },
       card: {
-        columns: { publicId: true, title: true, cardNumber: true },
+        columns: {
+          publicId: true,
+          title: true,
+          cardNumber: true,
+          deletedAt: true,
+        },
         with: {
           list: { columns: { publicId: true, name: true } },
         },
@@ -822,7 +832,12 @@ export const listBoardWorklogs = async (
         },
       },
       card: {
-        columns: { publicId: true, title: true, cardNumber: true },
+        columns: {
+          publicId: true,
+          title: true,
+          cardNumber: true,
+          deletedAt: true,
+        },
         with: {
           list: { columns: { publicId: true, name: true } },
           labels: {

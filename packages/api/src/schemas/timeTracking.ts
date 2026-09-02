@@ -36,6 +36,7 @@ export const timeTrackingWorklogSchema = z.object({
     publicId: z.string(),
     title: z.string(),
     cardNumber: z.number().int().nullable(),
+    deletedAt: z.date().nullable(),
     list: z.object({
       publicId: z.string(),
       name: z.string(),

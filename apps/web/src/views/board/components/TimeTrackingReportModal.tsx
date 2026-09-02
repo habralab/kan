@@ -502,13 +502,22 @@ export function TimeTrackingReportModal({
                             {entry.member.displayName}
                           </td>
                           <td className="max-w-64 truncate px-3 py-2">
-                            <Link
-                              href={`/cards/${entry.card.publicId}`}
-                              className="hover:underline"
-                              onClick={closeModal}
-                            >
-                              {entry.card.title}
-                            </Link>
+                            {entry.card.deletedAt ? (
+                              <span>
+                                {entry.card.title}{" "}
+                                <span className="text-xs text-light-700 dark:text-dark-700">
+                                  ({t`Removed`})
+                                </span>
+                              </span>
+                            ) : (
+                              <Link
+                                href={`/cards/${entry.card.publicId}`}
+                                className="hover:underline"
+                                onClick={closeModal}
+                              >
+                                {entry.card.title}
+                              </Link>
+                            )}
                           </td>
                           <td className="px-3 py-2">{entry.card.list.name}</td>
                           <td className="max-w-48 truncate px-3 py-2">

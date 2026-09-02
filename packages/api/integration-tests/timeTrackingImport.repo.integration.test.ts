@@ -182,6 +182,25 @@ describe("time tracking import repository", () => {
       );
   });
 
+  it("preflights all mappings before an import run is created", async () => {
+    const summary = await importRepo.validateTimeTrackingImportMappings(db, [
+      source("entry-1"),
+      source("entry-2", {
+        cardPublicId: null,
+        workspaceMemberPublicId: null,
+      }),
+    ]);
+
+    expect(summary).toEqual({ boards: 1, cards: 1, workspaceMembers: 1 });
+    await expect(
+      importRepo.validateTimeTrackingImportMappings(db, [
+        source("entry-3", { cardPublicId: "missingcard1" }),
+      ]),
+    ).rejects.toMatchObject({ code: "CARD_NOT_IN_BOARD" });
+    expect(await db.select().from(timeTrackingImportRuns)).toHaveLength(0);
+    expect(await db.select().from(timeTrackingWorklogs)).toHaveLength(0);
+  });
+
   it("is insert-only by default and requires explicit updates", async () => {
     const firstRun = await startRun();
     if (!firstRun) throw new Error("Unable to create first import run");

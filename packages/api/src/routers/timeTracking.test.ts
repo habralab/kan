@@ -827,6 +827,7 @@ describe("time tracking router", () => {
       durationSeconds: undefined,
       comment: null,
       actorUserId: user.id,
+      expectedMemberUserId: user.id,
     });
   });
 
@@ -849,6 +850,36 @@ describe("time tracking router", () => {
       }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mockRepo.deleteWorklog).not.toHaveBeenCalled();
+  });
+
+  it("rechecks ownership when deleting an owner's entry", async () => {
+    mockRepo.getWorklogContext.mockResolvedValue({
+      workspaceId: 42,
+      memberUserId: user.id,
+      memberStatus: "active",
+      memberDeletedAt: null,
+      deletedAt: null,
+    });
+    mockHasPermission.mockImplementation(
+      (_db, _userId, _workspaceId, permission) =>
+        Promise.resolve(permission === "worklog:delete"),
+    );
+    mockRepo.deleteWorklog.mockResolvedValue({
+      publicId: worklog.publicId,
+      deleted: true,
+    });
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).deleteWorklog({
+        worklogPublicId: worklog.publicId,
+      }),
+    ).resolves.toEqual({ publicId: worklog.publicId, deleted: true });
+    expect(mockRepo.deleteWorklog).toHaveBeenCalledWith(db, {
+      worklogPublicId: worklog.publicId,
+      workspaceId: 42,
+      actorUserId: user.id,
+      expectedMemberUserId: user.id,
+    });
   });
 
   it("does not start a timer without worklog:create", async () => {

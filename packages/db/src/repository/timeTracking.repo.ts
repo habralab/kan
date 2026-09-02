@@ -413,7 +413,8 @@ export const updateBoardSettings = async (
       .where(
         and(eq(boards.publicId, input.boardPublicId), isNull(boards.deletedAt)),
       )
-      .limit(1);
+      .limit(1)
+      .for("update");
 
     if (!board) throw new TimeTrackingRepositoryError("BOARD_NOT_FOUND");
     if (board.type !== "regular" && input.enabled)
@@ -531,6 +532,7 @@ export const updateWorklog = async (
     durationSeconds?: number;
     comment?: string | null;
     actorUserId: string;
+    expectedMemberUserId?: string;
   },
 ) =>
   db.transaction(async (tx) => {
@@ -538,10 +540,17 @@ export const updateWorklog = async (
       .select({ id: timeTrackingWorklogs.id })
       .from(timeTrackingWorklogs)
       .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
+      .innerJoin(
+        workspaceMembers,
+        eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
+      )
       .where(
         and(
           eq(timeTrackingWorklogs.publicId, input.worklogPublicId),
           eq(boards.workspaceId, input.workspaceId),
+          input.expectedMemberUserId
+            ? eq(workspaceMembers.userId, input.expectedMemberUserId)
+            : undefined,
           isNull(timeTrackingWorklogs.deletedAt),
           isNull(boards.deletedAt),
         ),
@@ -599,6 +608,7 @@ export const deleteWorklog = async (
     worklogPublicId: string;
     workspaceId: number;
     actorUserId: string;
+    expectedMemberUserId?: string;
   },
 ) =>
   db.transaction(async (tx) => {
@@ -606,10 +616,17 @@ export const deleteWorklog = async (
       .select({ id: timeTrackingWorklogs.id })
       .from(timeTrackingWorklogs)
       .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
+      .innerJoin(
+        workspaceMembers,
+        eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
+      )
       .where(
         and(
           eq(timeTrackingWorklogs.publicId, input.worklogPublicId),
           eq(boards.workspaceId, input.workspaceId),
+          input.expectedMemberUserId
+            ? eq(workspaceMembers.userId, input.expectedMemberUserId)
+            : undefined,
           isNull(boards.deletedAt),
         ),
       )

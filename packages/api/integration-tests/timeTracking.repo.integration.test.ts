@@ -583,6 +583,17 @@ describe("time tracking repository", () => {
         })),
       )
       .returning();
+    await db.insert(timeTrackingWorklogs).values({
+      publicId: "activehist01",
+      boardId,
+      cardId,
+      workspaceMemberId,
+      workDate: "2026-09-01",
+      durationSeconds: 60,
+      comment: null,
+      entryMethod: "manual",
+      createdBy: userId,
+    });
     const pausedWorklog = insertedHistorical[0];
     if (!pausedWorklog) throw new Error("Unable to seed historical worklog");
     await expect(
@@ -613,10 +624,20 @@ describe("time tracking repository", () => {
       db,
       workspaceId,
     );
+    const reportOptions = await timeTrackingRepo.getBoardReportOptions(
+      db,
+      boardId,
+    );
     expect(
       page.items.map((item) => item.workspaceMember.status).sort(),
-    ).toEqual(["active", "paused", "removed"]);
+    ).toEqual(["active", "active", "paused", "removed"]);
     expect(memberOptions.map((member) => member.status)).toEqual(["active"]);
+    expect(reportOptions.members[0]?.publicId).toBe(memberPublicId);
+    expect(
+      reportOptions.members.map(
+        (member) => member.status === "active" && member.deletedAt === null,
+      ),
+    ).toEqual([true, false, false, false]);
   });
 
   it("rechecks time data while holding the board move lock", async () => {

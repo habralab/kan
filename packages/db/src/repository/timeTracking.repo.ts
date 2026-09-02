@@ -25,6 +25,7 @@ import {
   timeTrackingActiveTimers,
   timeTrackingBoardSettings,
   timeTrackingWorklogs,
+  timeTrackingWorklogSources,
   users,
   workspaceMembers,
   workspaces,
@@ -852,6 +853,36 @@ export const listBoardWorklogs = async (
     nextCursor:
       hasMore && last ? { workDate: last.workDate, id: last.id } : null,
   };
+};
+
+export const listWorklogSourcesByWorklogIds = (
+  db: dbClient,
+  worklogIds: number[],
+) => {
+  if (worklogIds.length === 0) return Promise.resolve([]);
+
+  return db
+    .select({
+      worklogId: timeTrackingWorklogSources.worklogId,
+      provider: timeTrackingWorklogSources.provider,
+      externalId: timeTrackingWorklogSources.externalId,
+      sourceCreatedAt: timeTrackingWorklogSources.sourceCreatedAt,
+      sourceUpdatedAt: timeTrackingWorklogSources.sourceUpdatedAt,
+      sourceCreatedAtRaw: timeTrackingWorklogSources.sourceCreatedAtRaw,
+      sourceUpdatedAtRaw: timeTrackingWorklogSources.sourceUpdatedAtRaw,
+      sourceTimestampTimezone:
+        timeTrackingWorklogSources.sourceTimestampTimezone,
+      sourceCreatedByExternalMemberId:
+        timeTrackingWorklogSources.sourceCreatedByExternalMemberId,
+      sourceCreatedByDisplayName:
+        timeTrackingWorklogSources.sourceCreatedByDisplayName,
+      sourceUpdatedByExternalMemberId:
+        timeTrackingWorklogSources.sourceUpdatedByExternalMemberId,
+      sourceUpdatedByDisplayName:
+        timeTrackingWorklogSources.sourceUpdatedByDisplayName,
+    })
+    .from(timeTrackingWorklogSources)
+    .where(inArray(timeTrackingWorklogSources.worklogId, worklogIds));
 };
 
 export const getBoardWorklogSummary = async (

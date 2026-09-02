@@ -25,6 +25,14 @@ const nullableTimestampSchema = z
   .datetime({ offset: true })
   .transform((value) => new Date(value))
   .nullable();
+const optionalNullableString = (max: number) =>
+  z
+    .string()
+    .min(1)
+    .max(max)
+    .nullable()
+    .optional()
+    .transform((value) => value ?? null);
 const sourceSchema = z.object({
   externalId: z.string().min(1).max(255),
   externalBoardId: z.string().min(1).max(255),
@@ -32,6 +40,13 @@ const sourceSchema = z.object({
   externalMemberId: z.string().min(1).max(255).nullable(),
   sourceCreatedAt: nullableTimestampSchema,
   sourceUpdatedAt: nullableTimestampSchema,
+  sourceCreatedAtRaw: optionalNullableString(128),
+  sourceUpdatedAtRaw: optionalNullableString(128),
+  sourceTimestampTimezone: optionalNullableString(64),
+  sourceCreatedByExternalMemberId: optionalNullableString(255),
+  sourceCreatedByDisplayName: optionalNullableString(255),
+  sourceUpdatedByExternalMemberId: optionalNullableString(255),
+  sourceUpdatedByDisplayName: optionalNullableString(255),
   billable: z.boolean().nullable(),
   invoiced: z.boolean().nullable(),
   sourceHash: hashSchema,
@@ -52,7 +67,7 @@ const quarantineSchema = sourceSchema.extend({
 });
 const manifestSchema = z.object({
   format: z.literal("kan-time-tracking-import-plan-v1"),
-  schemaVersion: z.literal(1),
+  schemaVersion: z.union([z.literal(1), z.literal(2)]),
   planId: z.string().min(1),
   provider: z.string().min(1).max(64),
   bundleVersion: z.string().min(1).max(128),

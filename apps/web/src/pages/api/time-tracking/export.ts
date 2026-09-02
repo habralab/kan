@@ -15,6 +15,7 @@ import {
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
   getTimeTrackingExportFilename,
+  getTimeTrackingSourceTimestamp,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
   TIME_TRACKING_ENTRIES_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
@@ -219,6 +220,16 @@ export default withRateLimit(
           limit: EXPORT_PAGE_SIZE,
           cursor,
         });
+        const sources =
+          profile === "detailed"
+            ? await timeTrackingRepo.listWorklogSourcesByWorklogIds(
+                db,
+                page.items.map((row) => row.id),
+              )
+            : [];
+        const sourcesByWorklogId = new Map(
+          sources.map((source) => [source.worklogId, source]),
+        );
         for (const row of page.items) {
           const labels = getLabels(row);
           const member = getWorklogMember(row.workspaceMember);
@@ -246,6 +257,7 @@ export default withRateLimit(
             );
             continue;
           }
+          const source = sourcesByWorklogId.get(row.id);
           await writeChunk(
             res,
             encodeCsvRow([
@@ -274,6 +286,21 @@ export default withRateLimit(
               row.createdByUser?.name,
               row.updatedAt,
               row.updatedByUser?.name,
+              source?.provider,
+              source?.externalId,
+              getTimeTrackingSourceTimestamp(
+                source?.sourceCreatedAt,
+                source?.sourceCreatedAtRaw,
+              ),
+              source?.sourceTimestampTimezone,
+              source?.sourceCreatedByDisplayName,
+              source?.sourceCreatedByExternalMemberId,
+              getTimeTrackingSourceTimestamp(
+                source?.sourceUpdatedAt,
+                source?.sourceUpdatedAtRaw,
+              ),
+              source?.sourceUpdatedByDisplayName,
+              source?.sourceUpdatedByExternalMemberId,
             ]),
           );
         }

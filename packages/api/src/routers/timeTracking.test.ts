@@ -319,9 +319,11 @@ describe("time tracking router", () => {
     mockHasPermission.mockResolvedValue(true);
     mockRepo.getCardWorklogSummary.mockResolvedValue({
       totalSeconds: 3600,
+      entryCount: 1,
       memberTotals: [
         {
           durationSeconds: 3600,
+          entryCount: 1,
           memberPublicId: "member123456",
           memberEmail: "test@example.com",
           memberStatus: "active",
@@ -344,6 +346,7 @@ describe("time tracking router", () => {
     );
     expect(result).toMatchObject({
       totalSeconds: 3600,
+      entryCount: 1,
       canCreate: true,
       canStartTimer: true,
       canManage: true,
@@ -358,6 +361,7 @@ describe("time tracking router", () => {
     );
     mockRepo.getCardWorklogSummary.mockResolvedValue({
       totalSeconds: 0,
+      entryCount: 0,
       memberTotals: [],
     });
 
@@ -469,7 +473,6 @@ describe("time tracking router", () => {
     expect(mockRepo.getTimeTrackingMemberOptions).toHaveBeenCalledWith(
       db,
       cardContext.workspaceId,
-      false,
     );
     expect(result).toEqual({
       members: [
@@ -481,20 +484,21 @@ describe("time tracking router", () => {
         },
       ],
       canManage: false,
+      defaultMemberPublicId: "member123456",
     });
   });
 
-  it("marks a soft-deleted historical member as removed for managers", async () => {
+  it("returns the current member as the manager default", async () => {
     mockHasPermission.mockResolvedValue(true);
     mockRepo.getTimeTrackingMemberOptions.mockResolvedValue([
       {
-        publicId: "deletedmem01",
-        email: "former@example.com",
+        publicId: "member123456",
+        email: "test@example.com",
         status: "active",
-        deletedAt: new Date("2026-08-01T00:00:00.000Z"),
-        userId: "00000000-0000-0000-0000-000000000002",
-        displayName: "Former User",
-        userEmail: "former@example.com",
+        deletedAt: null,
+        userId: user.id,
+        displayName: "Test User",
+        userEmail: "test@example.com",
         showEmailsToMembers: true,
       },
     ]);
@@ -505,12 +509,17 @@ describe("time tracking router", () => {
 
     expect(result.members).toEqual([
       {
-        publicId: "deletedmem01",
-        displayName: "Former User",
-        email: "former@example.com",
-        status: "removed",
+        publicId: "member123456",
+        displayName: "Test User",
+        email: "test@example.com",
+        status: "active",
       },
     ]);
+    expect(result.defaultMemberPublicId).toBe("member123456");
+    expect(mockRepo.getTimeTrackingMemberOptions).toHaveBeenCalledWith(
+      db,
+      cardContext.workspaceId,
+    );
   });
 
   it("returns a filtered board report without internal IDs", async () => {

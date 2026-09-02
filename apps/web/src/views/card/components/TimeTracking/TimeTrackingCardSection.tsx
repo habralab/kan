@@ -1,6 +1,12 @@
 import Link from "next/link";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import { t } from "@lingui/core/macro";
 import { useEffect, useMemo, useState } from "react";
+import { HiChevronDown } from "react-icons/hi2";
 
 import type { RouterOutputs } from "~/utils/api";
 import Button from "~/components/Button";
@@ -40,6 +46,7 @@ export function TimeTrackingCardSection({
   const [deleteEntry, setDeleteEntry] = useState<Worklog | null>(null);
   const [confirmSwitch, setConfirmSwitch] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [entriesOpen, setEntriesOpen] = useState(false);
 
   const settings = api.timeTracking.getSettings.useQuery(
     { boardPublicId },
@@ -53,7 +60,7 @@ export function TimeTrackingCardSection({
   );
   const firstPage = api.timeTracking.listWorklogs.useQuery(
     { cardPublicId, limit: PAGE_SIZE },
-    { enabled: isEnabled },
+    { enabled: isEnabled && entriesOpen },
   );
   const memberOptions = api.timeTracking.getMemberOptions.useQuery(
     { cardPublicId },
@@ -171,14 +178,32 @@ export function TimeTrackingCardSection({
     [summary.data?.memberTotals],
   );
 
-  const effectiveMemberOptions =
-    memberOptions.data ??
-    (formEntry &&
-    formEntry !== "new" &&
-    formEntry.member &&
-    summary.data?.canManage !== true
-      ? { members: [formEntry.member], canManage: false }
-      : null);
+  const effectiveMemberOptions = useMemo(() => {
+    if (memberOptions.data) {
+      if (
+        formEntry &&
+        formEntry !== "new" &&
+        formEntry.member &&
+        !memberOptions.data.members.some(
+          (member) => member.publicId === formEntry.member?.publicId,
+        )
+      ) {
+        return {
+          ...memberOptions.data,
+          members: [...memberOptions.data.members, formEntry.member],
+        };
+      }
+      return memberOptions.data;
+    }
+    if (formEntry && formEntry !== "new" && formEntry.member) {
+      return {
+        members: [formEntry.member],
+        canManage: false,
+        defaultMemberPublicId: formEntry.member.publicId,
+      };
+    }
+    return null;
+  }, [formEntry, memberOptions.data]);
 
   const beginTimer = () => {
     if (timer && !timerIsOnCard) {
@@ -432,117 +457,152 @@ export function TimeTrackingCardSection({
         </div>
       )}
 
-      <div className="mt-4 space-y-3">
-        {summary.isError || firstPage.isError ? (
-          <div className="space-y-3">
-            <p className="text-sm text-red-700 dark:text-red-500">
-              {t`Unable to load time entries.`}
-            </p>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => {
-                void summary.refetch();
-                void firstPage.refetch();
-              }}
-            >
-              {t`Try again`}
-            </Button>
-          </div>
-        ) : firstPage.isLoading ? (
-          <LoadingSpinner size="sm" />
-        ) : entries.length === 0 ? (
-          <p className="text-sm text-light-900 dark:text-dark-900">
-            {t`No time has been logged on this card yet.`}
+      {summary.isError && (
+        <div className="mt-4 space-y-3">
+          <p className="text-sm text-red-700 dark:text-red-500">
+            {t`Unable to load time entries.`}
           </p>
-        ) : (
-          entries.map((entry) => (
-            <div
-              key={entry.publicId}
-              className="rounded-md border border-light-300 px-3 py-2 dark:border-dark-300"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-sm text-light-1000 dark:text-dark-1000">
-                    <span className="font-medium">
-                      {entry.member?.displayName ?? t`Unavailable member`}
-                    </span>
-                    {" · "}
-                    {formatDuration(entry.durationSeconds)}
-                    {" · "}
-                    {entry.workDate}
-                  </p>
-                  {entry.comment && (
-                    <p className="mt-1 whitespace-pre-wrap text-xs text-light-900 dark:text-dark-900">
-                      {entry.comment}
-                    </p>
-                  )}
-                </div>
-                {(entry.canEdit || entry.canDelete) && (
-                  <div className="flex shrink-0 gap-1">
-                    {entry.canEdit && (
-                      <Button
-                        size="xs"
-                        variant="ghost"
-                        onClick={() => setFormEntry(entry)}
-                      >
-                        {t`Edit`}
-                      </Button>
-                    )}
-                    {entry.canDelete && (
-                      <Button
-                        size="xs"
-                        variant="ghost"
-                        onClick={() => setDeleteEntry(entry)}
-                      >
-                        {t`Delete`}
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </div>
-              {deleteEntry?.publicId === entry.publicId && (
-                <div className="mt-3 flex items-center justify-end gap-2 border-t border-light-300 pt-2 dark:border-dark-300">
-                  <span className="mr-auto text-xs text-light-900 dark:text-dark-900">
-                    {t`Delete this time entry?`}
-                  </span>
-                  <Button
-                    size="xs"
-                    variant="secondary"
-                    onClick={() => setDeleteEntry(null)}
-                  >
-                    {t`Cancel`}
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="danger"
-                    onClick={() =>
-                      removeWorklog.mutate({
-                        worklogPublicId: entry.publicId,
-                      })
-                    }
-                    isLoading={removeWorklog.isPending}
-                  >
-                    {t`Delete`}
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </div>
-
-      {nextCursor && (
-        <div className="mt-4 flex justify-center">
           <Button
             size="sm"
-            variant="ghost"
-            onClick={loadMore}
-            isLoading={isLoadingMore}
+            variant="secondary"
+            onClick={() => void summary.refetch()}
           >
-            {t`Load more`}
+            {t`Try again`}
           </Button>
         </div>
+      )}
+
+      {(summary.data?.entryCount ?? 0) > 0 && (
+        <Disclosure
+          as="div"
+          className="mt-4 border-t border-light-300 pt-2 dark:border-dark-300"
+        >
+          {({ open }) => (
+            <>
+              <DisclosureButton
+                className="group flex w-full items-center justify-between rounded-md py-2 text-left text-sm font-medium text-light-1000 focus-visible:outline-none dark:text-dark-1000"
+                onClick={() => setEntriesOpen(!open)}
+              >
+                <span>
+                  {t`Time entries`} · {summary.data?.entryCount}
+                </span>
+                <HiChevronDown className="h-4 w-4 text-light-900 transition-transform group-data-[open]:rotate-180 dark:text-dark-900" />
+              </DisclosureButton>
+              <DisclosurePanel className="space-y-3 pt-2">
+                {firstPage.isError ? (
+                  <div className="space-y-3">
+                    <p className="text-sm text-red-700 dark:text-red-500">
+                      {t`Unable to load time entries.`}
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => {
+                        void firstPage.refetch();
+                      }}
+                    >
+                      {t`Try again`}
+                    </Button>
+                  </div>
+                ) : firstPage.isLoading ? (
+                  <LoadingSpinner size="sm" />
+                ) : entries.length === 0 ? (
+                  <p className="text-sm text-light-900 dark:text-dark-900">
+                    {t`No time has been logged on this card yet.`}
+                  </p>
+                ) : (
+                  entries.map((entry) => (
+                    <div
+                      key={entry.publicId}
+                      className="rounded-md border border-light-300 px-3 py-2 dark:border-dark-300"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm text-light-1000 dark:text-dark-1000">
+                            <span className="font-medium">
+                              {entry.member?.displayName ??
+                                t`Unavailable member`}
+                            </span>
+                            {" · "}
+                            {formatDuration(entry.durationSeconds)}
+                            {" · "}
+                            {entry.workDate}
+                          </p>
+                          {entry.comment && (
+                            <p className="mt-1 whitespace-pre-wrap text-xs text-light-900 dark:text-dark-900">
+                              {entry.comment}
+                            </p>
+                          )}
+                        </div>
+                        {(entry.canEdit || entry.canDelete) && (
+                          <div className="flex shrink-0 gap-1">
+                            {entry.canEdit && (
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                onClick={() => setFormEntry(entry)}
+                              >
+                                {t`Edit`}
+                              </Button>
+                            )}
+                            {entry.canDelete && (
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                onClick={() => setDeleteEntry(entry)}
+                              >
+                                {t`Delete`}
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {deleteEntry?.publicId === entry.publicId && (
+                        <div className="mt-3 flex items-center justify-end gap-2 border-t border-light-300 pt-2 dark:border-dark-300">
+                          <span className="mr-auto text-xs text-light-900 dark:text-dark-900">
+                            {t`Delete this time entry?`}
+                          </span>
+                          <Button
+                            size="xs"
+                            variant="secondary"
+                            onClick={() => setDeleteEntry(null)}
+                          >
+                            {t`Cancel`}
+                          </Button>
+                          <Button
+                            size="xs"
+                            variant="danger"
+                            onClick={() =>
+                              removeWorklog.mutate({
+                                worklogPublicId: entry.publicId,
+                              })
+                            }
+                            isLoading={removeWorklog.isPending}
+                          >
+                            {t`Delete`}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+
+                {nextCursor && (
+                  <div className="flex justify-center pt-1">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={loadMore}
+                      isLoading={isLoadingMore}
+                    >
+                      {t`Load more`}
+                    </Button>
+                  </div>
+                )}
+              </DisclosurePanel>
+            </>
+          )}
+        </Disclosure>
       )}
     </section>
   );

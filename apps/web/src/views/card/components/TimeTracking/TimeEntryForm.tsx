@@ -1,5 +1,5 @@
 import { t } from "@lingui/core/macro";
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 
 import type { RouterOutputs } from "~/utils/api";
 import Button from "~/components/Button";
@@ -52,7 +52,9 @@ export function TimeEntryForm({
   onSave,
 }: TimeEntryFormProps) {
   const [memberPublicId, setMemberPublicId] = useState(
-    entry?.member?.publicId ?? "",
+    entry
+      ? (entry.member?.publicId ?? "")
+      : memberOptions.defaultMemberPublicId,
   );
   const [duration, setDuration] = useState(
     entry ? durationValue(entry.durationSeconds) : "",
@@ -62,12 +64,6 @@ export function TimeEntryForm({
   const [durationError, setDurationError] = useState(false);
   const fieldId = useId();
   const durationErrorId = `${fieldId}-duration-error`;
-
-  useEffect(() => {
-    if (!memberPublicId && memberOptions.members.length === 1) {
-      setMemberPublicId(memberOptions.members[0]?.publicId ?? "");
-    }
-  }, [memberOptions.members, memberPublicId]);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -79,11 +75,13 @@ export function TimeEntryForm({
 
     onSave({
       workspaceMemberPublicId:
-        memberOptions.canManage && memberPublicId
+        memberOptions.canManage &&
+        memberPublicId &&
+        memberPublicId !== entry?.member?.publicId
           ? memberPublicId
           : entry
             ? undefined
-            : memberOptions.members[0]?.publicId,
+            : memberOptions.defaultMemberPublicId,
       workDate,
       durationSeconds,
       comment: comment.trim() || null,

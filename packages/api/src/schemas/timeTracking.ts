@@ -116,6 +116,7 @@ export const timeTrackingActiveTimerSchema = z.union([
 
 export const timeTrackingCardSummarySchema = z.object({
   totalSeconds: z.number().int().nonnegative(),
+  entryCount: z.number().int().nonnegative(),
   memberTotals: z.array(
     z.object({
       member: timeTrackingMemberSchema.nullable(),
@@ -137,4 +138,5 @@ export const timeTrackingCardTotalsSchema = z.array(
 export const timeTrackingMemberOptionsSchema = z.object({
   members: z.array(timeTrackingMemberSchema),
   canManage: z.boolean(),
+  defaultMemberPublicId: z.string(),
 });

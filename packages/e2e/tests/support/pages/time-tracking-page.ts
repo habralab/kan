@@ -72,6 +72,12 @@ export class TimeTrackingPage {
     ).toBeVisible();
   }
 
+  async showTimeEntries() {
+    await this.cardSection()
+      .getByRole("button", { name: /^Time entries/ })
+      .click();
+  }
+
   async startTimer() {
     const started = waitForTrpcMutation(this.page, "timeTracking.startTimer");
     await this.cardSection()

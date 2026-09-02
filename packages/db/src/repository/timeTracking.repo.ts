@@ -169,7 +169,11 @@ export const getCardTimeTrackingContext = async (
   return card ?? null;
 };
 
-export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
+export const getCardWorklogSummary = async (
+  db: dbClient,
+  cardId: number,
+  dateRange?: { dateFrom: string; dateTo: string },
+) => {
   const durationSeconds =
     sql<number>`SUM(${timeTrackingWorklogs.durationSeconds})`.mapWith(Number);
   const memberTotals = await db
@@ -196,6 +200,12 @@ export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
       and(
         eq(timeTrackingWorklogs.cardId, cardId),
         isNull(timeTrackingWorklogs.deletedAt),
+        dateRange
+          ? gte(timeTrackingWorklogs.workDate, dateRange.dateFrom)
+          : undefined,
+        dateRange
+          ? lte(timeTrackingWorklogs.workDate, dateRange.dateTo)
+          : undefined,
       ),
     )
     .groupBy(workspaceMembers.id, users.id, workspaces.showEmailsToMembers)
@@ -628,6 +638,8 @@ export const listWorklogsByCard = async (
     cardPublicId: string;
     limit: number;
     cursor?: WorklogCursor;
+    dateFrom?: string;
+    dateTo?: string;
   },
 ) => {
   const [card] = await db
@@ -703,6 +715,12 @@ export const listWorklogsByCard = async (
     where: and(
       eq(timeTrackingWorklogs.cardId, card.id),
       isNull(timeTrackingWorklogs.deletedAt),
+      input.dateFrom
+        ? gte(timeTrackingWorklogs.workDate, input.dateFrom)
+        : undefined,
+      input.dateTo
+        ? lte(timeTrackingWorklogs.workDate, input.dateTo)
+        : undefined,
       cursorCondition,
     ),
     orderBy: (worklogs, { desc }) => [

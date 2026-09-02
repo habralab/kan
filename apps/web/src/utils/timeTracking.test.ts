@@ -3,8 +3,46 @@ import { describe, expect, it } from "vitest";
 import {
   formatDuration,
   formatTimerDuration,
+  getTimeTrackingPeriodRange,
   parseDurationToSeconds,
 } from "./timeTracking";
+
+describe("getTimeTrackingPeriodRange", () => {
+  const now = new Date(2026, 8, 2, 15, 30);
+
+  it.each([
+    ["all", undefined],
+    ["today", { dateFrom: "2026-09-02", dateTo: "2026-09-02" }],
+    ["yesterday", { dateFrom: "2026-09-01", dateTo: "2026-09-01" }],
+    ["this-week", { dateFrom: "2026-08-31", dateTo: "2026-09-06" }],
+    ["last-week", { dateFrom: "2026-08-24", dateTo: "2026-08-30" }],
+    ["last-14-days", { dateFrom: "2026-08-20", dateTo: "2026-09-02" }],
+    ["this-month", { dateFrom: "2026-09-01", dateTo: "2026-09-30" }],
+    ["last-month", { dateFrom: "2026-08-01", dateTo: "2026-08-31" }],
+    ["this-quarter", { dateFrom: "2026-07-01", dateTo: "2026-09-30" }],
+    ["last-quarter", { dateFrom: "2026-04-01", dateTo: "2026-06-30" }],
+    ["this-year", { dateFrom: "2026-01-01", dateTo: "2026-12-31" }],
+    ["last-year", { dateFrom: "2025-01-01", dateTo: "2025-12-31" }],
+  ] as const)(
+    "resolves %s using local calendar boundaries",
+    (period, range) => {
+      expect(getTimeTrackingPeriodRange(period, now)).toEqual(range);
+    },
+  );
+
+  it("handles previous periods across a year boundary", () => {
+    const january = new Date(2026, 0, 5);
+
+    expect(getTimeTrackingPeriodRange("last-month", january)).toEqual({
+      dateFrom: "2025-12-01",
+      dateTo: "2025-12-31",
+    });
+    expect(getTimeTrackingPeriodRange("last-quarter", january)).toEqual({
+      dateFrom: "2025-10-01",
+      dateTo: "2025-12-31",
+    });
+  });
+});
 
 describe("parseDurationToSeconds", () => {
   it.each([

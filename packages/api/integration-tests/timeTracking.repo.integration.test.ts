@@ -888,7 +888,7 @@ describe("time tracking repository", () => {
     });
   });
 
-  it("stops a timer once and persists its rounded duration", async () => {
+  it("assigns a stopped timer to its start date and timezone", async () => {
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,
       enabled: true,
@@ -899,23 +899,21 @@ describe("time tracking repository", () => {
       cardPublicId,
       timezone: "Europe/Lisbon",
       comment: null,
-      startedAt: new Date("2026-08-31T23:30:00.000Z"),
+      startedAt: new Date("2026-08-31T22:59:30.000Z"),
     });
 
     const firstStop = await timeTrackingRepo.stopTimer(db, {
       userId,
-      timezone: "Europe/Lisbon",
-      stoppedAt: new Date("2026-08-31T23:31:31.000Z"),
+      stoppedAt: new Date("2026-08-31T23:01:01.000Z"),
     });
     const secondStop = await timeTrackingRepo.stopTimer(db, {
       userId,
-      timezone: "Europe/Lisbon",
-      stoppedAt: new Date("2026-08-31T23:32:00.000Z"),
+      stoppedAt: new Date("2026-08-31T23:02:00.000Z"),
     });
 
     expect(firstStop.stopped).toBe(true);
     expect(firstStop.worklog).toMatchObject({
-      workDate: "2026-09-01",
+      workDate: "2026-08-31",
       durationSeconds: 120,
       entryMethod: "timer",
       timerTimezone: "Europe/Lisbon",
@@ -925,7 +923,7 @@ describe("time tracking repository", () => {
     expect(await timeTrackingRepo.getActiveTimer(db, userId)).toBeNull();
   });
 
-  it("auto-stops the current timer when another card is started", async () => {
+  it("auto-stops a timer using its original start date and timezone", async () => {
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,
       enabled: true,
@@ -941,23 +939,25 @@ describe("time tracking repository", () => {
     await timeTrackingRepo.startTimer(db, {
       userId,
       cardPublicId,
-      timezone: "UTC",
+      timezone: "America/New_York",
       comment: "First card",
-      startedAt: new Date("2026-09-01T10:00:00.000Z"),
+      startedAt: new Date("2026-09-02T03:59:30.000Z"),
     });
 
     const switched = await timeTrackingRepo.startTimer(db, {
       userId,
       cardPublicId: "cardtime0002",
-      timezone: "UTC",
+      timezone: "Europe/Lisbon",
       comment: "Second card",
-      startedAt: new Date("2026-09-01T10:01:31.000Z"),
+      startedAt: new Date("2026-09-02T04:01:01.000Z"),
     });
     const active = await timeTrackingRepo.getActiveTimer(db, userId);
 
     expect(switched.autoStoppedWorklog).toMatchObject({
       comment: "First card",
+      workDate: "2026-09-01",
       durationSeconds: 120,
+      timerTimezone: "America/New_York",
       rawElapsedSeconds: 91,
     });
     expect(active).toMatchObject({
@@ -986,7 +986,6 @@ describe("time tracking repository", () => {
 
     const result = await timeTrackingRepo.stopTimer(db, {
       userId,
-      timezone: "UTC",
       stoppedAt: new Date("2026-09-01T10:00:31.000Z"),
     });
 
@@ -1019,7 +1018,6 @@ describe("time tracking repository", () => {
 
     const result = await timeTrackingRepo.stopTimer(db, {
       userId,
-      timezone: "UTC",
       stoppedAt: new Date("2026-09-01T10:00:31.000Z"),
     });
 

@@ -26,12 +26,17 @@ const formatLocalDate = (date: Date) =>
 const addLocalDays = (date: Date, days: number) =>
   new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 
-const startOfLocalWeek = (date: Date) =>
-  addLocalDays(date, -((date.getDay() + 6) % 7));
+type WeekStartDay = 0 | 1 | 6;
+
+const startOfLocalWeek = (date: Date, weekStartsOn: WeekStartDay) =>
+  addLocalDays(date, -((date.getDay() - weekStartsOn + 7) % 7));
 
 export const getTimeTrackingPeriodRange = (
   period: TimeTrackingPeriod,
-  now = new Date(),
+  {
+    now = new Date(),
+    weekStartsOn = 1,
+  }: { now?: Date; weekStartsOn?: WeekStartDay } = {},
 ): { dateFrom: string; dateTo: string } | undefined => {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   let dateFrom: Date;
@@ -49,11 +54,11 @@ export const getTimeTrackingPeriodRange = (
       dateTo = dateFrom;
       break;
     case "this-week":
-      dateFrom = startOfLocalWeek(today);
+      dateFrom = startOfLocalWeek(today, weekStartsOn);
       dateTo = addLocalDays(dateFrom, 6);
       break;
     case "last-week":
-      dateFrom = addLocalDays(startOfLocalWeek(today), -7);
+      dateFrom = addLocalDays(startOfLocalWeek(today, weekStartsOn), -7);
       dateTo = addLocalDays(dateFrom, 6);
       break;
     case "last-14-days":

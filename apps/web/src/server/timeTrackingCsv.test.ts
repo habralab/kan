@@ -3,12 +3,14 @@ import { describe, expect, it } from "vitest";
 import {
   encodeCsvCell,
   encodeCsvRow,
+  encodeTimeTrackingEntriesCsvRow,
   encodeTimeTrackingSummaryCsvRow,
   formatCsvDuration,
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
   getTimeTrackingExportFilename,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
+  TIME_TRACKING_ENTRIES_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
 } from "./timeTrackingCsv";
 
@@ -72,6 +74,25 @@ describe("time tracking CSV", () => {
     );
   });
 
+  it("encodes one analysis-friendly entry row", () => {
+    expect(
+      encodeTimeTrackingEntriesCsvRow({
+        workDate: "2026-08-27",
+        durationSeconds: 14_400,
+        memberName: "Ulia Muginova",
+        memberEmail: "mj@habr.team",
+        boardName: "Analytics",
+        cardName: "Author export",
+        cardNumber: 9,
+        listName: "Done",
+        labels: "Research; Export",
+        comment: null,
+      }),
+    ).toBe(
+      '"2026-08-27","04:00:00",14400,"Ulia Muginova","mj@habr.team","Analytics","Author export",9,"Done","Research; Export",\r\n',
+    );
+  });
+
   it("does not expose a hidden member email", () => {
     const member = {
       publicId: "member123456",
@@ -97,6 +118,22 @@ describe("time tracking CSV", () => {
       "Entry count",
       "Board",
       "Board ID",
+    ]);
+  });
+
+  it("keeps stable entries headers", () => {
+    expect(TIME_TRACKING_ENTRIES_CSV_HEADERS).toEqual([
+      "Date",
+      "Duration",
+      "Duration seconds",
+      "Member",
+      "Member email",
+      "Board",
+      "Card",
+      "Card number",
+      "List",
+      "Labels",
+      "Comment",
     ]);
   });
 

@@ -10,11 +10,13 @@ import { isValidWorkDate } from "@kan/db/repository/timeTracking.utils";
 
 import {
   encodeCsvRow,
+  encodeTimeTrackingEntriesCsvRow,
   encodeTimeTrackingSummaryCsvRow,
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
   getTimeTrackingExportFilename,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
+  TIME_TRACKING_ENTRIES_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
 } from "~/server/timeTrackingCsv";
 
@@ -99,12 +101,14 @@ export default withRateLimit(
         !isValidWorkDate(dateFrom) ||
         !isValidWorkDate(dateTo) ||
         dateFrom > dateTo ||
-        (profile !== "summary" && profile !== "detailed")
+        (profile !== "summary" &&
+          profile !== "entries" &&
+          profile !== "detailed")
       )
         return res.status(400).json({ error: "Invalid export parameters" });
       if (
         (profile === "summary" && !isExportGroupBy(groupBy)) ||
-        (profile === "detailed" && groupBy !== undefined)
+        (profile !== "summary" && groupBy !== undefined)
       )
         return res.status(400).json({ error: "Invalid export grouping" });
 
@@ -198,7 +202,14 @@ export default withRateLimit(
         return;
       }
 
-      await writeChunk(res, encodeCsvRow(TIME_TRACKING_DETAILED_CSV_HEADERS));
+      await writeChunk(
+        res,
+        encodeCsvRow(
+          profile === "entries"
+            ? TIME_TRACKING_ENTRIES_CSV_HEADERS
+            : TIME_TRACKING_DETAILED_CSV_HEADERS,
+        ),
+      );
 
       let cursor: timeTrackingRepo.WorklogCursor | undefined;
       do {
@@ -211,6 +222,30 @@ export default withRateLimit(
         for (const row of page.items) {
           const labels = getLabels(row);
           const member = getWorklogMember(row.workspaceMember);
+          const memberName = member
+            ? getTimeTrackingCsvMemberDisplayName(member)
+            : "Unavailable member";
+          const memberEmail = member
+            ? getTimeTrackingCsvMemberEmail(member)
+            : null;
+          if (profile === "entries") {
+            await writeChunk(
+              res,
+              encodeTimeTrackingEntriesCsvRow({
+                workDate: row.workDate,
+                durationSeconds: row.durationSeconds,
+                memberName,
+                memberEmail,
+                boardName: board.boardName,
+                cardName: row.card?.title ?? "Deleted card",
+                cardNumber: row.card?.cardNumber ?? null,
+                listName: row.card?.list.name ?? null,
+                labels: labels.map((label) => label.name).join("; "),
+                comment: row.comment,
+              }),
+            );
+            continue;
+          }
           await writeChunk(
             res,
             encodeCsvRow([
@@ -218,10 +253,8 @@ export default withRateLimit(
               row.workDate,
               row.durationSeconds,
               row.workspaceMember?.publicId,
-              member
-                ? getTimeTrackingCsvMemberDisplayName(member)
-                : "Unavailable member",
-              member ? getTimeTrackingCsvMemberEmail(member) : null,
+              memberName,
+              memberEmail,
               board.boardPublicId,
               board.boardName,
               row.card?.publicId,

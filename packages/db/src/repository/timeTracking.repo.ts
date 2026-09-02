@@ -556,7 +556,7 @@ export const updateWorklog = async (
         ),
       )
       .limit(1)
-      .for("update");
+      .for("update", { of: timeTrackingWorklogs });
 
     if (!worklog) throw new TimeTrackingRepositoryError("WORKLOG_NOT_FOUND");
 
@@ -630,7 +630,8 @@ export const deleteWorklog = async (
           isNull(boards.deletedAt),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for("update", { of: timeTrackingWorklogs });
 
     if (!worklog) throw new TimeTrackingRepositoryError("WORKLOG_NOT_FOUND");
 

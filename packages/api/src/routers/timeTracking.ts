@@ -462,6 +462,7 @@ export const timeTrackingRouter = createTRPCRouter({
           cardPublicId: publicIdSchema,
           limit: z.number().int().min(1).max(100).default(25),
           cursor: z.string().optional(),
+          workspaceMemberPublicId: publicIdSchema.optional(),
           ...cardDateRangeShape,
         })
         .refine(hasValidCardDateRange, {
@@ -490,6 +491,7 @@ export const timeTrackingRouter = createTRPCRouter({
           cardPublicId: input.cardPublicId,
           limit: input.limit,
           cursor: input.cursor ? decodeCursor(input.cursor) : undefined,
+          workspaceMemberPublicId: input.workspaceMemberPublicId,
           ...getCardDateRange(input),
         }),
         getCapabilities(ctx.db, userId, card.workspaceId),

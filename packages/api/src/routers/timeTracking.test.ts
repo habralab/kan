@@ -260,7 +260,7 @@ describe("time tracking router", () => {
     expect(mockRepo.getCardWorklogSummary).not.toHaveBeenCalled();
   });
 
-  it("forwards a card date range to the worklog page", async () => {
+  it("forwards card date and member filters to the worklog page", async () => {
     mockRepo.listWorklogsByCard.mockResolvedValue({
       items: [worklog],
       nextCursor: null,
@@ -270,6 +270,7 @@ describe("time tracking router", () => {
       cardPublicId: cardContext.cardPublicId,
       dateFrom: "2026-09-01",
       dateTo: "2026-09-30",
+      workspaceMemberPublicId: "member123456",
     });
 
     expect(mockRepo.listWorklogsByCard).toHaveBeenCalledWith(db, {
@@ -278,6 +279,7 @@ describe("time tracking router", () => {
       cursor: undefined,
       dateFrom: "2026-09-01",
       dateTo: "2026-09-30",
+      workspaceMemberPublicId: "member123456",
     });
   });
 

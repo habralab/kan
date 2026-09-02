@@ -115,14 +115,14 @@ export default function BoardDropdown({
       : []),
     ...(!isTemplate
       ? [
-        {
-          label: t`Time tracking`,
-          action: () => openModal("TIME_TRACKING_SETTINGS"),
-          icon: (
-            <HiOutlineClock className="h-[16px] w-[16px] text-dark-900" />
-          ),
-        },
-      ]
+          {
+            label: t`Time tracking`,
+            action: () => openModal("TIME_TRACKING_SETTINGS"),
+            icon: (
+              <HiOutlineClock className="h-[16px] w-[16px] text-dark-900" />
+            ),
+          },
+        ]
       : []),
     ...(!isTemplate && canArchiveBoard
       ? [

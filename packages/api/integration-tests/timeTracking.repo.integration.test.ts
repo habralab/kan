@@ -539,6 +539,40 @@ describe("time tracking repository", () => {
     ]);
   });
 
+  it("preserves a deleted card as historical report context", async () => {
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: memberPublicId,
+      workDate: "2026-09-01",
+      durationSeconds: 3600,
+      comment: null,
+      actorUserId: userId,
+    });
+    const deletedAt = new Date("2026-09-03T12:00:00Z");
+    await db.update(cards).set({ deletedAt }).where(eq(cards.id, cardId));
+
+    const report = await timeTrackingRepo.listBoardWorklogs(db, {
+      boardId,
+      filters: {
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+      },
+      limit: 25,
+    });
+
+    expect(report.items).toHaveLength(1);
+    expect(report.items[0]?.card).toMatchObject({
+      publicId: cardPublicId,
+      title: "Implement time tracking",
+      deletedAt,
+    });
+  });
+
   it("queries a production-sized board report without loading every row", async () => {
     const worklogCount = 25_002;
     const batchSize = 1_000;

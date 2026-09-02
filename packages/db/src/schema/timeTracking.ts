@@ -232,6 +232,23 @@ export const timeTrackingWorklogSources = pgTable(
     externalMemberId: varchar("externalMemberId", { length: 255 }),
     sourceCreatedAt: timestamp("sourceCreatedAt", { withTimezone: true }),
     sourceUpdatedAt: timestamp("sourceUpdatedAt", { withTimezone: true }),
+    sourceCreatedAtRaw: varchar("sourceCreatedAtRaw", { length: 128 }),
+    sourceUpdatedAtRaw: varchar("sourceUpdatedAtRaw", { length: 128 }),
+    sourceTimestampTimezone: varchar("sourceTimestampTimezone", { length: 64 }),
+    sourceCreatedByExternalMemberId: varchar(
+      "sourceCreatedByExternalMemberId",
+      { length: 255 },
+    ),
+    sourceCreatedByDisplayName: varchar("sourceCreatedByDisplayName", {
+      length: 255,
+    }),
+    sourceUpdatedByExternalMemberId: varchar(
+      "sourceUpdatedByExternalMemberId",
+      { length: 255 },
+    ),
+    sourceUpdatedByDisplayName: varchar("sourceUpdatedByDisplayName", {
+      length: 255,
+    }),
     billable: boolean("billable"),
     invoiced: boolean("invoiced"),
     sourceHash: varchar("sourceHash", { length: 64 }).notNull(),

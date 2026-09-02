@@ -200,12 +200,19 @@
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",329]],
     "translation": "Entries"
   },
-  "Gi0db4": {
-    "message": "Export detailed CSV",
+  "WoSfea": {
+    "message": "Export entries CSV",
     "placeholders": {},
     "comments": [],
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",424]],
-    "translation": "Export detailed CSV"
+    "translation": "Export entries CSV"
+  },
+  "85rIwg": {
+    "message": "Export full CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",449]],
+    "translation": "Export full CSV"
   },
   "o7dpgY": {
     "message": "Export summary CSV",

@@ -156,7 +156,7 @@ export function TimeTrackingReportModal({
     setToDate(range.toDate);
   };
 
-  const exportUrl = (profile: "summary" | "detailed") => {
+  const exportUrl = (profile: "summary" | "entries" | "detailed") => {
     const params = new URLSearchParams({
       boardPublicId,
       dateFrom: fromDate,
@@ -409,7 +409,16 @@ export function TimeTrackingReportModal({
                 <h3 className="text-sm font-medium text-light-1000 dark:text-dark-1000">
                   {t`Time entries`}
                 </h3>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap justify-end gap-2">
+                  <Button
+                    href={validRange ? exportUrl("entries") : undefined}
+                    openInNewTab
+                    size="xs"
+                    variant="secondary"
+                    disabled={!validRange}
+                  >
+                    {t`Export entries CSV`}
+                  </Button>
                   <Button
                     href={
                       validRange && groupBy ? exportUrl("summary") : undefined
@@ -433,7 +442,7 @@ export function TimeTrackingReportModal({
                     variant="secondary"
                     disabled={!validRange}
                   >
-                    {t`Export detailed CSV`}
+                    {t`Export full CSV`}
                   </Button>
                 </div>
               </div>

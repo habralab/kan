@@ -11,6 +11,20 @@ export const TIME_TRACKING_SUMMARY_CSV_HEADERS = [
   "Board ID",
 ] as const;
 
+export const TIME_TRACKING_ENTRIES_CSV_HEADERS = [
+  "Date",
+  "Duration",
+  "Duration seconds",
+  "Member",
+  "Member email",
+  "Board",
+  "Card",
+  "Card number",
+  "List",
+  "Labels",
+  "Comment",
+] as const;
+
 export const TIME_TRACKING_DETAILED_CSV_HEADERS = [
   "Worklog ID",
   "Date",
@@ -93,6 +107,32 @@ export const encodeTimeTrackingSummaryCsvRow = (input: {
     input.entryCount,
     input.boardName,
     input.boardPublicId,
+  ]);
+
+export const encodeTimeTrackingEntriesCsvRow = (input: {
+  workDate: string;
+  durationSeconds: number;
+  memberName: string;
+  memberEmail: string | null;
+  boardName: string;
+  cardName: string;
+  cardNumber: number | null;
+  listName: string | null;
+  labels: string;
+  comment: string | null;
+}) =>
+  encodeCsvRow([
+    input.workDate,
+    formatCsvDuration(input.durationSeconds),
+    input.durationSeconds,
+    input.memberName,
+    input.memberEmail,
+    input.boardName,
+    input.cardName,
+    input.cardNumber,
+    input.listName,
+    input.labels,
+    input.comment,
   ]);
 
 const protectSpreadsheetFormula = (value: string) =>

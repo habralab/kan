@@ -13628,5 +13628,96 @@
       ]
     ],
     "translation": "YouTube URL"
+  },
+  "XOJDc9": {
+    "message": "All time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 376]],
+    "translation": "All time"
+  },
+  "vfe90m": {
+    "message": "Last 14 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 381]],
+    "translation": "Last 14 days"
+  },
+  "rTwgPH": {
+    "message": "Last month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 383]],
+    "translation": "Last month"
+  },
+  "xSn9Fa": {
+    "message": "Last quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 385]],
+    "translation": "Last quarter"
+  },
+  "j9tmna": {
+    "message": "Last week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 380]],
+    "translation": "Last week"
+  },
+  "ayy6IJ": {
+    "message": "Last year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 387]],
+    "translation": "Last year"
+  },
+  "NtQvjo": {
+    "message": "Period",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 368]],
+    "translation": "Period"
+  },
+  "oW3yYY": {
+    "message": "This month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 382]],
+    "translation": "This month"
+  },
+  "jkA2we": {
+    "message": "This quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 384]],
+    "translation": "This quarter"
+  },
+  "yByRxz": {
+    "message": "This week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 379]],
+    "translation": "This week"
+  },
+  "xYHlfW": {
+    "message": "This year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 386]],
+    "translation": "This year"
+  },
+  "ecUA8p": {
+    "message": "Today",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 377]],
+    "translation": "Today"
+  },
+  "y/0uwd": {
+    "message": "Yesterday",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 378]],
+    "translation": "Yesterday"
   }
 }

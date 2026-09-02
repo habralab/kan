@@ -8302,5 +8302,96 @@
     "comments": [],
     "origin": [["src/components/YouTubeEmbed/EditYouTubeModal.tsx", 147]],
     "translation": "YouTube URL"
+  },
+  "XOJDc9": {
+    "message": "All time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 376]],
+    "translation": "За всё время"
+  },
+  "vfe90m": {
+    "message": "Last 14 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 381]],
+    "translation": "Последние 14 дней"
+  },
+  "rTwgPH": {
+    "message": "Last month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 383]],
+    "translation": "Прошлый месяц"
+  },
+  "xSn9Fa": {
+    "message": "Last quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 385]],
+    "translation": "Прошлый квартал"
+  },
+  "j9tmna": {
+    "message": "Last week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 380]],
+    "translation": "Прошлая неделя"
+  },
+  "ayy6IJ": {
+    "message": "Last year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 387]],
+    "translation": "Прошлый год"
+  },
+  "NtQvjo": {
+    "message": "Period",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 368]],
+    "translation": "Период"
+  },
+  "oW3yYY": {
+    "message": "This month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 382]],
+    "translation": "Этот месяц"
+  },
+  "jkA2we": {
+    "message": "This quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 384]],
+    "translation": "Этот квартал"
+  },
+  "yByRxz": {
+    "message": "This week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 379]],
+    "translation": "Эта неделя"
+  },
+  "xYHlfW": {
+    "message": "This year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 386]],
+    "translation": "Этот год"
+  },
+  "ecUA8p": {
+    "message": "Today",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 377]],
+    "translation": "Сегодня"
+  },
+  "y/0uwd": {
+    "message": "Yesterday",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx", 378]],
+    "translation": "Вчера"
   }
 }

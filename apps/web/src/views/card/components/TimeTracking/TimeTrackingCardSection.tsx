@@ -5,10 +5,11 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { HiChevronDown } from "react-icons/hi2";
 
 import type { RouterOutputs } from "~/utils/api";
+import type { TimeTrackingPeriod } from "~/utils/timeTracking";
 import Button from "~/components/Button";
 import LoadingSpinner from "~/components/LoadingSpinner";
 import Modal from "~/components/modal";
@@ -17,11 +18,12 @@ import { api } from "~/utils/api";
 import {
   formatDuration,
   formatTimerDuration,
+  getTimeTrackingPeriodRange,
   TIME_TRACKING_CHANNEL_NAME,
 } from "~/utils/timeTracking";
 import { TimeEntryForm } from "./TimeEntryForm";
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 10;
 type Worklog = RouterOutputs["timeTracking"]["listWorklogs"]["items"][number];
 
 const getTimezone = () =>
@@ -47,6 +49,12 @@ export function TimeTrackingCardSection({
   const [confirmSwitch, setConfirmSwitch] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [entriesOpen, setEntriesOpen] = useState(false);
+  const [period, setPeriod] = useState<TimeTrackingPeriod>("all");
+  const periodRef = useRef(period);
+  const periodRange = useMemo(
+    () => getTimeTrackingPeriodRange(period),
+    [period],
+  );
 
   const settings = api.timeTracking.getSettings.useQuery(
     { boardPublicId },
@@ -55,11 +63,11 @@ export function TimeTrackingCardSection({
   const activeTimer = api.timeTracking.getActiveTimer.useQuery();
   const isEnabled = settings.data?.enabled === true;
   const summary = api.timeTracking.getCardSummary.useQuery(
-    { cardPublicId },
+    { cardPublicId, ...(periodRange ?? {}) },
     { enabled: isEnabled },
   );
   const firstPage = api.timeTracking.listWorklogs.useQuery(
-    { cardPublicId, limit: PAGE_SIZE },
+    { cardPublicId, limit: PAGE_SIZE, ...(periodRange ?? {}) },
     { enabled: isEnabled && entriesOpen },
   );
   const memberOptions = api.timeTracking.getMemberOptions.useQuery(
@@ -213,15 +221,26 @@ export function TimeTrackingCardSection({
     startTimer.mutate({ cardPublicId, timezone: getTimezone() });
   };
 
+  const changePeriod = (nextPeriod: TimeTrackingPeriod) => {
+    periodRef.current = nextPeriod;
+    setPeriod(nextPeriod);
+    setEntries([]);
+    setNextCursor(null);
+    setDeleteEntry(null);
+  };
+
   const loadMore = async () => {
     if (!nextCursor || isLoadingMore) return;
+    const requestedPeriod = periodRef.current;
     setIsLoadingMore(true);
     try {
       const page = await utils.timeTracking.listWorklogs.fetch({
         cardPublicId,
         limit: PAGE_SIZE,
         cursor: nextCursor,
+        ...(periodRange ?? {}),
       });
+      if (periodRef.current !== requestedPeriod) return;
       setEntries((current) => {
         const existing = new Set(current.map((entry) => entry.publicId));
         return [
@@ -344,26 +363,51 @@ export function TimeTrackingCardSection({
               : formatDuration(summary.data?.totalSeconds ?? 0)}
           </p>
         </div>
-        {summary.data?.canCreate && (
-          <div className="flex flex-wrap justify-end gap-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => setFormEntry("new")}
+        <div className="flex flex-wrap justify-end gap-2">
+          <label>
+            <span className="sr-only">{t`Period`}</span>
+            <select
+              value={period}
+              onChange={(event) =>
+                changePeriod(event.target.value as TimeTrackingPeriod)
+              }
+              className="h-8 max-w-44 rounded-md border-0 bg-light-50 px-2 text-sm text-light-1000 shadow-sm ring-1 ring-inset ring-light-300 focus:ring-2 focus:ring-inset focus:ring-light-400 dark:bg-dark-200 dark:text-dark-1000 dark:ring-dark-400 dark:focus:ring-dark-500"
             >
-              {t`Add time`}
-            </Button>
-            {!timerIsOnCard && summary.data.canStartTimer && (
+              <option value="all">{t`All time`}</option>
+              <option value="today">{t`Today`}</option>
+              <option value="yesterday">{t`Yesterday`}</option>
+              <option value="this-week">{t`This week`}</option>
+              <option value="last-week">{t`Last week`}</option>
+              <option value="last-14-days">{t`Last 14 days`}</option>
+              <option value="this-month">{t`This month`}</option>
+              <option value="last-month">{t`Last month`}</option>
+              <option value="this-quarter">{t`This quarter`}</option>
+              <option value="last-quarter">{t`Last quarter`}</option>
+              <option value="this-year">{t`This year`}</option>
+              <option value="last-year">{t`Last year`}</option>
+            </select>
+          </label>
+          {summary.data?.canCreate && (
+            <>
               <Button
                 size="sm"
-                onClick={beginTimer}
-                isLoading={startTimer.isPending}
+                variant="secondary"
+                onClick={() => setFormEntry("new")}
               >
-                {t`Start timer`}
+                {t`Add time`}
               </Button>
-            )}
-          </div>
-        )}
+              {!timerIsOnCard && summary.data.canStartTimer && (
+                <Button
+                  size="sm"
+                  onClick={beginTimer}
+                  isLoading={startTimer.isPending}
+                >
+                  {t`Start timer`}
+                </Button>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {activeTimerPanel}

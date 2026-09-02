@@ -35,6 +35,10 @@ const timezoneSchema = z
 const durationSchema = z.number().int().positive().max(MAX_DURATION_SECONDS);
 const commentSchema = z.string().max(10_000).nullable().optional();
 const publicIdFilterSchema = z.array(publicIdSchema).max(100).optional();
+const cardDateRangeShape = {
+  dateFrom: workDateSchema.optional(),
+  dateTo: workDateSchema.optional(),
+};
 const reportFilterShape = {
   dateFrom: workDateSchema,
   dateTo: workDateSchema,
@@ -45,6 +49,18 @@ const reportFilterShape = {
 };
 const hasValidReportDateRange = (input: { dateFrom: string; dateTo: string }) =>
   input.dateFrom <= input.dateTo;
+const hasValidCardDateRange = (input: {
+  dateFrom?: string;
+  dateTo?: string;
+}) =>
+  input.dateFrom === undefined
+    ? input.dateTo === undefined
+    : input.dateTo !== undefined && input.dateFrom <= input.dateTo;
+
+const getCardDateRange = (input: { dateFrom?: string; dateTo?: string }) =>
+  input.dateFrom && input.dateTo
+    ? { dateFrom: input.dateFrom, dateTo: input.dateTo }
+    : undefined;
 
 const normalizePublicIds = (publicIds: string[] | undefined) => {
   if (!publicIds?.length) return undefined;
@@ -449,11 +465,16 @@ export const timeTrackingRouter = createTRPCRouter({
       },
     })
     .input(
-      z.object({
-        cardPublicId: publicIdSchema,
-        limit: z.number().int().min(1).max(100).default(25),
-        cursor: z.string().optional(),
-      }),
+      z
+        .object({
+          cardPublicId: publicIdSchema,
+          limit: z.number().int().min(1).max(100).default(25),
+          cursor: z.string().optional(),
+          ...cardDateRangeShape,
+        })
+        .refine(hasValidCardDateRange, {
+          message: "dateFrom and dateTo must form a valid range",
+        }),
     )
     .output(
       z.object({
@@ -477,6 +498,7 @@ export const timeTrackingRouter = createTRPCRouter({
           cardPublicId: input.cardPublicId,
           limit: input.limit,
           cursor: input.cursor ? decodeCursor(input.cursor) : undefined,
+          ...getCardDateRange(input),
         }),
         getCapabilities(ctx.db, userId, card.workspaceId),
       ]);
@@ -498,7 +520,16 @@ export const timeTrackingRouter = createTRPCRouter({
         protect: true,
       },
     })
-    .input(z.object({ cardPublicId: publicIdSchema }))
+    .input(
+      z
+        .object({
+          cardPublicId: publicIdSchema,
+          ...cardDateRangeShape,
+        })
+        .refine(hasValidCardDateRange, {
+          message: "dateFrom and dateTo must form a valid range",
+        }),
+    )
     .output(timeTrackingCardSummarySchema)
     .query(async ({ ctx, input }) => {
       const userId = requireUserId(ctx.user?.id);
@@ -512,7 +543,11 @@ export const timeTrackingRouter = createTRPCRouter({
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
       await assertPermission(ctx.db, userId, card.workspaceId, "worklog:view");
       const [summary, canCreate, canManage] = await Promise.all([
-        timeTrackingRepo.getCardWorklogSummary(ctx.db, card.cardId),
+        timeTrackingRepo.getCardWorklogSummary(
+          ctx.db,
+          card.cardId,
+          getCardDateRange(input),
+        ),
         hasPermission(ctx.db, userId, card.workspaceId, "worklog:create"),
         hasPermission(ctx.db, userId, card.workspaceId, "worklog:manage"),
       ]);

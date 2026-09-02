@@ -169,7 +169,7 @@ describe("time tracking router", () => {
         cardPublicId: cardContext.cardPublicId,
         timezone: "UTC",
       }),
-      caller.stopTimer({ timezone: "UTC" }),
+      caller.stopTimer(),
       caller.discardTimer(),
     ]);
 
@@ -208,7 +208,6 @@ describe("time tracking router", () => {
         cardPublicId: cardContext.cardPublicId,
         timezone: "not/a-timezone",
       }),
-      caller.stopTimer({ timezone: "not/a-timezone" }),
       caller.listWorklogs({
         cardPublicId: cardContext.cardPublicId,
         limit: 101,
@@ -917,9 +916,7 @@ describe("time tracking router", () => {
       worklog: { publicId: worklog.publicId },
     } as never);
 
-    const result = await timeTrackingRouter.createCaller(ctx).stopTimer({
-      timezone: "UTC",
-    });
+    const result = await timeTrackingRouter.createCaller(ctx).stopTimer();
 
     expect(result).toEqual({ stopped: true, worklog: null });
     expect(mockRepo.getWorklogByPublicId).not.toHaveBeenCalled();

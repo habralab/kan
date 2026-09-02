@@ -1077,19 +1077,18 @@ export const timeTrackingRouter = createTRPCRouter({
         protect: true,
       },
     })
-    .input(z.object({ timezone: timezoneSchema }))
+    .input(z.void())
     .output(
       z.object({
         stopped: z.boolean(),
         worklog: timeTrackingWorklogSchema.nullable(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
       const userId = requireUserId(ctx.user?.id);
       const active = await timeTrackingRepo.getActiveTimer(ctx.db, userId);
       const result = await timeTrackingRepo.stopTimer(ctx.db, {
         userId,
-        timezone: input.timezone,
       });
       if (!result.worklog || !active)
         return { stopped: result.stopped, worklog: null };

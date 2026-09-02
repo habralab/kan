@@ -1253,7 +1253,10 @@ export const startTimer = async (
             boardId: currentTimer.boardId,
             cardId: currentTimer.cardId,
             workspaceMemberId: currentTimer.workspaceMemberId,
-            workDate: getWorkDateInTimezone(stoppedAt, input.timezone),
+            workDate: getWorkDateInTimezone(
+              currentTimer.startedAt,
+              currentTimer.startTimezone,
+            ),
             durationSeconds: roundTimerDuration({
               rawElapsedSeconds,
               roundingIntervalSeconds: settings?.roundingIntervalSeconds,
@@ -1263,7 +1266,7 @@ export const startTimer = async (
             entryMethod: "timer",
             timerStartedAt: currentTimer.startedAt,
             timerStoppedAt: stoppedAt,
-            timerTimezone: input.timezone,
+            timerTimezone: currentTimer.startTimezone,
             rawElapsedSeconds,
             createdBy: input.userId,
           })
@@ -1304,7 +1307,6 @@ export const stopTimer = async (
   db: dbClient,
   input: {
     userId: string;
-    timezone: string;
     stoppedAt?: Date;
   },
 ) =>
@@ -1349,7 +1351,7 @@ export const stopTimer = async (
         boardId: timer.boardId,
         cardId: timer.cardId,
         workspaceMemberId: timer.workspaceMemberId,
-        workDate: getWorkDateInTimezone(stoppedAt, input.timezone),
+        workDate: getWorkDateInTimezone(timer.startedAt, timer.startTimezone),
         durationSeconds: roundTimerDuration({
           rawElapsedSeconds,
           roundingIntervalSeconds: settings?.roundingIntervalSeconds,
@@ -1359,7 +1361,7 @@ export const stopTimer = async (
         entryMethod: "timer",
         timerStartedAt: timer.startedAt,
         timerStoppedAt: stoppedAt,
-        timerTimezone: input.timezone,
+        timerTimezone: timer.startTimezone,
         rawElapsedSeconds,
         createdBy: input.userId,
       })

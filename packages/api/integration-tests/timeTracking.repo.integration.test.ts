@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import * as boardRepo from "@kan/db/repository/board.repo";
+import * as cardRepo from "@kan/db/repository/card.repo";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import {
   boards,
@@ -846,6 +847,148 @@ describe("time tracking repository", () => {
       reason: "time_tracking_data",
     });
     expect(board?.workspaceId).toBe(workspaceId);
+  });
+
+  it("allows same-board moves but blocks cross-board moves with worklog history", async () => {
+    const [sameBoardList] = await db
+      .insert(lists)
+      .values({
+        publicId: "listtime0002",
+        name: "Done",
+        index: 1,
+        boardId,
+        createdBy: userId,
+      })
+      .returning();
+    const [targetBoard] = await db
+      .insert(boards)
+      .values({
+        publicId: "boardtime002",
+        name: "Another board",
+        slug: "another-time-tracking-board",
+        workspaceId,
+        createdBy: userId,
+      })
+      .returning();
+    if (!sameBoardList || !targetBoard)
+      throw new Error("Unable to create card move targets");
+    const [targetList] = await db
+      .insert(lists)
+      .values({
+        publicId: "listtime0003",
+        name: "Incoming",
+        index: 0,
+        boardId: targetBoard.id,
+        createdBy: userId,
+      })
+      .returning();
+    if (!targetList) throw new Error("Unable to create target list");
+
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    const worklog = await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: memberPublicId,
+      workDate: "2026-09-01",
+      durationSeconds: 60,
+      comment: null,
+      actorUserId: userId,
+    });
+    if (!worklog) throw new Error("Unable to create card move blocker");
+    await timeTrackingRepo.deleteWorklog(db, {
+      worklogPublicId: worklog.publicId,
+      workspaceId,
+      actorUserId: userId,
+    });
+
+    await expect(
+      cardRepo.reorder(db, {
+        cardId,
+        newListId: sameBoardList.id,
+        newIndex: 0,
+      }),
+    ).resolves.toBeDefined();
+    await expect(
+      cardRepo.reorder(db, {
+        cardId,
+        newListId: targetList.id,
+        newIndex: 0,
+      }),
+    ).rejects.toMatchObject({
+      name: "CardMoveBlockedByTimeTrackingError",
+      message: "TIME_TRACKING_DATA",
+    });
+
+    const card = await db.query.cards.findFirst({
+      where: eq(cards.id, cardId),
+    });
+    expect(card?.listId).toBe(sameBoardList.id);
+  });
+
+  it("blocks cross-board moves until an active card timer is discarded", async () => {
+    const [targetBoard] = await db
+      .insert(boards)
+      .values({
+        publicId: "boardtime003",
+        name: "Timer target board",
+        slug: "timer-target-board",
+        workspaceId,
+        createdBy: userId,
+      })
+      .returning();
+    if (!targetBoard) throw new Error("Unable to create target board");
+    const [targetList] = await db
+      .insert(lists)
+      .values({
+        publicId: "listtime0004",
+        name: "Incoming",
+        index: 0,
+        boardId: targetBoard.id,
+        createdBy: userId,
+      })
+      .returning();
+    if (!targetList) throw new Error("Unable to create target list");
+
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.startTimer(db, {
+      userId,
+      cardPublicId,
+      timezone: "UTC",
+      comment: null,
+      startedAt: new Date("2026-09-01T10:00:00.000Z"),
+    });
+
+    await expect(
+      cardRepo.reorder(db, {
+        cardId,
+        newListId: targetList.id,
+        newIndex: 0,
+      }),
+    ).rejects.toMatchObject({
+      name: "CardMoveBlockedByTimeTrackingError",
+      message: "TIME_TRACKING_DATA",
+    });
+
+    await timeTrackingRepo.discardTimer(db, userId);
+    await expect(
+      cardRepo.reorder(db, {
+        cardId,
+        newListId: targetList.id,
+        newIndex: 0,
+      }),
+    ).resolves.toBeDefined();
+
+    const card = await db.query.cards.findFirst({
+      where: eq(cards.id, cardId),
+    });
+    expect(card?.listId).toBe(targetList.id);
   });
 
   it("starts one global timer and keeps repeated start idempotent", async () => {

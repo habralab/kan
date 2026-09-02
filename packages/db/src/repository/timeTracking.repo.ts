@@ -454,6 +454,18 @@ export const createManualWorklog = async (
   },
 ) =>
   db.transaction(async (tx) => {
+    // Serialize board resolution with cross-board card moves.
+    const [lockedCard] = await tx
+      .select({ id: cards.id })
+      .from(cards)
+      .where(
+        and(eq(cards.publicId, input.cardPublicId), isNull(cards.deletedAt)),
+      )
+      .limit(1)
+      .for("share");
+
+    if (!lockedCard) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
+
     const [card] = await tx
       .select({
         id: cards.id,
@@ -472,7 +484,7 @@ export const createManualWorklog = async (
       )
       .where(
         and(
-          eq(cards.publicId, input.cardPublicId),
+          eq(cards.id, lockedCard.id),
           isNull(cards.deletedAt),
           isNull(lists.deletedAt),
           isNull(boards.deletedAt),
@@ -921,6 +933,29 @@ export const getBoardTimeTrackingMoveBlockers = async (
   };
 };
 
+export const getCardTimeTrackingMoveBlockers = async (
+  db: dbClient,
+  cardId: number,
+) => {
+  const [worklog, activeTimer] = await Promise.all([
+    db
+      .select({ id: timeTrackingWorklogs.id })
+      .from(timeTrackingWorklogs)
+      .where(eq(timeTrackingWorklogs.cardId, cardId))
+      .limit(1),
+    db
+      .select({ id: timeTrackingActiveTimers.id })
+      .from(timeTrackingActiveTimers)
+      .where(eq(timeTrackingActiveTimers.cardId, cardId))
+      .limit(1),
+  ]);
+
+  return {
+    hasWorklogs: worklog.length > 0,
+    hasActiveTimers: activeTimer.length > 0,
+  };
+};
+
 export const getBoardWorklogGroups = async (
   db: dbClient,
   boardId: number,
@@ -1157,6 +1192,18 @@ export const startTimer = async (
         .where(eq(users.id, input.userId))
         .for("update");
 
+      // Serialize board resolution with cross-board card moves.
+      const [lockedCard] = await tx
+        .select({ id: cards.id })
+        .from(cards)
+        .where(
+          and(eq(cards.publicId, input.cardPublicId), isNull(cards.deletedAt)),
+        )
+        .limit(1)
+        .for("share");
+
+      if (!lockedCard) throw new TimeTrackingRepositoryError("CARD_NOT_FOUND");
+
       const [card] = await tx
         .select({
           id: cards.id,
@@ -1175,7 +1222,7 @@ export const startTimer = async (
         )
         .where(
           and(
-            eq(cards.publicId, input.cardPublicId),
+            eq(cards.id, lockedCard.id),
             isNull(cards.deletedAt),
             isNull(lists.deletedAt),
             isNull(boards.deletedAt),

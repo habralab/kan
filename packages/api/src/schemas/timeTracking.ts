@@ -22,7 +22,7 @@ export const timeTrackingWorklogSchema = z.object({
   workDate: z.string(),
   durationSeconds: z.number().int().positive(),
   comment: z.string().nullable(),
-  entryMethod: z.enum(["manual", "timer"]),
+  entryMethod: z.enum(["manual", "timer", "import"]),
   timer: z
     .object({
       startedAt: z.date(),
@@ -31,16 +31,18 @@ export const timeTrackingWorklogSchema = z.object({
       rawElapsedSeconds: z.number().int().nonnegative(),
     })
     .nullable(),
-  member: timeTrackingMemberSchema,
-  card: z.object({
-    publicId: z.string(),
-    title: z.string(),
-    cardNumber: z.number().int().nullable(),
-    list: z.object({
+  member: timeTrackingMemberSchema.nullable(),
+  card: z
+    .object({
       publicId: z.string(),
-      name: z.string(),
-    }),
-  }),
+      title: z.string(),
+      cardNumber: z.number().int().nullable(),
+      list: z.object({
+        publicId: z.string(),
+        name: z.string(),
+      }),
+    })
+    .nullable(),
   createdAt: z.date(),
   updatedAt: z.date().nullable(),
   createdByDisplayName: z.string().nullable(),
@@ -117,7 +119,7 @@ export const timeTrackingCardSummarySchema = z.object({
   entryCount: z.number().int().nonnegative(),
   memberTotals: z.array(
     z.object({
-      member: timeTrackingMemberSchema,
+      member: timeTrackingMemberSchema.nullable(),
       durationSeconds: z.number().int().positive(),
     }),
   ),

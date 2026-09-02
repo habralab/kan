@@ -637,6 +637,54 @@ describe("time tracking router", () => {
     expect(result.nextCursor).not.toContain("2026-09-01");
   });
 
+  it("keeps imported orphan records visible without inventing identities", async () => {
+    mockHasPermission.mockResolvedValue(true);
+    mockRepo.getBoardSettings.mockResolvedValue({
+      boardId: 10,
+      boardPublicId: cardContext.boardPublicId,
+      boardName: "Test board",
+      workspaceId: cardContext.workspaceId,
+      isArchived: false,
+      type: "regular",
+      createdBy: user.id,
+      enabled: true,
+      roundingIntervalSeconds: 60,
+      minimumDurationSeconds: 60,
+      activeTimerCount: 0,
+      updatedAt: null,
+    });
+    mockRepo.listBoardWorklogs.mockResolvedValue({
+      items: [
+        {
+          ...worklog,
+          id: 2,
+          entryMethod: "import",
+          workspaceMember: null,
+          card: null,
+          createdByUser: null,
+        },
+      ],
+      nextCursor: null,
+    });
+
+    const result = await timeTrackingRouter
+      .createCaller(ctx)
+      .listReportWorklogs({
+        boardPublicId: cardContext.boardPublicId,
+        dateFrom: "2026-09-01",
+        dateTo: "2026-09-30",
+      });
+
+    expect(result.items[0]).toMatchObject({
+      entryMethod: "import",
+      member: null,
+      card: null,
+      labels: [],
+      createdByDisplayName: null,
+      canEdit: false,
+    });
+  });
+
   it("rejects an inverted report date range", async () => {
     await expect(
       timeTrackingRouter.createCaller(ctx).getReportSummary({

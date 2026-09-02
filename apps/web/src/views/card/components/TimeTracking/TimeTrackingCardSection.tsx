@@ -3,10 +3,16 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Transition,
 } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { HiChevronDown } from "react-icons/hi2";
+import { HiCheck, HiChevronDown } from "react-icons/hi2";
+import { twMerge } from "tailwind-merge";
 
 import type { RouterOutputs } from "~/utils/api";
 import type { TimeTrackingPeriod } from "~/utils/timeTracking";
@@ -55,6 +61,22 @@ export function TimeTrackingCardSection({
     () => getTimeTrackingPeriodRange(period),
     [period],
   );
+  const periodOptions = [
+    { value: "all", label: t`All time` },
+    { value: "today", label: t`Today` },
+    { value: "yesterday", label: t`Yesterday` },
+    { value: "this-week", label: t`This week` },
+    { value: "last-week", label: t`Last week` },
+    { value: "last-14-days", label: t`Last 14 days` },
+    { value: "this-month", label: t`This month` },
+    { value: "last-month", label: t`Last month` },
+    { value: "this-quarter", label: t`This quarter` },
+    { value: "last-quarter", label: t`Last quarter` },
+    { value: "this-year", label: t`This year` },
+    { value: "last-year", label: t`Last year` },
+  ] satisfies { value: TimeTrackingPeriod; label: string }[];
+  const selectedPeriod =
+    periodOptions.find((option) => option.value === period) ?? periodOptions[0];
 
   const settings = api.timeTracking.getSettings.useQuery(
     { boardPublicId },
@@ -364,29 +386,57 @@ export function TimeTrackingCardSection({
           </p>
         </div>
         <div className="flex flex-wrap justify-end gap-2">
-          <label>
-            <span className="sr-only">{t`Period`}</span>
-            <select
-              value={period}
-              onChange={(event) =>
-                changePeriod(event.target.value as TimeTrackingPeriod)
-              }
-              className="h-8 max-w-44 rounded-md border-0 bg-light-50 px-2 text-sm text-light-1000 shadow-sm ring-1 ring-inset ring-light-300 focus:ring-2 focus:ring-inset focus:ring-light-400 dark:bg-dark-200 dark:text-dark-1000 dark:ring-dark-400 dark:focus:ring-dark-500"
-            >
-              <option value="all">{t`All time`}</option>
-              <option value="today">{t`Today`}</option>
-              <option value="yesterday">{t`Yesterday`}</option>
-              <option value="this-week">{t`This week`}</option>
-              <option value="last-week">{t`Last week`}</option>
-              <option value="last-14-days">{t`Last 14 days`}</option>
-              <option value="this-month">{t`This month`}</option>
-              <option value="last-month">{t`Last month`}</option>
-              <option value="this-quarter">{t`This quarter`}</option>
-              <option value="last-quarter">{t`Last quarter`}</option>
-              <option value="this-year">{t`This year`}</option>
-              <option value="last-year">{t`Last year`}</option>
-            </select>
-          </label>
+          <Listbox value={period} onChange={changePeriod}>
+            <div className="relative">
+              <ListboxButton
+                aria-label={t`Period`}
+                className="relative inline-flex min-w-36 cursor-pointer items-center rounded-md border border-light-600 bg-light-50 py-2 pl-3 pr-8 text-left text-xs font-semibold text-light-1000 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-400 dark:border-dark-600 dark:bg-dark-300 dark:text-dark-1000 dark:focus-visible:ring-dark-500"
+              >
+                <span className="block max-w-32 truncate">
+                  {selectedPeriod?.label}
+                </span>
+                <HiChevronDown
+                  aria-hidden
+                  className="pointer-events-none absolute right-2 h-4 w-4 text-light-700 dark:text-dark-700"
+                />
+              </ListboxButton>
+              <Transition
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <ListboxOptions className="absolute right-0 z-50 mt-1 max-h-72 w-52 overflow-y-auto rounded-md border border-light-300 bg-light-50 py-1 text-sm shadow-lg focus:outline-none dark:border-dark-400 dark:bg-dark-200">
+                  {periodOptions.map((option) => (
+                    <ListboxOption
+                      key={option.value}
+                      value={option.value}
+                      className={({ focus, selected }) =>
+                        twMerge(
+                          "relative cursor-pointer select-none py-2 pl-3 pr-9 text-light-900 dark:text-dark-900",
+                          focus &&
+                            "bg-light-200 text-light-1000 dark:bg-dark-400 dark:text-dark-1000",
+                          selected &&
+                            "font-semibold text-light-1000 dark:text-dark-1000",
+                        )
+                      }
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span className="block truncate">{option.label}</span>
+                          {selected && (
+                            <HiCheck
+                              aria-hidden
+                              className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                            />
+                          )}
+                        </>
+                      )}
+                    </ListboxOption>
+                  ))}
+                </ListboxOptions>
+              </Transition>
+            </div>
+          </Listbox>
           {summary.data?.canCreate && (
             <>
               <Button

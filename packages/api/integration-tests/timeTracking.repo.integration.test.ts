@@ -240,6 +240,80 @@ describe("time tracking repository", () => {
     expect(secondPage.nextCursor).toBeNull();
   });
 
+  it("filters a card worklog page by workspace member without changing its summary", async () => {
+    const [otherMember] = await db
+      .insert(workspaceMembers)
+      .values({
+        publicId: "othermem0001",
+        email: "other@example.com",
+        workspaceId,
+        createdBy: userId,
+        role: "member",
+        status: "active",
+      })
+      .returning();
+    if (!otherMember) throw new Error("Unable to create another test member");
+
+    await timeTrackingRepo.updateBoardSettings(db, {
+      boardPublicId,
+      enabled: true,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: otherMember.publicId,
+      workDate: "2026-09-02",
+      durationSeconds: 120,
+      comment: null,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: memberPublicId,
+      workDate: "2026-09-01",
+      durationSeconds: 60,
+      comment: null,
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.createManualWorklog(db, {
+      cardPublicId,
+      workspaceMemberPublicId: otherMember.publicId,
+      workDate: "2026-08-31",
+      durationSeconds: 180,
+      comment: null,
+      actorUserId: userId,
+    });
+
+    const [firstPage, summary] = await Promise.all([
+      timeTrackingRepo.listWorklogsByCard(db, {
+        cardPublicId,
+        workspaceMemberPublicId: otherMember.publicId,
+        limit: 1,
+      }),
+      timeTrackingRepo.getCardWorklogSummary(db, cardId),
+    ]);
+    if (!firstPage.nextCursor)
+      throw new Error("Expected the filtered page to have a cursor");
+    const secondPage = await timeTrackingRepo.listWorklogsByCard(db, {
+      cardPublicId,
+      workspaceMemberPublicId: otherMember.publicId,
+      cursor: firstPage.nextCursor,
+      limit: 1,
+    });
+
+    expect(firstPage.items[0]).toMatchObject({
+      durationSeconds: 120,
+      workspaceMember: { publicId: otherMember.publicId },
+    });
+    expect(secondPage.items[0]).toMatchObject({
+      durationSeconds: 180,
+      workspaceMember: { publicId: otherMember.publicId },
+    });
+    expect(secondPage.nextCursor).toBeNull();
+    expect(summary).toMatchObject({ totalSeconds: 360, entryCount: 3 });
+    expect(summary.memberTotals).toHaveLength(2);
+  });
+
   it("filters card worklog pages and summaries by an inclusive date range", async () => {
     await timeTrackingRepo.updateBoardSettings(db, {
       boardPublicId,

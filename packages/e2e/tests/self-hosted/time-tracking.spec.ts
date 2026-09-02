@@ -43,6 +43,7 @@ test(
 
     await page.reload();
     await timeTracking.expectCardTotal("1h 30m");
+    await timeTracking.showTimeEntries();
     await expect(
       page.getByText("Reviewed the implementation", { exact: true }),
     ).toBeVisible();

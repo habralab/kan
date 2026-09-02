@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
@@ -12,6 +12,7 @@ import {
   timeTrackingImportRuns,
   timeTrackingWorklogs,
   timeTrackingWorklogSources,
+  workspaceMembers,
 } from "@kan/db/schema";
 
 import type { TestDbClient } from "./test-db";
@@ -304,6 +305,180 @@ describe("time tracking import repository", () => {
       comment: "Corrected upstream",
     });
     expect(await db.select().from(timeTrackingWorklogs)).toHaveLength(1);
+  });
+
+  it("updates resolved Kan mappings without a source hash change", async () => {
+    const run = await startRun();
+    if (!run) throw new Error("Unable to create import run");
+    const original = source("mapping-entry", {
+      cardPublicId: null,
+      workspaceMemberPublicId: null,
+    });
+    const [inserted] = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [original],
+    });
+    if (!inserted?.worklogPublicId)
+      throw new Error("Unable to create imported worklog");
+
+    const [targetBoard] = await db
+      .insert(boards)
+      .values({
+        publicId: "mapboard0001",
+        name: "Mapped board",
+        slug: "mapped-board",
+        workspaceId,
+        createdBy: userId,
+      })
+      .returning();
+    if (!targetBoard) throw new Error("Unable to create mapped board");
+    const [targetList] = await db
+      .insert(lists)
+      .values({
+        publicId: "maplist00001",
+        name: "Mapped list",
+        index: 0,
+        boardId: targetBoard.id,
+        createdBy: userId,
+      })
+      .returning();
+    if (!targetList) throw new Error("Unable to create mapped list");
+    const [targetCard] = await db
+      .insert(cards)
+      .values({
+        publicId: "mapcard00001",
+        title: "Mapped card",
+        index: 0,
+        listId: targetList.id,
+        createdBy: userId,
+      })
+      .returning();
+    const [targetMember] = await db
+      .insert(workspaceMembers)
+      .values({
+        publicId: "mapmember001",
+        email: "mapped@example.com",
+        workspaceId,
+        createdBy: userId,
+        role: "member",
+        status: "active",
+      })
+      .returning();
+    if (!targetCard || !targetMember)
+      throw new Error("Unable to create mapped card and member");
+
+    const remapped = {
+      ...original,
+      boardPublicId: targetBoard.publicId,
+      cardPublicId: targetCard.publicId,
+      workspaceMemberPublicId: targetMember.publicId,
+    };
+    const conflict = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [remapped],
+    });
+    const updated = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: [remapped],
+      updateExisting: true,
+    });
+    const [worklog] = await db
+      .select()
+      .from(timeTrackingWorklogs)
+      .where(eq(timeTrackingWorklogs.publicId, inserted.worklogPublicId));
+
+    expect(conflict[0]?.disposition).toBe("conflict");
+    expect(updated[0]?.disposition).toBe("updated");
+    expect(worklog).toMatchObject({
+      boardId: targetBoard.id,
+      cardId: targetCard.id,
+      workspaceMemberId: targetMember.id,
+      workDate: original.workDate,
+      durationSeconds: original.durationSeconds,
+      comment: original.comment,
+      updatedBy: null,
+    });
+  });
+
+  it("does not overwrite locally edited or deleted imported worklogs", async () => {
+    const run = await startRun();
+    if (!run) throw new Error("Unable to create import run");
+    const originalRecords = [
+      source("locally-edited"),
+      source("locally-deleted"),
+    ];
+    const [editedResult, deletedResult] =
+      await importRepo.importTimeTrackingWorklogBatch(db, {
+        importRunPublicId: run.publicId,
+        provider: run.provider,
+        records: originalRecords,
+      });
+    if (!editedResult?.worklogPublicId || !deletedResult?.worklogPublicId)
+      throw new Error("Unable to create imported worklogs");
+
+    await timeTrackingRepo.updateWorklog(db, {
+      worklogPublicId: editedResult.worklogPublicId,
+      workspaceId,
+      comment: "Manager correction",
+      actorUserId: userId,
+    });
+    await timeTrackingRepo.deleteWorklog(db, {
+      worklogPublicId: deletedResult.worklogPublicId,
+      workspaceId,
+      actorUserId: userId,
+    });
+
+    const changedRecords = [
+      source("locally-edited", {
+        sourceHash: "b".repeat(64),
+        durationSeconds: 7200,
+        comment: "Changed upstream",
+      }),
+      source("locally-deleted", {
+        sourceHash: "c".repeat(64),
+        durationSeconds: 7200,
+        comment: "Changed upstream",
+      }),
+    ];
+    const results = await importRepo.importTimeTrackingWorklogBatch(db, {
+      importRunPublicId: run.publicId,
+      provider: run.provider,
+      records: changedRecords,
+      updateExisting: true,
+    });
+    const storedWorklogs = await db
+      .select()
+      .from(timeTrackingWorklogs)
+      .where(
+        inArray(timeTrackingWorklogs.publicId, [
+          editedResult.worklogPublicId,
+          deletedResult.worklogPublicId,
+        ]),
+      );
+    const storedSources = await db.select().from(timeTrackingWorklogSources);
+    const edited = storedWorklogs.find(
+      (worklog) => worklog.publicId === editedResult.worklogPublicId,
+    );
+    const deleted = storedWorklogs.find(
+      (worklog) => worklog.publicId === deletedResult.worklogPublicId,
+    );
+
+    expect(results.map(({ disposition }) => disposition)).toEqual([
+      "conflict",
+      "conflict",
+    ]);
+    expect(edited).toMatchObject({
+      durationSeconds: 3600,
+      comment: "Manager correction",
+      updatedBy: userId,
+    });
+    expect(deleted?.deletedAt).toBeInstanceOf(Date);
+    expect(storedSources.map(({ sourceHash }) => sourceHash).sort()).toEqual(
+      originalRecords.map(({ sourceHash }) => sourceHash).sort(),
+    );
   });
 
   it("backfills source provenance without changing the imported worklog", async () => {

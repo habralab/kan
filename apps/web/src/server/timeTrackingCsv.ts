@@ -49,7 +49,21 @@ export const TIME_TRACKING_DETAILED_CSV_HEADERS = [
   "Created by",
   "Updated at",
   "Updated by",
+  "Source provider",
+  "Source entry ID",
+  "Source created at",
+  "Source timestamp timezone",
+  "Source created by",
+  "Source created by ID",
+  "Source updated at",
+  "Source updated by",
+  "Source updated by ID",
 ] as const;
+
+export const getTimeTrackingSourceTimestamp = (
+  normalized: Date | null | undefined,
+  raw: string | null | undefined,
+) => normalized ?? raw ?? null;
 
 export const getTimeTrackingExportFilename = (input: {
   boardName: string;

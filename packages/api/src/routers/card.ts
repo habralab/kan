@@ -7,6 +7,7 @@ import * as cardCommentRepo from "@kan/db/repository/cardComment.repo";
 import * as checklistRepo from "@kan/db/repository/checklist.repo";
 import * as labelRepo from "@kan/db/repository/label.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
+import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { generateAttachmentUrl, generateAvatarUrl } from "@kan/shared/utils";
 
@@ -928,6 +929,22 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
+      if (newList && existingCard.list.boardId !== newList.boardId) {
+        const timeTrackingBlockers =
+          await timeTrackingRepo.getCardTimeTrackingMoveBlockers(
+            ctx.db,
+            existingCard.id,
+          );
+        if (
+          timeTrackingBlockers.hasWorklogs ||
+          timeTrackingBlockers.hasActiveTimers
+        )
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: `Cards with time entries or active timers cannot be moved between boards`,
+          });
+      }
+
       let result:
         | {
             id: number;
@@ -953,11 +970,20 @@ export const cardRouter = createTRPCRouter({
       }
 
       if (input.index !== undefined || newListId !== undefined) {
-        result = await cardRepo.reorder(ctx.db, {
-          cardId: existingCard.id,
-          newIndex: input.index,
-          newListId: newListId,
-        });
+        try {
+          result = await cardRepo.reorder(ctx.db, {
+            cardId: existingCard.id,
+            newIndex: input.index,
+            newListId: newListId,
+          });
+        } catch (error) {
+          if (error instanceof cardRepo.CardMoveBlockedByTimeTrackingError)
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: `Cards with time entries or active timers cannot be moved between boards`,
+            });
+          throw error;
+        }
       }
 
       if (!result)

@@ -494,7 +494,7 @@ describe("time tracking repository", () => {
     });
   });
 
-  it("credits historical members but rejects invited members", async () => {
+  it("preserves historical entries but rejects inactive manual assignees", async () => {
     const historicalMembers = await db
       .insert(workspaceMembers)
       .values([
@@ -546,14 +546,16 @@ describe("time tracking repository", () => {
     });
 
     for (const member of historicalMembers) {
-      await timeTrackingRepo.createManualWorklog(db, {
-        cardPublicId,
-        workspaceMemberPublicId: member.publicId,
-        workDate: "2026-09-01",
-        durationSeconds: 60,
-        comment: null,
-        actorUserId: userId,
-      });
+      await expect(
+        timeTrackingRepo.createManualWorklog(db, {
+          cardPublicId,
+          workspaceMemberPublicId: member.publicId,
+          workDate: "2026-09-01",
+          durationSeconds: 60,
+          comment: null,
+          actorUserId: userId,
+        }),
+      ).rejects.toMatchObject({ code: "MEMBER_NOT_FOUND" });
     }
     await expect(
       timeTrackingRepo.createManualWorklog(db, {
@@ -565,6 +567,44 @@ describe("time tracking repository", () => {
         actorUserId: userId,
       }),
     ).rejects.toMatchObject({ code: "MEMBER_NOT_FOUND" });
+    const insertedHistorical = await db
+      .insert(timeTrackingWorklogs)
+      .values(
+        historicalMembers.map((member, index) => ({
+          publicId: `histlog0000${index + 1}`,
+          boardId,
+          cardId,
+          workspaceMemberId: member.id,
+          workDate: "2026-09-01",
+          durationSeconds: 60,
+          comment: null,
+          entryMethod: "manual" as const,
+          createdBy: userId,
+        })),
+      )
+      .returning();
+    const pausedWorklog = insertedHistorical[0];
+    if (!pausedWorklog) throw new Error("Unable to seed historical worklog");
+    await expect(
+      timeTrackingRepo.updateWorklog(db, {
+        worklogPublicId: pausedWorklog.publicId,
+        workspaceId,
+        workspaceMemberPublicId: historicalMembers[0]?.publicId,
+        durationSeconds: 120,
+        actorUserId: userId,
+      }),
+    ).rejects.toMatchObject({ code: "MEMBER_NOT_FOUND" });
+    await expect(
+      timeTrackingRepo.updateWorklog(db, {
+        worklogPublicId: pausedWorklog.publicId,
+        workspaceId,
+        durationSeconds: 120,
+        actorUserId: userId,
+      }),
+    ).resolves.toMatchObject({
+      workspaceMemberId: historicalMembers[0]?.id,
+      durationSeconds: 120,
+    });
     const page = await timeTrackingRepo.listWorklogsByCard(db, {
       cardPublicId,
       limit: 25,
@@ -572,21 +612,11 @@ describe("time tracking repository", () => {
     const memberOptions = await timeTrackingRepo.getTimeTrackingMemberOptions(
       db,
       workspaceId,
-      true,
     );
     expect(
       page.items.map((item) => item.workspaceMember.status).sort(),
     ).toEqual(["active", "paused", "removed"]);
-    expect(memberOptions.map((member) => member.status).sort()).toEqual([
-      "active",
-      "active",
-      "paused",
-      "removed",
-    ]);
-    expect(
-      memberOptions.find((member) => member.publicId === "deletedmem01")
-        ?.deletedAt,
-    ).toEqual(new Date("2026-08-01T00:00:00.000Z"));
+    expect(memberOptions.map((member) => member.status)).toEqual(["active"]);
   });
 
   it("rechecks time data while holding the board move lock", async () => {

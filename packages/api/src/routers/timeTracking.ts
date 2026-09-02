@@ -510,6 +510,7 @@ export const timeTrackingRouter = createTRPCRouter({
       ]);
       return {
         totalSeconds: summary.totalSeconds,
+        entryCount: summary.entryCount,
         memberTotals: summary.memberTotals.map((member) => ({
           member: formatMember({
             publicId: member.memberPublicId,
@@ -574,7 +575,11 @@ export const timeTrackingRouter = createTRPCRouter({
       );
       if (!card)
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
-      await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
+      const currentMember = await requireActiveWorkspaceMember(
+        ctx.db,
+        card.workspaceId,
+        userId,
+      );
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
       const [canCreate, canManage] = await Promise.all([
         hasPermission(ctx.db, userId, card.workspaceId, "worklog:create"),
@@ -584,13 +589,13 @@ export const timeTrackingRouter = createTRPCRouter({
       const members = await timeTrackingRepo.getTimeTrackingMemberOptions(
         ctx.db,
         card.workspaceId,
-        canManage,
       );
       return {
         members: members
           .filter((member) => canManage || member.userId === userId)
           .map(formatMember),
         canManage,
+        defaultMemberPublicId: currentMember.publicId,
       };
     }),
 

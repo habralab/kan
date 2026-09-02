@@ -647,15 +647,6 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
             )}
             {!isTemplate && (
               <>
-                {timeTrackingSettings.data?.enabled && (
-                  <Button
-                    iconLeft={<HiOutlineClock className="h-5 w-5" />}
-                    variant="secondary"
-                    onClick={() => openModal("TIME_TRACKING_REPORT")}
-                  >
-                    {t`Time`}
-                  </Button>
-                )}
                 <UpdateBoardSlugButton
                   handleOnClick={() => openModal("UPDATE_BOARD_SLUG")}
                   isLoading={isLoading}
@@ -673,6 +664,15 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                   isLoading={!boardData}
                   isAdmin={workspace.role === "admin"}
                 />
+                {timeTrackingSettings.data?.enabled && (
+                  <Button
+                    iconLeft={<HiOutlineClock />}
+                    variant="secondary"
+                    onClick={() => openModal("TIME_TRACKING_REPORT")}
+                  >
+                    {t`Time`}
+                  </Button>
+                )}
                 {boardData && (
                   <Filters
                     labels={boardData.labels}

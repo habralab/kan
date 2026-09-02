@@ -20,6 +20,15 @@ const PAGE_SIZE = 50;
 
 type ReportWorklog =
   RouterOutputs["timeTracking"]["listReportWorklogs"]["items"][number];
+type ReportMember =
+  RouterOutputs["timeTracking"]["getReportOptions"]["members"][number];
+
+const memberStatusLabel = (status: ReportMember["status"]) => {
+  if (status === "paused") return t`Paused`;
+  if (status === "removed") return t`Removed`;
+  if (status === "invited") return t`Invited`;
+  return t`Active`;
+};
 
 const localDate = (date: Date) => {
   const offset = date.getTimezoneOffset() * 60_000;
@@ -255,6 +264,9 @@ export function TimeTrackingReportModal({
                     {options.data?.members.map((member) => (
                       <option key={member.publicId} value={member.publicId}>
                         {member.displayName}
+                        {member.status !== "active"
+                          ? ` (${memberStatusLabel(member.status)})`
+                          : ""}
                       </option>
                     ))}
                   </select>

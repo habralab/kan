@@ -175,6 +175,7 @@ export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
   const memberTotals = await db
     .select({
       durationSeconds,
+      entryCount: count(),
       memberPublicId: workspaceMembers.publicId,
       memberEmail: workspaceMembers.email,
       memberStatus: workspaceMembers.status,
@@ -205,6 +206,10 @@ export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
       (total, member) => total + member.durationSeconds,
       0,
     ),
+    entryCount: memberTotals.reduce(
+      (total, member) => total + member.entryCount,
+      0,
+    ),
     memberTotals,
   };
 };
@@ -212,7 +217,6 @@ export const getCardWorklogSummary = async (db: dbClient, cardId: number) => {
 export const getTimeTrackingMemberOptions = (
   db: dbClient,
   workspaceId: number,
-  includeHistorical: boolean,
 ) =>
   db
     .select({
@@ -231,11 +235,8 @@ export const getTimeTrackingMemberOptions = (
     .where(
       and(
         eq(workspaceMembers.workspaceId, workspaceId),
-        inArray(
-          workspaceMembers.status,
-          includeHistorical ? ["active", "paused", "removed"] : ["active"],
-        ),
-        includeHistorical ? undefined : isNull(workspaceMembers.deletedAt),
+        eq(workspaceMembers.status, "active"),
+        isNull(workspaceMembers.deletedAt),
       ),
     )
     .orderBy(users.name, workspaceMembers.email);
@@ -484,7 +485,8 @@ export const createManualWorklog = async (
         and(
           eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
           eq(workspaceMembers.workspaceId, card.workspaceId),
-          inArray(workspaceMembers.status, ["active", "paused", "removed"]),
+          eq(workspaceMembers.status, "active"),
+          isNull(workspaceMembers.deletedAt),
         ),
       )
       .limit(1);
@@ -548,7 +550,8 @@ export const updateWorklog = async (
           and(
             eq(workspaceMembers.publicId, input.workspaceMemberPublicId),
             eq(workspaceMembers.workspaceId, input.workspaceId),
-            inArray(workspaceMembers.status, ["active", "paused", "removed"]),
+            eq(workspaceMembers.status, "active"),
+            isNull(workspaceMembers.deletedAt),
           ),
         )
         .limit(1);

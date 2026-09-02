@@ -7707,5 +7707,918 @@
     "comments": [],
     "origin": [["src/components/YouTubeEmbed/EditYouTubeModal.tsx", 147]],
     "translation": "URL do YouTube"
+  },
+  "VEnTjc": {
+    "message": "{0, plural, one {1 active timer can still be stopped or discarded if time tracking is disabled.} other {{1} active timers can still be stopped or discarded if time tracking is disabled.}}",
+    "placeholders": {
+      "0": ["settings.data.activeTimerCount"],
+      "1": ["settings.data.activeTimerCount"]
+    },
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 114]
+    ],
+    "translation": "{0, plural, one {1 cronômetro ativo ainda pode ser parado ou descartado se o controle de tempo estiver desativado.} other {{1} cronômetros ativos ainda podem ser parados ou descartados se o controle de tempo estiver desativado.}}"
+  },
+  "INSeGm": {
+    "message": "{0, plural, one {1 entry} other {{1} entries}}",
+    "placeholders": { "0": ["group.entryCount"], "1": ["group.entryCount"] },
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 378]],
+    "translation": "{0, plural, one {1 registro} other {{1} registros}}"
+  },
+  "PqP8GL": {
+    "message": "1h 30m",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 136]
+    ],
+    "translation": "1 h 30 min"
+  },
+  "MdyqML": {
+    "message": "Add time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 99],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        326
+      ]
+    ],
+    "translation": "Adicionar tempo"
+  },
+  "4upC5z": {
+    "message": "All cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 287]],
+    "translation": "Todos os cartões"
+  },
+  "zDDU1o": {
+    "message": "All labels",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 307]],
+    "translation": "Todas as etiquetas"
+  },
+  "qe9rVr": {
+    "message": "All lists",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 272]],
+    "translation": "Todas as listas"
+  },
+  "RevbX8": {
+    "message": "All members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 254]],
+    "translation": "Todos os membros"
+  },
+  "VPUvtP": {
+    "message": "Can add time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 151],
+      ["src/views/settings/components/RolePermissions.tsx", 40]
+    ],
+    "translation": "Pode adicionar registros de tempo"
+  },
+  "2BD2mA": {
+    "message": "Can delete own time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 153],
+      ["src/views/settings/components/RolePermissions.tsx", 42]
+    ],
+    "translation": "Pode excluir os próprios registros de tempo"
+  },
+  "kImq1u": {
+    "message": "Can edit own time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 152],
+      ["src/views/settings/components/RolePermissions.tsx", 41]
+    ],
+    "translation": "Pode editar os próprios registros de tempo"
+  },
+  "xLuBnq": {
+    "message": "Can manage all time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 154],
+      ["src/views/settings/components/RolePermissions.tsx", 43]
+    ],
+    "translation": "Pode gerenciar todos os registros de tempo"
+  },
+  "DgC8eZ": {
+    "message": "Can view time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 150],
+      ["src/views/settings/components/RolePermissions.tsx", 39]
+    ],
+    "translation": "Pode visualizar registros de tempo"
+  },
+  "Ccpbzh": {
+    "message": "Cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 331]],
+    "translation": "Cartões"
+  },
+  "WQ5uca": {
+    "message": "Choose a grouping to export a summary",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 412]],
+    "translation": "Escolha um agrupamento para exportar um resumo"
+  },
+  "NBdIgR": {
+    "message": "Comment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 471],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 165]
+    ],
+    "translation": "Comentário"
+  },
+  "8rZVt4": {
+    "message": "Current month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 208]],
+    "translation": "Mês atual"
+  },
+  "mYGY3B": {
+    "message": "Date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 462],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 152]
+    ],
+    "translation": "Data"
+  },
+  "AmfkGS": {
+    "message": "Delete this time entry?",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        503
+      ]
+    ],
+    "translation": "Excluir este registro de tempo?"
+  },
+  "bzSI52": {
+    "message": "Discard",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        254
+      ]
+    ],
+    "translation": "Descartar"
+  },
+  "CtkaqE": {
+    "message": "Edit time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 99]
+    ],
+    "translation": "Editar registro de tempo"
+  },
+  "WY7Cmx": {
+    "message": "Enable time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 93],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 102]
+    ],
+    "translation": "Ativar o controle de tempo"
+  },
+  "vJiLfv": {
+    "message": "Enter a duration such as 2h, 90m, or 1:30.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 147]
+    ],
+    "translation": "Insira uma duração, por exemplo, 2h, 90m ou 1:30."
+  },
+  "ef6vAZ": {
+    "message": "Entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 329]],
+    "translation": "Registros"
+  },
+  "Gi0db4": {
+    "message": "Export detailed CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 424]],
+    "translation": "Exportar CSV detalhado"
+  },
+  "o7dpgY": {
+    "message": "Export summary CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 415]],
+    "translation": "Exportar CSV de resumo"
+  },
+  "ejVYRQ": {
+    "message": "From",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 228]],
+    "translation": "De"
+  },
+  "ALoP4W": {
+    "message": "Group by",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 349]],
+    "translation": "Agrupar por"
+  },
+  "Dn4OyV": {
+    "message": "Invited",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 43]
+    ],
+    "translation": "Convidado"
+  },
+  "87a/t/": {
+    "message": "Label",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 301]],
+    "translation": "Etiqueta"
+  },
+  "uq2BmQ": {
+    "message": "Last 30 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 222]],
+    "translation": "Últimos 30 dias"
+  },
+  "yQ2kGp": {
+    "message": "Load more",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 526],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        539
+      ]
+    ],
+    "translation": "Carregar mais"
+  },
+  "BWTzAb": {
+    "message": "Manual",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 503]],
+    "translation": "Manual"
+  },
+  "bNv3ig": {
+    "message": "Members can add time entries and run timers on cards. Disabling this feature keeps existing history.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 96]],
+    "translation": "Os membros podem adicionar registros de tempo e iniciar cronômetros nos cartões. A desativação deste recurso mantém o histórico existente."
+  },
+  "fiPesM": {
+    "message": "Method",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 467]],
+    "translation": "Método"
+  },
+  "dNhH8G": {
+    "message": "No grouping",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 359]],
+    "translation": "Sem agrupamento"
+  },
+  "3M/nm+": {
+    "message": "No time entries match these filters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 455]],
+    "translation": "Nenhum registro de tempo corresponde a estes filtros."
+  },
+  "L2Mlhd": {
+    "message": "No time has been logged on this card yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        452
+      ]
+    ],
+    "translation": "Ainda não há tempo registrado neste cartão."
+  },
+  "1xwZj/": {
+    "message": "Previous month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 215]],
+    "translation": "Mês anterior"
+  },
+  "eps54V": {
+    "message": "Removed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 42]
+    ],
+    "translation": "Removido"
+  },
+  "RiQMUh": {
+    "message": "Running",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/Card.tsx", 148]],
+    "translation": "Em andamento"
+  },
+  "ZQyeYU": {
+    "message": "Running on this card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        226
+      ]
+    ],
+    "translation": "Em andamento neste cartão"
+  },
+  "E5eC82": {
+    "message": "Select a member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 112]
+    ],
+    "translation": "Selecionar um membro"
+  },
+  "UBj8RW": {
+    "message": "Start timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        334
+      ]
+    ],
+    "translation": "Iniciar cronômetro"
+  },
+  "IzcP+r": {
+    "message": "Starting this timer will stop the timer on “{0}” and save its elapsed time.",
+    "placeholders": { "0": ["timer.card.title"] },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        348
+      ]
+    ],
+    "translation": "Ao iniciar este cronômetro, o cronômetro em “{0}” será parado e o tempo decorrido será salvo."
+  },
+  "Gwsani": {
+    "message": "Starting this timer will stop the timer on the inaccessible card and save its elapsed time.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        347
+      ]
+    ],
+    "translation": "Ao iniciar este cronômetro, o cronômetro no cartão inacessível será parado e o tempo decorrido será salvo."
+  },
+  "ygCKqB": {
+    "message": "Stop",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        245
+      ]
+    ],
+    "translation": "Parar"
+  },
+  "hQk1gv": {
+    "message": "Stop and start",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        365
+      ]
+    ],
+    "translation": "Parar e iniciar"
+  },
+  "t24lpS": {
+    "message": "The start date must not be after the end date.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 319]],
+    "translation": "A data de início não pode ser posterior à data de término."
+  },
+  "LhMjLm": {
+    "message": "Time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 469],
+      ["src/views/board/index.tsx", 647],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 127]
+    ],
+    "translation": "Tempo"
+  },
+  "Ebh8y/": {
+    "message": "Time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 398]],
+    "translation": "Registros de tempo"
+  },
+  "5YFXV7": {
+    "message": "Time report",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 189]],
+    "translation": "Relatório de tempo"
+  },
+  "SMjp8F": {
+    "message": "Time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/BoardDropdown.tsx", 116],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 63],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        311
+      ]
+    ],
+    "translation": "Controle de tempo"
+  },
+  "EMqDFj": {
+    "message": "Time tracking has been disabled. Existing history is preserved.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 42]],
+    "translation": "O controle de tempo foi desativado. O histórico existente foi mantido."
+  },
+  "Vvl2CI": {
+    "message": "Time tracking is now available on this board.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 41]],
+    "translation": "O controle de tempo agora está disponível neste quadro."
+  },
+  "zHHNK3": {
+    "message": "Time tracking updated",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 39]],
+    "translation": "Controle de tempo atualizado"
+  },
+  "obwKN+": {
+    "message": "Timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 502]],
+    "translation": "Cronômetro"
+  },
+  "dMbLQM": {
+    "message": "Timer on an inaccessible card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        224
+      ]
+    ],
+    "translation": "Cronômetro em um cartão inacessível"
+  },
+  "/jQctM": {
+    "message": "To",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 237]],
+    "translation": "Até"
+  },
+  "/kXBrK": {
+    "message": "Total time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 326]],
+    "translation": "Tempo total"
+  },
+  "KDw4GX": {
+    "message": "Try again",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 446],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 85],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        280
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        298
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        407
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        445
+      ]
+    ],
+    "translation": "Tentar novamente"
+  },
+  "6/Ns5U": {
+    "message": "Deleted card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 493]],
+    "translation": "Cartão excluído"
+  },
+  "aGbZ2d": {
+    "message": "Unavailable member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 375],
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 481],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        425
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        472
+      ]
+    ],
+    "translation": "Membro indisponível"
+  },
+  "zvcXZs": {
+    "message": "Unable to add time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        131
+      ]
+    ],
+    "translation": "Não foi possível adicionar o tempo"
+  },
+  "Q9E45Q": {
+    "message": "Unable to delete time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        145
+      ]
+    ],
+    "translation": "Não foi possível excluir o registro de tempo"
+  },
+  "4IUsF2": {
+    "message": "Unable to discard timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        160
+      ]
+    ],
+    "translation": "Não foi possível descartar o cronômetro"
+  },
+  "IIaGLD": {
+    "message": "Unable to load members.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        396
+      ]
+    ],
+    "translation": "Não foi possível carregar os membros."
+  },
+  "ZvZ7/B": {
+    "message": "Unable to load more time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 136],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        207
+      ]
+    ],
+    "translation": "Não foi possível carregar mais registros de tempo"
+  },
+  "vsYAKj": {
+    "message": "Unable to load the active timer.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        273
+      ]
+    ],
+    "translation": "Não foi possível carregar o cronômetro ativo."
+  },
+  "ka1erB": {
+    "message": "Unable to load the time report.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 435]],
+    "translation": "Não foi possível carregar o relatório de tempo."
+  },
+  "EK8TGG": {
+    "message": "Unable to load time entries.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        435
+      ]
+    ],
+    "translation": "Não foi possível carregar os registros de tempo."
+  },
+  "ZfaaiP": {
+    "message": "Unable to load time tracking settings.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 82]],
+    "translation": "Não foi possível carregar as configurações do controle de tempo."
+  },
+  "563CZw": {
+    "message": "Unable to load time tracking.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        291
+      ]
+    ],
+    "translation": "Não foi possível carregar o controle de tempo."
+  },
+  "VyfeA+": {
+    "message": "Unable to start timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        152
+      ]
+    ],
+    "translation": "Não foi possível iniciar o cronômetro"
+  },
+  "Je4xFx": {
+    "message": "Unable to stop timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        156
+      ]
+    ],
+    "translation": "Não foi possível parar o cronômetro"
+  },
+  "cdvzpG": {
+    "message": "Unable to update time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        138
+      ]
+    ],
+    "translation": "Não foi possível atualizar o registro de tempo"
+  },
+  "MKM8bX": {
+    "message": "Unable to update time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 48]],
+    "translation": "Não foi possível atualizar o controle de tempo"
+  },
+  "x0vUTB": {
+    "message": "Unarchive this board before enabling time tracking.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 126]
+    ],
+    "translation": "Desarquive este quadro antes de ativar o controle de tempo."
+  },
+  "rfdrJY": {
+    "message": "You don't have permission to change this setting.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 132]
+    ],
+    "translation": "Você não tem permissão para alterar esta configuração."
+  },
+  "XOJDc9": {
+    "message": "All time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        376
+      ]
+    ],
+    "translation": "Todo o período"
+  },
+  "vfe90m": {
+    "message": "Last 14 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        381
+      ]
+    ],
+    "translation": "Últimos 14 dias"
+  },
+  "rTwgPH": {
+    "message": "Last month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        383
+      ]
+    ],
+    "translation": "Mês passado"
+  },
+  "xSn9Fa": {
+    "message": "Last quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        385
+      ]
+    ],
+    "translation": "Trimestre passado"
+  },
+  "j9tmna": {
+    "message": "Last week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        380
+      ]
+    ],
+    "translation": "Semana passada"
+  },
+  "ayy6IJ": {
+    "message": "Last year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        387
+      ]
+    ],
+    "translation": "Ano passado"
+  },
+  "NtQvjo": {
+    "message": "Period",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        368
+      ]
+    ],
+    "translation": "Período"
+  },
+  "oW3yYY": {
+    "message": "This month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        382
+      ]
+    ],
+    "translation": "Este mês"
+  },
+  "jkA2we": {
+    "message": "This quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        384
+      ]
+    ],
+    "translation": "Este trimestre"
+  },
+  "yByRxz": {
+    "message": "This week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        379
+      ]
+    ],
+    "translation": "Esta semana"
+  },
+  "xYHlfW": {
+    "message": "This year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        386
+      ]
+    ],
+    "translation": "Este ano"
+  },
+  "ecUA8p": {
+    "message": "Today",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        377
+      ]
+    ],
+    "translation": "Hoje"
+  },
+  "y/0uwd": {
+    "message": "Yesterday",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        378
+      ]
+    ],
+    "translation": "Ontem"
   }
 }

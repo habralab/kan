@@ -1077,6 +1077,12 @@ export const getBoardReportOptions = async (db: dbClient, boardId: number) => {
       .orderBy(labels.name),
   ]);
 
+  members.sort(
+    (left, right) =>
+      Number(left.status !== "active" || left.deletedAt !== null) -
+      Number(right.status !== "active" || right.deletedAt !== null),
+  );
+
   return {
     members,
     cards: reportCards,

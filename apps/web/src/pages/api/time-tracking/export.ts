@@ -52,20 +52,23 @@ const getWorklogMember = (
   member: Awaited<
     ReturnType<typeof timeTrackingRepo.listBoardWorklogs>
   >["items"][number]["workspaceMember"],
-) => ({
-  publicId: member.publicId,
-  email: member.email,
-  displayName: member.user?.name ?? null,
-  userEmail: member.user?.email ?? null,
-  showEmailsToMembers: member.workspace.showEmailsToMembers,
-});
+) =>
+  member
+    ? {
+        publicId: member.publicId,
+        email: member.email,
+        displayName: member.user?.name ?? null,
+        userEmail: member.user?.email ?? null,
+        showEmailsToMembers: member.workspace.showEmailsToMembers,
+      }
+    : null;
 
 const getLabels = (
   row: Awaited<
     ReturnType<typeof timeTrackingRepo.listBoardWorklogs>
   >["items"][number],
 ) =>
-  row.card.labels
+  (row.card?.labels ?? [])
     .filter(({ label }) => label.deletedAt === null)
     .map(({ label }) => label);
 
@@ -214,16 +217,18 @@ export default withRateLimit(
               row.publicId,
               row.workDate,
               row.durationSeconds,
-              row.workspaceMember.publicId,
-              getTimeTrackingCsvMemberDisplayName(member),
-              getTimeTrackingCsvMemberEmail(member),
+              row.workspaceMember?.publicId,
+              member
+                ? getTimeTrackingCsvMemberDisplayName(member)
+                : "Unavailable member",
+              member ? getTimeTrackingCsvMemberEmail(member) : null,
               board.boardPublicId,
               board.boardName,
-              row.card.publicId,
-              row.card.title,
-              row.card.cardNumber,
-              row.card.list.publicId,
-              row.card.list.name,
+              row.card?.publicId,
+              row.card?.title ?? "Deleted card",
+              row.card?.cardNumber,
+              row.card?.list.publicId,
+              row.card?.list.name,
               labels.map((label) => label.publicId).join(";"),
               labels.map((label) => label.name).join("; "),
               row.entryMethod,

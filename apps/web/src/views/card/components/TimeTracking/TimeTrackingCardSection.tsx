@@ -173,7 +173,10 @@ export function TimeTrackingCardSection({
 
   const effectiveMemberOptions =
     memberOptions.data ??
-    (formEntry && formEntry !== "new" && summary.data?.canManage !== true
+    (formEntry &&
+    formEntry !== "new" &&
+    formEntry.member &&
+    summary.data?.canManage !== true
       ? { members: [formEntry.member], canManage: false }
       : null);
 
@@ -417,12 +420,13 @@ export function TimeTrackingCardSection({
 
       {memberTotals.length > 0 && (
         <div className="mb-5 mt-4 flex flex-wrap gap-2">
-          {memberTotals.map(({ member, durationSeconds }) => (
+          {memberTotals.map(({ member, durationSeconds }, index) => (
             <span
-              key={member.publicId}
+              key={member?.publicId ?? `unavailable-${index}`}
               className="rounded-full bg-light-200 px-2.5 py-1 text-xs text-light-900 dark:bg-dark-300 dark:text-dark-900"
             >
-              {member.displayName}: {formatDuration(durationSeconds)}
+              {member?.displayName ?? t`Unavailable member`}:{" "}
+              {formatDuration(durationSeconds)}
             </span>
           ))}
         </div>
@@ -461,7 +465,7 @@ export function TimeTrackingCardSection({
                 <div className="min-w-0">
                   <p className="text-sm text-light-1000 dark:text-dark-1000">
                     <span className="font-medium">
-                      {entry.member.displayName}
+                      {entry.member?.displayName ?? t`Unavailable member`}
                     </span>
                     {" · "}
                     {formatDuration(entry.durationSeconds)}

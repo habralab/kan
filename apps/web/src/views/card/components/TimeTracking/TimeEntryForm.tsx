@@ -52,7 +52,7 @@ export function TimeEntryForm({
   onSave,
 }: TimeEntryFormProps) {
   const [memberPublicId, setMemberPublicId] = useState(
-    entry?.member.publicId ?? "",
+    entry?.member?.publicId ?? "",
   );
   const [duration, setDuration] = useState(
     entry ? durationValue(entry.durationSeconds) : "",

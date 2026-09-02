@@ -26,22 +26,52 @@ describe("getTimeTrackingPeriodRange", () => {
   ] as const)(
     "resolves %s using local calendar boundaries",
     (period, range) => {
-      expect(getTimeTrackingPeriodRange(period, now)).toEqual(range);
+      expect(getTimeTrackingPeriodRange(period, { now })).toEqual(range);
     },
   );
 
   it("handles previous periods across a year boundary", () => {
     const january = new Date(2026, 0, 5);
 
-    expect(getTimeTrackingPeriodRange("last-month", january)).toEqual({
+    expect(getTimeTrackingPeriodRange("last-month", { now: january })).toEqual({
       dateFrom: "2025-12-01",
       dateTo: "2025-12-31",
     });
-    expect(getTimeTrackingPeriodRange("last-quarter", january)).toEqual({
+    expect(
+      getTimeTrackingPeriodRange("last-quarter", { now: january }),
+    ).toEqual({
       dateFrom: "2025-10-01",
       dateTo: "2025-12-31",
     });
   });
+
+  it.each([
+    [
+      0,
+      { dateFrom: "2026-08-30", dateTo: "2026-09-05" },
+      { dateFrom: "2026-08-23", dateTo: "2026-08-29" },
+    ],
+    [
+      1,
+      { dateFrom: "2026-08-31", dateTo: "2026-09-06" },
+      { dateFrom: "2026-08-24", dateTo: "2026-08-30" },
+    ],
+    [
+      6,
+      { dateFrom: "2026-08-29", dateTo: "2026-09-04" },
+      { dateFrom: "2026-08-22", dateTo: "2026-08-28" },
+    ],
+  ] as const)(
+    "uses workspace week start day %s",
+    (weekStartsOn, thisWeek, lastWeek) => {
+      expect(
+        getTimeTrackingPeriodRange("this-week", { now, weekStartsOn }),
+      ).toEqual(thisWeek);
+      expect(
+        getTimeTrackingPeriodRange("last-week", { now, weekStartsOn }),
+      ).toEqual(lastWeek);
+    },
+  );
 });
 
 describe("parseDurationToSeconds", () => {

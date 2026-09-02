@@ -20,6 +20,7 @@ import Button from "~/components/Button";
 import LoadingSpinner from "~/components/LoadingSpinner";
 import Modal from "~/components/modal";
 import { usePopup } from "~/providers/popup";
+import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import {
   formatDuration,
@@ -47,6 +48,7 @@ export function TimeTrackingCardSection({
 }) {
   const utils = api.useUtils();
   const { showPopup } = usePopup();
+  const { workspace } = useWorkspace();
   const [entries, setEntries] = useState<Worklog[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -62,8 +64,11 @@ export function TimeTrackingCardSection({
   const periodRef = useRef(period);
   const selectedMemberPublicIdRef = useRef(selectedMemberPublicId);
   const periodRange = useMemo(
-    () => getTimeTrackingPeriodRange(period),
-    [period],
+    () =>
+      getTimeTrackingPeriodRange(period, {
+        weekStartsOn: workspace.weekStartDay,
+      }),
+    [period, workspace.weekStartDay],
   );
   const periodOptions = [
     { value: "all", label: t`All time` },
@@ -310,7 +315,9 @@ export function TimeTrackingCardSection({
         ...(requestedMemberPublicId
           ? { workspaceMemberPublicId: requestedMemberPublicId }
           : {}),
-        ...(getTimeTrackingPeriodRange(requestedPeriod) ?? {}),
+        ...(getTimeTrackingPeriodRange(requestedPeriod, {
+          weekStartsOn: workspace.weekStartDay,
+        }) ?? {}),
       });
       if (
         periodRef.current !== requestedPeriod ||
@@ -361,7 +368,7 @@ export function TimeTrackingCardSection({
           <Button
             size="sm"
             variant="danger"
-            onClick={() => stopTimer.mutate({ timezone: getTimezone() })}
+            onClick={() => stopTimer.mutate()}
             isLoading={stopTimer.isPending ? true : undefined}
             disabled={isMutatingTimer}
           >

@@ -56,7 +56,11 @@ export function TimeTrackingCardSection({
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [entriesOpen, setEntriesOpen] = useState(false);
   const [period, setPeriod] = useState<TimeTrackingPeriod>("all");
+  const [selectedMemberPublicId, setSelectedMemberPublicId] = useState<
+    string | null
+  >(null);
   const periodRef = useRef(period);
+  const selectedMemberPublicIdRef = useRef(selectedMemberPublicId);
   const periodRange = useMemo(
     () => getTimeTrackingPeriodRange(period),
     [period],
@@ -89,7 +93,14 @@ export function TimeTrackingCardSection({
     { enabled: isEnabled },
   );
   const firstPage = api.timeTracking.listWorklogs.useQuery(
-    { cardPublicId, limit: PAGE_SIZE, ...(periodRange ?? {}) },
+    {
+      cardPublicId,
+      limit: PAGE_SIZE,
+      ...(selectedMemberPublicId
+        ? { workspaceMemberPublicId: selectedMemberPublicId }
+        : {}),
+      ...(periodRange ?? {}),
+    },
     { enabled: isEnabled && entriesOpen },
   );
   const memberOptions = api.timeTracking.getMemberOptions.useQuery(
@@ -207,6 +218,30 @@ export function TimeTrackingCardSection({
         .sort((a, b) => b.durationSeconds - a.durationSeconds) ?? [],
     [summary.data?.memberTotals],
   );
+  const filterableMemberCount = memberTotals.length;
+
+  useEffect(() => {
+    if (
+      !selectedMemberPublicId ||
+      !summary.data ||
+      (filterableMemberCount > 1 &&
+        memberTotals.some(
+          ({ member }) => member.publicId === selectedMemberPublicId,
+        ))
+    )
+      return;
+
+    selectedMemberPublicIdRef.current = null;
+    setSelectedMemberPublicId(null);
+    setEntries([]);
+    setNextCursor(null);
+    setDeleteEntry(null);
+  }, [
+    filterableMemberCount,
+    memberTotals,
+    selectedMemberPublicId,
+    summary.data,
+  ]);
 
   const effectiveMemberOptions = useMemo(() => {
     if (memberOptions.data) {
@@ -244,7 +279,19 @@ export function TimeTrackingCardSection({
 
   const changePeriod = (nextPeriod: TimeTrackingPeriod) => {
     periodRef.current = nextPeriod;
+    selectedMemberPublicIdRef.current = null;
     setPeriod(nextPeriod);
+    setSelectedMemberPublicId(null);
+    setEntries([]);
+    setNextCursor(null);
+    setDeleteEntry(null);
+  };
+
+  const toggleMemberFilter = (memberPublicId: string) => {
+    const nextMemberPublicId =
+      selectedMemberPublicId === memberPublicId ? null : memberPublicId;
+    selectedMemberPublicIdRef.current = nextMemberPublicId;
+    setSelectedMemberPublicId(nextMemberPublicId);
     setEntries([]);
     setNextCursor(null);
     setDeleteEntry(null);
@@ -253,15 +300,23 @@ export function TimeTrackingCardSection({
   const loadMore = async () => {
     if (!nextCursor || isLoadingMore) return;
     const requestedPeriod = periodRef.current;
+    const requestedMemberPublicId = selectedMemberPublicIdRef.current;
     setIsLoadingMore(true);
     try {
       const page = await utils.timeTracking.listWorklogs.fetch({
         cardPublicId,
         limit: PAGE_SIZE,
         cursor: nextCursor,
-        ...(periodRange ?? {}),
+        ...(requestedMemberPublicId
+          ? { workspaceMemberPublicId: requestedMemberPublicId }
+          : {}),
+        ...(getTimeTrackingPeriodRange(requestedPeriod) ?? {}),
       });
-      if (periodRef.current !== requestedPeriod) return;
+      if (
+        periodRef.current !== requestedPeriod ||
+        selectedMemberPublicIdRef.current !== requestedMemberPublicId
+      )
+        return;
       setEntries((current) => {
         const existing = new Set(current.map((entry) => entry.publicId));
         return [
@@ -538,14 +593,45 @@ export function TimeTrackingCardSection({
 
       {memberTotals.length > 0 && (
         <div className="mb-5 mt-4 flex flex-wrap gap-2">
-          {memberTotals.map(({ member, durationSeconds }) => (
-            <span
-              key={member.publicId}
-              className="rounded-full bg-light-200 px-2.5 py-1 text-xs text-light-900 dark:bg-dark-300 dark:text-dark-900"
-            >
-              {member.displayName}: {formatDuration(durationSeconds)}
-            </span>
-          ))}
+          {memberTotals.map(({ member, durationSeconds }) => {
+            const content = (
+              <>
+                {member.displayName}: {formatDuration(durationSeconds)}
+              </>
+            );
+            const chipClasses =
+              "rounded-full border px-2.5 py-1 text-xs transition-colors";
+
+            if (filterableMemberCount <= 1) {
+              return (
+                <span
+                  key={member.publicId}
+                  className={`${chipClasses} border-transparent bg-light-200 text-light-900 dark:bg-dark-300 dark:text-dark-900`}
+                >
+                  {content}
+                </span>
+              );
+            }
+
+            const isSelected = selectedMemberPublicId === member.publicId;
+            return (
+              <button
+                key={member.publicId}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => toggleMemberFilter(member.publicId)}
+                className={twMerge(
+                  chipClasses,
+                  "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-400 dark:focus-visible:ring-dark-500",
+                  isSelected
+                    ? "border-light-1000 bg-light-1000 text-light-50 dark:border-dark-1000 dark:bg-dark-1000 dark:text-dark-50"
+                    : "border-transparent bg-light-200 text-light-900 hover:border-light-600 hover:bg-light-300 dark:bg-dark-300 dark:text-dark-900 dark:hover:border-dark-600 dark:hover:bg-dark-400",
+                )}
+              >
+                {content}
+              </button>
+            );
+          })}
         </div>
       )}
 

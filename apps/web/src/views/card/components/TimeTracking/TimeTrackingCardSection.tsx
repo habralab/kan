@@ -651,6 +651,7 @@ export function TimeTrackingCardSection({
         <Disclosure
           as="div"
           className="mt-4 border-t border-light-300 pt-2 dark:border-dark-300"
+          defaultOpen={entriesOpen}
         >
           {({ open }) => (
             <>

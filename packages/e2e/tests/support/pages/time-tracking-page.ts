@@ -41,10 +41,12 @@ export class TimeTrackingPage {
     member,
     duration,
     comment,
+    date,
   }: {
     member: string;
     duration: string;
     comment: string;
+    date?: string;
   }) {
     await this.cardSection()
       .getByRole("button", { name: "Add time", exact: true })
@@ -55,6 +57,7 @@ export class TimeTrackingPage {
       label: member,
     });
     await dialog.getByLabel("Time", { exact: true }).fill(duration);
+    if (date) await dialog.getByLabel("Date", { exact: true }).fill(date);
     await dialog.getByLabel("Comment", { exact: true }).fill(comment);
 
     const created = waitForTrpcMutation(
@@ -76,6 +79,30 @@ export class TimeTrackingPage {
     await this.cardSection()
       .getByRole("button", { name: /^Time entries/ })
       .click();
+  }
+
+  async selectPeriod(period: string) {
+    await this.cardSection()
+      .getByRole("button", { name: "Period", exact: true })
+      .click();
+    await this.page.getByRole("option", { name: period, exact: true }).click();
+  }
+
+  async expectEntry(comment: string, visible = true) {
+    const assertion = expect(
+      this.cardSection().getByText(comment, { exact: true }),
+    );
+    if (visible) await assertion.toBeVisible();
+    else await assertion.toBeHidden();
+  }
+
+  async toggleMemberFilter(member: string, duration: string, pressed: boolean) {
+    const chip = this.cardSection().getByRole("button", {
+      name: `${member}: ${duration}`,
+      exact: true,
+    });
+    await chip.click();
+    await expect(chip).toHaveAttribute("aria-pressed", String(pressed));
   }
 
   async startTimer() {

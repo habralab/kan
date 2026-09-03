@@ -84,6 +84,7 @@ export interface RenderSuggestionsProps {
 
 export interface WorkspaceMember {
   publicId: string;
+  status: "active" | "invited" | "removed" | "paused";
   user: {
     id: string | null;
     name: string | null;
@@ -515,7 +516,7 @@ export default function Editor({
             char: "@",
             items: ({ query }: { query: string }) => {
               const withEmail = workspaceMembers.filter(
-                (member) => member.email,
+                (member) => member.email && member.status !== "paused",
               );
 
               const mapped = withEmail.map((member: WorkspaceMember) => ({

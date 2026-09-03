@@ -23,6 +23,7 @@ interface FormValues {
 const Comment = ({
   publicId,
   cardPublicId,
+  userId,
   name,
   email,
   image,
@@ -35,6 +36,7 @@ const Comment = ({
 }: {
   publicId: string | undefined;
   cardPublicId: string;
+  userId: string | null;
   name: string;
   email: string;
   image: string | null;
@@ -71,6 +73,7 @@ const Comment = ({
       .map((member) => ({
         publicId: member.publicId,
         email: member.email,
+        status: member.status,
         user: member.user
           ? {
               id: member.user.id,
@@ -79,6 +82,12 @@ const Comment = ({
             }
           : null,
       })) ?? [];
+
+  const isPaused = workspaceMembers.some(
+    (member) =>
+      member.status === "paused" &&
+      ((userId && member.user?.id === userId) || member.email === email),
+  );
 
   if (!publicId) return null;
 
@@ -132,16 +141,23 @@ const Comment = ({
     >
       <div className="flex justify-between">
         <div className="flex items-center space-x-2">
-          <Avatar
-            size="sm"
-            name={name ?? ""}
-            email={email ?? ""}
-            imageUrl={getAvatarUrl(image) || undefined}
-            isLoading={isLoading}
-          />
+          <span className={isPaused ? "opacity-50" : undefined}>
+            <Avatar
+              size="sm"
+              name={name ?? ""}
+              email={email ?? ""}
+              imageUrl={getAvatarUrl(image) || undefined}
+              isLoading={isLoading}
+            />
+          </span>
 
           <p className="text-sm">
             <span className="font-medium dark:text-dark-1000">{`${name} `}</span>
+            {isPaused && (
+              <span className="text-light-800 dark:text-dark-800">
+                ({t`Paused`})
+              </span>
+            )}
             <span className="mx-1 text-light-900 dark:text-dark-800">·</span>
             <span className="space-x-1 text-light-900 dark:text-dark-800">
               {formatDistanceToNow(new Date(createdAt), {

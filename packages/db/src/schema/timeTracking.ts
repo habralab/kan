@@ -74,11 +74,11 @@ export const timeTrackingWorklogs = pgTable(
       .notNull()
       .references(() => boards.id, { onDelete: "cascade" }),
     cardId: bigint("cardId", { mode: "number" }).references(() => cards.id, {
-      onDelete: "set null",
+      onDelete: "cascade",
     }),
     workspaceMemberId: bigint("workspaceMemberId", {
       mode: "number",
-    }).references(() => workspaceMembers.id, { onDelete: "set null" }),
+    }).references(() => workspaceMembers.id, { onDelete: "cascade" }),
     workDate: date("workDate", { mode: "string" }).notNull(),
     durationSeconds: integer("durationSeconds").notNull(),
     comment: text("comment"),

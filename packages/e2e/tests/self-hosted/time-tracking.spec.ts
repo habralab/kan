@@ -158,7 +158,11 @@ test(
     const members = new MembersPage(page);
 
     await members.open();
-    const inviteLink = await members.createInviteLink();
+    await members.openInviteModal();
+    await page.getByRole("switch", { name: "Create invite link" }).click();
+    const linkInput = page.getByRole("dialog").locator("input[readonly]");
+    await expect(linkInput).not.toHaveValue("");
+    const inviteLink = await linkInput.inputValue();
 
     const secondUserContext = await browser.newContext();
     const secondUserPage = await secondUserContext.newPage();

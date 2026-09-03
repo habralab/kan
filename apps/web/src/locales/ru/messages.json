@@ -145,6 +145,13 @@
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",208]],
     "translation": "Текущий месяц"
   },
+  "ioxL7D": {
+    "message": "Custom range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx",219]],
+    "translation": "Произвольный период"
+  },
   "mYGY3B": {
     "message": "Date",
     "placeholders": {},

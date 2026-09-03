@@ -63,8 +63,8 @@ export interface WorklogCursor {
 }
 
 export interface TimeTrackingReportFilters {
-  dateFrom: string;
-  dateTo: string;
+  dateFrom?: string;
+  dateTo?: string;
   memberPublicIds?: string[];
   cardPublicIds?: string[];
   listPublicIds?: string[];
@@ -82,8 +82,12 @@ const getReportConditions = (
 ) => [
   eq(timeTrackingWorklogs.boardId, boardId),
   isNull(timeTrackingWorklogs.deletedAt),
-  gte(timeTrackingWorklogs.workDate, filters.dateFrom),
-  lte(timeTrackingWorklogs.workDate, filters.dateTo),
+  filters.dateFrom
+    ? gte(timeTrackingWorklogs.workDate, filters.dateFrom)
+    : undefined,
+  filters.dateTo
+    ? lte(timeTrackingWorklogs.workDate, filters.dateTo)
+    : undefined,
   filters.memberPublicIds?.length
     ? inArray(
         timeTrackingWorklogs.workspaceMemberId,

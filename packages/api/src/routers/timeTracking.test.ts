@@ -636,16 +636,44 @@ describe("time tracking router", () => {
     expect(result.items[0]?.card.deletedAt).toBeNull();
     expect(result.items[0]).not.toHaveProperty("id");
     expect(result.nextCursor).not.toContain("2026-09-01");
+
+    await timeTrackingRouter.createCaller(ctx).listReportWorklogs({
+      boardPublicId: cardContext.boardPublicId,
+      limit: 50,
+    });
+
+    expect(mockRepo.listBoardWorklogs).toHaveBeenLastCalledWith(db, {
+      boardId: 10,
+      filters: {
+        labelPublicIds: undefined,
+        cardPublicIds: undefined,
+        listPublicIds: undefined,
+        memberPublicIds: undefined,
+      },
+      limit: 50,
+      cursor: undefined,
+    });
   });
 
-  it("rejects an inverted report date range", async () => {
-    await expect(
-      timeTrackingRouter.createCaller(ctx).getReportSummary({
+  it("rejects incomplete and inverted report date ranges", async () => {
+    const caller = timeTrackingRouter.createCaller(ctx);
+    const results = await Promise.allSettled([
+      caller.getReportSummary({
+        boardPublicId: cardContext.boardPublicId,
+        dateFrom: "2026-09-01",
+      }),
+      caller.getReportSummary({
         boardPublicId: cardContext.boardPublicId,
         dateFrom: "2026-09-30",
         dateTo: "2026-09-01",
       }),
-    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    ]);
+
+    for (const result of results) {
+      expect(result.status).toBe("rejected");
+      if (result.status === "rejected")
+        expect(result.reason).toMatchObject({ code: "BAD_REQUEST" });
+    }
     expect(mockRepo.getBoardWorklogSummary).not.toHaveBeenCalled();
   });
 

@@ -7858,6 +7858,13 @@
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 208]],
     "translation": "Mois en cours"
   },
+  "ioxL7D": {
+    "message": "Custom range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 219]],
+    "translation": "Période personnalisée"
+  },
   "mYGY3B": {
     "message": "Date",
     "placeholders": {},

@@ -21,7 +21,7 @@ describe("time tracking CSV", () => {
     );
   });
 
-  it.each(["=1+1", "+cmd", "-2+3", "@SUM(A1)"])(
+  it.each(["=1+1", "+cmd", "-2+3", "@SUM(A1)", "\t=1+1", "\r=1+1"])(
     "neutralizes spreadsheet formula %s",
     (value) => {
       expect(encodeCsvCell(value)).toBe(`"'${value}"`);

@@ -110,6 +110,7 @@ export const boardRouter = createTRPCRouter({
           )
           .optional(),
         type: z.enum(["regular", "template"]).optional(),
+        cardView: z.enum(["full", "summary"]).default("full"),
       }),
     )
     .output(boardDetailSchema)
@@ -150,6 +151,7 @@ export const boardRouter = createTRPCRouter({
           lists: input.lists ?? [],
           dueDate: dueDateFilters,
           type: input.type,
+          cardView: input.cardView,
         },
       );
 
@@ -190,9 +192,8 @@ export const boardRouter = createTRPCRouter({
         result.lists.map(async (list) => ({
           ...list,
           cards: await Promise.all(
-            list.cards.map(async (card) => ({
-              ...card,
-              members: await Promise.all(
+            list.cards.map(async (card) => {
+              const members = await Promise.all(
                 card.members.map(async (member) => {
                   if (!member.user?.image) return member;
                   const avatarUrl = await resolveAvatarUrl(member.user.image);
@@ -201,8 +202,25 @@ export const boardRouter = createTRPCRouter({
                     user: { ...member.user, image: avatarUrl },
                   };
                 }),
-              ),
-            })),
+              );
+
+              if (input.cardView === "summary") {
+                if (!card.summary) {
+                  throw new TRPCError({
+                    message: "Card summary was not returned",
+                    code: "INTERNAL_SERVER_ERROR",
+                  });
+                }
+
+                return {
+                  ...card,
+                  members,
+                  summary: card.summary,
+                };
+              }
+
+              return { ...card, members };
+            }),
           ),
         })),
       );

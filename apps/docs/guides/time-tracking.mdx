@@ -33,15 +33,19 @@ displayed totals.
 
 ## View a board report
 
-Select **Time** in the board header to open the report. You can filter by date,
-member, card, list, and label, and group results by member, card, or list.
+Select **Time** in the board header to open the report. The period selector uses
+the same calendar presets as cards, including **All time**. Selecting a preset
+updates the visible **From** and **To** dates; editing either date switches the
+report to a custom range. The report, totals, and CSV exports always use the
+displayed range. You can also filter by member, card, list, and label, and group
+results by member, card, or list.
 
 The report offers three CSV profiles:
 
 - **Summary** contains grouped totals and entry counts.
 - **Entries** contains analysis-friendly business fields such as date,
   duration, member, card, list, labels, and comment.
-- **Detailed** also contains stable identifiers, timer metadata, and audit
+- **Full** also contains stable identifiers, timer metadata, and audit
   timestamps for integrations and troubleshooting.
 
 CSV exports neutralize values that spreadsheet applications could otherwise
@@ -52,12 +56,12 @@ visibility setting.
 
 Time tracking uses its own workspace permissions:
 
-| Permission       | Allows                                                 |
-| ---------------- | ------------------------------------------------------ |
-| `worklog:view`   | View entries, totals, reports, and exports             |
-| `worklog:create` | Add time and run a timer for yourself                  |
-| `worklog:edit`   | Edit your own entries                                  |
-| `worklog:delete` | Delete your own entries                                |
+| Permission       | Allows                                                                       |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `worklog:view`   | View entries, totals, reports, and exports                                   |
+| `worklog:create` | Add time and run a timer for yourself                                        |
+| `worklog:edit`   | Edit your own entries                                                        |
+| `worklog:delete` | Delete your own entries                                                      |
 | `worklog:manage` | Add entries for other active members and edit or delete any member's entries |
 
 Workspace administrators receive all permissions by default. Members receive

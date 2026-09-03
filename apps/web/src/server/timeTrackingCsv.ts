@@ -56,8 +56,8 @@ export const TIME_TRACKING_DETAILED_CSV_HEADERS = [
 export const getTimeTrackingExportFilename = (input: {
   boardName: string;
   boardPublicId: string;
-  dateFrom: string;
-  dateTo: string;
+  dateFrom?: string;
+  dateTo?: string;
   profileName: string;
 }) => {
   const boardToken =
@@ -68,7 +68,12 @@ export const getTimeTrackingExportFilename = (input: {
       .toLowerCase()
       .slice(0, 80) || "board";
 
-  return `kan-time-${boardToken}-${input.boardPublicId}-${input.dateFrom}-${input.dateTo}-${input.profileName}.csv`;
+  const rangeToken =
+    input.dateFrom && input.dateTo
+      ? `${input.dateFrom}-${input.dateTo}`
+      : "all-time";
+
+  return `kan-time-${boardToken}-${input.boardPublicId}-${rangeToken}-${input.profileName}.csv`;
 };
 
 interface CsvMember {

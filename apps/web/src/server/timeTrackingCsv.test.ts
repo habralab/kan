@@ -58,6 +58,16 @@ describe("time tracking CSV", () => {
     ).toBe("kan-time-board-board1234567-2026-09-01-2026-09-30-detailed.csv");
   });
 
+  it("names an unbounded export as all time", () => {
+    expect(
+      getTimeTrackingExportFilename({
+        boardName: "Product",
+        boardPublicId: "board1234567",
+        profileName: "entries",
+      }),
+    ).toBe("kan-time-product-board1234567-all-time-entries.csv");
+  });
+
   it("encodes one aggregated summary row", () => {
     expect(
       encodeTimeTrackingSummaryCsvRow({

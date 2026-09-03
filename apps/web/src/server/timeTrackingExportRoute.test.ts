@@ -148,6 +148,23 @@ describe("time tracking export route", () => {
     expect(mockRepo.getBoardSettings).not.toHaveBeenCalled();
   });
 
+  it("rejects a partial export date range", async () => {
+    const response = createResponse();
+
+    await handler(
+      createRequest({
+        boardPublicId: board.boardPublicId,
+        dateFrom: "2026-09-01",
+        profile: "entries",
+      }),
+      response as never,
+    );
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ error: "Invalid export parameters" });
+    expect(mockRepo.getBoardSettings).not.toHaveBeenCalled();
+  });
+
   it("does not export without board and worklog view permissions", async () => {
     mockAssertPermission.mockRejectedValueOnce(new Error("denied"));
     const response = createResponse();
@@ -208,5 +225,25 @@ describe("time tracking export route", () => {
     expect(csv).toContain("anonymous_member123456");
     expect(csv).not.toContain("member@example.com");
     expect(csv).toContain(`"'=HYPERLINK(""https://example.com"")"`);
+  });
+
+  it("streams an all-time export without date filters", async () => {
+    const response = createResponse();
+
+    await handler(
+      createRequest({
+        boardPublicId: board.boardPublicId,
+        profile: "entries",
+      }),
+      response as never,
+    );
+
+    const filters = mockRepo.listBoardWorklogs.mock.calls[0]?.[1].filters;
+    expect(response.statusCode).toBe(200);
+    expect(response.headers.get("content-disposition")).toContain(
+      "all-time-entries.csv",
+    );
+    expect(filters).not.toHaveProperty("dateFrom");
+    expect(filters).not.toHaveProperty("dateTo");
   });
 });

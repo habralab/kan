@@ -40,19 +40,13 @@ const cardDateRangeShape = {
   dateTo: workDateSchema.optional(),
 };
 const reportFilterShape = {
-  dateFrom: workDateSchema,
-  dateTo: workDateSchema,
+  ...cardDateRangeShape,
   memberPublicIds: publicIdFilterSchema,
   cardPublicIds: publicIdFilterSchema,
   listPublicIds: publicIdFilterSchema,
   labelPublicIds: publicIdFilterSchema,
 };
-const hasValidReportDateRange = (input: { dateFrom: string; dateTo: string }) =>
-  input.dateFrom <= input.dateTo;
-const hasValidCardDateRange = (input: {
-  dateFrom?: string;
-  dateTo?: string;
-}) =>
+const hasValidDateRange = (input: { dateFrom?: string; dateTo?: string }) =>
   input.dateFrom === undefined
     ? input.dateTo === undefined
     : input.dateTo !== undefined && input.dateFrom <= input.dateTo;
@@ -68,15 +62,16 @@ const normalizePublicIds = (publicIds: string[] | undefined) => {
 };
 
 const normalizeReportFilters = (filters: {
-  dateFrom: string;
-  dateTo: string;
+  dateFrom?: string;
+  dateTo?: string;
   memberPublicIds?: string[];
   cardPublicIds?: string[];
   listPublicIds?: string[];
   labelPublicIds?: string[];
 }) => ({
-  dateFrom: filters.dateFrom,
-  dateTo: filters.dateTo,
+  ...(filters.dateFrom && filters.dateTo
+    ? { dateFrom: filters.dateFrom, dateTo: filters.dateTo }
+    : {}),
   memberPublicIds: normalizePublicIds(filters.memberPublicIds),
   cardPublicIds: normalizePublicIds(filters.cardPublicIds),
   listPublicIds: normalizePublicIds(filters.listPublicIds),
@@ -466,7 +461,7 @@ export const timeTrackingRouter = createTRPCRouter({
           workspaceMemberPublicId: publicIdSchema.optional(),
           ...cardDateRangeShape,
         })
-        .refine(hasValidCardDateRange, {
+        .refine(hasValidDateRange, {
           message: "dateFrom and dateTo must form a valid range",
         }),
     )
@@ -521,7 +516,7 @@ export const timeTrackingRouter = createTRPCRouter({
           cardPublicId: publicIdSchema,
           ...cardDateRangeShape,
         })
-        .refine(hasValidCardDateRange, {
+        .refine(hasValidDateRange, {
           message: "dateFrom and dateTo must form a valid range",
         }),
     )
@@ -683,8 +678,8 @@ export const timeTrackingRouter = createTRPCRouter({
           ...reportFilterShape,
           groupBy: z.enum(["member", "card", "list"]).optional(),
         })
-        .refine(hasValidReportDateRange, {
-          message: "dateFrom must not be after dateTo",
+        .refine(hasValidDateRange, {
+          message: "dateFrom and dateTo must form a valid range",
         }),
     )
     .output(timeTrackingReportSummarySchema)
@@ -739,8 +734,8 @@ export const timeTrackingRouter = createTRPCRouter({
           limit: z.number().int().min(1).max(100).default(50),
           cursor: z.string().optional(),
         })
-        .refine(hasValidReportDateRange, {
-          message: "dateFrom must not be after dateTo",
+        .refine(hasValidDateRange, {
+          message: "dateFrom and dateTo must form a valid range",
         }),
     )
     .output(

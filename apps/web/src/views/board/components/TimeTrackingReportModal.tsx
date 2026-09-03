@@ -6,15 +6,19 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 
 import type { RouterOutputs } from "~/utils/api";
+import type { TimeTrackingPeriod } from "~/utils/timeTracking";
 import Button from "~/components/Button";
 import LoadingSpinner from "~/components/LoadingSpinner";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
+import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import {
   formatDuration,
+  getTimeTrackingPeriodRange,
   TIME_TRACKING_CHANNEL_NAME,
 } from "~/utils/timeTracking";
+import { getTimeTrackingPeriodOptions } from "~/utils/timeTrackingLabels";
 
 const PAGE_SIZE = 50;
 
@@ -30,34 +34,6 @@ const memberStatusLabel = (status: ReportMember["status"]) => {
   return t`Active`;
 };
 
-const localDate = (date: Date) => {
-  const offset = date.getTimezoneOffset() * 60_000;
-  return new Date(date.getTime() - offset).toISOString().slice(0, 10);
-};
-
-const currentMonthRange = () => {
-  const now = new Date();
-  return {
-    fromDate: localDate(new Date(now.getFullYear(), now.getMonth(), 1)),
-    toDate: localDate(new Date(now.getFullYear(), now.getMonth() + 1, 0)),
-  };
-};
-
-const previousMonthRange = () => {
-  const now = new Date();
-  return {
-    fromDate: localDate(new Date(now.getFullYear(), now.getMonth() - 1, 1)),
-    toDate: localDate(new Date(now.getFullYear(), now.getMonth(), 0)),
-  };
-};
-
-const lastThirtyDaysRange = () => {
-  const to = new Date();
-  const from = new Date();
-  from.setDate(from.getDate() - 29);
-  return { fromDate: localDate(from), toDate: localDate(to) };
-};
-
 export function TimeTrackingReportModal({
   boardPublicId,
 }: {
@@ -65,10 +41,14 @@ export function TimeTrackingReportModal({
 }) {
   const { closeModal } = useModal();
   const { showPopup } = usePopup();
+  const { workspace } = useWorkspace();
   const utils = api.useUtils();
-  const initialRange = currentMonthRange();
-  const [fromDate, setFromDate] = useState(initialRange.fromDate);
-  const [toDate, setToDate] = useState(initialRange.toDate);
+  const initialRange = getTimeTrackingPeriodRange("this-month");
+  const [period, setPeriod] = useState<TimeTrackingPeriod | "custom">(
+    "this-month",
+  );
+  const [fromDate, setFromDate] = useState(initialRange?.dateFrom ?? "");
+  const [toDate, setToDate] = useState(initialRange?.dateTo ?? "");
   const [workspaceMemberPublicId, setWorkspaceMemberPublicId] = useState("");
   const [cardPublicId, setCardPublicId] = useState("");
   const [listPublicId, setListPublicId] = useState("");
@@ -80,8 +60,7 @@ export function TimeTrackingReportModal({
 
   const filters = {
     boardPublicId,
-    dateFrom: fromDate,
-    dateTo: toDate,
+    ...(fromDate && toDate ? { dateFrom: fromDate, dateTo: toDate } : {}),
     memberPublicIds: workspaceMemberPublicId
       ? [workspaceMemberPublicId]
       : undefined,
@@ -95,7 +74,8 @@ export function TimeTrackingReportModal({
   const [loadedFilterKey, setLoadedFilterKey] = useState(filterKey);
   const visibleEntries = loadedFilterKey === filterKey ? entries : [];
   const visibleNextCursor = loadedFilterKey === filterKey ? nextCursor : null;
-  const validRange = fromDate <= toDate;
+  const validRange =
+    (!fromDate && !toDate) || (!!fromDate && !!toDate && fromDate <= toDate);
   const options = api.timeTracking.getReportOptions.useQuery({ boardPublicId });
   const summary = api.timeTracking.getReportSummary.useQuery(
     { ...filters, groupBy: groupBy === "" ? undefined : groupBy },
@@ -161,18 +141,24 @@ export function TimeTrackingReportModal({
     }
   };
 
-  const setRange = (range: { fromDate: string; toDate: string }) => {
-    setFromDate(range.fromDate);
-    setToDate(range.toDate);
+  const changePeriod = (nextPeriod: TimeTrackingPeriod) => {
+    const range = getTimeTrackingPeriodRange(nextPeriod, {
+      weekStartsOn: workspace.weekStartDay,
+    });
+    setPeriod(nextPeriod);
+    setFromDate(range?.dateFrom ?? "");
+    setToDate(range?.dateTo ?? "");
   };
 
   const exportUrl = (profile: "summary" | "entries" | "detailed") => {
     const params = new URLSearchParams({
       boardPublicId,
-      dateFrom: fromDate,
-      dateTo: toDate,
       profile,
     });
+    if (fromDate && toDate) {
+      params.set("dateFrom", fromDate);
+      params.set("dateTo", toDate);
+    }
     if (workspaceMemberPublicId)
       params.append("memberPublicIds", workspaceMemberPublicId);
     if (cardPublicId) params.append("cardPublicIds", cardPublicId);
@@ -218,37 +204,37 @@ export function TimeTrackingReportModal({
             </div>
 
             <div className="flex-1 overflow-y-auto p-5">
-              <div className="mb-4 flex flex-wrap gap-2">
-                <Button
-                  size="xs"
-                  variant="secondary"
-                  onClick={() => setRange(currentMonthRange())}
-                >
-                  {t`Current month`}
-                </Button>
-                <Button
-                  size="xs"
-                  variant="secondary"
-                  onClick={() => setRange(previousMonthRange())}
-                >
-                  {t`Previous month`}
-                </Button>
-                <Button
-                  size="xs"
-                  variant="secondary"
-                  onClick={() => setRange(lastThirtyDaysRange())}
-                >
-                  {t`Last 30 days`}
-                </Button>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-7">
+                <label className="text-xs text-light-900 dark:text-dark-900">
+                  {t`Period`}
+                  <select
+                    value={period}
+                    onChange={(event) =>
+                      changePeriod(event.target.value as TimeTrackingPeriod)
+                    }
+                    className={inputClassName}
+                  >
+                    {period === "custom" && (
+                      <option value="custom" disabled>
+                        {t`Custom range`}
+                      </option>
+                    )}
+                    {getTimeTrackingPeriodOptions().map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <label className="text-xs text-light-900 dark:text-dark-900">
                   {t`From`}
                   <input
                     type="date"
                     value={fromDate}
-                    onChange={(event) => setFromDate(event.target.value)}
+                    onChange={(event) => {
+                      setPeriod("custom");
+                      setFromDate(event.target.value);
+                    }}
                     className={inputClassName}
                   />
                 </label>
@@ -257,7 +243,10 @@ export function TimeTrackingReportModal({
                   <input
                     type="date"
                     value={toDate}
-                    onChange={(event) => setToDate(event.target.value)}
+                    onChange={(event) => {
+                      setPeriod("custom");
+                      setToDate(event.target.value);
+                    }}
                     className={inputClassName}
                   />
                 </label>

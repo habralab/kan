@@ -27,6 +27,7 @@ import {
   getTimeTrackingPeriodRange,
   TIME_TRACKING_CHANNEL_NAME,
 } from "~/utils/timeTracking";
+import { getTimeTrackingPeriodOptions } from "~/utils/timeTrackingLabels";
 import { ElapsedTimer } from "./ElapsedTimer";
 import { TimeEntryForm } from "./TimeEntryForm";
 
@@ -66,20 +67,7 @@ export function TimeTrackingCardSection({
       }),
     [period, workspace.weekStartDay],
   );
-  const periodOptions = [
-    { value: "all", label: t`All time` },
-    { value: "today", label: t`Today` },
-    { value: "yesterday", label: t`Yesterday` },
-    { value: "this-week", label: t`This week` },
-    { value: "last-week", label: t`Last week` },
-    { value: "last-14-days", label: t`Last 14 days` },
-    { value: "this-month", label: t`This month` },
-    { value: "last-month", label: t`Last month` },
-    { value: "this-quarter", label: t`This quarter` },
-    { value: "last-quarter", label: t`Last quarter` },
-    { value: "this-year", label: t`This year` },
-    { value: "last-year", label: t`Last year` },
-  ] satisfies { value: TimeTrackingPeriod; label: string }[];
+  const periodOptions = getTimeTrackingPeriodOptions();
   const selectedPeriod =
     periodOptions.find((option) => option.value === period) ?? periodOptions[0];
 

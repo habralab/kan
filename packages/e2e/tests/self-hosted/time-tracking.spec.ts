@@ -71,6 +71,29 @@ test(
     await expect(
       report.getByText("Reviewed the implementation", { exact: true }),
     ).toBeVisible();
+
+    const period = report.getByRole("combobox", {
+      name: "Period",
+      exact: true,
+    });
+    const fromDate = report.getByLabel("From", { exact: true });
+    const toDate = report.getByLabel("To", { exact: true });
+    const entriesExport = report.getByRole("link", {
+      name: "Export entries CSV",
+      exact: true,
+    });
+
+    await period.selectOption({ label: "All time" });
+    await expect(fromDate).toHaveValue("");
+    await expect(toDate).toHaveValue("");
+    await expect(entriesExport).not.toHaveAttribute("href", /dateFrom|dateTo/);
+
+    await period.selectOption({ label: "Today" });
+    await expect(fromDate).toHaveValue(localDate(0));
+    await expect(toDate).toHaveValue(localDate(0));
+    await expect(entriesExport).toHaveAttribute("href", /dateFrom=.*dateTo=/);
+    await fromDate.fill(localDate(-1));
+    await expect(period).toHaveValue("custom");
   },
 );
 

@@ -385,8 +385,8 @@ export function TimeTrackingReportModal({
                           <p className="truncate text-sm font-medium text-light-1000 dark:text-dark-1000">
                             {group.publicId === "unavailable-member"
                               ? t`Unavailable member`
-                              : group.publicId === "deleted-card"
-                                ? t`Deleted card`
+                              : group.publicId === "unavailable-card"
+                                ? t`Unavailable card`
                                 : group.label}
                           </p>
                           <p className="text-xs text-light-900 dark:text-dark-900">
@@ -506,7 +506,7 @@ export function TimeTrackingReportModal({
                           </td>
                           <td className="max-w-64 truncate px-3 py-2">
                             {!entry.card ? (
-                              t`Deleted card`
+                              t`Unavailable card`
                             ) : entry.card.deletedAt ? (
                               <span>
                                 {entry.card.title}{" "}

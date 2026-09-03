@@ -8227,12 +8227,15 @@
     ],
     "translation": "Spróbuj ponownie"
   },
-  "6/Ns5U": {
-    "message": "Deleted card",
+  "SBMyw7": {
+    "message": "Unavailable card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 493]],
-    "translation": "Usunięta karta"
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 390],
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 510]
+    ],
+    "translation": "Niedostępna karta"
   },
   "aGbZ2d": {
     "message": "Unavailable member",

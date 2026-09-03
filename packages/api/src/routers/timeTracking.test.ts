@@ -634,7 +634,7 @@ describe("time tracking router", () => {
     expect(result.items[0]?.labels).toEqual([
       { publicId: "label1234567", name: "Migration" },
     ]);
-    expect(result.items[0]?.card.deletedAt).toBeNull();
+    expect(result.items[0]?.card?.deletedAt).toBeNull();
     expect(result.items[0]).not.toHaveProperty("id");
     expect(result.nextCursor).not.toContain("2026-09-01");
 

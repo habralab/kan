@@ -13,7 +13,7 @@ import {
   loadTimeTrackingImportPlan,
   parseTimeTrackingImportPlanArguments,
   sha256,
-} from "@kan/db/timeTrackingImportPlan";
+} from "./timeTrackingPlan";
 
 const temporaryRoots: string[] = [];
 

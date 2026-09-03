@@ -78,27 +78,29 @@ const Filters = ({
   };
 
   const formattedMembers = members
-    .filter(
-      (member) =>
-        member.status !== "paused" &&
-        assignedMemberPublicIds?.has(member.publicId),
+    .filter((member) => assignedMemberPublicIds?.has(member.publicId))
+    .sort(
+      (a, b) =>
+        Number(a.status === "paused") - Number(b.status === "paused"),
     )
     .map((member) => ({
       key: member.publicId,
-      value: formatMemberDisplayName(
+      value: `${formatMemberDisplayName(
         member.user?.name ?? null,
         member.user?.email ?? null,
-      ),
+      )}${member.status === "paused" ? ` (${t`Paused`})` : ""}`,
       selected: !!router.query.members?.includes(member.publicId),
       leftIcon: (
-        <Avatar
-          size="xs"
-          name={member.user?.name ?? ""}
-          imageUrl={
-            member.user?.image ? getAvatarUrl(member.user.image) : undefined
-          }
-          email={member.user?.email ?? ""}
-        />
+        <span className={member.status === "paused" ? "opacity-50" : undefined}>
+          <Avatar
+            size="xs"
+            name={member.user?.name ?? ""}
+            imageUrl={
+              member.user?.image ? getAvatarUrl(member.user.image) : undefined
+            }
+            email={member.user?.email ?? ""}
+          />
+        </span>
       ),
     }));
 

@@ -1,4 +1,5 @@
 import type { DropResult } from "react-beautiful-dnd";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -55,11 +56,20 @@ import { MoveBoardForm } from "./components/MoveBoardForm";
 import { NewCardForm } from "./components/NewCardForm";
 import { NewListForm } from "./components/NewListForm";
 import { NewTemplateForm } from "./components/NewTemplateForm";
-import { TimeTrackingReportModal } from "./components/TimeTrackingReportModal";
-import { TimeTrackingSettingsForm } from "./components/TimeTrackingSettingsForm";
 import UpdateBoardSlugButton from "./components/UpdateBoardSlugButton";
 import { UpdateBoardSlugForm } from "./components/UpdateBoardSlugForm";
 import VisibilityButton from "./components/VisibilityButton";
+
+const TimeTrackingReportModal = dynamic(() =>
+  import("./components/TimeTrackingReportModal").then(
+    (module) => module.TimeTrackingReportModal,
+  ),
+);
+const TimeTrackingSettingsForm = dynamic(() =>
+  import("./components/TimeTrackingSettingsForm").then(
+    (module) => module.TimeTrackingSettingsForm,
+  ),
+);
 
 type PublicListId = string;
 

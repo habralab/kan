@@ -39,7 +39,7 @@ import ListSelector from "./components/ListSelector";
 import MemberSelector from "./components/MemberSelector";
 import { NewChecklistForm } from "./components/NewChecklistForm";
 import NewCommentForm from "./components/NewCommentForm";
-import { TimeTrackingCardSection } from "./components/TimeTracking/TimeTrackingCardSection";
+import { TimeTrackingCardSectionLoader } from "./components/TimeTracking/TimeTrackingCardSectionLoader";
 
 interface FormValues {
   cardId: string;
@@ -448,7 +448,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                     </form>
                   </div>
                   {!isTemplate && boardId && (
-                    <TimeTrackingCardSection
+                    <TimeTrackingCardSectionLoader
                       cardPublicId={cardId}
                       boardPublicId={boardId}
                     />

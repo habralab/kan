@@ -72,15 +72,13 @@ describe("time tracking CSV", () => {
     expect(
       encodeTimeTrackingSummaryCsvRow({
         groupBy: "card",
-        groupPublicId: "card12345678",
         groupLabel: "Migration, phase 2",
         durationSeconds: 3661,
         entryCount: 3,
         boardName: "Operations",
-        boardPublicId: "board1234567",
       }),
     ).toBe(
-      '"card","card12345678","Migration, phase 2",3661,"01:01:01",3,"Operations","board1234567"\r\n',
+      '"card","Migration, phase 2","01:01:01",3661,3,"Operations"\r\n',
     );
   });
 
@@ -121,13 +119,11 @@ describe("time tracking CSV", () => {
   it("keeps stable summary headers", () => {
     expect(TIME_TRACKING_SUMMARY_CSV_HEADERS).toEqual([
       "Group by",
-      "Group ID",
       "Group",
-      "Duration seconds",
       "Duration",
+      "Duration seconds",
       "Entry count",
       "Board",
-      "Board ID",
     ]);
   });
 

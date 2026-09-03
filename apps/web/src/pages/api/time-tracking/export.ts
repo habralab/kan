@@ -188,12 +188,10 @@ export default withRateLimit(
             res,
             encodeTimeTrackingSummaryCsvRow({
               groupBy,
-              groupPublicId: group.publicId,
               groupLabel: getGroupLabel(group),
               durationSeconds: group.durationSeconds,
               entryCount: group.entryCount,
               boardName: board.boardName,
-              boardPublicId: board.boardPublicId,
             }),
           );
         }

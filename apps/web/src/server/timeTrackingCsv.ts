@@ -2,13 +2,11 @@ type CsvValue = string | number | Date | null | undefined;
 
 export const TIME_TRACKING_SUMMARY_CSV_HEADERS = [
   "Group by",
-  "Group ID",
   "Group",
-  "Duration seconds",
   "Duration",
+  "Duration seconds",
   "Entry count",
   "Board",
-  "Board ID",
 ] as const;
 
 export const TIME_TRACKING_ENTRIES_CSV_HEADERS = [
@@ -96,22 +94,18 @@ export const getTimeTrackingCsvMemberEmail = (member: CsvMember) =>
 
 export const encodeTimeTrackingSummaryCsvRow = (input: {
   groupBy: string;
-  groupPublicId: string;
   groupLabel: string;
   durationSeconds: number;
   entryCount: number;
   boardName: string;
-  boardPublicId: string;
 }) =>
   encodeCsvRow([
     input.groupBy,
-    input.groupPublicId,
     input.groupLabel,
-    input.durationSeconds,
     formatCsvDuration(input.durationSeconds),
+    input.durationSeconds,
     input.entryCount,
     input.boardName,
-    input.boardPublicId,
   ]);
 
 export const encodeTimeTrackingEntriesCsvRow = (input: {

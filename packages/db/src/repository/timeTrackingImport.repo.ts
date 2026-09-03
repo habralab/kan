@@ -99,6 +99,53 @@ export interface TimeTrackingImportResult {
   worklogPublicId?: string;
 }
 
+export const accumulateTimeTrackingImportResults = (
+  counters: TimeTrackingImportCounters,
+  records: { externalId: string; durationSeconds: number | null }[],
+  results: TimeTrackingImportResult[],
+  target: "worklogs" | "quarantine",
+) => {
+  if (records.length !== results.length)
+    throw new Error("Import result count does not match record count");
+
+  for (const [index, result] of results.entries()) {
+    const record = records[index];
+    if (!record || record.externalId !== result.externalId)
+      throw new Error("Import result does not match its source record");
+
+    if (target === "quarantine") {
+      if (result.disposition === "conflict") counters.conflictRecords++;
+      else {
+        counters.quarantinedRecords++;
+        counters.quarantinedSeconds += record.durationSeconds ?? 0;
+      }
+      continue;
+    }
+
+    if (result.disposition === "inserted") {
+      counters.insertedRecords++;
+      counters.insertedSeconds += record.durationSeconds ?? 0;
+    } else if (result.disposition === "updated") counters.updatedRecords++;
+    else if (result.disposition === "skipped") counters.skippedRecords++;
+    else counters.conflictRecords++;
+  }
+};
+
+export const assertTimeTrackingImportCountersComplete = (
+  counters: TimeTrackingImportCounters,
+) => {
+  const accountedRecords =
+    counters.insertedRecords +
+    counters.updatedRecords +
+    counters.skippedRecords +
+    counters.quarantinedRecords +
+    counters.conflictRecords;
+  if (accountedRecords !== counters.inputRecords)
+    throw new Error(
+      `Import counters account for ${accountedRecords} of ${counters.inputRecords} records`,
+    );
+};
+
 export interface TimeTrackingImportMappingSummary {
   boards: number;
   cards: number;
@@ -564,8 +611,8 @@ export const importTimeTrackingWorklogBatch = (
         continue;
       }
 
-      if (worklogChanged)
-        await tx
+      if (worklogChanged) {
+        const [updatedWorklog] = await tx
           .update(timeTrackingWorklogs)
           .set({
             boardId: board.id,
@@ -577,9 +624,24 @@ export const importTimeTrackingWorklogBatch = (
               comment: record.comment,
             }),
             updatedAt: new Date(),
-            updatedBy: null,
           })
-          .where(eq(timeTrackingWorklogs.id, existing.worklogId));
+          .where(
+            and(
+              eq(timeTrackingWorklogs.id, existing.worklogId),
+              isNull(timeTrackingWorklogs.updatedBy),
+              isNull(timeTrackingWorklogs.deletedAt),
+            ),
+          )
+          .returning({ id: timeTrackingWorklogs.id });
+        if (!updatedWorklog) {
+          resultsByExternalId.set(record.externalId, {
+            externalId: record.externalId,
+            disposition: "conflict",
+            worklogPublicId: existing.worklogPublicId,
+          });
+          continue;
+        }
+      }
       await tx
         .update(timeTrackingWorklogSources)
         .set({

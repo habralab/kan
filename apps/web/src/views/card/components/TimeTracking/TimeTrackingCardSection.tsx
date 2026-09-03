@@ -24,10 +24,10 @@ import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import {
   formatDuration,
-  formatTimerDuration,
   getTimeTrackingPeriodRange,
   TIME_TRACKING_CHANNEL_NAME,
 } from "~/utils/timeTracking";
+import { ElapsedTimer } from "./ElapsedTimer";
 import { TimeEntryForm } from "./TimeEntryForm";
 
 const PAGE_SIZE = 10;
@@ -35,9 +35,6 @@ type Worklog = RouterOutputs["timeTracking"]["listWorklogs"]["items"][number];
 
 const getTimezone = () =>
   Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-
-const getElapsedSeconds = (startedAt: Date) =>
-  Math.max(0, Math.floor((Date.now() - startedAt.getTime()) / 1000));
 
 export function TimeTrackingCardSection({
   cardPublicId,
@@ -55,7 +52,6 @@ export function TimeTrackingCardSection({
   const [formEntry, setFormEntry] = useState<Worklog | "new" | null>(null);
   const [deleteEntry, setDeleteEntry] = useState<Worklog | null>(null);
   const [confirmSwitch, setConfirmSwitch] = useState(false);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [entriesOpen, setEntriesOpen] = useState(false);
   const [period, setPeriod] = useState<TimeTrackingPeriod>("all");
   const [selectedMemberPublicId, setSelectedMemberPublicId] = useState<
@@ -127,15 +123,6 @@ export function TimeTrackingCardSection({
     setEntries(firstPage.data.items);
     setNextCursor(firstPage.data.nextCursor);
   }, [firstPage.data, firstPage.dataUpdatedAt]);
-
-  useEffect(() => {
-    if (!timer) return;
-    const updateElapsed = () =>
-      setElapsedSeconds(getElapsedSeconds(timer.startedAt));
-    updateElapsed();
-    const interval = window.setInterval(updateElapsed, 1000);
-    return () => window.clearInterval(interval);
-  }, [timer]);
 
   useEffect(() => {
     if (!("BroadcastChannel" in window)) return;
@@ -347,7 +334,10 @@ export function TimeTrackingCardSection({
       <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div className="min-w-0">
           <p className="font-mono text-lg font-semibold text-light-1000 dark:text-dark-1000">
-            {formatTimerDuration(elapsedSeconds)}
+            <ElapsedTimer
+              key={timer.startedAt.getTime()}
+              startedAt={timer.startedAt}
+            />
           </p>
           <p className="truncate text-xs text-light-900 dark:text-dark-900">
             {timer.inaccessible ? (

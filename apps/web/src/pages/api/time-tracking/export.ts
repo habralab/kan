@@ -93,11 +93,10 @@ export default withRateLimit(
       if (
         !boardPublicId ||
         boardPublicId.length !== 12 ||
-        !dateFrom ||
-        !dateTo ||
-        !isValidWorkDate(dateFrom) ||
-        !isValidWorkDate(dateTo) ||
-        dateFrom > dateTo ||
+        (dateFrom === undefined) !== (dateTo === undefined) ||
+        (dateFrom !== undefined && !isValidWorkDate(dateFrom)) ||
+        (dateTo !== undefined && !isValidWorkDate(dateTo)) ||
+        (dateFrom !== undefined && dateTo !== undefined && dateFrom > dateTo) ||
         (profile !== "summary" &&
           profile !== "entries" &&
           profile !== "detailed")
@@ -147,7 +146,10 @@ export default withRateLimit(
         return res.status(403).json({ error: "Permission denied" });
       }
 
-      const filters = { dateFrom, dateTo, ...publicIdFilters };
+      const filters = {
+        ...(dateFrom && dateTo ? { dateFrom, dateTo } : {}),
+        ...publicIdFilters,
+      };
       const summaryGroups =
         profile === "summary" && isExportGroupBy(groupBy)
           ? await timeTrackingRepo.getBoardWorklogGroups(

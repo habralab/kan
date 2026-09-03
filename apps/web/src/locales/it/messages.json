@@ -7803,6 +7803,13 @@
     "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 208]],
     "translation": "Mese corrente"
   },
+  "ioxL7D": {
+    "message": "Custom range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 219]],
+    "translation": "Intervallo personalizzato"
+  },
   "mYGY3B": {
     "message": "Date",
     "placeholders": {},

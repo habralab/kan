@@ -288,6 +288,13 @@
       "when": 1788374100837,
       "tag": "20260902183500_AddTimeTrackingSourceProvenance",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1788398854245,
+      "tag": "20260903012734_RestoreTimeTrackingCascadeDeletes",
+      "breakpoints": true
     }
   ]
 }

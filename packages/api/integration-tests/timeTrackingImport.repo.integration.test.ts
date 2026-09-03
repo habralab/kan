@@ -24,7 +24,9 @@ describe("time tracking import repository", () => {
   let boardId: number;
   let workspaceId: number;
   let cardPublicId: string;
+  let cardId: number;
   let memberPublicId: string;
+  let workspaceMemberId: number;
   let userId: string;
 
   const source = (
@@ -75,6 +77,7 @@ describe("time tracking import repository", () => {
     });
     if (!member) throw new Error("Seeded workspace member not found");
     memberPublicId = member.publicId;
+    workspaceMemberId = member.id;
 
     boardPublicId = "importboard1";
     cardPublicId = "importcard01";
@@ -101,13 +104,75 @@ describe("time tracking import repository", () => {
       })
       .returning();
     if (!list) throw new Error("Unable to create import list");
-    await db.insert(cards).values({
-      publicId: cardPublicId,
-      title: "Imported card",
-      index: 0,
-      listId: list.id,
-      createdBy: seeded.user.id,
-    });
+    const [card] = await db
+      .insert(cards)
+      .values({
+        publicId: cardPublicId,
+        title: "Imported card",
+        index: 0,
+        listId: list.id,
+        createdBy: seeded.user.id,
+      })
+      .returning();
+    if (!card) throw new Error("Unable to create import card");
+    cardId = card.id;
+  });
+
+  const insertReferencedWorklogs = async (prefix: "delm" | "delc") => {
+    await db.insert(timeTrackingWorklogs).values([
+      {
+        publicId: `${prefix}manual01`,
+        boardId,
+        cardId,
+        workspaceMemberId,
+        workDate: "2026-08-29",
+        durationSeconds: 60,
+        entryMethod: "manual",
+        createdBy: userId,
+      },
+      {
+        publicId: `${prefix}timer001`,
+        boardId,
+        cardId,
+        workspaceMemberId,
+        workDate: "2026-08-29",
+        durationSeconds: 60,
+        entryMethod: "timer",
+        timerStartedAt: new Date("2026-08-29T08:46:00Z"),
+        timerStoppedAt: new Date("2026-08-29T08:47:00Z"),
+        timerTimezone: "UTC",
+        rawElapsedSeconds: 60,
+        createdBy: userId,
+      },
+      {
+        publicId: `${prefix}import01`,
+        boardId,
+        cardId,
+        workspaceMemberId,
+        workDate: "2026-08-29",
+        durationSeconds: 60,
+        entryMethod: "import",
+        createdBy: null,
+      },
+    ]);
+  };
+
+  it("cascades referenced worklogs when a workspace member is deleted", async () => {
+    await insertReferencedWorklogs("delm");
+
+    await db
+      .delete(workspaceMembers)
+      .where(eq(workspaceMembers.id, workspaceMemberId));
+
+    expect(await db.select().from(timeTrackingWorklogs)).toHaveLength(0);
+  });
+
+  it("cascades referenced worklogs when a card is deleted", async () => {
+    await insertReferencedWorklogs("delc");
+
+    await db.delete(cards).where(eq(cards.id, cardId));
+
+    expect(await db.select().from(timeTrackingWorklogs)).toHaveLength(0);
   });
 
   it("imports resolved and orphan worklogs with generic provenance", async () => {

@@ -5,7 +5,7 @@ import {
   isValidIanaTimezone,
   isValidWorkDate,
   roundTimerDuration,
-} from "./timeTracking";
+} from "@kan/db/repository/timeTracking.utils";
 
 describe("roundTimerDuration", () => {
   it.each([

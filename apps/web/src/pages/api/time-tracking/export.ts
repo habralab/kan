@@ -279,9 +279,8 @@ export default withRateLimit(
     } catch (error) {
       if (res.headersSent) {
         res.destroy(error instanceof Error ? error : undefined);
-        return;
       }
-      return res.status(500).json({ error: "Internal server error" });
+      throw error;
     }
   }),
 );

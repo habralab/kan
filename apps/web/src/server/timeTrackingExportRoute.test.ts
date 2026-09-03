@@ -246,4 +246,17 @@ describe("time tracking export route", () => {
     expect(filters).not.toHaveProperty("dateFrom");
     expect(filters).not.toHaveProperty("dateTo");
   });
+
+  it("destroys a started stream and forwards export errors to logging", async () => {
+    const error = new Error("export failed");
+    mockRepo.listBoardWorklogs.mockRejectedValue(error);
+    const response = createResponse();
+
+    await expect(
+      handler(createRequest(validQuery), response as never),
+    ).rejects.toBe(error);
+
+    expect(response.destroyedWith).toBe(error);
+    expect(response.ended).toBe(false);
+  });
 });

@@ -335,10 +335,12 @@ export const getMemberByPublicId = (
   return db.query.workspaceMembers.findFirst({
     columns: {
       id: true,
+      status: true,
     },
     where: and(
       eq(workspaceMembers.publicId, memberPublicId),
       eq(workspaceMembers.workspaceId, workspaceId),
+      isNull(workspaceMembers.deletedAt),
     ),
   });
 };
@@ -351,10 +353,12 @@ export const getAllMembersByPublicIds = (
   return db.query.workspaceMembers.findMany({
     columns: {
       id: true,
+      status: true,
     },
     where: and(
       inArray(workspaceMembers.publicId, memberPublicIds),
       eq(workspaceMembers.workspaceId, workspaceId),
+      isNull(workspaceMembers.deletedAt),
     ),
   });
 };

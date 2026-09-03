@@ -674,6 +674,15 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                     members={boardData.workspace.members.filter(
                       (member) => member.user !== null,
                     )}
+                    assignedMemberPublicIds={
+                      new Set(
+                        boardData.lists.flatMap((list) =>
+                          list.cards.flatMap((card) =>
+                            card.members.map((member) => member.publicId),
+                          ),
+                        ),
+                      )
+                    }
                     lists={boardData.allLists}
                     position="left"
                     isLoading={!boardData}

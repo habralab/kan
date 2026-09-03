@@ -312,6 +312,7 @@ export const getByPublicId = async (
                       publicId: true,
                       email: true,
                       deletedAt: true,
+                      status: true,
                     },
                     with: {
                       user: {

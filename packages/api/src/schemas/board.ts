@@ -4,6 +4,7 @@ import {
   checklistResponseSchema,
   labelSchema,
   workspaceMemberSchema,
+  workspaceMemberStatusSchema,
 } from "./common";
 
 // ─── board.all ───────────────────────────────────────────────
@@ -25,6 +26,7 @@ export const boardListItemSchema = z.object({
 const boardCardMemberSchema = z.object({
   publicId: z.string(),
   email: z.string(),
+  status: workspaceMemberStatusSchema,
   user: z
     .object({
       name: z.string().nullable(),

@@ -186,8 +186,8 @@ describe("time tracking import repository", () => {
       expect(groups).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            publicId: timeTrackingRepo.DELETED_TIME_TRACKING_CARD_GROUP_ID,
-            label: "Deleted card",
+            publicId: timeTrackingRepo.UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID,
+            label: "Unavailable card",
             durationSeconds: 1800,
             entryCount: 1,
           }),

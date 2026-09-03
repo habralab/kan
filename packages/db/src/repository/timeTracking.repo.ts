@@ -76,7 +76,7 @@ export type TimeTrackingReportGroupBy = "member" | "card" | "list";
 export type TimeTrackingExportGroupBy = TimeTrackingReportGroupBy | "date";
 
 export const UNAVAILABLE_TIME_TRACKING_MEMBER_GROUP_ID = "unavailable-member";
-export const DELETED_TIME_TRACKING_CARD_GROUP_ID = "deleted-card";
+export const UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID = "unavailable-card";
 
 const getReportConditions = (
   db: dbClient,
@@ -1072,7 +1072,7 @@ export const getBoardWorklogGroups = async (
   }
 
   if (groupBy === "card") {
-    const [rows, deleted] = await Promise.all([
+    const [rows, unavailable] = await Promise.all([
       db
         .select({
           publicId: cards.publicId,
@@ -1091,12 +1091,12 @@ export const getBoardWorklogGroups = async (
         .where(and(conditions, isNull(timeTrackingWorklogs.cardId))),
     ]);
     const groups = rows.map((row) => ({ ...row, member: null }));
-    if (deleted[0]?.entryCount)
+    if (unavailable[0]?.entryCount)
       groups.push({
-        publicId: DELETED_TIME_TRACKING_CARD_GROUP_ID,
-        label: "Deleted card",
-        durationSeconds: deleted[0].durationSeconds,
-        entryCount: deleted[0].entryCount,
+        publicId: UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID,
+        label: "Unavailable card",
+        durationSeconds: unavailable[0].durationSeconds,
+        entryCount: unavailable[0].entryCount,
         member: null,
       });
     return groups.sort(
@@ -1120,7 +1120,7 @@ export const getBoardWorklogGroups = async (
     return rows.map((row) => ({ ...row, member: null }));
   }
 
-  const [rows, deleted] = await Promise.all([
+  const [rows, unavailable] = await Promise.all([
     db
       .select({
         publicId: lists.publicId,
@@ -1140,12 +1140,12 @@ export const getBoardWorklogGroups = async (
       .where(and(conditions, isNull(timeTrackingWorklogs.cardId))),
   ]);
   const groups = rows.map((row) => ({ ...row, member: null }));
-  if (deleted[0]?.entryCount)
+  if (unavailable[0]?.entryCount)
     groups.push({
-      publicId: DELETED_TIME_TRACKING_CARD_GROUP_ID,
-      label: "Deleted card",
-      durationSeconds: deleted[0].durationSeconds,
-      entryCount: deleted[0].entryCount,
+      publicId: UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID,
+      label: "Unavailable card",
+      durationSeconds: unavailable[0].durationSeconds,
+      entryCount: unavailable[0].entryCount,
       member: null,
     });
   return groups.sort(

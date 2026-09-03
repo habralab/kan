@@ -8282,12 +8282,15 @@
     ],
     "translation": "Volver a intentarlo"
   },
-  "6/Ns5U": {
-    "message": "Deleted card",
+  "SBMyw7": {
+    "message": "Unavailable card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 493]],
-    "translation": "Tarjeta eliminada"
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 390],
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 510]
+    ],
+    "translation": "Tarjeta no disponible"
   },
   "aGbZ2d": {
     "message": "Unavailable member",

@@ -81,6 +81,15 @@ export class TimeTrackingPage {
       .click();
   }
 
+  async expectEntryCount(count: number) {
+    await expect(
+      this.cardSection().getByRole("button", {
+        name: `Time entries · ${count}`,
+        exact: true,
+      }),
+    ).toBeVisible();
+  }
+
   async selectPeriod(period: string) {
     await this.cardSection()
       .getByRole("button", { name: "Period", exact: true })

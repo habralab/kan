@@ -555,6 +555,7 @@ export const timeTrackingRouter = createTRPCRouter({
             showEmailsToMembers: member.showEmailsToMembers,
           }),
           durationSeconds: member.durationSeconds,
+          entryCount: member.entryCount,
         })),
         canCreate:
           (canCreate || canManage) &&

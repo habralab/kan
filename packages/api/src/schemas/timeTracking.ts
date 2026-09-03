@@ -120,6 +120,7 @@ export const timeTrackingCardSummarySchema = z.object({
     z.object({
       member: timeTrackingMemberSchema,
       durationSeconds: z.number().int().positive(),
+      entryCount: z.number().int().positive(),
     }),
   ),
   canCreate: z.boolean(),

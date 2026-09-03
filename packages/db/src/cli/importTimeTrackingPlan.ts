@@ -1,6 +1,7 @@
-import type { TimeTrackingImportResult } from "@kan/db/repository/timeTrackingImport.repo";
 import { createDrizzleClient } from "@kan/db/client";
 import {
+  accumulateTimeTrackingImportResults,
+  assertTimeTrackingImportCountersComplete,
   completeTimeTrackingImportRun,
   createEmptyTimeTrackingImportCounters,
   failTimeTrackingImportRun,
@@ -20,27 +21,6 @@ const batches = <T>(records: T[], size = 500) => {
   for (let index = 0; index < records.length; index += size)
     result.push(records.slice(index, index + size));
   return result;
-};
-
-const addResults = (
-  counters: ReturnType<typeof createEmptyTimeTrackingImportCounters>,
-  records: { durationSeconds: number | null }[],
-  results: TimeTrackingImportResult[],
-  quarantine: boolean,
-) => {
-  for (const [index, result] of results.entries()) {
-    const seconds = records[index]?.durationSeconds ?? 0;
-    if (quarantine && result.disposition !== "conflict") {
-      counters.quarantinedRecords++;
-      counters.quarantinedSeconds += seconds;
-    }
-    if (result.disposition === "inserted" && !quarantine) {
-      counters.insertedRecords++;
-      counters.insertedSeconds += seconds;
-    } else if (result.disposition === "updated") counters.updatedRecords++;
-    else if (result.disposition === "skipped") counters.skippedRecords++;
-    else if (result.disposition === "conflict") counters.conflictRecords++;
-  }
 };
 
 if (process.argv.length < 3) {
@@ -95,7 +75,12 @@ try {
           records: batch,
           updateExisting,
         });
-        addResults(counters, batch, results, false);
+        accumulateTimeTrackingImportResults(
+          counters,
+          batch,
+          results,
+          "worklogs",
+        );
       }
       for (const batch of batches(quarantine)) {
         const results = await quarantineTimeTrackingImportBatch(db, {
@@ -104,8 +89,14 @@ try {
           records: batch,
           updateExisting,
         });
-        addResults(counters, batch, results, true);
+        accumulateTimeTrackingImportResults(
+          counters,
+          batch,
+          results,
+          "quarantine",
+        );
       }
+      assertTimeTrackingImportCountersComplete(counters);
       await completeTimeTrackingImportRun(db, {
         importRunPublicId: run.publicId,
         counters,

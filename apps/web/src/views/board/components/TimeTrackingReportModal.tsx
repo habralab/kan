@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@lingui/react/macro";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 
 import type { RouterOutputs } from "~/utils/api";
@@ -89,6 +89,12 @@ export function TimeTrackingReportModal({
     listPublicIds: listPublicId ? [listPublicId] : undefined,
     labelPublicIds: labelPublicId ? [labelPublicId] : undefined,
   };
+  const filterKey = JSON.stringify(filters);
+  const filterKeyRef = useRef(filterKey);
+  filterKeyRef.current = filterKey;
+  const [loadedFilterKey, setLoadedFilterKey] = useState(filterKey);
+  const visibleEntries = loadedFilterKey === filterKey ? entries : [];
+  const visibleNextCursor = loadedFilterKey === filterKey ? nextCursor : null;
   const validRange = fromDate <= toDate;
   const options = api.timeTracking.getReportOptions.useQuery({ boardPublicId });
   const summary = api.timeTracking.getReportSummary.useQuery(
@@ -102,15 +108,17 @@ export function TimeTrackingReportModal({
 
   useEffect(() => {
     if (validRange) return;
+    setLoadedFilterKey(filterKey);
     setEntries([]);
     setNextCursor(null);
-  }, [validRange]);
+  }, [filterKey, validRange]);
 
   useEffect(() => {
     if (!firstPage.data) return;
+    setLoadedFilterKey(filterKey);
     setEntries(firstPage.data.items);
     setNextCursor(firstPage.data.nextCursor);
-  }, [firstPage.data, firstPage.dataUpdatedAt]);
+  }, [filterKey, firstPage.data, firstPage.dataUpdatedAt]);
 
   useEffect(() => {
     if (!("BroadcastChannel" in window)) return;
@@ -124,14 +132,16 @@ export function TimeTrackingReportModal({
   }, [utils.timeTracking]);
 
   const loadMore = async () => {
-    if (!nextCursor || isLoadingMore) return;
+    if (!visibleNextCursor || isLoadingMore) return;
+    const requestedFilterKey = filterKey;
     setIsLoadingMore(true);
     try {
       const page = await utils.timeTracking.listReportWorklogs.fetch({
         ...filters,
         limit: PAGE_SIZE,
-        cursor: nextCursor,
+        cursor: visibleNextCursor,
       });
+      if (filterKeyRef.current !== requestedFilterKey) return;
       setEntries((current) => {
         const existing = new Set(current.map((entry) => entry.publicId));
         return [
@@ -471,7 +481,7 @@ export function TimeTrackingReportModal({
                 <div className="flex min-h-40 items-center justify-center">
                   <LoadingSpinner />
                 </div>
-              ) : entries.length === 0 ? (
+              ) : visibleEntries.length === 0 ? (
                 <p className="rounded-md border border-light-300 p-6 text-center text-sm text-light-900 dark:border-dark-300 dark:text-dark-900">
                   {t`No time entries match these filters.`}
                 </p>
@@ -493,7 +503,7 @@ export function TimeTrackingReportModal({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-light-300 dark:divide-dark-300">
-                      {entries.map((entry) => (
+                      {visibleEntries.map((entry) => (
                         <tr key={entry.publicId}>
                           <td className="whitespace-nowrap px-3 py-2">
                             {entry.workDate}
@@ -545,7 +555,7 @@ export function TimeTrackingReportModal({
                 </div>
               )}
 
-              {nextCursor && !hasError && (
+              {visibleNextCursor && !hasError && (
                 <div className="mt-4 flex justify-center">
                   <Button
                     size="sm"

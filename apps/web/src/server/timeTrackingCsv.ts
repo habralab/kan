@@ -136,7 +136,7 @@ export const encodeTimeTrackingEntriesCsvRow = (input: {
   ]);
 
 const protectSpreadsheetFormula = (value: string) =>
-  /^[=+\-@]/.test(value) ? `'${value}` : value;
+  /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
 
 export const encodeCsvCell = (value: CsvValue) => {
   if (value === null || value === undefined) return "";

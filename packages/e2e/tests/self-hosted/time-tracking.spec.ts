@@ -187,15 +187,18 @@ test(
     });
     await timeTracking.expectCardTotal("3h");
     await timeTracking.showTimeEntries();
+    await timeTracking.expectEntryCount(2);
     await timeTracking.expectEntry("Owner entry");
     await timeTracking.expectEntry("Second member entry");
 
     await timeTracking.toggleMemberFilter(user.name, "1h", true);
     await timeTracking.expectCardTotal("3h");
+    await timeTracking.expectEntryCount(1);
     await timeTracking.expectEntry("Owner entry");
     await timeTracking.expectEntry("Second member entry", false);
 
     await timeTracking.toggleMemberFilter(user.name, "1h", false);
+    await timeTracking.expectEntryCount(2);
     await timeTracking.expectEntry("Owner entry");
     await timeTracking.expectEntry("Second member entry");
   },

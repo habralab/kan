@@ -199,6 +199,11 @@ export function TimeTrackingCardSection({
     [summary.data?.memberTotals],
   );
   const filterableMemberCount = memberTotals.length;
+  const visibleEntryCount = selectedMemberPublicId
+    ? (memberTotals.find(
+        ({ member }) => member.publicId === selectedMemberPublicId,
+      )?.entryCount ?? 0)
+    : (summary.data?.entryCount ?? 0);
 
   useEffect(() => {
     if (
@@ -635,7 +640,7 @@ export function TimeTrackingCardSection({
         </div>
       )}
 
-      {(summary.data?.entryCount ?? 0) > 0 && (
+      {visibleEntryCount > 0 && (
         <Disclosure
           as="div"
           className="mt-4 border-t border-light-300 pt-2 dark:border-dark-300"
@@ -648,7 +653,7 @@ export function TimeTrackingCardSection({
                 onClick={() => setEntriesOpen(!open)}
               >
                 <span>
-                  {t`Time entries`} · {summary.data?.entryCount}
+                  {t`Time entries`} · {visibleEntryCount}
                 </span>
                 <HiChevronDown className="h-4 w-4 text-light-900 transition-transform group-data-[open]:rotate-180 dark:text-dark-900" />
               </DisclosureButton>

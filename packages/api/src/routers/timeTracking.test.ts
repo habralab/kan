@@ -402,6 +402,7 @@ describe("time tracking router", () => {
       canManage: true,
     });
     expect(result.memberTotals[0]).not.toHaveProperty("memberUserId");
+    expect(result.memberTotals[0]?.entryCount).toBe(1);
   });
 
   it("does not offer a timer to managers without create permission", async () => {

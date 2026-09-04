@@ -28,6 +28,8 @@ import {
 } from "@kan/db/schema";
 import { generateUID } from "@kan/shared/utils";
 
+import { getBoardProjection } from "./custom-field.repo";
+
 export class CardMoveBlockedByTimeTrackingError extends Error {
   constructor() {
     super("TIME_TRACKING_DATA");
@@ -702,8 +704,23 @@ export const getWithListAndMembersByPublicId = async (
 
   if (!card) return null;
 
+  const customFieldProjection = await getBoardProjection(
+    db,
+    card.list.board.publicId,
+    [card.publicId],
+  );
+
   const formattedResult = {
     ...card,
+    customFieldValues:
+      customFieldProjection.valuesByCardPublicId[card.publicId] ?? [],
+    list: {
+      ...card.list,
+      board: {
+        ...card.list.board,
+        customFields: customFieldProjection.definitions,
+      },
+    },
     labels: card.labels.map((label) => label.label),
     members: card.members.map((member) => member.member),
     activities: card.activities.filter(

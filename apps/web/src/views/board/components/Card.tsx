@@ -16,6 +16,9 @@ import LabelIcon from "~/components/LabelIcon";
 import { useLocalisation } from "~/hooks/useLocalisation";
 import { getAvatarUrl } from "~/utils/helpers";
 import { formatDuration } from "~/utils/timeTracking";
+import { CustomFieldBadges } from "./custom-fields/custom-field-badges";
+
+type BoardCustomFields = Parameters<typeof CustomFieldBadges>[0];
 
 const Card = ({
   title,
@@ -30,6 +33,8 @@ const Card = ({
   dueDate,
   timeTrackingTotalSeconds,
   isTimerRunning,
+  customFields,
+  customFieldValues,
 }: {
   title: string;
   ticketNumber?: string | null;
@@ -63,6 +68,8 @@ const Card = ({
   dueDate?: Date | null;
   timeTrackingTotalSeconds?: number;
   isTimerRunning?: boolean;
+  customFields: BoardCustomFields["definitions"];
+  customFieldValues: BoardCustomFields["values"];
 }) => {
   const { dateLocale } = useLocalisation();
   const showYear = dueDate ? !isSameYear(dueDate, new Date()) : false;
@@ -100,6 +107,10 @@ const Card = ({
         </span>
       )}
       <span className="break-words">{title}</span>
+      <CustomFieldBadges
+        definitions={customFields}
+        values={customFieldValues}
+      />
       {labels.length ||
       members.length ||
       cardSummary.checklistItemCount > 0 ||

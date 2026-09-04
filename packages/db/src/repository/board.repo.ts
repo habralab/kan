@@ -34,7 +34,11 @@ import {
 } from "@kan/db/schema";
 import { generateUID, normalizeDescription } from "@kan/shared/utils";
 
-import { getBoardProjection } from "./custom-field.repo";
+import type { BoardCustomFieldFilter } from "./custom-field.repo";
+import {
+  getCardPublicIdsMatchingFilters,
+  getBoardProjection,
+} from "./custom-field.repo";
 
 export const getCount = async (db: dbClient) => {
   const result = await db
@@ -159,6 +163,7 @@ export const getByPublicId = async (
     members: string[];
     labels: string[];
     lists: string[];
+    customFields: BoardCustomFieldFilter[];
     dueDate: DueDateFilter[];
     type: "regular" | "template" | undefined;
     cardView?: "full" | "summary";
@@ -219,6 +224,12 @@ export const getByPublicId = async (
 
     cardIds = filteredCards.map((card) => card.publicId);
   }
+
+  const customFieldCardIds = await getCardPublicIdsMatchingFilters(
+    db,
+    { publicId: boardPublicId },
+    filters.customFields,
+  );
 
   const board = await db.query.boards.findFirst({
     columns: {
@@ -399,6 +410,9 @@ export const getByPublicId = async (
             where: and(
               cardIds.length > 0 ? inArray(cards.publicId, cardIds) : undefined,
               isNull(cards.deletedAt),
+              customFieldCardIds
+                ? inArray(cards.publicId, customFieldCardIds)
+                : undefined,
               buildDueDateWhere(filters.dueDate),
             ),
             orderBy: [asc(cards.index)],
@@ -483,6 +497,7 @@ export const getBySlug = async (
     members: string[];
     labels: string[];
     lists: string[];
+    customFields: BoardCustomFieldFilter[];
     dueDate: DueDateFilter[];
   },
 ) => {
@@ -507,6 +522,12 @@ export const getBySlug = async (
 
     cardIds = filteredCards.map((card) => card.publicId);
   }
+
+  const customFieldCardIds = await getCardPublicIdsMatchingFilters(
+    db,
+    { slug: boardSlug, workspaceId },
+    filters.customFields,
+  );
 
   const board = await db.query.boards.findFirst({
     columns: {
@@ -601,6 +622,9 @@ export const getBySlug = async (
             where: and(
               cardIds.length > 0 ? inArray(cards.publicId, cardIds) : undefined,
               isNull(cards.deletedAt),
+              customFieldCardIds
+                ? inArray(cards.publicId, customFieldCardIds)
+                : undefined,
               buildDueDateWhere(filters.dueDate),
             ),
             orderBy: [asc(cards.index)],

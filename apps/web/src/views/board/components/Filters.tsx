@@ -4,11 +4,13 @@ import {
   HiMiniXMark,
   HiOutlineClock,
   HiOutlineSquare3Stack3D,
+  HiOutlineTableCells,
   HiOutlineTag,
   HiOutlineUserCircle,
 } from "react-icons/hi2";
 import { IoFilterOutline } from "react-icons/io5";
 
+import type { RouterOutputs } from "~/utils/api";
 import Avatar from "~/components/Avatar";
 import Button from "~/components/Button";
 import CheckboxDropdown from "~/components/CheckboxDropdown";
@@ -18,6 +20,10 @@ import {
   formatToArray,
   getAvatarUrl,
 } from "~/utils/helpers";
+import {
+  encodeCheckboxFilter,
+  encodeSelectFilter,
+} from "./custom-fields/custom-field-filters";
 
 interface Member {
   publicId: string;
@@ -40,12 +46,16 @@ interface List {
   name: string;
 }
 
+type CustomFieldDefinition =
+  RouterOutputs["board"]["byId"]["customFields"][number];
+
 const Filters = ({
   position = "right",
   labels,
   members,
   assignedMemberPublicIds,
   lists,
+  customFields,
   isLoading,
 }: {
   position?: "left" | "right";
@@ -53,6 +63,7 @@ const Filters = ({
   members: Member[];
   assignedMemberPublicIds?: Set<string>;
   lists: List[];
+  customFields: CustomFieldDefinition[];
   isLoading: boolean;
 }) => {
   const router = useRouter();
@@ -70,6 +81,7 @@ const Filters = ({
           labels: [],
           lists: [],
           dueDate: [],
+          customFields: [],
         },
       });
     } catch (error) {
@@ -150,6 +162,66 @@ const Filters = ({
     },
   ];
 
+  const selectedCustomFieldFilters = formatToArray(router.query.customFields);
+  const customFieldGroups = customFields.flatMap((field) => {
+    if (field.type === "select") {
+      const items = field.options.map((option) => {
+        const key = encodeSelectFilter(field.publicId, option.publicId);
+        return {
+          key,
+          value: option.isArchived
+            ? `${option.name} (${t`Archived`})`
+            : option.name,
+          selected: selectedCustomFieldFilters.includes(key),
+          leftIcon: (
+            <span
+              className={`h-2.5 w-2.5 rounded-full border border-black/10 ${
+                option.isArchived ? "opacity-50" : ""
+              }`}
+              style={{ backgroundColor: option.colourCode ?? "transparent" }}
+            />
+          ),
+        };
+      });
+
+      return items.length > 0
+        ? [
+            {
+              key: `customField:${field.publicId}`,
+              label: field.name,
+              icon: <HiOutlineTableCells size={16} />,
+              items,
+            },
+          ]
+        : [];
+    }
+
+    if (field.type === "checkbox") {
+      const items = [
+        { key: "checked" as const, value: t`Checked` },
+        { key: "unchecked" as const, value: t`Unchecked or not set` },
+      ].map((item) => {
+        const key = encodeCheckboxFilter(field.publicId, item.key);
+        return {
+          key,
+          value: item.value,
+          selected: selectedCustomFieldFilters.includes(key),
+        };
+      });
+
+      return [
+        {
+          key: `customField:${field.publicId}`,
+          label: field.name,
+          icon: <HiOutlineTableCells size={16} />,
+          items,
+        },
+      ];
+    }
+
+    return [];
+  });
+
   const groups = [
     ...(formattedMembers.length
       ? [
@@ -183,6 +255,7 @@ const Filters = ({
       icon: <HiOutlineClock size={16} />,
       items: dueDateItems,
     },
+    ...customFieldGroups,
   ];
 
   const handleSelect = async (
@@ -190,7 +263,10 @@ const Filters = ({
     item: { key: string },
   ) => {
     if (groupKey === null) return;
-    const currentQuery = router.query[groupKey] ?? [];
+    const queryKey = groupKey.startsWith("customField:")
+      ? "customFields"
+      : groupKey;
+    const currentQuery = router.query[queryKey] ?? [];
     const formattedCurrentQuery = Array.isArray(currentQuery)
       ? currentQuery
       : [currentQuery];
@@ -202,7 +278,7 @@ const Filters = ({
     try {
       await router.push({
         pathname: router.pathname,
-        query: { ...router.query, [groupKey]: updatedQuery },
+        query: { ...router.query, [queryKey]: updatedQuery },
       });
     } catch (error) {
       console.error(error);
@@ -214,6 +290,7 @@ const Filters = ({
     ...formatToArray(router.query.labels),
     ...formatToArray(router.query.lists),
     ...formatToArray(router.query.dueDate),
+    ...selectedCustomFieldFilters,
   ].length;
 
   return (

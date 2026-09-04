@@ -44,6 +44,10 @@ vi.mock("@kan/auth/server", () => ({
 vi.mock("@kan/shared/utils", () => ({
   generateAttachmentUrl: vi.fn(),
   generateAvatarUrl: vi.fn(),
+  normalizeDescription: vi.fn(
+    (description: string | null | undefined): string | null =>
+      description ?? null,
+  ),
 }));
 vi.mock("../utils/notifications", () => ({
   sendMentionEmails: vi.fn(),
@@ -246,10 +250,7 @@ describe("card member workspace scoping", () => {
         dueDate: null,
         labels: [],
         checklists: [],
-        members: [
-          { publicId: "active-member" },
-          { publicId: "paused-member" },
-        ],
+        members: [{ publicId: "active-member" }, { publicId: "paused-member" }],
       });
       mockCardCreate.mockResolvedValueOnce({
         id: 18,

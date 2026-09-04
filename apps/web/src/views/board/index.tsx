@@ -230,6 +230,8 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
   }, [boardId]);
 
   const isLoading = isInitialLoading || isQueryLoading;
+  const boardVisibility =
+    boardData?.visibility === "public" ? "public" : "private";
 
   useScrollRestore(
     boardId,
@@ -648,11 +650,11 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                   workspaceSlug={workspace.slug ?? ""}
                   boardSlug={boardData?.slug ?? ""}
                   boardPublicId={boardId ?? ""}
-                  visibility={boardData?.visibility ?? "private"}
+                  visibility={boardVisibility}
                   canEdit={canEditBoard}
                 />
                 <VisibilityButton
-                  visibility={boardData?.visibility ?? "private"}
+                  visibility={boardVisibility}
                   boardPublicId={boardId ?? ""}
                   boardSlug={boardData?.slug ?? ""}
                   queryParams={queryParams}
@@ -674,9 +676,9 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                     members={boardData.workspace.members.filter(
                       (member) => member.user !== null,
                     )}
-                    assignedMemberPublicIds={new Set(
-                      boardData.assignedMemberPublicIds,
-                    )}
+                    assignedMemberPublicIds={
+                      new Set(boardData.assignedMemberPublicIds)
+                    }
                     lists={boardData.allLists}
                     position="left"
                     isLoading={!boardData}

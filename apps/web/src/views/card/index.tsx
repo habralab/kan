@@ -236,11 +236,10 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
 
   const editorWorkspaceMembers =
     workspaceMembers
-      ?.filter((member) => member.email)
+      ?.filter((member) => member.email && member.status !== "paused")
       .map((member) => ({
         publicId: member.publicId,
         email: member.email,
-        status: member.status,
         user: member.user
           ? {
               id: member.user.id,

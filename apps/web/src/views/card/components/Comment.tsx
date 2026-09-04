@@ -67,7 +67,9 @@ const Comment = ({
     },
   );
 
-  const workspaceMembers: WorkspaceMember[] =
+  const workspaceMembers: (WorkspaceMember & {
+    status: "active" | "invited" | "removed" | "paused";
+  })[] =
     cardData?.list.board.workspace.members
       .filter((member) => member.email)
       .map((member) => ({
@@ -86,7 +88,11 @@ const Comment = ({
   const isPaused = workspaceMembers.some(
     (member) =>
       member.status === "paused" &&
-      ((userId && member.user?.id === userId) || member.email === email),
+      (userId ? member.user?.id === userId : member.email === email),
+  );
+
+  const mentionableWorkspaceMembers = workspaceMembers.filter(
+    (member) => member.status !== "paused",
   );
 
   if (!publicId) return null;
@@ -185,7 +191,7 @@ const Comment = ({
           <Editor
             content={comment ?? null}
             readOnly={true}
-            workspaceMembers={workspaceMembers}
+            workspaceMembers={mentionableWorkspaceMembers}
             enableYouTubeEmbed={false}
             disableHeadings={true}
           />
@@ -196,7 +202,7 @@ const Comment = ({
             <Editor
               content={watch("comment")}
               onChange={(value) => setValue("comment", value)}
-              workspaceMembers={workspaceMembers}
+              workspaceMembers={mentionableWorkspaceMembers}
               enableYouTubeEmbed={false}
               placeholder={t`Add comment... (type '/' to open commands or '@' to mention)`}
               disableHeadings={true}

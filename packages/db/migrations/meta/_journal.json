@@ -295,6 +295,13 @@
       "when": 1788398854245,
       "tag": "20260903012734_RestoreTimeTrackingCascadeDeletes",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1788553158783,
+      "tag": "20260904201918_AddCustomFields",
+      "breakpoints": true
     }
   ]
 }

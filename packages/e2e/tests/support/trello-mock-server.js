@@ -13,6 +13,24 @@ const board = {
     { id: "list-1", name: "To Do" },
     { id: "list-2", name: "Done" },
   ],
+  customFields: [
+    {
+      id: "field-route",
+      name: "Route",
+      pos: 1,
+      type: "list",
+      display: { cardFront: true },
+      options: [
+        {
+          id: "option-north",
+          idCustomField: "field-route",
+          pos: 1,
+          color: "blue",
+          value: { text: "North" },
+        },
+      ],
+    },
+  ],
   cards: [
     {
       id: "card-1",
@@ -20,6 +38,14 @@ const board = {
       desc: "Users can't log in",
       idList: "list-1",
       labels: [{ id: "label-1", name: "Bug", color: "red_dark" }],
+      customFieldItems: [
+        {
+          id: "item-route",
+          idCustomField: "field-route",
+          idModel: "card-1",
+          idValue: "option-north",
+        },
+      ],
     },
     {
       id: "card-2",
@@ -59,9 +85,13 @@ const server = createServer((req, res) => {
   }
 
   if (url.pathname === `/boards/${board.id}`) {
-    if (url.searchParams.get("labels_limit") !== "1000") {
+    if (
+      url.searchParams.get("labels_limit") !== "1000" ||
+      url.searchParams.get("customFields") !== "true" ||
+      url.searchParams.get("card_customFieldItems") !== "true"
+    ) {
       res.writeHead(400);
-      res.end(JSON.stringify({ message: "labels_limit must be 1000" }));
+      res.end(JSON.stringify({ message: "Required board fields are missing" }));
       return;
     }
 

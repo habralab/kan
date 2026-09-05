@@ -79,6 +79,12 @@ const server = createServer((req, res) => {
   }
 
   if (url.pathname === "/members/me/boards") {
+    if (url.searchParams.get("token") !== "mock-trello-token") {
+      res.writeHead(401);
+      res.end(JSON.stringify({ message: "Invalid token" }));
+      return;
+    }
+
     res.writeHead(200);
     res.end(JSON.stringify([{ id: board.id, name: board.name }]));
     return;
@@ -88,7 +94,8 @@ const server = createServer((req, res) => {
     if (
       url.searchParams.get("labels_limit") !== "1000" ||
       url.searchParams.get("customFields") !== "true" ||
-      url.searchParams.get("card_customFieldItems") !== "true"
+      url.searchParams.get("card_customFieldItems") !== "true" ||
+      url.searchParams.get("token") !== "mock-trello-token"
     ) {
       res.writeHead(400);
       res.end(JSON.stringify({ message: "Required board fields are missing" }));

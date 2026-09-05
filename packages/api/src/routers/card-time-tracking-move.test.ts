@@ -29,10 +29,14 @@ vi.mock("@kan/db/repository/cardActivity.repo", () => ({
 
 vi.mock("@kan/db/repository/cardComment.repo", () => ({}));
 vi.mock("@kan/db/repository/checklist.repo", () => ({}));
+vi.mock("@kan/db/repository/custom-field.repo", () => ({
+  moveCardValuesToBoard: vi.fn(),
+  CustomFieldRepositoryError: class CustomFieldRepositoryError extends Error {},
+}));
 vi.mock("@kan/db/repository/label.repo", () => ({}));
 
 vi.mock("@kan/db/repository/list.repo", () => ({
-  getByPublicId: vi.fn(),
+  getWorkspaceAndListIdByListPublicId: vi.fn(),
 }));
 
 vi.mock("@kan/db/repository/timeTracking.repo", () => ({
@@ -67,7 +71,9 @@ const mockGetCardContext =
   cardRepo.getWorkspaceAndCardIdByCardPublicId as ReturnType<typeof vi.fn>;
 const mockGetCard = cardRepo.getByPublicId as ReturnType<typeof vi.fn>;
 const mockReorder = cardRepo.reorder as ReturnType<typeof vi.fn>;
-const mockGetList = listRepo.getByPublicId as ReturnType<typeof vi.fn>;
+const mockGetList = listRepo.getWorkspaceAndListIdByListPublicId as ReturnType<
+  typeof vi.fn
+>;
 const mockGetMoveBlockers =
   timeTrackingRepo.getCardTimeTrackingMoveBlockers as ReturnType<typeof vi.fn>;
 
@@ -104,7 +110,8 @@ describe("card.update time tracking move guard", () => {
       publicId: input.listPublicId,
       name: "Incoming",
       boardId: 200,
-      index: 0,
+      boardPublicId: "target-board1",
+      workspaceId: 10,
     });
     mockGetMoveBlockers.mockResolvedValue({
       hasWorklogs: false,
@@ -143,10 +150,15 @@ describe("card.update time tracking move guard", () => {
         "Cards with time entries or active timers cannot be moved between boards",
     });
     expect(mockGetMoveBlockers).toHaveBeenCalledWith(db, 1);
-    expect(mockReorder).toHaveBeenCalledWith(db, {
-      cardId: 1,
-      newIndex: 0,
-      newListId: 22,
-    });
+    expect(mockReorder).toHaveBeenCalledTimes(1);
+    const reorderCall = mockReorder.mock.calls[0] as unknown[] | undefined;
+    expect(reorderCall?.slice(0, 2)).toEqual([
+      db,
+      { cardId: 1, newIndex: 0, newListId: 22 },
+    ]);
+    const reorderOptions = reorderCall?.[2] as
+      | { beforeReorder?: unknown }
+      | undefined;
+    expect(typeof reorderOptions?.beforeReorder).toBe("function");
   });
 });

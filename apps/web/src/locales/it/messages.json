@@ -6,7 +6,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        153
+        175
       ]
     ],
     "translation": " (modificato)"
@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        321
+        348
       ]
     ],
     "translation": "{0} | {1}"
@@ -114,7 +114,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        63
+        65
       ]
     ],
     "translation": "{0} è stato aggiunto ai tuoi preferiti."
@@ -130,7 +130,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        64
+        66
       ]
     ],
     "translation": "{0} è stato rimosso dai tuoi preferiti."
@@ -146,7 +146,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        558
+        569
       ]
     ],
     "translation": "{0} etichette"
@@ -162,7 +162,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        571
+        646
       ]
     ],
     "translation": "{0} non trovato"
@@ -418,8 +418,16 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        34
+      ],
+      [
         "src/views/boards/index.tsx",
         33
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        44
       ],
       [
         "src/views/settings/components/NewWebhookModal.tsx",
@@ -439,7 +447,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        476
+        509
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -479,7 +487,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        365
+        405
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        678
       ]
     ],
     "translation": "Aggiungi"
@@ -567,7 +579,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        185
+        207
       ],
       [
         "src/views/card/components/NewCommentForm.tsx",
@@ -607,7 +619,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        490
+        554
       ]
     ],
     "translation": "Aggiungi campo"
@@ -635,7 +647,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        138
+        148
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -667,7 +679,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        158
       ]
     ],
     "translation": "Aggiungi ai preferiti"
@@ -834,7 +846,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        60
+        62
       ]
     ],
     "translation": "Aggiunto ai preferiti"
@@ -941,6 +953,22 @@
       ]
     ],
     "translation": "Sicurezza avanzata, conformità e supporto dedicato per grandi organizzazioni."
+  },
+  "NawEr2": {
+    "message": "After",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        185
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        193
+      ]
+    ],
+    "translation": "Dopo"
   },
   "4upC5z": {
     "message": "All cards",
@@ -1263,6 +1291,18 @@
     ],
     "translation": "Candidati"
   },
+  "DB8zMK": {
+    "message": "Apply",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        306
+      ]
+    ],
+    "translation": "Applica"
+  },
   "yb/fjw": {
     "message": "Approval",
     "placeholders": {},
@@ -1282,7 +1322,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        220
+        228
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        372
       ]
     ],
     "translation": "Archivia"
@@ -1294,7 +1338,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        138
       ]
     ],
     "translation": "Archivia bacheca"
@@ -1306,7 +1350,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        186
+        194
       ]
     ],
     "translation": "Archivia campo personalizzato"
@@ -1318,7 +1362,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        330
+        341
       ]
     ],
     "translation": "Archivia opzione"
@@ -1330,10 +1374,22 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        196
+        204
       ]
     ],
     "translation": "Archiviare questo campo? I valori esistenti delle schede verranno nascosti ma conservati."
+  },
+  "ABZuOF": {
+    "message": "Archive this option? Existing card values will keep it until changed.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        350
+      ]
+    ],
+    "translation": "Archiviare questa opzione? I valori esistenti nelle schede la manterranno finché non verranno modificati."
   },
   "TdfEV7": {
     "message": "Archived",
@@ -1341,8 +1397,24 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/custom-fields/custom-field-badges.tsx",
+        72
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        204
+      ],
+      [
         "src/views/boards/index.tsx",
         34
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        249
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        407
       ]
     ],
     "translation": "Archiviato"
@@ -1354,7 +1426,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        370
+        410
       ]
     ],
     "translation": "Opzioni archiviate"
@@ -1518,11 +1590,11 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        621
+        632
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        622
+        633
       ]
     ],
     "translation": "Allega file"
@@ -1598,6 +1670,22 @@
       ]
     ],
     "translation": "Roadmap base"
+  },
+  "EmSrGB": {
+    "message": "Before",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        184
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        193
+      ]
+    ],
+    "translation": "Prima di"
   },
   "/XCg57": {
     "message": "Best for growing teams that need collaboration",
@@ -1761,15 +1849,15 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        543
+        618
       ],
       [
         "src/views/card/index.tsx",
-        321
+        348
       ],
       [
         "src/views/public/board/index.tsx",
-        125
+        129
       ]
     ],
     "translation": "Board"
@@ -1794,7 +1882,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        49
+        51
       ]
     ],
     "translation": "Bacheca archiviata"
@@ -1818,7 +1906,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        561
+        636
       ]
     ],
     "translation": "Nome bacheca"
@@ -1854,7 +1942,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        181
+        186
       ]
     ],
     "translation": "Board non trovata"
@@ -1866,7 +1954,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        167
+        187
       ]
     ],
     "translation": "Opzioni bacheca"
@@ -1890,7 +1978,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        50
+        52
       ]
     ],
     "translation": "Bacheca ripristinata"
@@ -1930,7 +2018,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        79
+        83
       ]
     ],
     "translation": "URL della board copiato negli appunti"
@@ -2294,11 +2382,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        152
+        158
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        41
+        47
       ]
     ],
     "translation": "Può modificare ruoli e permessi dei membri"
@@ -2342,11 +2430,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        151
+        157
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        40
+        46
       ]
     ],
     "translation": "Può invitare membri"
@@ -2390,11 +2478,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        153
+        159
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        42
+        48
       ]
     ],
     "translation": "Può rimuovere membri"
@@ -2470,11 +2558,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        150
+        156
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        39
+        45
       ]
     ],
     "translation": "Può visualizzare i membri"
@@ -2526,7 +2614,19 @@
       ],
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        267
+        277
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        298
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        213
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        359
       ],
       [
         "src/views/board/components/DeleteBoardConfirmation.tsx",
@@ -2537,8 +2637,12 @@
         99
       ],
       [
+        "src/views/board/components/TimeTrackingSettingsForm.tsx",
+        138
+      ],
+      [
         "src/views/card/components/Comment.tsx",
-        195
+        217
       ],
       [
         "src/views/card/components/DeleteCardConfirmation.tsx",
@@ -2551,6 +2655,22 @@
       [
         "src/views/card/components/DeleteCommentConfirmation.tsx",
         77
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        176
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        525
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        573
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        743
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -2593,8 +2713,20 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        292
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        372
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        488
+      ],
+      [
         "src/views/card/index.tsx",
-        321
+        348
       ]
     ],
     "translation": "Card"
@@ -2606,7 +2738,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        67
+        58
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2646,11 +2778,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        384
+        411
       ],
       [
         "src/views/card/index.tsx",
-        421
+        448
       ]
     ],
     "translation": "Card non trovata"
@@ -2662,7 +2794,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        167
+        168
       ]
     ],
     "translation": "Opzioni scheda"
@@ -2674,7 +2806,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        424
+        437
       ]
     ],
     "translation": "Titolo della card"
@@ -2686,7 +2818,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        314
+        375
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2818,7 +2950,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        38
+        43
       ]
     ],
     "translation": "Casella di controllo"
@@ -2834,15 +2966,15 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        190
+        232
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        23
+        34
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        223
+        294
       ]
     ],
     "translation": "Selezionato"
@@ -2915,6 +3047,18 @@
     ],
     "translation": "Scegli piano"
   },
+  "xCJdfg": {
+    "message": "Clear",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        288
+      ]
+    ],
+    "translation": "Cancella"
+  },
   "VHS0aJ": {
     "message": "Clear all custom permissions?",
     "placeholders": {},
@@ -2962,7 +3106,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        227
+        397
       ]
     ],
     "translation": "Cancella filtri"
@@ -2994,15 +3138,27 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        281
+        283
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        481
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        200
+      ],
+      [
+        "src/views/board/components/TimeTrackingSettingsForm.tsx",
+        69
       ],
       [
         "src/views/card/index.tsx",
-        375
+        402
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        172
+        178
       ],
       [
         "src/views/settings/components/NewApiKeyModal.tsx",
@@ -3082,7 +3238,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        161
+        183
       ]
     ],
     "translation": "Opzioni commento"
@@ -3349,6 +3505,22 @@
     ],
     "translation": "Contattaci"
   },
+  "/5mghO": {
+    "message": "Contains",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        177
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        183
+      ]
+    ],
+    "translation": "Contiene"
+  },
   "AX4ktp": {
     "message": "Content Creation",
     "placeholders": {},
@@ -3460,7 +3632,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        257
+        249
       ]
     ],
     "translation": "Copia checklist"
@@ -3472,7 +3644,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        279
+        267
       ]
     ],
     "translation": "Copia campi personalizzati"
@@ -3484,7 +3656,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        221
+        213
       ]
     ],
     "translation": "Copia etichette"
@@ -3508,7 +3680,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        239
+        231
       ]
     ],
     "translation": "Copia membri"
@@ -3564,11 +3736,11 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        653
+        664
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        156
+        157
       ]
     ],
     "translation": "Crea un altro"
@@ -3592,7 +3764,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        663
+        674
       ]
     ],
     "translation": "Crea card"
@@ -3640,7 +3812,7 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        168
+        169
       ]
     ],
     "translation": "Crea lista"
@@ -3684,7 +3856,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        520
+        531
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -3700,11 +3872,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        99
+        113
       ],
       [
         "src/views/board/index.tsx",
-        685
+        773
       ]
     ],
     "translation": "Crea nuova lista"
@@ -3890,7 +4062,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        131
+        139
       ]
     ],
     "translation": "Nome del campo personalizzato"
@@ -3902,15 +4074,15 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        110
+        111
       ],
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        416
+        472
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        275
+        386
       ]
     ],
     "translation": "Campi personalizzati"
@@ -4061,7 +4233,15 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        36
+        41
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        486
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        150
       ]
     ],
     "translation": "Data"
@@ -4136,6 +4316,14 @@
         83
       ],
       [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        727
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        755
+      ],
+      [
         "src/views/settings/components/DeleteWebhookConfirmation.tsx",
         82
       ],
@@ -4173,7 +4361,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        169
       ]
     ],
     "translation": "Elimina board"
@@ -4189,7 +4377,7 @@
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        152
+        153
       ]
     ],
     "translation": "Elimina card"
@@ -4213,7 +4401,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        120
+        135
       ]
     ],
     "translation": "Elimina commento"
@@ -4237,7 +4425,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        169
       ]
     ],
     "translation": "Elimina template"
@@ -4574,7 +4762,7 @@
       ],
       [
         "src/views/board/components/CardContextMembersModal.tsx",
-        68
+        88
       ],
       [
         "src/views/boards/components/TemplateBoards.tsx",
@@ -4622,7 +4810,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        40
+        45
       ]
     ],
     "translation": "Menu a discesa"
@@ -4634,15 +4822,15 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        171
+        301
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        575
+        586
       ],
       [
         "src/views/card/index.tsx",
-        153
+        174
       ]
     ],
     "translation": "Data di scadenza"
@@ -4654,7 +4842,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        132
+        165
       ]
     ],
     "translation": "Scadenza il mese prossimo"
@@ -4666,7 +4854,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        127
+        160
       ]
     ],
     "translation": "Scadenza la prossima settimana"
@@ -4678,7 +4866,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        117
+        150
       ]
     ],
     "translation": "Scadenza oggi"
@@ -4690,7 +4878,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        122
+        155
       ]
     ],
     "translation": "Scadenza domani"
@@ -4702,7 +4890,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        279
+        289
       ]
     ],
     "translation": "Duplica"
@@ -4714,7 +4902,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        111
+        103
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
@@ -4734,7 +4922,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        279
+        289
       ]
     ],
     "translation": "Duplicazione in corso…"
@@ -4747,6 +4935,10 @@
       [
         "src/components/YouTubeEmbed/YouTubeDropdown.tsx",
         42
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        718
       ],
       [
         "src/views/settings/components/WebhookList.tsx",
@@ -4762,7 +4954,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        109
+        118
       ],
       [
         "src/views/board/components/UpdateBoardSlugForm.tsx",
@@ -4778,7 +4970,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        111
+        126
       ]
     ],
     "translation": "Modifica commento"
@@ -4802,7 +4994,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        162
+        168
       ],
       [
         "src/views/members/index.tsx",
@@ -4958,7 +5150,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        200
+        192
       ]
     ],
     "translation": "Fine dell'elenco"
@@ -5130,6 +5322,22 @@
       ]
     ],
     "translation": "Voci"
+  },
+  "f9yJNM": {
+    "message": "Equals",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        180
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        187
+      ]
+    ],
+    "translation": "Uguale a"
   },
   "SlfejT": {
     "message": "Error",
@@ -5728,7 +5936,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        467
+        531
       ]
     ],
     "translation": "Nome del campo"
@@ -5740,7 +5948,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        475
+        539
       ]
     ],
     "translation": "Tipo di campo"
@@ -5752,7 +5960,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        419
+        475
       ]
     ],
     "translation": "I campi saranno disponibili non appena creerai il primo."
@@ -5776,10 +5984,22 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        221
+        391
       ]
     ],
     "translation": "Filtra"
+  },
+  "wP7Cju": {
+    "message": "Filter by value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        212
+      ]
+    ],
+    "translation": "Filtra per valore"
   },
   "l31EoQ": {
     "message": "Find answers to common questions about Kan. Can't find what you're looking for? Feel free to <0>contact us</0>.",
@@ -5908,11 +6128,15 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        244
+        243
       ],
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        247
+        246
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        230
       ]
     ],
     "translation": "Da"
@@ -6036,7 +6260,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        670
+        758
       ]
     ],
     "translation": "Inizia creando una nuova lista"
@@ -6471,6 +6695,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        541
+      ],
+      [
         "src/views/boards/index.tsx",
         83
       ]
@@ -6768,7 +6996,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        115
+        120
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -6946,11 +7174,15 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        155
+        285
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        524
+        535
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        490
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -6958,7 +7190,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        133
+        154
       ]
     ],
     "translation": "Etichette"
@@ -7229,7 +7461,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        312
+        373
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -7241,7 +7473,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        77
+        81
       ]
     ],
     "translation": "Link copiato"
@@ -7253,11 +7485,23 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        117
+        109
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        274
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        373
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        489
       ],
       [
         "src/views/card/index.tsx",
-        124
+        145
       ]
     ],
     "translation": "Lista"
@@ -7273,7 +7517,7 @@
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        144
+        145
       ]
     ],
     "translation": "Nome lista"
@@ -7297,7 +7541,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        163
+        293
       ]
     ],
     "translation": "Liste"
@@ -7325,7 +7569,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        579
+        580
       ]
     ],
     "translation": "Carica altre attività"
@@ -7337,7 +7581,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        180
+        186
       ]
     ],
     "translation": "Caricamento permessi..."
@@ -7349,7 +7593,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        579
+        580
       ]
     ],
     "translation": "Caricamento..."
@@ -7433,7 +7677,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        98
+        100
       ]
     ],
     "translation": "Crea template"
@@ -7445,7 +7689,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextMembersModal.tsx",
-        51
+        71
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
@@ -7548,12 +7792,28 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        254
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        371
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        487
+      ],
+      [
         "src/views/card/components/ActivityList.tsx",
         55
       ],
       [
         "src/views/card/components/ActivityList.tsx",
         88
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        102
       ],
       [
         "src/views/members/index.tsx",
@@ -7597,19 +7857,23 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        147
+        277
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        482
+        493
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        341
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        116
+        121
       ],
       [
         "src/views/card/index.tsx",
-        143
+        164
       ],
       [
         "src/views/members/index.tsx",
@@ -7749,7 +8013,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        166
+        174
       ]
     ],
     "translation": "Sposta campo in basso"
@@ -7761,7 +8025,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        149
+        157
       ]
     ],
     "translation": "Sposta campo in alto"
@@ -7773,7 +8037,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        308
+        319
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        626
       ]
     ],
     "translation": "Sposta opzione in basso"
@@ -7785,7 +8053,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        289
+        300
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        612
       ]
     ],
     "translation": "Sposta opzione in alto"
@@ -7821,7 +8093,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        129
+        149
       ]
     ],
     "translation": "Sposta nell'area di lavoro"
@@ -7972,7 +8244,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        407
+        420
       ]
     ],
     "translation": "Nuova card"
@@ -8020,11 +8292,11 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        128
+        129
       ],
       [
         "src/views/board/index.tsx",
-        634
+        722
       ]
     ],
     "translation": "Nuova lista"
@@ -8036,7 +8308,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        354
+        394
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        660
       ]
     ],
     "translation": "Nuova opzione"
@@ -8208,7 +8484,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        137
+        170
       ]
     ],
     "translation": "Nessuna data"
@@ -8268,7 +8544,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        666
+        754
       ]
     ],
     "translation": "Nessuna lista"
@@ -8280,7 +8556,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        671
+        759
       ]
     ],
     "translation": "Nessuna lista è stata ancora creata"
@@ -8320,7 +8596,7 @@
     "origin": [
       [
         "src/views/settings/components/RolePermissions.tsx",
-        110
+        116
       ]
     ],
     "translation": "Nessun ruolo trovato per questo workspace."
@@ -8368,11 +8644,15 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        176
+        244
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        222
+        296
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        334
       ]
     ],
     "translation": "Non impostato"
@@ -8384,7 +8664,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        34
+        39
       ]
     ],
     "translation": "Numero"
@@ -8509,6 +8789,22 @@
     ],
     "translation": "Open source friends"
   },
+  "tgPwON": {
+    "message": "Operator",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        223
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        225
+      ]
+    ],
+    "translation": "Operatore"
+  },
   "7KcJ0c": {
     "message": "Option colour",
     "placeholders": {},
@@ -8516,7 +8812,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        251
+        260
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        577
       ]
     ],
     "translation": "Colore dell’opzione"
@@ -8528,7 +8828,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        262
+        272
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        594
       ]
     ],
     "translation": "Nome dell’opzione"
@@ -8540,7 +8844,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        244
+        252
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        568
       ]
     ],
     "translation": "Opzioni"
@@ -8592,7 +8900,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        112
+        145
       ]
     ],
     "translation": "In ritardo"
@@ -8652,7 +8960,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        271
+        273
       ]
     ],
     "translation": "Password già impostata"
@@ -8734,6 +9042,38 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/board/components/Card.tsx",
+        208
+      ],
+      [
+        "src/views/board/components/CardContextMembersModal.tsx",
+        38
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        113
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        31
+      ],
+      [
+        "src/views/card/components/Comment.tsx",
+        164
+      ],
+      [
+        "src/views/card/components/MemberSelector.tsx",
+        134
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        41
+      ],
+      [
+        "src/views/card/index.tsx",
+        112
+      ],
       [
         "src/views/members/index.tsx",
         230
@@ -8840,7 +9180,7 @@
     "origin": [
       [
         "src/views/settings/components/RolePermissions.tsx",
-        119
+        125
       ]
     ],
     "translation": "Permesso"
@@ -9068,15 +9408,23 @@
       ],
       [
         "src/views/board/components/BoardDropdown.tsx",
-        72
+        74
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        90
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        452
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        198
+        203
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        94
+        95
       ],
       [
         "src/views/board/components/NewTemplateForm.tsx",
@@ -9096,11 +9444,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        224
+        285
       ],
       [
         "src/views/board/index.tsx",
-        280
+        341
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -9132,7 +9480,15 @@
       ],
       [
         "src/views/card/components/Comment.tsx",
-        93
+        108
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        100
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        123
       ],
       [
         "src/views/card/components/DeleteCardConfirmation.tsx",
@@ -9160,7 +9516,7 @@
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        82
+        87
       ],
       [
         "src/views/card/components/NewChecklistForm.tsx",
@@ -9176,11 +9532,11 @@
       ],
       [
         "src/views/card/index.tsx",
-        236
+        263
       ],
       [
         "src/views/card/index.tsx",
-        249
+        276
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -9272,15 +9628,19 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        76
+        67
       ],
       [
         "src/views/board/components/CardContextMoveListModal.tsx",
         42
       ],
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        136
+      ],
+      [
         "src/views/board/index.tsx",
-        321
+        382
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -9295,12 +9655,16 @@
         100
       ],
       [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        321
+      ],
+      [
         "src/views/public/board/CardModal.tsx",
         45
       ],
       [
         "src/views/public/board/index.tsx",
-        86
+        90
       ]
     ],
     "translation": "Riprova."
@@ -9312,7 +9676,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        193
+        185
       ]
     ],
     "translation": "Posizione nell'elenco (0 = primo, lascia vuoto per la fine)"
@@ -9539,6 +9903,22 @@
     ],
     "translation": "Quick win"
   },
+  "6jAi8c": {
+    "message": "Range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        181
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        186
+      ]
+    ],
+    "translation": "Intervallo"
+  },
   "6EWT6T": {
     "message": "Recruitment",
     "placeholders": {},
@@ -9581,6 +9961,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        643
+      ],
+      [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
         58
       ]
@@ -9594,7 +9978,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        640
+        651
       ]
     ],
     "translation": "Rimuovi file"
@@ -9606,7 +9990,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        158
       ]
     ],
     "translation": "Rimuovi dai preferiti"
@@ -9721,7 +10105,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        61
+        63
       ]
     ],
     "translation": "Rimosso dai preferiti"
@@ -9837,7 +10221,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        245
+        251
       ]
     ],
     "translation": "Ripristina impostazioni predefinite del ruolo"
@@ -10009,8 +10393,16 @@
         183
       ],
       [
+        "src/views/board/components/TimeTrackingSettingsForm.tsx",
+        149
+      ],
+      [
         "src/views/card/components/Comment.tsx",
-        202
+        224
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        184
       ],
       [
         "src/views/settings/components/Avatar.tsx",
@@ -10162,7 +10554,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        131
+        123
       ]
     ],
     "translation": "Seleziona un elenco"
@@ -10335,6 +10727,18 @@
     ],
     "translation": "Imposta scadenza"
   },
+  "+9/nz4": {
+    "message": "Set filter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/Filters.tsx",
+        177
+      ]
+    ],
+    "translation": "Imposta filtro"
+  },
   "2gHjVM": {
     "message": "Set Password",
     "placeholders": {},
@@ -10388,6 +10792,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/components/Dashboard.tsx",
+        207
+      ],
       [
         "src/components/SettingsLayout.tsx",
         102
@@ -10502,7 +10910,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        228
+        236
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        558
       ]
     ],
     "translation": "Mostra sul fronte della scheda"
@@ -10734,7 +11146,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        327
+        340
       ]
     ],
     "translation": "Alcuni allegati non sono riusciti"
@@ -11096,11 +11508,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        543
+        618
       ],
       [
         "src/views/board/index.tsx",
-        580
+        655
       ]
     ],
     "translation": "Template"
@@ -11268,7 +11680,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        32
+        37
       ]
     ],
     "translation": "Testo"
@@ -11304,7 +11716,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        52
+        54
       ]
     ],
     "translation": "La bacheca è stata archiviata."
@@ -11332,7 +11744,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        53
+        55
       ]
     ],
     "translation": "La bacheca è stata ripristinata."
@@ -11344,7 +11756,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        69
+        60
       ]
     ],
     "translation": "La scheda è stata duplicata."
@@ -11363,7 +11775,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        328
+        341
       ]
     ],
     "translation": "La scheda è stata creata, ma {failedCount} di {0} allegati non sono stati caricati."
@@ -11543,7 +11955,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        446
+        502
       ]
     ],
     "translation": "Questa bacheca non ha ancora campi personalizzati."
@@ -11555,7 +11967,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        184
+        189
       ]
     ],
     "translation": "Questa bacheca è privata o non esiste"
@@ -11911,7 +12323,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        180
+        172
       ]
     ],
     "translation": "Titolo (facoltativo)"
@@ -11923,11 +12335,15 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        265
+        264
       ],
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        267
+        266
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        242
       ]
     ],
     "translation": "A"
@@ -12139,7 +12555,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        248
+        275
       ]
     ],
     "translation": "Impossibile aggiungere l'etichetta"
@@ -12163,7 +12579,7 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        97
+        122
       ]
     ],
     "translation": "Impossibile cancellare il campo personalizzato"
@@ -12199,7 +12615,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        319
+        380
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -12211,7 +12627,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        84
+        88
       ]
     ],
     "translation": "Impossibile copiare il link"
@@ -12223,7 +12639,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        195
+        200
       ]
     ],
     "translation": "Impossibile creare la card"
@@ -12247,7 +12663,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        405
+        451
       ]
     ],
     "translation": "Impossibile creare il campo personalizzato"
@@ -12259,7 +12675,7 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        93
+        94
       ]
     ],
     "translation": "Impossibile creare la lista"
@@ -12411,7 +12827,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        75
+        66
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -12643,7 +13059,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        71
+        73
       ]
     ],
     "translation": "Impossibile aggiornare la board"
@@ -12679,11 +13095,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        279
+        340
       ],
       [
         "src/views/card/index.tsx",
-        235
+        262
       ]
     ],
     "translation": "Impossibile aggiornare la card"
@@ -12719,7 +13135,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        92
+        107
       ]
     ],
     "translation": "Impossibile aggiornare il commento"
@@ -12731,7 +13147,7 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        75
+        99
       ]
     ],
     "translation": "Impossibile aggiornare il campo personalizzato"
@@ -12743,7 +13159,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        81
+        89
       ]
     ],
     "translation": "Impossibile aggiornare i campi personalizzati"
@@ -12779,7 +13195,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        223
+        284
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -12795,7 +13211,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        81
+        86
       ]
     ],
     "translation": "Impossibile aggiornare i membri"
@@ -12871,7 +13287,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        138
       ]
     ],
     "translation": "Ripristina bacheca"
@@ -12967,11 +13383,11 @@
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        23
+        34
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        224
+        295
       ]
     ],
     "translation": "Non selezionato"
@@ -12983,7 +13399,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        191
+        233
       ]
     ],
     "translation": "Non selezionato o non impostato"
@@ -13501,6 +13917,22 @@
     ],
     "translation": "L'utente è già membro di questo workspace"
   },
+  "wMHvYH": {
+    "message": "Value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        243
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        246
+      ]
+    ],
+    "translation": "Valore"
+  },
   "vSJd18": {
     "message": "Video",
     "placeholders": {},
@@ -13556,7 +13988,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        153
+        157
       ]
     ],
     "translation": "Sola visualizzazione"
@@ -13580,7 +14012,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        187
+        192
       ]
     ],
     "translation": "Visualizza workspace"
@@ -13885,7 +14317,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        543
+        618
       ],
       [
         "src/views/boards/index.tsx",
@@ -13897,7 +14329,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        125
+        129
       ],
       [
         "src/views/public/boards/index.tsx",
@@ -14299,11 +14731,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        618
+        706
       ],
       [
         "src/views/board/index.tsx",
-        676
+        764
       ],
       [
         "src/views/boards/components/BoardsList.tsx",
@@ -14453,7 +14885,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        273
+        275
       ]
     ],
     "translation": "Il tuo account ha già una password. Puoi modificarla dalle impostazioni del tuo account."
@@ -14762,177 +15194,5 @@
       ]
     ],
     "translation": "URL YouTube"
-  },
-  "ABZuOF": {
-    "message": "Archive this option? Existing card values will keep it until changed.",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        340
-      ]
-    ],
-    "translation": "Archiviare questa opzione? I valori esistenti nelle schede la manterranno finché non verranno modificati."
-  },
-  "NawEr2": {
-    "message": "After",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        186
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        182
-      ]
-    ],
-    "translation": "Dopo"
-  },
-  "DB8zMK": {
-    "message": "Apply",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        307
-      ]
-    ],
-    "translation": "Applica"
-  },
-  "EmSrGB": {
-    "message": "Before",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        185
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        182
-      ]
-    ],
-    "translation": "Prima di"
-  },
-  "xCJdfg": {
-    "message": "Clear",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        289
-      ]
-    ],
-    "translation": "Cancella"
-  },
-  "/5mghO": {
-    "message": "Contains",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        178
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        172
-      ]
-    ],
-    "translation": "Contiene"
-  },
-  "f9yJNM": {
-    "message": "Equals",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        181
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        176
-      ]
-    ],
-    "translation": "Uguale a"
-  },
-  "wP7Cju": {
-    "message": "Filter by value",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        213
-      ]
-    ],
-    "translation": "Filtra per valore"
-  },
-  "tgPwON": {
-    "message": "Operator",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        224
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        226
-      ]
-    ],
-    "translation": "Operatore"
-  },
-  "6jAi8c": {
-    "message": "Range",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        182
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        187
-      ]
-    ],
-    "translation": "Intervallo"
-  },
-  "+9/nz4": {
-    "message": "Set filter",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/Filters.tsx",
-        166
-      ]
-    ],
-    "translation": "Imposta filtro"
-  },
-  "wMHvYH": {
-    "message": "Value",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        244
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        247
-      ]
-    ],
-    "translation": "Valore"
   }
 }

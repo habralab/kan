@@ -6,7 +6,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        153
+        175
       ]
     ],
     "translation": " (redigeret)"
@@ -24,7 +24,6 @@
     "translation": ", eller se vores"
   },
   "VEnTjc": {
-    "translation": "",
     "message": "{0, plural, one {1 active timer can still be stopped or discarded if time tracking is disabled.} other {{1} active timers can still be stopped or discarded if time tracking is disabled.}}",
     "placeholders": {
       "0": [
@@ -40,10 +39,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         114
       ]
-    ]
+    ],
+    "translation": ""
   },
   "INSeGm": {
-    "translation": "",
     "message": "{0, plural, one {1 entry} other {{1} entries}}",
     "placeholders": {
       "0": [
@@ -59,7 +58,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         393
       ]
-    ]
+    ],
+    "translation": ""
   },
   "J/hVSQ": {
     "message": "{0}",
@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        321
+        348
       ]
     ],
     "translation": "{0} | {1}"
@@ -114,7 +114,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        63
+        65
       ]
     ],
     "translation": "{0} er føjet til dine favoritter."
@@ -130,7 +130,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        64
+        66
       ]
     ],
     "translation": "{0} er fjernet fra dine favoritter."
@@ -146,7 +146,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        558
+        569
       ]
     ],
     "translation": "{0} etiketter"
@@ -162,7 +162,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        571
+        646
       ]
     ],
     "translation": "{0} blev ikke fundet"
@@ -305,7 +305,6 @@
     "translation": "14 dages gratis prøveperiode · Skift abonnement eller opsig når som helst"
   },
   "PqP8GL": {
-    "translation": "",
     "message": "1h 30m",
     "placeholders": {},
     "comments": [],
@@ -314,7 +313,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         134
       ]
-    ]
+    ],
+    "translation": ""
   },
   "4obmDr": {
     "message": "404 - Page Not Found | kan.bn",
@@ -418,8 +418,16 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        34
+      ],
+      [
         "src/views/boards/index.tsx",
         33
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        44
       ],
       [
         "src/views/settings/components/NewWebhookModal.tsx",
@@ -439,7 +447,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        476
+        509
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -479,7 +487,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        365
+        405
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        678
       ]
     ],
     "translation": "Tilføj"
@@ -567,7 +579,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        185
+        207
       ],
       [
         "src/views/card/components/NewCommentForm.tsx",
@@ -607,7 +619,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        490
+        554
       ]
     ],
     "translation": "Tilføj felt"
@@ -635,7 +647,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        138
+        148
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -645,7 +657,6 @@
     "translation": "Tilføj medlem"
   },
   "MdyqML": {
-    "translation": "",
     "message": "Add time",
     "placeholders": {},
     "comments": [],
@@ -658,7 +669,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         494
       ]
-    ]
+    ],
+    "translation": ""
   },
   "pBsoKL": {
     "message": "Add to favorites",
@@ -667,7 +679,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        158
       ]
     ],
     "translation": "Føj til favoritter"
@@ -834,7 +846,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        60
+        62
       ]
     ],
     "translation": "Føjet til favoritter"
@@ -942,8 +954,23 @@
     ],
     "translation": "Avanceret sikkerhed, compliance og dedikeret support til store organisationer."
   },
+  "NawEr2": {
+    "message": "After",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        185
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        193
+      ]
+    ],
+    "translation": "Efter"
+  },
   "4upC5z": {
-    "translation": "",
     "message": "All cards",
     "placeholders": {},
     "comments": [],
@@ -952,7 +979,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         298
       ]
-    ]
+    ],
+    "translation": ""
   },
   "h2ztFt": {
     "message": "All Free features +",
@@ -967,7 +995,6 @@
     "translation": "Alle funktioner i Gratis +"
   },
   "zDDU1o": {
-    "translation": "",
     "message": "All labels",
     "placeholders": {},
     "comments": [],
@@ -976,10 +1003,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         318
       ]
-    ]
+    ],
+    "translation": ""
   },
   "qe9rVr": {
-    "translation": "",
     "message": "All lists",
     "placeholders": {},
     "comments": [],
@@ -988,7 +1015,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         283
       ]
-    ]
+    ],
+    "translation": ""
   },
   "nryrgW": {
     "message": "All member permission overrides have been reset to their role defaults.",
@@ -1003,7 +1031,6 @@
     "translation": "Alle brugerdefinerede medlemsrettigheder er nulstillet til standardindstillingerne for deres roller."
   },
   "RevbX8": {
-    "translation": "",
     "message": "All members",
     "placeholders": {},
     "comments": [],
@@ -1012,7 +1039,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         262
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZAs2NN": {
     "message": "All Pro features +",
@@ -1052,7 +1080,6 @@
     "translation": "Alle funktioner i Teams +"
   },
   "XOJDc9": {
-    "translation": "",
     "message": "All time",
     "placeholders": {},
     "comments": [],
@@ -1061,7 +1088,8 @@
         "src/utils/timeTrackingLabels.ts",
         7
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Z3krJD": {
     "message": "Allow workspace members to see each other's email addresses",
@@ -1263,6 +1291,18 @@
     ],
     "translation": "Ansøgere"
   },
+  "DB8zMK": {
+    "message": "Apply",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        306
+      ]
+    ],
+    "translation": "Anvend"
+  },
   "yb/fjw": {
     "message": "Approval",
     "placeholders": {},
@@ -1282,7 +1322,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        220
+        228
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        372
       ]
     ],
     "translation": "Arkivér"
@@ -1294,7 +1338,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        138
       ]
     ],
     "translation": "Arkivér tavle"
@@ -1306,7 +1350,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        186
+        194
       ]
     ],
     "translation": "Arkivér brugerdefineret felt"
@@ -1318,7 +1362,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        330
+        341
       ]
     ],
     "translation": "Arkivér valgmulighed"
@@ -1330,10 +1374,22 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        196
+        204
       ]
     ],
     "translation": "Arkivér dette felt? Eksisterende kortværdier skjules, men bevares."
+  },
+  "ABZuOF": {
+    "message": "Archive this option? Existing card values will keep it until changed.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        350
+      ]
+    ],
+    "translation": "Arkivér denne valgmulighed? Eksisterende kortværdier beholder den, indtil de ændres."
   },
   "TdfEV7": {
     "message": "Archived",
@@ -1341,8 +1397,24 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/custom-fields/custom-field-badges.tsx",
+        72
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        204
+      ],
+      [
         "src/views/boards/index.tsx",
         34
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        249
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        407
       ]
     ],
     "translation": "Arkiveret"
@@ -1354,7 +1426,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        370
+        410
       ]
     ],
     "translation": "Arkiverede valgmuligheder"
@@ -1518,11 +1590,11 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        621
+        632
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        622
+        633
       ]
     ],
     "translation": ""
@@ -1598,6 +1670,22 @@
       ]
     ],
     "translation": "Grundlæggende roadmap"
+  },
+  "EmSrGB": {
+    "message": "Before",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        184
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        193
+      ]
+    ],
+    "translation": "Før"
   },
   "/XCg57": {
     "message": "Best for growing teams that need collaboration",
@@ -1761,15 +1849,15 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        543
+        618
       ],
       [
         "src/views/card/index.tsx",
-        321
+        348
       ],
       [
         "src/views/public/board/index.tsx",
-        125
+        129
       ]
     ],
     "translation": "Tavle"
@@ -1794,7 +1882,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        49
+        51
       ]
     ],
     "translation": "Tavle arkiveret"
@@ -1818,7 +1906,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        561
+        636
       ]
     ],
     "translation": ""
@@ -1854,7 +1942,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        181
+        186
       ]
     ],
     "translation": "Tavlen blev ikke fundet"
@@ -1866,7 +1954,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        167
+        187
       ]
     ],
     "translation": ""
@@ -1890,7 +1978,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        50
+        52
       ]
     ],
     "translation": "Tavle fjernet fra arkivet"
@@ -1930,7 +2018,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        79
+        83
       ]
     ],
     "translation": "Tavlens URL er kopieret til udklipsholderen"
@@ -2064,7 +2152,6 @@
     "translation": "Kan tilføje kommentarer"
   },
   "VPUvtP": {
-    "translation": "",
     "message": "Can add time entries",
     "placeholders": {},
     "comments": [],
@@ -2077,7 +2164,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         40
       ]
-    ]
+    ],
+    "translation": ""
   },
   "N3380t": {
     "message": "Can create boards",
@@ -2192,7 +2280,6 @@
     "translation": "Kan slette lister"
   },
   "2BD2mA": {
-    "translation": "",
     "message": "Can delete own time entries",
     "placeholders": {},
     "comments": [],
@@ -2205,7 +2292,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         42
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Cmudpi": {
     "message": "Can delete workspace",
@@ -2294,17 +2382,16 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        152
+        158
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        41
+        47
       ]
     ],
     "translation": "Kan redigere medlemsroller og rettigheder"
   },
   "kImq1u": {
-    "translation": "",
     "message": "Can edit own time entries",
     "placeholders": {},
     "comments": [],
@@ -2317,7 +2404,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         41
       ]
-    ]
+    ],
+    "translation": ""
   },
   "iLbjv+": {
     "message": "Can edit workspace",
@@ -2342,17 +2430,16 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        151
+        157
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        40
+        46
       ]
     ],
     "translation": "Kan invitere medlemmer"
   },
   "xLuBnq": {
-    "translation": "",
     "message": "Can manage all time entries",
     "placeholders": {},
     "comments": [],
@@ -2365,7 +2452,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         43
       ]
-    ]
+    ],
+    "translation": ""
   },
   "qQXocp": {
     "message": "Can manage workspace settings",
@@ -2390,11 +2478,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        153
+        159
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        42
+        48
       ]
     ],
     "translation": "Kan fjerne medlemmer"
@@ -2470,17 +2558,16 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        150
+        156
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        39
+        45
       ]
     ],
     "translation": "Kan se medlemmer"
   },
   "DgC8eZ": {
-    "translation": "",
     "message": "Can view time entries",
     "placeholders": {},
     "comments": [],
@@ -2493,7 +2580,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         39
       ]
-    ]
+    ],
+    "translation": ""
   },
   "SNfg0e": {
     "message": "Can view workspace",
@@ -2526,7 +2614,19 @@
       ],
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        267
+        277
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        298
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        213
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        359
       ],
       [
         "src/views/board/components/DeleteBoardConfirmation.tsx",
@@ -2537,8 +2637,12 @@
         99
       ],
       [
+        "src/views/board/components/TimeTrackingSettingsForm.tsx",
+        138
+      ],
+      [
         "src/views/card/components/Comment.tsx",
-        195
+        217
       ],
       [
         "src/views/card/components/DeleteCardConfirmation.tsx",
@@ -2551,6 +2655,22 @@
       [
         "src/views/card/components/DeleteCommentConfirmation.tsx",
         77
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        176
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        525
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        573
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        743
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -2593,8 +2713,20 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        292
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        372
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        488
+      ],
+      [
         "src/views/card/index.tsx",
-        321
+        348
       ]
     ],
     "translation": "Kort"
@@ -2606,7 +2738,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        67
+        58
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2646,11 +2778,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        384
+        411
       ],
       [
         "src/views/card/index.tsx",
-        421
+        448
       ]
     ],
     "translation": "Kortet blev ikke fundet"
@@ -2662,7 +2794,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        167
+        168
       ]
     ],
     "translation": ""
@@ -2674,7 +2806,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        424
+        437
       ]
     ],
     "translation": "Korttitel"
@@ -2686,7 +2818,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        314
+        375
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2700,7 +2832,6 @@
     "translation": "Kortets URL er kopieret til udklipsholderen"
   },
   "Ccpbzh": {
-    "translation": "",
     "message": "Cards",
     "placeholders": {},
     "comments": [],
@@ -2709,7 +2840,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         342
       ]
-    ]
+    ],
+    "translation": ""
   },
   "VhMDMg": {
     "message": "Change Password",
@@ -2818,7 +2950,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        38
+        43
       ]
     ],
     "translation": "Afkrydsningsfelt"
@@ -2834,15 +2966,15 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        190
+        232
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        23
+        34
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        223
+        294
       ]
     ],
     "translation": "Markeret"
@@ -2876,7 +3008,6 @@
     "translation": "Tjeklister"
   },
   "WQ5uca": {
-    "translation": "",
     "message": "Choose a grouping to export a summary",
     "placeholders": {},
     "comments": [],
@@ -2885,7 +3016,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         436
       ]
-    ]
+    ],
+    "translation": ""
   },
   "zMquA7": {
     "message": "Choose a plan",
@@ -2914,6 +3046,18 @@
       ]
     ],
     "translation": "Vælg abonnement"
+  },
+  "xCJdfg": {
+    "message": "Clear",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        288
+      ]
+    ],
+    "translation": "Ryd"
   },
   "VHS0aJ": {
     "message": "Clear all custom permissions?",
@@ -2962,7 +3106,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        227
+        397
       ]
     ],
     "translation": "Ryd filtre"
@@ -2994,15 +3138,27 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        281
+        283
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        481
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        200
+      ],
+      [
+        "src/views/board/components/TimeTrackingSettingsForm.tsx",
+        69
       ],
       [
         "src/views/card/index.tsx",
-        375
+        402
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        172
+        178
       ],
       [
         "src/views/settings/components/NewApiKeyModal.tsx",
@@ -3060,7 +3216,6 @@
     "translation": "Kommer snart"
   },
   "NBdIgR": {
-    "translation": "",
     "message": "Comment",
     "placeholders": {},
     "comments": [],
@@ -3073,7 +3228,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         163
       ]
-    ]
+    ],
+    "translation": ""
   },
   "dYbQ1T": {
     "message": "Comment options",
@@ -3082,7 +3238,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        161
+        183
       ]
     ],
     "translation": ""
@@ -3336,6 +3492,22 @@
     ],
     "translation": "Kontakt os"
   },
+  "/5mghO": {
+    "message": "Contains",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        177
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        183
+      ]
+    ],
+    "translation": "Indeholder"
+  },
   "AX4ktp": {
     "message": "Content Creation",
     "placeholders": {},
@@ -3447,7 +3619,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        257
+        249
       ]
     ],
     "translation": "Kopiér tjeklister"
@@ -3459,7 +3631,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        279
+        267
       ]
     ],
     "translation": "Kopiér brugerdefinerede felter"
@@ -3471,7 +3643,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        221
+        213
       ]
     ],
     "translation": "Kopiér etiketter"
@@ -3495,7 +3667,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        239
+        231
       ]
     ],
     "translation": "Kopiér medlemmer"
@@ -3551,11 +3723,11 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        653
+        664
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        156
+        157
       ]
     ],
     "translation": "Opret en til"
@@ -3579,7 +3751,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        663
+        674
       ]
     ],
     "translation": "Opret kort"
@@ -3627,7 +3799,7 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        168
+        169
       ]
     ],
     "translation": "Opret liste"
@@ -3671,7 +3843,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        520
+        531
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -3687,11 +3859,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        99
+        113
       ],
       [
         "src/views/board/index.tsx",
-        685
+        773
       ]
     ],
     "translation": "Opret ny liste"
@@ -3864,7 +4036,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        131
+        139
       ]
     ],
     "translation": "Navn på brugerdefineret felt"
@@ -3876,15 +4048,15 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        110
+        111
       ],
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        416
+        472
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        275
+        386
       ]
     ],
     "translation": "Brugerdefinerede felter"
@@ -3902,7 +4074,6 @@
     "translation": "Brugerdefinerede rettigheder"
   },
   "ioxL7D": {
-    "translation": "",
     "message": "Custom range",
     "placeholders": {},
     "comments": [],
@@ -3911,7 +4082,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         219
       ]
-    ]
+    ],
+    "translation": ""
   },
   "UirJfL": {
     "message": "Custom SLA",
@@ -4022,7 +4194,15 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        36
+        41
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        486
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        150
       ]
     ],
     "translation": "Dato"
@@ -4097,6 +4277,14 @@
         83
       ],
       [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        727
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        755
+      ],
+      [
         "src/views/settings/components/DeleteWebhookConfirmation.tsx",
         82
       ],
@@ -4134,7 +4322,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        169
       ]
     ],
     "translation": "Slet tavle"
@@ -4150,7 +4338,7 @@
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        152
+        153
       ]
     ],
     "translation": "Slet kort"
@@ -4174,7 +4362,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        120
+        135
       ]
     ],
     "translation": "Slet kommentar"
@@ -4198,13 +4386,12 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        169
       ]
     ],
     "translation": "Slet skabelon"
   },
   "AmfkGS": {
-    "translation": "",
     "message": "Delete this time entry?",
     "placeholders": {},
     "comments": [],
@@ -4213,7 +4400,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         736
       ]
-    ]
+    ],
+    "translation": ""
   },
   "snMaH4": {
     "message": "Delete webhook",
@@ -4328,7 +4516,6 @@
     "translation": "Målarbejdsområde"
   },
   "bzSI52": {
-    "translation": "",
     "message": "Discard",
     "placeholders": {},
     "comments": [],
@@ -4337,7 +4524,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         370
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Odv3J6": {
     "message": "Disconnect GitHub",
@@ -4522,7 +4710,7 @@
       ],
       [
         "src/views/board/components/CardContextMembersModal.tsx",
-        68
+        88
       ],
       [
         "src/views/boards/components/TemplateBoards.tsx",
@@ -4570,7 +4758,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        40
+        45
       ]
     ],
     "translation": "Rulleliste"
@@ -4582,15 +4770,15 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        171
+        301
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        575
+        586
       ],
       [
         "src/views/card/index.tsx",
-        153
+        174
       ]
     ],
     "translation": "Forfaldsdato"
@@ -4602,7 +4790,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        132
+        165
       ]
     ],
     "translation": "Forfalder næste måned"
@@ -4614,7 +4802,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        127
+        160
       ]
     ],
     "translation": "Forfalder i næste uge"
@@ -4626,7 +4814,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        117
+        150
       ]
     ],
     "translation": "Forfalder i dag"
@@ -4638,7 +4826,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        122
+        155
       ]
     ],
     "translation": "Forfalder i morgen"
@@ -4650,7 +4838,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        279
+        289
       ]
     ],
     "translation": "Duplikér"
@@ -4662,7 +4850,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        111
+        103
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
@@ -4682,7 +4870,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        279
+        289
       ]
     ],
     "translation": "Duplikerer…"
@@ -4695,6 +4883,10 @@
       [
         "src/components/YouTubeEmbed/YouTubeDropdown.tsx",
         42
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        718
       ],
       [
         "src/views/settings/components/WebhookList.tsx",
@@ -4710,7 +4902,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        109
+        118
       ],
       [
         "src/views/board/components/UpdateBoardSlugForm.tsx",
@@ -4726,7 +4918,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        111
+        126
       ]
     ],
     "translation": "Rediger kommentar"
@@ -4750,7 +4942,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        162
+        168
       ],
       [
         "src/views/members/index.tsx",
@@ -4760,7 +4952,6 @@
     "translation": "Rediger rettigheder"
   },
   "CtkaqE": {
-    "translation": "",
     "message": "Edit time entry",
     "placeholders": {},
     "comments": [],
@@ -4769,7 +4960,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         97
       ]
-    ]
+    ],
+    "translation": ""
   },
   "fW5sSv": {
     "message": "Edit webhook",
@@ -4884,7 +5076,6 @@
     "translation": "E-mailsynlighed"
   },
   "WY7Cmx": {
-    "translation": "",
     "message": "Enable time tracking",
     "placeholders": {},
     "comments": [],
@@ -4897,7 +5088,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         102
       ]
-    ]
+    ],
+    "translation": ""
   },
   "bFREhu": {
     "message": "End of list",
@@ -4906,7 +5098,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        200
+        192
       ]
     ],
     "translation": "Slutningen af listen"
@@ -4956,7 +5148,6 @@
     "translation": "Indtast en brugerdefineret titel"
   },
   "vJiLfv": {
-    "translation": "",
     "message": "Enter a duration such as 2h, 90m, or 1:30.",
     "placeholders": {},
     "comments": [],
@@ -4965,7 +5156,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         145
       ]
-    ]
+    ],
+    "translation": ""
   },
   "rQRXo8": {
     "message": "Enter new secret to update",
@@ -5068,7 +5260,6 @@
     "translation": "Enterprise"
   },
   "ef6vAZ": {
-    "translation": "",
     "message": "Entries",
     "placeholders": {},
     "comments": [],
@@ -5077,7 +5268,24 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         340
       ]
-    ]
+    ],
+    "translation": ""
+  },
+  "f9yJNM": {
+    "message": "Equals",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        180
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        187
+      ]
+    ],
+    "translation": "Er lig med"
   },
   "SlfejT": {
     "message": "Error",
@@ -5365,7 +5573,6 @@
     "translation": "Udførelse"
   },
   "WoSfea": {
-    "translation": "",
     "message": "Export entries CSV",
     "placeholders": {},
     "comments": [],
@@ -5374,10 +5581,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         423
       ]
-    ]
+    ],
+    "translation": ""
   },
   "85rIwg": {
-    "translation": "",
     "message": "Export full CSV",
     "placeholders": {},
     "comments": [],
@@ -5386,10 +5593,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         448
       ]
-    ]
+    ],
+    "translation": ""
   },
   "o7dpgY": {
-    "translation": "",
     "message": "Export summary CSV",
     "placeholders": {},
     "comments": [],
@@ -5398,7 +5605,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         439
       ]
-    ]
+    ],
+    "translation": ""
   },
   "GwNIE2": {
     "message": "Extended Roadmap",
@@ -5663,7 +5871,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        467
+        531
       ]
     ],
     "translation": "Feltnavn"
@@ -5675,7 +5883,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        475
+        539
       ]
     ],
     "translation": "Felttype"
@@ -5687,7 +5895,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        419
+        475
       ]
     ],
     "translation": "Felter er tilgængelige, så snart du opretter det første."
@@ -5711,10 +5919,22 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        221
+        391
       ]
     ],
     "translation": "Filter"
+  },
+  "wP7Cju": {
+    "message": "Filter by value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        212
+      ]
+    ],
+    "translation": "Filtrer efter værdi"
   },
   "l31EoQ": {
     "message": "Find answers to common questions about Kan. Can't find what you're looking for? Feel free to <0>contact us</0>.",
@@ -5837,20 +6057,24 @@
     "translation": "Gratis for altid"
   },
   "ejVYRQ": {
-    "translation": "Fra",
     "message": "From",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        244
+        243
       ],
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        247
+        246
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        230
       ]
-    ]
+    ],
+    "translation": "Fra"
   },
   "6uBU1F": {
     "message": "Full API access",
@@ -5971,7 +6195,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        670
+        758
       ]
     ],
     "translation": "Kom i gang ved at oprette en ny liste"
@@ -6197,7 +6421,6 @@
     "translation": "Google SSO + SAML"
   },
   "ALoP4W": {
-    "translation": "",
     "message": "Group by",
     "placeholders": {},
     "comments": [],
@@ -6206,7 +6429,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         360
       ]
-    ]
+    ],
+    "translation": ""
   },
   "O1wAlQ": {
     "message": "Guest",
@@ -6405,6 +6629,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        541
+      ],
       [
         "src/views/boards/index.tsx",
         83
@@ -6703,7 +6931,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        115
+        120
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -6713,7 +6941,6 @@
     "translation": "Invitér medlem"
   },
   "Dn4OyV": {
-    "translation": "",
     "message": "Invited",
     "placeholders": {},
     "comments": [],
@@ -6726,7 +6953,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         43
       ]
-    ]
+    ],
+    "translation": ""
   },
   "M2zwdn": {
     "message": "Inviting members requires a Team or Pro plan. You'll be redirected to upgrade your workspace.",
@@ -6846,7 +7074,6 @@
     "translation": "Tastaturgenveje"
   },
   "87a/t/": {
-    "translation": "",
     "message": "Label",
     "placeholders": {},
     "comments": [],
@@ -6855,7 +7082,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         312
       ]
-    ]
+    ],
+    "translation": ""
   },
   "h8DugX": {
     "message": "Labels",
@@ -6868,11 +7096,15 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        155
+        285
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        524
+        535
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        490
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -6880,7 +7112,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        133
+        154
       ]
     ],
     "translation": "Etiketter"
@@ -6934,7 +7166,6 @@
     "translation": "Stor"
   },
   "vfe90m": {
-    "translation": "",
     "message": "Last 14 days",
     "placeholders": {},
     "comments": [],
@@ -6943,10 +7174,10 @@
         "src/utils/timeTrackingLabels.ts",
         12
       ]
-    ]
+    ],
+    "translation": ""
   },
   "rTwgPH": {
-    "translation": "",
     "message": "Last month",
     "placeholders": {},
     "comments": [],
@@ -6955,10 +7186,10 @@
         "src/utils/timeTrackingLabels.ts",
         14
       ]
-    ]
+    ],
+    "translation": ""
   },
   "xSn9Fa": {
-    "translation": "",
     "message": "Last quarter",
     "placeholders": {},
     "comments": [],
@@ -6967,10 +7198,10 @@
         "src/utils/timeTrackingLabels.ts",
         16
       ]
-    ]
+    ],
+    "translation": ""
   },
   "j9tmna": {
-    "translation": "",
     "message": "Last week",
     "placeholders": {},
     "comments": [],
@@ -6979,10 +7210,10 @@
         "src/utils/timeTrackingLabels.ts",
         11
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ayy6IJ": {
-    "translation": "",
     "message": "Last year",
     "placeholders": {},
     "comments": [],
@@ -6991,7 +7222,8 @@
         "src/utils/timeTrackingLabels.ts",
         18
       ]
-    ]
+    ],
+    "translation": ""
   },
   "8Is1ih": {
     "message": "Launch offer",
@@ -7125,7 +7357,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        312
+        373
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -7137,7 +7369,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        77
+        81
       ]
     ],
     "translation": "Link kopieret"
@@ -7149,11 +7381,23 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        117
+        109
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        274
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        373
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        489
       ],
       [
         "src/views/card/index.tsx",
-        124
+        145
       ]
     ],
     "translation": "Liste"
@@ -7169,7 +7413,7 @@
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        144
+        145
       ]
     ],
     "translation": "Listenavn"
@@ -7193,13 +7437,12 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        163
+        293
       ]
     ],
     "translation": "Lister"
   },
   "yQ2kGp": {
-    "translation": "",
     "message": "Load more",
     "placeholders": {},
     "comments": [],
@@ -7212,7 +7455,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         771
       ]
-    ]
+    ],
+    "translation": ""
   },
   "1rVAfU": {
     "message": "Load more activities",
@@ -7221,7 +7465,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        579
+        580
       ]
     ],
     "translation": "Indlæs flere aktiviteter"
@@ -7233,7 +7477,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        180
+        186
       ]
     ],
     "translation": "Indlæser rettigheder..."
@@ -7245,7 +7489,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        579
+        580
       ]
     ],
     "translation": "Indlæser..."
@@ -7329,7 +7573,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        98
+        100
       ]
     ],
     "translation": "Gør til skabelon"
@@ -7341,7 +7585,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextMembersModal.tsx",
-        51
+        71
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
@@ -7351,7 +7595,6 @@
     "translation": "Administrer medlemmer"
   },
   "BWTzAb": {
-    "translation": "",
     "message": "Manual",
     "placeholders": {},
     "comments": [],
@@ -7360,7 +7603,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         542
       ]
-    ]
+    ],
+    "translation": ""
   },
   "IDvohQ": {
     "message": "marked a checklist item as incomplete",
@@ -7444,12 +7688,28 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        254
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        371
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        487
+      ],
+      [
         "src/views/card/components/ActivityList.tsx",
         55
       ],
       [
         "src/views/card/components/ActivityList.tsx",
         88
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        102
       ],
       [
         "src/views/members/index.tsx",
@@ -7493,19 +7753,23 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        147
+        277
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        482
+        493
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        341
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        116
+        121
       ],
       [
         "src/views/card/index.tsx",
-        143
+        164
       ],
       [
         "src/views/members/index.tsx",
@@ -7535,7 +7799,6 @@
     "translation": "Medlemmer | {0}"
   },
   "bNv3ig": {
-    "translation": "",
     "message": "Members can add time entries and run timers on cards. Disabling this feature keeps existing history.",
     "placeholders": {},
     "comments": [],
@@ -7544,7 +7807,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         96
       ]
-    ]
+    ],
+    "translation": ""
   },
   "/bZzdR": {
     "message": "Mentions",
@@ -7559,7 +7823,6 @@
     "translation": "Omtaler"
   },
   "fiPesM": {
-    "translation": "",
     "message": "Method",
     "placeholders": {},
     "comments": [],
@@ -7568,7 +7831,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         491
       ]
-    ]
+    ],
+    "translation": ""
   },
   "hty0d5": {
     "message": "Monday",
@@ -7645,7 +7909,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        166
+        174
       ]
     ],
     "translation": "Flyt felt ned"
@@ -7657,7 +7921,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        149
+        157
       ]
     ],
     "translation": "Flyt felt op"
@@ -7669,7 +7933,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        308
+        319
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        626
       ]
     ],
     "translation": "Flyt valgmulighed ned"
@@ -7681,7 +7949,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        289
+        300
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        612
       ]
     ],
     "translation": "Flyt valgmulighed op"
@@ -7717,7 +7989,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        129
+        149
       ]
     ],
     "translation": "Flyt til arbejdsområde"
@@ -7868,7 +8140,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        407
+        420
       ]
     ],
     "translation": "Nyt kort"
@@ -7916,11 +8188,11 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        128
+        129
       ],
       [
         "src/views/board/index.tsx",
-        634
+        722
       ]
     ],
     "translation": "Ny liste"
@@ -7932,7 +8204,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        354
+        394
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        660
       ]
     ],
     "translation": "Ny valgmulighed"
@@ -8104,7 +8380,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        137
+        170
       ]
     ],
     "translation": "Ingen datoer"
@@ -8122,7 +8398,6 @@
     "translation": "Der er ingen download-URL tilgængelig for denne vedhæftede fil."
   },
   "dNhH8G": {
-    "translation": "",
     "message": "No grouping",
     "placeholders": {},
     "comments": [],
@@ -8131,7 +8406,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         370
       ]
-    ]
+    ],
+    "translation": ""
   },
   "TXO5TM": {
     "message": "No keyboard shortcuts registered.",
@@ -8164,7 +8440,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        666
+        754
       ]
     ],
     "translation": "Ingen lister"
@@ -8176,7 +8452,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        671
+        759
       ]
     ],
     "translation": "Der er endnu ikke oprettet nogen lister"
@@ -8216,13 +8492,12 @@
     "origin": [
       [
         "src/views/settings/components/RolePermissions.tsx",
-        110
+        116
       ]
     ],
     "translation": "Der er endnu ikke fundet nogen roller for dette arbejdsområde."
   },
   "3M/nm+": {
-    "translation": "",
     "message": "No time entries match these filters.",
     "placeholders": {},
     "comments": [],
@@ -8231,10 +8506,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         479
       ]
-    ]
+    ],
+    "translation": ""
   },
   "L2Mlhd": {
-    "translation": "",
     "message": "No time has been logged on this card yet.",
     "placeholders": {},
     "comments": [],
@@ -8243,7 +8518,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         684
       ]
-    ]
+    ],
+    "translation": ""
   },
   "TX0bT7": {
     "message": "No webhooks configured. Add a webhook to receive notifications.",
@@ -8264,11 +8540,15 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        176
+        244
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        222
+        296
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        334
       ]
     ],
     "translation": "Ikke angivet"
@@ -8280,7 +8560,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        34
+        39
       ]
     ],
     "translation": "Tal"
@@ -8405,6 +8685,22 @@
     ],
     "translation": "Open source-venner"
   },
+  "tgPwON": {
+    "message": "Operator",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        223
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        225
+      ]
+    ],
+    "translation": "Operator"
+  },
   "7KcJ0c": {
     "message": "Option colour",
     "placeholders": {},
@@ -8412,7 +8708,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        251
+        260
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        577
       ]
     ],
     "translation": "Farve på valgmulighed"
@@ -8424,7 +8724,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        262
+        272
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        594
       ]
     ],
     "translation": "Navn på valgmulighed"
@@ -8436,7 +8740,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        244
+        252
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        568
       ]
     ],
     "translation": "Valgmuligheder"
@@ -8488,7 +8796,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        112
+        145
       ]
     ],
     "translation": "Overskredet"
@@ -8548,7 +8856,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        271
+        273
       ]
     ],
     "translation": "Adgangskode allerede indstillet"
@@ -8630,6 +8938,38 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/board/components/Card.tsx",
+        208
+      ],
+      [
+        "src/views/board/components/CardContextMembersModal.tsx",
+        38
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        113
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        31
+      ],
+      [
+        "src/views/card/components/Comment.tsx",
+        164
+      ],
+      [
+        "src/views/card/components/MemberSelector.tsx",
+        134
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        41
+      ],
+      [
+        "src/views/card/index.tsx",
+        112
+      ],
       [
         "src/views/members/index.tsx",
         230
@@ -8714,7 +9054,6 @@
     "translation": "Perfekt til små og voksende teams, der vil samarbejde."
   },
   "NtQvjo": {
-    "translation": "",
     "message": "Period",
     "placeholders": {},
     "comments": [],
@@ -8727,7 +9066,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         439
       ]
-    ]
+    ],
+    "translation": ""
   },
   "TH3Irz": {
     "message": "Permission",
@@ -8736,7 +9076,7 @@
     "origin": [
       [
         "src/views/settings/components/RolePermissions.tsx",
-        119
+        125
       ]
     ],
     "translation": "Rettighed"
@@ -8964,15 +9304,23 @@
       ],
       [
         "src/views/board/components/BoardDropdown.tsx",
-        72
+        74
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        90
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        452
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        198
+        203
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        94
+        95
       ],
       [
         "src/views/board/components/NewTemplateForm.tsx",
@@ -8992,11 +9340,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        224
+        285
       ],
       [
         "src/views/board/index.tsx",
-        280
+        341
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -9028,7 +9376,15 @@
       ],
       [
         "src/views/card/components/Comment.tsx",
-        93
+        108
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        100
+      ],
+      [
+        "src/views/card/components/custom-fields/custom-fields.tsx",
+        123
       ],
       [
         "src/views/card/components/DeleteCardConfirmation.tsx",
@@ -9056,7 +9412,7 @@
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        82
+        87
       ],
       [
         "src/views/card/components/NewChecklistForm.tsx",
@@ -9072,11 +9428,11 @@
       ],
       [
         "src/views/card/index.tsx",
-        236
+        263
       ],
       [
         "src/views/card/index.tsx",
-        249
+        276
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -9168,15 +9524,19 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        76
+        67
       ],
       [
         "src/views/board/components/CardContextMoveListModal.tsx",
         42
       ],
       [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        136
+      ],
+      [
         "src/views/board/index.tsx",
-        321
+        382
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -9191,12 +9551,16 @@
         100
       ],
       [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        321
+      ],
+      [
         "src/views/public/board/CardModal.tsx",
         45
       ],
       [
         "src/views/public/board/index.tsx",
-        86
+        90
       ]
     ],
     "translation": "Prøv igen."
@@ -9208,7 +9572,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        193
+        185
       ]
     ],
     "translation": "Placering på listen (0 = først, lad feltet være tomt for sidst)"
@@ -9422,6 +9786,22 @@
     ],
     "translation": "Hurtig gevinst"
   },
+  "6jAi8c": {
+    "message": "Range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        181
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        186
+      ]
+    ],
+    "translation": "Interval"
+  },
   "6EWT6T": {
     "message": "Recruitment",
     "placeholders": {},
@@ -9464,6 +9844,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        643
+      ],
+      [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
         58
       ]
@@ -9477,7 +9861,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        640
+        651
       ]
     ],
     "translation": ""
@@ -9489,7 +9873,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        158
       ]
     ],
     "translation": "Fjern fra favoritter"
@@ -9507,7 +9891,6 @@
     "translation": "Fjern medlem"
   },
   "eps54V": {
-    "translation": "",
     "message": "Removed",
     "placeholders": {},
     "comments": [],
@@ -9524,7 +9907,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         42
       ]
-    ]
+    ],
+    "translation": ""
   },
   "BZkYSt": {
     "message": "removed {0} labels: <0>{labelList}</0>",
@@ -9604,7 +9988,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        61
+        63
       ]
     ],
     "translation": "Fjernet fra favoritter"
@@ -9720,7 +10104,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        245
+        251
       ]
     ],
     "translation": "Nulstil til rollens standardindstillinger"
@@ -9835,7 +10219,6 @@
     "translation": "Kør på din egen infrastruktur"
   },
   "RiQMUh": {
-    "translation": "",
     "message": "Running",
     "placeholders": {},
     "comments": [],
@@ -9844,10 +10227,10 @@
         "src/views/board/components/Card.tsx",
         177
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZQyeYU": {
-    "translation": "",
     "message": "Running on this card",
     "placeholders": {},
     "comments": [],
@@ -9856,7 +10239,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         342
       ]
-    ]
+    ],
+    "translation": ""
   },
   "YEOVrT": {
     "message": "SAML SSO",
@@ -9892,8 +10276,16 @@
         183
       ],
       [
+        "src/views/board/components/TimeTrackingSettingsForm.tsx",
+        149
+      ],
+      [
         "src/views/card/components/Comment.tsx",
-        202
+        224
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
+        184
       ],
       [
         "src/views/settings/components/Avatar.tsx",
@@ -10045,13 +10437,12 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        131
+        123
       ]
     ],
     "translation": "Vælg en liste"
   },
   "E5eC82": {
-    "translation": "",
     "message": "Select a member",
     "placeholders": {},
     "comments": [],
@@ -10060,7 +10451,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         110
       ]
-    ]
+    ],
+    "translation": ""
   },
   "NM2hyD": {
     "message": "Select a workspace",
@@ -10218,6 +10610,18 @@
     ],
     "translation": "Angiv forfaldsdato"
   },
+  "+9/nz4": {
+    "message": "Set filter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/Filters.tsx",
+        177
+      ]
+    ],
+    "translation": "Indstil filter"
+  },
   "2gHjVM": {
     "message": "Set Password",
     "placeholders": {},
@@ -10271,6 +10675,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/components/Dashboard.tsx",
+        207
+      ],
       [
         "src/components/SettingsLayout.tsx",
         102
@@ -10385,7 +10793,11 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        228
+        236
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        558
       ]
     ],
     "translation": "Vis på kortets forside"
@@ -10617,7 +11029,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        327
+        340
       ]
     ],
     "translation": ""
@@ -10716,7 +11128,6 @@
     "translation": "Start gratis. Opgrader, efterhånden som dit team vokser. Ingen skjulte gebyrer, ingen binding."
   },
   "UBj8RW": {
-    "translation": "",
     "message": "Start timer",
     "placeholders": {},
     "comments": [],
@@ -10725,7 +11136,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         502
       ]
-    ]
+    ],
+    "translation": ""
   },
   "lUlbS2": {
     "message": "Start your 14-day free trial, cancel anytime.",
@@ -10740,7 +11152,6 @@
     "translation": ""
   },
   "IzcP+r": {
-    "translation": "",
     "message": "Starting this timer will stop the timer on “{0}” and save its elapsed time.",
     "placeholders": {
       "0": [
@@ -10753,10 +11164,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         517
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Gwsani": {
-    "translation": "",
     "message": "Starting this timer will stop the timer on the inaccessible card and save its elapsed time.",
     "placeholders": {},
     "comments": [],
@@ -10765,7 +11176,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         516
       ]
-    ]
+    ],
+    "translation": ""
   },
   "uAQUqI": {
     "message": "Status",
@@ -10780,7 +11192,6 @@
     "translation": "Status"
   },
   "ygCKqB": {
-    "translation": "",
     "message": "Stop",
     "placeholders": {},
     "comments": [],
@@ -10789,10 +11200,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         361
       ]
-    ]
+    ],
+    "translation": ""
   },
   "hQk1gv": {
-    "translation": "",
     "message": "Stop and start",
     "placeholders": {},
     "comments": [],
@@ -10801,7 +11212,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         534
       ]
-    ]
+    ],
+    "translation": ""
   },
   "hQRttt": {
     "message": "Submit",
@@ -10979,11 +11391,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        543
+        618
       ],
       [
         "src/views/board/index.tsx",
-        580
+        655
       ]
     ],
     "translation": "Skabelon"
@@ -11151,7 +11563,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        32
+        37
       ]
     ],
     "translation": "Tekst"
@@ -11187,7 +11599,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        52
+        54
       ]
     ],
     "translation": "Tavlen er blevet arkiveret."
@@ -11215,7 +11627,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        53
+        55
       ]
     ],
     "translation": "Tavlen er fjernet fra arkivet."
@@ -11227,7 +11639,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        69
+        60
       ]
     ],
     "translation": "Kortet er blevet duplikeret."
@@ -11246,7 +11658,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        328
+        341
       ]
     ],
     "translation": ""
@@ -11328,7 +11740,6 @@
     "translation": "Siden, du leder efter, findes ikke eller er blevet flyttet."
   },
   "t24lpS": {
-    "translation": "",
     "message": "The start date must not be after the end date.",
     "placeholders": {},
     "comments": [],
@@ -11337,7 +11748,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         330
       ]
-    ]
+    ],
+    "translation": ""
   },
   "fQCrjt": {
     "message": "The visibility of your board has been set to {0}.",
@@ -11426,7 +11838,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        446
+        502
       ]
     ],
     "translation": "Dette board har endnu ingen brugerdefinerede felter."
@@ -11438,7 +11850,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        184
+        189
       ]
     ],
     "translation": "Denne tavle er privat eller findes ikke"
@@ -11480,7 +11892,6 @@
     "translation": "Dette medlems rettigheder er nulstillet til standardindstillingerne for rollen."
   },
   "oW3yYY": {
-    "translation": "",
     "message": "This month",
     "placeholders": {},
     "comments": [],
@@ -11489,10 +11900,10 @@
         "src/utils/timeTrackingLabels.ts",
         13
       ]
-    ]
+    ],
+    "translation": ""
   },
   "jkA2we": {
-    "translation": "",
     "message": "This quarter",
     "placeholders": {},
     "comments": [],
@@ -11501,7 +11912,8 @@
         "src/utils/timeTrackingLabels.ts",
         15
       ]
-    ]
+    ],
+    "translation": ""
   },
   "HQVm6e": {
     "message": "This URL has already been taken",
@@ -11528,7 +11940,6 @@
     "translation": "Denne URL er reserveret"
   },
   "yByRxz": {
-    "translation": "",
     "message": "This week",
     "placeholders": {},
     "comments": [],
@@ -11537,7 +11948,8 @@
         "src/utils/timeTrackingLabels.ts",
         10
       ]
-    ]
+    ],
+    "translation": ""
   },
   "OAYToL": {
     "message": "This will remove all custom member permissions in this workspace. Members will inherit permissions only from their roles.",
@@ -11624,7 +12036,6 @@
     "translation": "Dette brugernavn til arbejdsområdet er allerede taget"
   },
   "xYHlfW": {
-    "translation": "",
     "message": "This year",
     "placeholders": {},
     "comments": [],
@@ -11633,7 +12044,8 @@
         "src/utils/timeTrackingLabels.ts",
         17
       ]
-    ]
+    ],
+    "translation": ""
   },
   "pEb95p": {
     "message": "Ticket ID copied to clipboard",
@@ -11648,7 +12060,6 @@
     "translation": "Sags-ID kopieret til udklipsholderen"
   },
   "LhMjLm": {
-    "translation": "",
     "message": "Time",
     "placeholders": {},
     "comments": [],
@@ -11665,10 +12076,10 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         125
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Ebh8y/": {
-    "translation": "",
     "message": "Time entries",
     "placeholders": {},
     "comments": [],
@@ -11681,10 +12092,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         660
       ]
-    ]
+    ],
+    "translation": ""
   },
   "5YFXV7": {
-    "translation": "",
     "message": "Time report",
     "placeholders": {},
     "comments": [],
@@ -11693,10 +12104,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         194
       ]
-    ]
+    ],
+    "translation": ""
   },
   "SMjp8F": {
-    "translation": "",
     "message": "Time tracking",
     "placeholders": {},
     "comments": [],
@@ -11713,10 +12124,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         427
       ]
-    ]
+    ],
+    "translation": ""
   },
   "EMqDFj": {
-    "translation": "",
     "message": "Time tracking has been disabled. Existing history is preserved.",
     "placeholders": {},
     "comments": [],
@@ -11725,10 +12136,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         42
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Vvl2CI": {
-    "translation": "",
     "message": "Time tracking is now available on this board.",
     "placeholders": {},
     "comments": [],
@@ -11737,10 +12148,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         41
       ]
-    ]
+    ],
+    "translation": ""
   },
   "zHHNK3": {
-    "translation": "",
     "message": "Time tracking updated",
     "placeholders": {},
     "comments": [],
@@ -11749,10 +12160,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         39
       ]
-    ]
+    ],
+    "translation": ""
   },
   "obwKN+": {
-    "translation": "",
     "message": "Timer",
     "placeholders": {},
     "comments": [],
@@ -11761,10 +12172,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         539
       ]
-    ]
+    ],
+    "translation": ""
   },
   "dMbLQM": {
-    "translation": "",
     "message": "Timer on an inaccessible card",
     "placeholders": {},
     "comments": [],
@@ -11773,7 +12184,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         340
       ]
-    ]
+    ],
+    "translation": ""
   },
   "MHrjPM": {
     "message": "Title",
@@ -11794,26 +12206,30 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        180
+        172
       ]
     ],
     "translation": "Titel (valgfrit)"
   },
   "/jQctM": {
-    "translation": "Til",
     "message": "To",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        265
+        264
       ],
       [
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        267
+        266
+      ],
+      [
+        "src/views/board/components/TimeTrackingReportModal.tsx",
+        242
       ]
-    ]
+    ],
+    "translation": "Til"
   },
   "Se/UIp": {
     "message": "To Do",
@@ -11832,7 +12248,6 @@
     "translation": "Opgaver"
   },
   "ecUA8p": {
-    "translation": "",
     "message": "Today",
     "placeholders": {},
     "comments": [],
@@ -11841,7 +12256,8 @@
         "src/utils/timeTrackingLabels.ts",
         8
       ]
-    ]
+    ],
+    "translation": ""
   },
   "4gAX8s": {
     "message": "Toggle menu",
@@ -11868,7 +12284,6 @@
     "translation": "Token er påkrævet"
   },
   "/kXBrK": {
-    "translation": "",
     "message": "Total time",
     "placeholders": {},
     "comments": [],
@@ -11877,7 +12292,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         337
       ]
-    ]
+    ],
+    "translation": ""
   },
   "eEQyz+": {
     "message": "Track all card changes with detailed activity history.",
@@ -11956,7 +12372,6 @@
     "translation": "Betroet af teams med højt tempo<0/>over hele verden"
   },
   "KDw4GX": {
-    "translation": "",
     "message": "Try again",
     "placeholders": {},
     "comments": [],
@@ -11989,7 +12404,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         677
       ]
-    ]
+    ],
+    "translation": ""
   },
   "bZSICm": {
     "message": "Unable to add checklist item",
@@ -12022,13 +12438,12 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        248
+        275
       ]
     ],
     "translation": "Kunne ikke tilføje etiket"
   },
   "zvcXZs": {
-    "translation": "",
     "message": "Unable to add time",
     "placeholders": {},
     "comments": [],
@@ -12037,7 +12452,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         159
       ]
-    ]
+    ],
+    "translation": ""
   },
   "887Wwx": {
     "message": "Unable to clear custom field",
@@ -12046,7 +12462,7 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        97
+        122
       ]
     ],
     "translation": "Kunne ikke rydde det brugerdefinerede felt"
@@ -12082,7 +12498,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        319
+        380
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -12094,7 +12510,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        84
+        88
       ]
     ],
     "translation": "Kunne ikke kopiere link"
@@ -12106,7 +12522,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        195
+        200
       ]
     ],
     "translation": "Kunne ikke oprette kort"
@@ -12130,7 +12546,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        405
+        451
       ]
     ],
     "translation": "Kunne ikke oprette det brugerdefinerede felt"
@@ -12142,7 +12558,7 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        93
+        94
       ]
     ],
     "translation": "Kunne ikke oprette liste"
@@ -12252,7 +12668,6 @@
     "translation": "Kunne ikke slette kommentar"
   },
   "Q9E45Q": {
-    "translation": "",
     "message": "Unable to delete time entry",
     "placeholders": {},
     "comments": [],
@@ -12261,7 +12676,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         173
       ]
-    ]
+    ],
+    "translation": ""
   },
   "23nvb2": {
     "message": "Unable to delete webhook",
@@ -12276,7 +12692,6 @@
     "translation": "Kunne ikke slette webhook"
   },
   "4IUsF2": {
-    "translation": "",
     "message": "Unable to discard timer",
     "placeholders": {},
     "comments": [],
@@ -12285,7 +12700,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         188
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Oo4E6p": {
     "message": "Unable to duplicate card",
@@ -12294,7 +12710,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        75
+        66
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -12304,7 +12720,6 @@
     "translation": "Kunne ikke duplikere kort"
   },
   "IIaGLD": {
-    "translation": "",
     "message": "Unable to load members.",
     "placeholders": {},
     "comments": [],
@@ -12313,10 +12728,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         565
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZvZ7/B": {
-    "translation": "",
     "message": "Unable to load more time entries",
     "placeholders": {},
     "comments": [],
@@ -12329,10 +12744,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         320
       ]
-    ]
+    ],
+    "translation": ""
   },
   "vsYAKj": {
-    "translation": "",
     "message": "Unable to load the active timer.",
     "placeholders": {},
     "comments": [],
@@ -12341,10 +12756,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         389
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ka1erB": {
-    "translation": "",
     "message": "Unable to load the time report.",
     "placeholders": {},
     "comments": [],
@@ -12353,10 +12768,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         459
       ]
-    ]
+    ],
+    "translation": ""
   },
   "EK8TGG": {
-    "translation": "",
     "message": "Unable to load time entries.",
     "placeholders": {},
     "comments": [],
@@ -12369,10 +12784,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         668
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZfaaiP": {
-    "translation": "",
     "message": "Unable to load time tracking settings.",
     "placeholders": {},
     "comments": [],
@@ -12381,10 +12796,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         82
       ]
-    ]
+    ],
+    "translation": ""
   },
   "563CZw": {
-    "translation": "",
     "message": "Unable to load time tracking.",
     "placeholders": {},
     "comments": [],
@@ -12393,7 +12808,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         407
       ]
-    ]
+    ],
+    "translation": ""
   },
   "d196/6": {
     "message": "Unable to move board",
@@ -12480,7 +12896,6 @@
     "translation": "Kunne ikke starte betaling"
   },
   "VyfeA+": {
-    "translation": "",
     "message": "Unable to start timer",
     "placeholders": {},
     "comments": [],
@@ -12489,10 +12904,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         180
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Je4xFx": {
-    "translation": "",
     "message": "Unable to stop timer",
     "placeholders": {},
     "comments": [],
@@ -12501,7 +12916,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         184
       ]
-    ]
+    ],
+    "translation": ""
   },
   "KNK33q": {
     "message": "Unable to test webhook",
@@ -12526,7 +12942,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        71
+        73
       ]
     ],
     "translation": "Kunne ikke opdatere tavle"
@@ -12562,11 +12978,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        279
+        340
       ],
       [
         "src/views/card/index.tsx",
-        235
+        262
       ]
     ],
     "translation": "Kunne ikke opdatere kort"
@@ -12602,7 +13018,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        92
+        107
       ]
     ],
     "translation": "Kunne ikke opdatere kommentar"
@@ -12614,7 +13030,7 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        75
+        99
       ]
     ],
     "translation": "Kunne ikke opdatere det brugerdefinerede felt"
@@ -12626,7 +13042,7 @@
     "origin": [
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        81
+        89
       ]
     ],
     "translation": "Kunne ikke opdatere de brugerdefinerede felter"
@@ -12662,7 +13078,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        223
+        284
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -12678,7 +13094,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        81
+        86
       ]
     ],
     "translation": "Kunne ikke opdatere medlemmer"
@@ -12712,7 +13128,6 @@
     "translation": "Kunne ikke opdatere rolle"
   },
   "cdvzpG": {
-    "translation": "",
     "message": "Unable to update time entry",
     "placeholders": {},
     "comments": [],
@@ -12721,10 +13136,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         166
       ]
-    ]
+    ],
+    "translation": ""
   },
   "MKM8bX": {
-    "translation": "",
     "message": "Unable to update time tracking",
     "placeholders": {},
     "comments": [],
@@ -12733,7 +13148,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         48
       ]
-    ]
+    ],
+    "translation": ""
   },
   "V1o9Jo": {
     "message": "Unable to update webhook",
@@ -12754,13 +13170,12 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        138
       ]
     ],
     "translation": "Fjern tavle fra arkiv"
   },
   "x0vUTB": {
-    "translation": "",
     "message": "Unarchive this board before enabling time tracking.",
     "placeholders": {},
     "comments": [],
@@ -12769,7 +13184,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         126
       ]
-    ]
+    ],
+    "translation": ""
   },
   "E8zYtd": {
     "message": "unassigned <0>{0}</0> from the card",
@@ -12816,7 +13232,6 @@
     "translation": "Utilgængeligt kort"
   },
   "aGbZ2d": {
-    "translation": "",
     "message": "Unavailable member",
     "placeholders": {},
     "comments": [],
@@ -12837,7 +13252,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         697
       ]
-    ]
+    ],
+    "translation": ""
   },
   "9nuvQ0": {
     "message": "Unchecked",
@@ -12850,11 +13266,11 @@
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        23
+        34
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        224
+        295
       ]
     ],
     "translation": "Ikke markeret"
@@ -12866,7 +13282,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        191
+        233
       ]
     ],
     "translation": "Ikke markeret eller ikke angivet"
@@ -13367,6 +13783,22 @@
     ],
     "translation": "Brugeren er allerede medlem af dette arbejdsområde"
   },
+  "wMHvYH": {
+    "message": "Value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        243
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        246
+      ]
+    ],
+    "translation": "Værdi"
+  },
   "vSJd18": {
     "message": "Video",
     "placeholders": {},
@@ -13422,7 +13854,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        153
+        157
       ]
     ],
     "translation": "Kun visning"
@@ -13446,7 +13878,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        187
+        192
       ]
     ],
     "translation": "Se arbejdsområde"
@@ -13738,7 +14170,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        543
+        618
       ],
       [
         "src/views/boards/index.tsx",
@@ -13750,7 +14182,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        125
+        129
       ],
       [
         "src/views/public/boards/index.tsx",
@@ -14024,7 +14456,6 @@
     "translation": "Ja, vi tilbyder et gratis abonnement for altid til individuel brug. Ingen begrænsninger, ingen betalingsmure, ingen grænser."
   },
   "y/0uwd": {
-    "translation": "",
     "message": "Yesterday",
     "placeholders": {},
     "comments": [],
@@ -14033,7 +14464,8 @@
         "src/utils/timeTrackingLabels.ts",
         9
       ]
-    ]
+    ],
+    "translation": ""
   },
   "RtlIYB": {
     "message": "You are about to change your password.",
@@ -14139,11 +14571,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        618
+        706
       ],
       [
         "src/views/board/index.tsx",
-        676
+        764
       ],
       [
         "src/views/boards/components/BoardsList.tsx",
@@ -14161,7 +14593,6 @@
     "translation": "Du har ikke tilladelse"
   },
   "rfdrJY": {
-    "translation": "",
     "message": "You don't have permission to change this setting.",
     "placeholders": {},
     "comments": [],
@@ -14170,7 +14601,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         132
       ]
-    ]
+    ],
+    "translation": ""
   },
   "p/hk9N": {
     "message": "You have been logged in successfully.",
@@ -14267,7 +14699,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        273
+        275
       ]
     ],
     "translation": "Din konto har allerede en adgangskode. Du kan ændre den under dine kontoindstillinger."
@@ -14563,177 +14995,5 @@
       ]
     ],
     "translation": "YouTube-URL"
-  },
-  "ABZuOF": {
-    "message": "Archive this option? Existing card values will keep it until changed.",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        340
-      ]
-    ],
-    "translation": "Arkivér denne valgmulighed? Eksisterende kortværdier beholder den, indtil de ændres."
-  },
-  "NawEr2": {
-    "message": "After",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        186
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        182
-      ]
-    ],
-    "translation": "Efter"
-  },
-  "DB8zMK": {
-    "message": "Apply",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        307
-      ]
-    ],
-    "translation": "Anvend"
-  },
-  "EmSrGB": {
-    "message": "Before",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        185
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        182
-      ]
-    ],
-    "translation": "Før"
-  },
-  "xCJdfg": {
-    "message": "Clear",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        289
-      ]
-    ],
-    "translation": "Ryd"
-  },
-  "/5mghO": {
-    "message": "Contains",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        178
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        172
-      ]
-    ],
-    "translation": "Indeholder"
-  },
-  "f9yJNM": {
-    "message": "Equals",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        181
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        176
-      ]
-    ],
-    "translation": "Er lig med"
-  },
-  "wP7Cju": {
-    "message": "Filter by value",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        213
-      ]
-    ],
-    "translation": "Filtrer efter værdi"
-  },
-  "tgPwON": {
-    "message": "Operator",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        224
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        226
-      ]
-    ],
-    "translation": "Operator"
-  },
-  "6jAi8c": {
-    "message": "Range",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        182
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        187
-      ]
-    ],
-    "translation": "Interval"
-  },
-  "+9/nz4": {
-    "message": "Set filter",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/Filters.tsx",
-        166
-      ]
-    ],
-    "translation": "Indstil filter"
-  },
-  "wMHvYH": {
-    "message": "Value",
-    "placeholders": {},
-    "comments": [],
-    "origin": [
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        244
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
-        247
-      ]
-    ],
-    "translation": "Værdi"
   }
 }

@@ -5837,14 +5837,18 @@
     "translation": "Gratis for altid"
   },
   "ejVYRQ": {
-    "translation": "",
+    "translation": "Fra",
     "message": "From",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        230
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        244
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        247
       ]
     ]
   },
@@ -11796,14 +11800,18 @@
     "translation": "Titel (valgfrit)"
   },
   "/jQctM": {
-    "translation": "",
+    "translation": "Til",
     "message": "To",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        242
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        265
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        267
       ]
     ]
   },
@@ -14567,5 +14575,165 @@
       ]
     ],
     "translation": "Arkivér denne valgmulighed? Eksisterende kortværdier beholder den, indtil de ændres."
+  },
+  "NawEr2": {
+    "message": "After",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        186
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        182
+      ]
+    ],
+    "translation": "Efter"
+  },
+  "DB8zMK": {
+    "message": "Apply",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        307
+      ]
+    ],
+    "translation": "Anvend"
+  },
+  "EmSrGB": {
+    "message": "Before",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        185
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        182
+      ]
+    ],
+    "translation": "Før"
+  },
+  "xCJdfg": {
+    "message": "Clear",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        289
+      ]
+    ],
+    "translation": "Ryd"
+  },
+  "/5mghO": {
+    "message": "Contains",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        178
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        172
+      ]
+    ],
+    "translation": "Indeholder"
+  },
+  "f9yJNM": {
+    "message": "Equals",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        181
+      ],
+      [
+        "src/views/board/components/Filters.tsx",
+        176
+      ]
+    ],
+    "translation": "Er lig med"
+  },
+  "wP7Cju": {
+    "message": "Filter by value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        213
+      ]
+    ],
+    "translation": "Filtrer efter værdi"
+  },
+  "tgPwON": {
+    "message": "Operator",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        224
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        226
+      ]
+    ],
+    "translation": "Operator"
+  },
+  "6jAi8c": {
+    "message": "Range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        182
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        187
+      ]
+    ],
+    "translation": "Interval"
+  },
+  "+9/nz4": {
+    "message": "Set filter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/Filters.tsx",
+        166
+      ]
+    ],
+    "translation": "Indstil filter"
+  },
+  "wMHvYH": {
+    "message": "Value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        244
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        247
+      ]
+    ],
+    "translation": "Værdi"
   }
 }

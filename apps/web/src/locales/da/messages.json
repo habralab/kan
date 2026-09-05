@@ -6,7 +6,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        175
+        153
       ]
     ],
     "translation": " (redigeret)"
@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        348
+        321
       ]
     ],
     "translation": "{0} | {1}"
@@ -114,7 +114,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        65
+        63
       ]
     ],
     "translation": "{0} er føjet til dine favoritter."
@@ -130,7 +130,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        66
+        64
       ]
     ],
     "translation": "{0} er fjernet fra dine favoritter."
@@ -146,7 +146,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        569
+        558
       ]
     ],
     "translation": "{0} etiketter"
@@ -162,7 +162,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        646
+        571
       ]
     ],
     "translation": "{0} blev ikke fundet"
@@ -418,16 +418,8 @@
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        34
-      ],
-      [
         "src/views/boards/index.tsx",
         33
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
-        44
       ],
       [
         "src/views/settings/components/NewWebhookModal.tsx",
@@ -447,7 +439,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        509
+        476
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -575,7 +567,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        207
+        185
       ],
       [
         "src/views/card/components/NewCommentForm.tsx",
@@ -643,7 +635,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        148
+        138
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -675,7 +667,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        158
+        138
       ]
     ],
     "translation": "Føj til favoritter"
@@ -842,7 +834,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        62
+        60
       ]
     ],
     "translation": "Føjet til favoritter"
@@ -1302,7 +1294,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        118
       ]
     ],
     "translation": "Arkivér tavle"
@@ -1349,24 +1341,8 @@
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/custom-fields/custom-field-badges.tsx",
-        72
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        173
-      ],
-      [
         "src/views/boards/index.tsx",
         34
-      ],
-      [
-        "src/views/card/components/custom-fields/custom-fields.tsx",
-        197
-      ],
-      [
-        "src/views/card/components/custom-fields/custom-fields.tsx",
-        316
       ]
     ],
     "translation": "Arkiveret"
@@ -1542,11 +1518,11 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        632
+        621
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        633
+        622
       ]
     ],
     "translation": ""
@@ -1785,15 +1761,15 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        618
+        543
       ],
       [
         "src/views/card/index.tsx",
-        348
+        321
       ],
       [
         "src/views/public/board/index.tsx",
-        129
+        125
       ]
     ],
     "translation": "Tavle"
@@ -1818,7 +1794,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        51
+        49
       ]
     ],
     "translation": "Tavle arkiveret"
@@ -1842,7 +1818,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        636
+        561
       ]
     ],
     "translation": ""
@@ -1878,7 +1854,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        186
+        181
       ]
     ],
     "translation": "Tavlen blev ikke fundet"
@@ -1890,7 +1866,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        187
+        167
       ]
     ],
     "translation": ""
@@ -1914,7 +1890,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        52
+        50
       ]
     ],
     "translation": "Tavle fjernet fra arkivet"
@@ -1954,7 +1930,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        83
+        79
       ]
     ],
     "translation": "Tavlens URL er kopieret til udklipsholderen"
@@ -2318,11 +2294,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        158
+        152
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        47
+        41
       ]
     ],
     "translation": "Kan redigere medlemsroller og rettigheder"
@@ -2366,11 +2342,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        157
+        151
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        46
+        40
       ]
     ],
     "translation": "Kan invitere medlemmer"
@@ -2414,11 +2390,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        159
+        153
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        48
+        42
       ]
     ],
     "translation": "Kan fjerne medlemmer"
@@ -2494,11 +2470,11 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        156
+        150
       ],
       [
         "src/views/settings/components/RolePermissions.tsx",
-        45
+        39
       ]
     ],
     "translation": "Kan se medlemmer"
@@ -2550,11 +2526,7 @@
       ],
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        277
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        205
+        267
       ],
       [
         "src/views/board/components/DeleteBoardConfirmation.tsx",
@@ -2565,12 +2537,8 @@
         99
       ],
       [
-        "src/views/board/components/TimeTrackingSettingsForm.tsx",
-        138
-      ],
-      [
         "src/views/card/components/Comment.tsx",
-        217
+        195
       ],
       [
         "src/views/card/components/DeleteCardConfirmation.tsx",
@@ -2583,22 +2551,6 @@
       [
         "src/views/card/components/DeleteCommentConfirmation.tsx",
         77
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
-        176
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        525
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        573
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        743
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -2641,20 +2593,8 @@
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        292
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        372
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        488
-      ],
-      [
         "src/views/card/index.tsx",
-        348
+        321
       ]
     ],
     "translation": "Kort"
@@ -2666,7 +2606,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        58
+        67
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2706,11 +2646,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        411
+        384
       ],
       [
         "src/views/card/index.tsx",
-        448
+        421
       ]
     ],
     "translation": "Kortet blev ikke fundet"
@@ -2722,7 +2662,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        168
+        167
       ]
     ],
     "translation": ""
@@ -2734,7 +2674,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        437
+        424
       ]
     ],
     "translation": "Korttitel"
@@ -2746,7 +2686,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        375
+        314
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2894,7 +2834,7 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        201
+        190
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
@@ -2902,7 +2842,7 @@
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        242
+        223
       ]
     ],
     "translation": "Markeret"
@@ -3022,7 +2962,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        315
+        227
       ]
     ],
     "translation": "Ryd filtre"
@@ -3057,24 +2997,12 @@
         281
       ],
       [
-        "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        425
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        200
-      ],
-      [
-        "src/views/board/components/TimeTrackingSettingsForm.tsx",
-        69
-      ],
-      [
         "src/views/card/index.tsx",
-        402
+        375
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        178
+        172
       ],
       [
         "src/views/settings/components/NewApiKeyModal.tsx",
@@ -3154,7 +3082,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        183
+        161
       ]
     ],
     "translation": ""
@@ -3519,7 +3447,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        249
+        257
       ]
     ],
     "translation": "Kopiér tjeklister"
@@ -3531,7 +3459,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        267
+        279
       ]
     ],
     "translation": "Kopiér brugerdefinerede felter"
@@ -3543,7 +3471,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        213
+        221
       ]
     ],
     "translation": "Kopiér etiketter"
@@ -3567,7 +3495,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        231
+        239
       ]
     ],
     "translation": "Kopiér medlemmer"
@@ -3623,11 +3551,11 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        664
+        653
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        157
+        156
       ]
     ],
     "translation": "Opret en til"
@@ -3651,7 +3579,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        674
+        663
       ]
     ],
     "translation": "Opret kort"
@@ -3699,7 +3627,7 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        169
+        168
       ]
     ],
     "translation": "Opret liste"
@@ -3743,7 +3671,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        531
+        520
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -3759,11 +3687,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        113
+        99
       ],
       [
         "src/views/board/index.tsx",
-        773
+        685
       ]
     ],
     "translation": "Opret ny liste"
@@ -3948,7 +3876,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        111
+        110
       ],
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
@@ -3956,7 +3884,7 @@
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        295
+        275
       ]
     ],
     "translation": "Brugerdefinerede felter"
@@ -4095,14 +4023,6 @@
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         36
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        486
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
-        150
       ]
     ],
     "translation": "Dato"
@@ -4177,14 +4097,6 @@
         83
       ],
       [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        727
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        755
-      ],
-      [
         "src/views/settings/components/DeleteWebhookConfirmation.tsx",
         82
       ],
@@ -4222,7 +4134,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        169
+        149
       ]
     ],
     "translation": "Slet tavle"
@@ -4238,7 +4150,7 @@
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        153
+        152
       ]
     ],
     "translation": "Slet kort"
@@ -4262,7 +4174,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        135
+        120
       ]
     ],
     "translation": "Slet kommentar"
@@ -4286,7 +4198,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        169
+        149
       ]
     ],
     "translation": "Slet skabelon"
@@ -4610,7 +4522,7 @@
       ],
       [
         "src/views/board/components/CardContextMembersModal.tsx",
-        88
+        68
       ],
       [
         "src/views/boards/components/TemplateBoards.tsx",
@@ -4670,15 +4582,15 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        254
+        171
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        586
+        575
       ],
       [
         "src/views/card/index.tsx",
-        174
+        153
       ]
     ],
     "translation": "Forfaldsdato"
@@ -4690,7 +4602,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        155
+        132
       ]
     ],
     "translation": "Forfalder næste måned"
@@ -4702,7 +4614,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        150
+        127
       ]
     ],
     "translation": "Forfalder i næste uge"
@@ -4714,7 +4626,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        140
+        117
       ]
     ],
     "translation": "Forfalder i dag"
@@ -4726,7 +4638,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        145
+        122
       ]
     ],
     "translation": "Forfalder i morgen"
@@ -4738,7 +4650,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        289
+        279
       ]
     ],
     "translation": "Duplikér"
@@ -4750,7 +4662,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        103
+        111
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
@@ -4770,7 +4682,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        289
+        279
       ]
     ],
     "translation": "Duplikerer…"
@@ -4783,10 +4695,6 @@
       [
         "src/components/YouTubeEmbed/YouTubeDropdown.tsx",
         42
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        718
       ],
       [
         "src/views/settings/components/WebhookList.tsx",
@@ -4802,7 +4710,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        109
       ],
       [
         "src/views/board/components/UpdateBoardSlugForm.tsx",
@@ -4818,7 +4726,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        126
+        111
       ]
     ],
     "translation": "Rediger kommentar"
@@ -4842,7 +4750,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        168
+        162
       ],
       [
         "src/views/members/index.tsx",
@@ -4998,7 +4906,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        192
+        200
       ]
     ],
     "translation": "Slutningen af listen"
@@ -5803,7 +5711,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        309
+        221
       ]
     ],
     "translation": "Filter"
@@ -6059,7 +5967,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        758
+        670
       ]
     ],
     "translation": "Kom i gang ved at oprette en ny liste"
@@ -6494,10 +6402,6 @@
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        541
-      ],
-      [
         "src/views/boards/index.tsx",
         83
       ]
@@ -6795,7 +6699,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        120
+        115
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -6960,15 +6864,11 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        238
+        155
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        535
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        490
+        524
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -6976,7 +6876,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        154
+        133
       ]
     ],
     "translation": "Etiketter"
@@ -7221,7 +7121,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        373
+        312
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -7233,7 +7133,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        81
+        77
       ]
     ],
     "translation": "Link kopieret"
@@ -7245,23 +7145,11 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        109
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        274
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        373
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        489
+        117
       ],
       [
         "src/views/card/index.tsx",
-        145
+        124
       ]
     ],
     "translation": "Liste"
@@ -7277,7 +7165,7 @@
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        145
+        144
       ]
     ],
     "translation": "Listenavn"
@@ -7301,7 +7189,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        246
+        163
       ]
     ],
     "translation": "Lister"
@@ -7329,7 +7217,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        580
+        579
       ]
     ],
     "translation": "Indlæs flere aktiviteter"
@@ -7341,7 +7229,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        186
+        180
       ]
     ],
     "translation": "Indlæser rettigheder..."
@@ -7353,7 +7241,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        580
+        579
       ]
     ],
     "translation": "Indlæser..."
@@ -7437,7 +7325,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        100
+        98
       ]
     ],
     "translation": "Gør til skabelon"
@@ -7449,7 +7337,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextMembersModal.tsx",
-        71
+        51
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
@@ -7552,28 +7440,12 @@
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        254
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        371
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        487
-      ],
-      [
         "src/views/card/components/ActivityList.tsx",
         55
       ],
       [
         "src/views/card/components/ActivityList.tsx",
         88
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
-        102
       ],
       [
         "src/views/members/index.tsx",
@@ -7617,23 +7489,19 @@
       ],
       [
         "src/views/board/components/Filters.tsx",
-        230
+        147
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        493
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        341
+        482
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        121
+        116
       ],
       [
         "src/views/card/index.tsx",
-        164
+        143
       ],
       [
         "src/views/members/index.tsx",
@@ -7845,7 +7713,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        129
       ]
     ],
     "translation": "Flyt til arbejdsområde"
@@ -7996,7 +7864,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        420
+        407
       ]
     ],
     "translation": "Nyt kort"
@@ -8044,11 +7912,11 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        129
+        128
       ],
       [
         "src/views/board/index.tsx",
-        722
+        634
       ]
     ],
     "translation": "Ny liste"
@@ -8232,7 +8100,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        160
+        137
       ]
     ],
     "translation": "Ingen datoer"
@@ -8292,7 +8160,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        754
+        666
       ]
     ],
     "translation": "Ingen lister"
@@ -8304,7 +8172,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        759
+        671
       ]
     ],
     "translation": "Der er endnu ikke oprettet nogen lister"
@@ -8344,7 +8212,7 @@
     "origin": [
       [
         "src/views/settings/components/RolePermissions.tsx",
-        116
+        110
       ]
     ],
     "translation": "Der er endnu ikke fundet nogen roller for dette arbejdsområde."
@@ -8392,11 +8260,11 @@
     "origin": [
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        194
+        176
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        241
+        222
       ]
     ],
     "translation": "Ikke angivet"
@@ -8616,7 +8484,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        135
+        112
       ]
     ],
     "translation": "Overskredet"
@@ -8759,38 +8627,6 @@
     "comments": [],
     "origin": [
       [
-        "src/views/board/components/Card.tsx",
-        208
-      ],
-      [
-        "src/views/board/components/CardContextMembersModal.tsx",
-        38
-      ],
-      [
-        "src/views/board/components/Filters.tsx",
-        103
-      ],
-      [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        31
-      ],
-      [
-        "src/views/card/components/Comment.tsx",
-        164
-      ],
-      [
-        "src/views/card/components/MemberSelector.tsx",
-        134
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
-        41
-      ],
-      [
-        "src/views/card/index.tsx",
-        112
-      ],
-      [
         "src/views/members/index.tsx",
         230
       ]
@@ -8896,7 +8732,7 @@
     "origin": [
       [
         "src/views/settings/components/RolePermissions.tsx",
-        125
+        119
       ]
     ],
     "translation": "Rettighed"
@@ -9124,23 +8960,15 @@
       ],
       [
         "src/views/board/components/BoardDropdown.tsx",
-        74
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        82
-      ],
-      [
-        "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        406
+        72
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        203
+        198
       ],
       [
         "src/views/board/components/NewListForm.tsx",
-        95
+        94
       ],
       [
         "src/views/board/components/NewTemplateForm.tsx",
@@ -9160,11 +8988,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        285
+        224
       ],
       [
         "src/views/board/index.tsx",
-        341
+        280
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -9196,15 +9024,7 @@
       ],
       [
         "src/views/card/components/Comment.tsx",
-        108
-      ],
-      [
-        "src/views/card/components/custom-fields/custom-fields.tsx",
-        76
-      ],
-      [
-        "src/views/card/components/custom-fields/custom-fields.tsx",
-        98
+        93
       ],
       [
         "src/views/card/components/DeleteCardConfirmation.tsx",
@@ -9232,7 +9052,7 @@
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        87
+        82
       ],
       [
         "src/views/card/components/NewChecklistForm.tsx",
@@ -9248,11 +9068,11 @@
       ],
       [
         "src/views/card/index.tsx",
-        263
+        236
       ],
       [
         "src/views/card/index.tsx",
-        276
+        249
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -9344,19 +9164,15 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        67
+        76
       ],
       [
         "src/views/board/components/CardContextMoveListModal.tsx",
         42
       ],
       [
-        "src/views/board/components/TimeTrackingReportModal.tsx",
-        136
-      ],
-      [
         "src/views/board/index.tsx",
-        382
+        321
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -9371,16 +9187,12 @@
         100
       ],
       [
-        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
-        321
-      ],
-      [
         "src/views/public/board/CardModal.tsx",
         45
       ],
       [
         "src/views/public/board/index.tsx",
-        90
+        86
       ]
     ],
     "translation": "Prøv igen."
@@ -9392,7 +9204,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        185
+        193
       ]
     ],
     "translation": "Placering på listen (0 = først, lad feltet være tomt for sidst)"
@@ -9661,7 +9473,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        651
+        640
       ]
     ],
     "translation": ""
@@ -9673,7 +9485,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        158
+        138
       ]
     ],
     "translation": "Fjern fra favoritter"
@@ -9788,7 +9600,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        63
+        61
       ]
     ],
     "translation": "Fjernet fra favoritter"
@@ -9904,7 +9716,7 @@
     "origin": [
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
-        251
+        245
       ]
     ],
     "translation": "Nulstil til rollens standardindstillinger"
@@ -10076,16 +9888,8 @@
         183
       ],
       [
-        "src/views/board/components/TimeTrackingSettingsForm.tsx",
-        149
-      ],
-      [
         "src/views/card/components/Comment.tsx",
-        224
-      ],
-      [
-        "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
-        184
+        202
       ],
       [
         "src/views/settings/components/Avatar.tsx",
@@ -10237,7 +10041,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        123
+        131
       ]
     ],
     "translation": "Vælg en liste"
@@ -10809,7 +10613,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        340
+        327
       ]
     ],
     "translation": ""
@@ -11171,11 +10975,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        618
+        543
       ],
       [
         "src/views/board/index.tsx",
-        655
+        580
       ]
     ],
     "translation": "Skabelon"
@@ -11379,7 +11183,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        54
+        52
       ]
     ],
     "translation": "Tavlen er blevet arkiveret."
@@ -11407,7 +11211,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        55
+        53
       ]
     ],
     "translation": "Tavlen er fjernet fra arkivet."
@@ -11419,7 +11223,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        60
+        69
       ]
     ],
     "translation": "Kortet er blevet duplikeret."
@@ -11438,7 +11242,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        341
+        328
       ]
     ],
     "translation": ""
@@ -11630,7 +11434,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        189
+        184
       ]
     ],
     "translation": "Denne tavle er privat eller findes ikke"
@@ -11986,7 +11790,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        172
+        180
       ]
     ],
     "translation": "Titel (valgfrit)"
@@ -12210,7 +12014,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        275
+        248
       ]
     ],
     "translation": "Kunne ikke tilføje etiket"
@@ -12270,7 +12074,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        380
+        319
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -12282,7 +12086,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        88
+        84
       ]
     ],
     "translation": "Kunne ikke kopiere link"
@@ -12294,7 +12098,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        200
+        195
       ]
     ],
     "translation": "Kunne ikke oprette kort"
@@ -12330,7 +12134,7 @@
     "origin": [
       [
         "src/views/board/components/NewListForm.tsx",
-        94
+        93
       ]
     ],
     "translation": "Kunne ikke oprette liste"
@@ -12482,7 +12286,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDuplicateModal.tsx",
-        66
+        75
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -12714,7 +12518,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        73
+        71
       ]
     ],
     "translation": "Kunne ikke opdatere tavle"
@@ -12750,11 +12554,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        340
+        279
       ],
       [
         "src/views/card/index.tsx",
-        262
+        235
       ]
     ],
     "translation": "Kunne ikke opdatere kort"
@@ -12790,7 +12594,7 @@
     "origin": [
       [
         "src/views/card/components/Comment.tsx",
-        107
+        92
       ]
     ],
     "translation": "Kunne ikke opdatere kommentar"
@@ -12850,7 +12654,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        284
+        223
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -12866,7 +12670,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        86
+        81
       ]
     ],
     "translation": "Kunne ikke opdatere medlemmer"
@@ -12942,7 +12746,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        118
       ]
     ],
     "translation": "Fjern tavle fra arkiv"
@@ -13042,7 +12846,7 @@
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
-        243
+        224
       ]
     ],
     "translation": "Ikke markeret"
@@ -13054,7 +12858,7 @@
     "origin": [
       [
         "src/views/board/components/Filters.tsx",
-        202
+        191
       ]
     ],
     "translation": "Ikke markeret eller ikke angivet"
@@ -13610,7 +13414,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        157
+        153
       ]
     ],
     "translation": "Kun visning"
@@ -13634,7 +13438,7 @@
     "origin": [
       [
         "src/views/public/board/index.tsx",
-        192
+        187
       ]
     ],
     "translation": "Se arbejdsområde"
@@ -13926,7 +13730,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        618
+        543
       ],
       [
         "src/views/boards/index.tsx",
@@ -13938,7 +13742,7 @@
       ],
       [
         "src/views/public/board/index.tsx",
-        129
+        125
       ],
       [
         "src/views/public/boards/index.tsx",
@@ -14327,11 +14131,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        706
+        618
       ],
       [
         "src/views/board/index.tsx",
-        764
+        676
       ],
       [
         "src/views/boards/components/BoardsList.tsx",
@@ -14751,5 +14555,17 @@
       ]
     ],
     "translation": "YouTube-URL"
+  },
+  "ABZuOF": {
+    "message": "Archive this option? Existing card values will keep it until changed.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        340
+      ]
+    ],
+    "translation": "Arkivér denne valgmulighed? Eksisterende kortværdier beholder den, indtil de ændres."
   }
 }

@@ -9,3 +9,5 @@ Screenshots for `habralab/kan` commit `5240798c` using the synthetic
   the clear action inside a group.
 - `02-filter-groups-mobile-dark.png` — the same group summary at a mobile
   viewport.
+- `filter-badge-before-after.png` — an enlarged before/after comparison of the
+  active-filter count badge alignment.

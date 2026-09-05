@@ -37,6 +37,8 @@ export class CardMoveBlockedByTimeTrackingError extends Error {
   }
 }
 
+type dbTransaction = Parameters<Parameters<dbClient["transaction"]>[0]>[0];
+
 export const getCount = async (db: dbClient) => {
   const result = await db
     .select({ count: count() })
@@ -738,6 +740,9 @@ export const reorder = async (
     newIndex: number | undefined;
     cardId: number;
   },
+  options?: {
+    beforeReorder?: (transaction: dbTransaction) => Promise<void>;
+  },
 ) => {
   return db.transaction(async (tx) => {
     // Worklog and timer creation take a shared lock on this row before
@@ -807,6 +812,8 @@ export const reorder = async (
       if (worklog || activeTimer)
         throw new CardMoveBlockedByTimeTrackingError();
     }
+
+    if (options?.beforeReorder) await options.beforeReorder(tx);
 
     let newIndex = args.newIndex;
 

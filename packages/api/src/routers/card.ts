@@ -972,14 +972,7 @@ export const cardRouter = createTRPCRouter({
             code: "CONFLICT",
             message: `Cards with time entries or active timers cannot be moved between boards`,
           });
-
-        if (await customFieldRepo.hasCardValues(ctx.db, existingCard.id))
-          throw new TRPCError({
-            message: `Cards with custom field values cannot yet be moved between boards`,
-            code: "BAD_REQUEST",
-          });
       }
-
       let result:
         | {
             id: number;
@@ -1005,19 +998,52 @@ export const cardRouter = createTRPCRouter({
       }
 
       if (input.index !== undefined || newListId !== undefined) {
-        try {
-          result = await cardRepo.reorder(ctx.db, {
-            cardId: existingCard.id,
-            newIndex: input.index,
-            newListId: newListId,
-          });
-        } catch (error) {
-          if (error instanceof cardRepo.CardMoveBlockedByTimeTrackingError)
-            throw new TRPCError({
-              code: "CONFLICT",
-              message: `Cards with time entries or active timers cannot be moved between boards`,
+        const reorderInput = {
+          cardId: existingCard.id,
+          newIndex: input.index,
+          newListId,
+        };
+        const targetBoardId = newList?.boardId;
+        const isCrossBoardMove =
+          targetBoardId !== undefined &&
+          targetBoardId !== existingCard.list.boardId;
+
+        if (isCrossBoardMove) {
+          try {
+            result = await cardRepo.reorder(ctx.db, reorderInput, {
+              beforeReorder: async (transaction) => {
+                await customFieldRepo.moveCardValuesToBoard(transaction, {
+                  cardId: existingCard.id,
+                  targetBoardId,
+                  actorUserId: userId,
+                });
+              },
             });
-          throw error;
+          } catch (error) {
+            if (error instanceof customFieldRepo.CustomFieldRepositoryError) {
+              const message =
+                error.code === "FIELD_MAPPING_AMBIGUOUS"
+                  ? "Multiple target custom fields have the same name and type"
+                  : error.code === "OPTION_MAPPING_AMBIGUOUS"
+                    ? "Multiple target custom field options have the same name"
+                    : error.code === "ARCHIVED_FIELD_MOVE_UNSUPPORTED"
+                      ? "Cards with archived custom field values cannot be moved between boards"
+                      : error.message;
+              throw new TRPCError({
+                message,
+                code: "BAD_REQUEST",
+                cause: error,
+              });
+            }
+            if (error instanceof cardRepo.CardMoveBlockedByTimeTrackingError)
+              throw new TRPCError({
+                code: "CONFLICT",
+                message: `Cards with time entries or active timers cannot be moved between boards`,
+              });
+            throw error;
+          }
+        } else {
+          result = await cardRepo.reorder(ctx.db, reorderInput);
         }
       }
 

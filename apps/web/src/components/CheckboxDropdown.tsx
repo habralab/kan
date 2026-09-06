@@ -223,7 +223,7 @@ export default function CheckboxDropdown({
                       <span className="ml-2 text-[12px] font-semibold">
                         {selectedGroupDetails?.label}
                       </span>
-                      <span className="ml-auto">
+                      <span className="ml-auto flex items-center">
                         {renderSelectedCount(
                           selectedGroupDetails?.selectedCount,
                         )}

@@ -39,6 +39,10 @@ export { memberInviteResponseSchema } from "./member";
 export {
   customFieldPublicIdSchema,
   customFieldNameSchema,
+  customFieldDescriptionSchema,
+  customFieldPlaceholderSchema,
+  customFieldPlacementSchema,
+  customFieldSectionLabelSchema,
   customFieldColourCodeSchema,
   customFieldNumberValueSchema,
   customFieldOptionSchema,

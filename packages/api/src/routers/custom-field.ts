@@ -8,9 +8,13 @@ import * as customFieldRepo from "@kan/db/repository/custom-field.repo";
 import {
   customFieldColourCodeSchema as colourCodeSchema,
   customFieldDefinitionSchema as definitionSchema,
+  customFieldDescriptionSchema as descriptionSchema,
   customFieldNameSchema as nameSchema,
   customFieldOptionSchema as optionSchema,
+  customFieldPlaceholderSchema as placeholderSchema,
+  customFieldPlacementSchema as placementSchema,
   customFieldPublicIdSchema as publicIdSchema,
+  customFieldSectionLabelSchema as sectionLabelSchema,
   customFieldValueInputSchema as valueInputSchema,
   customFieldValueSchema as valueSchema,
 } from "../schemas";
@@ -46,6 +50,10 @@ const throwRepositoryError = (error: unknown): never => {
 const mapDefinition = (definition: {
   publicId: string;
   name: string;
+  description: string | null;
+  placeholder: string | null;
+  sectionLabel: string | null;
+  placement: "main" | "sidebar";
   type: "text" | "number" | "date" | "checkbox" | "select";
   position: number;
   showOnCard: boolean;
@@ -56,6 +64,7 @@ const mapDefinition = (definition: {
     position: number;
     deletedAt?: Date | null;
   }[];
+  defaultValue: z.infer<typeof valueInputSchema> | null;
 }) => ({
   ...definition,
   options: definition.options.map(({ deletedAt, ...option }) => ({
@@ -113,6 +122,10 @@ export const customFieldRouter = createTRPCRouter({
       z.object({
         boardPublicId: publicIdSchema,
         name: nameSchema,
+        description: descriptionSchema.nullable().optional(),
+        placeholder: placeholderSchema.nullable().optional(),
+        sectionLabel: sectionLabelSchema.nullable().optional(),
+        placement: placementSchema.default("sidebar"),
         type: z.enum(["text", "number", "date", "checkbox", "select"]),
         showOnCard: z.boolean().default(true),
         options: z
@@ -167,11 +180,30 @@ export const customFieldRouter = createTRPCRouter({
         .object({
           fieldPublicId: publicIdSchema,
           name: nameSchema.optional(),
+          description: descriptionSchema.nullable().optional(),
+          placeholder: placeholderSchema.nullable().optional(),
+          sectionLabel: sectionLabelSchema.nullable().optional(),
+          placement: placementSchema.optional(),
           showOnCard: z.boolean().optional(),
+          defaultValue: valueInputSchema.nullable().optional(),
         })
         .refine(
-          ({ name, showOnCard }) =>
-            name !== undefined || showOnCard !== undefined,
+          ({
+            name,
+            description,
+            placeholder,
+            sectionLabel,
+            placement,
+            showOnCard,
+            defaultValue,
+          }) =>
+            name !== undefined ||
+            description !== undefined ||
+            placeholder !== undefined ||
+            sectionLabel !== undefined ||
+            placement !== undefined ||
+            showOnCard !== undefined ||
+            defaultValue !== undefined,
           { message: "At least one field must be updated" },
         ),
     )

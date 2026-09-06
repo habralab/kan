@@ -30,6 +30,7 @@ vi.mock("@kan/db/repository/cardActivity.repo", () => ({
 vi.mock("@kan/db/repository/cardComment.repo", () => ({}));
 vi.mock("@kan/db/repository/checklist.repo", () => ({}));
 vi.mock("@kan/db/repository/custom-field.repo", () => ({
+  MAX_CUSTOM_FIELDS_PER_BOARD: 50,
   moveCardValuesToBoard: vi.fn(),
   CustomFieldRepositoryError: class CustomFieldRepositoryError extends Error {},
 }));

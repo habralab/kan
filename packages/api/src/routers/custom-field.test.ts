@@ -106,6 +106,10 @@ describe("custom field router", () => {
       {
         publicId: fieldPublicId,
         name: "Priority",
+        description: null,
+        placeholder: null,
+        sectionLabel: null,
+        placement: "sidebar",
         type: "select",
         position: 0,
         showOnCard: true,
@@ -118,6 +122,7 @@ describe("custom field router", () => {
             deletedAt: new Date("2026-09-04T12:00:00Z"),
           },
         ],
+        defaultValue: null,
       },
     ]);
 
@@ -141,6 +146,10 @@ describe("custom field router", () => {
     mockCreateDefinition.mockResolvedValue({
       publicId: fieldPublicId,
       name: "Priority",
+      description: null,
+      placeholder: null,
+      sectionLabel: "Workflow",
+      placement: "sidebar",
       type: "select",
       position: 0,
       showOnCard: true,
@@ -152,11 +161,15 @@ describe("custom field router", () => {
           position: 0,
         },
       ],
+      defaultValue: null,
     });
 
     await customFieldRouter.createCaller(ctx).createDefinition({
       boardPublicId,
       name: "Priority",
+      description: "Used during triage",
+      placeholder: "Choose priority",
+      sectionLabel: "Workflow",
       type: "select",
       showOnCard: true,
       options: [{ name: "High", colourCode: "#ff0000" }],
@@ -171,6 +184,10 @@ describe("custom field router", () => {
     expect(mockCreateDefinition).toHaveBeenCalledWith(mockDb, {
       boardPublicId,
       name: "Priority",
+      description: "Used during triage",
+      placeholder: "Choose priority",
+      sectionLabel: "Workflow",
+      placement: "sidebar",
       type: "select",
       showOnCard: true,
       options: [{ name: "High", colourCode: "#ff0000" }],
@@ -183,14 +200,22 @@ describe("custom field router", () => {
     mockUpdateDefinition.mockResolvedValue({
       publicId: fieldPublicId,
       name: "Customer",
+      description: null,
+      placeholder: null,
+      sectionLabel: null,
+      placement: "main",
       type: "text",
       position: 0,
       showOnCard: false,
+      defaultValue: null,
     });
 
     await customFieldRouter.createCaller(ctx).updateDefinition({
       fieldPublicId,
+      sectionLabel: null,
+      placement: "main",
       showOnCard: false,
+      defaultValue: { type: "text", value: "Unknown" },
     });
 
     expect(mockAssertPermission).toHaveBeenCalledWith(
@@ -199,6 +224,14 @@ describe("custom field router", () => {
       fieldScope.workspaceId,
       "board:edit",
     );
+    expect(mockUpdateDefinition).toHaveBeenCalledWith(mockDb, {
+      fieldPublicId,
+      sectionLabel: null,
+      placement: "main",
+      showOnCard: false,
+      defaultValue: { type: "text", value: "Unknown" },
+      actorUserId: mockUser.id,
+    });
   });
 
   it("archives definitions with board:edit and the authenticated actor", async () => {

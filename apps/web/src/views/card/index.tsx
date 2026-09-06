@@ -184,6 +184,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         definitions={card?.list.board.customFields ?? []}
         values={card?.customFieldValues ?? []}
         disabled={!canEdit}
+        placement="sidebar"
       />
     </div>
   );
@@ -479,6 +480,13 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                       boardPublicId={boardId}
                     />
                   )}
+                  <CustomFields
+                    cardPublicId={card.publicId}
+                    definitions={card.list.board.customFields}
+                    values={card.customFieldValues}
+                    disabled={!canEdit}
+                    placement="main"
+                  />
                   <Checklists
                     checklists={card.checklists}
                     cardPublicId={cardId}

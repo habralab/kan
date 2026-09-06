@@ -9153,5 +9153,103 @@
       ]
     ],
     "translation": "Waarde"
+  },
+  "TlEEts": {
+    "message": "Default value",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",334]],
+    "translation": "Standaardwaarde"
+  },
+  "Nu4oKW": {
+    "message": "Description",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",308]],
+    "translation": "Beschrijving"
+  },
+  "AoQvBa": {
+    "message": "Explain how this field should be used",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",313]],
+    "translation": "Leg uit hoe dit veld moet worden gebruikt"
+  },
+  "YZsaTf": {
+    "message": "Field description (optional)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",772]],
+    "translation": "Veldbeschrijving (optioneel)"
+  },
+  "jfPOyl": {
+    "message": "Hint shown in an empty field",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",326]],
+    "translation": "Hint die in een leeg veld wordt getoond"
+  },
+  "1GuE4N": {
+    "message": "Input placeholder (optional)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",780]],
+    "translation": "Plaatshouder (optioneel)"
+  },
+  "xJne3c": {
+    "message": "No default",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",341],["src/views/board/components/custom-fields/custom-field-manager.tsx",387],["src/views/board/components/custom-fields/custom-field-manager.tsx",420]],
+    "translation": "Geen standaardwaarde"
+  },
+  "hx1ePY": {
+    "message": "Placeholder",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",322]],
+    "translation": "Plaatshouder"
+  },
+  "Ch2KQj": {
+    "message": "Main panel",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",321],["src/views/board/components/custom-fields/custom-field-manager.tsx",833]],
+    "translation": "Hoofdpaneel"
+  },
+  "q9gKtl": {
+    "message": "No section",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",329]],
+    "translation": "Geen sectie"
+  },
+  "MFTZK8": {
+    "message": "Placement",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",308],["src/views/board/components/custom-fields/custom-field-manager.tsx",823]],
+    "translation": "Plaatsing"
+  },
+  "BhZ5PL": {
+    "message": "Section",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",325],["src/views/board/components/custom-fields/custom-field-manager.tsx",837]],
+    "translation": "Sectie"
+  },
+  "1IoHLw": {
+    "message": "Section name (optional)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",841]],
+    "translation": "Sectienaam (optioneel)"
+  },
+  "uWi2Q+": {
+    "message": "Sidebar",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",320],["src/views/board/components/custom-fields/custom-field-manager.tsx",832]],
+    "translation": "Zijbalk"
   }
 }

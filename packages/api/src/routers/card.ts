@@ -12,7 +12,6 @@ import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import {
   generateAttachmentUrl,
-  generateAvatarUrl,
   normalizeDescription,
 } from "@kan/shared/utils";
 
@@ -26,6 +25,7 @@ import {
 } from "../schemas";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { mergeActivities } from "../utils/activities";
+import { createAvatarUrlResolver } from "../utils/avatarUrls";
 import { sendMentionEmails } from "../utils/notifications";
 import {
   assertCanDelete,
@@ -729,6 +729,7 @@ export const cardRouter = createTRPCRouter({
       );
 
       // Generate presigned URLs for workspace member avatars
+      const resolveAvatarUrl = createAvatarUrlResolver();
       const workspaceWithAvatarUrls = result.list.board.workspace
         ? {
             ...result.list.board.workspace,
@@ -738,7 +739,7 @@ export const cardRouter = createTRPCRouter({
                   return member;
                 }
 
-                const avatarUrl = await generateAvatarUrl(member.user.image);
+                const avatarUrl = await resolveAvatarUrl(member.user.image);
                 return {
                   ...member,
                   user: {
@@ -823,13 +824,14 @@ export const cardRouter = createTRPCRouter({
       );
 
       // Generate presigned URLs for user avatars in activities
+      const resolveAvatarUrl = createAvatarUrlResolver();
       const activitiesWithAvatarUrls = await Promise.all(
         result.activities.map(async (activity) => {
           const updatedActivity = { ...activity };
 
           // Generate presigned URL for activity user avatar
           if (activity.user?.image) {
-            const userAvatarUrl = await generateAvatarUrl(activity.user.image);
+            const userAvatarUrl = await resolveAvatarUrl(activity.user.image);
             updatedActivity.user = {
               ...activity.user,
               image: userAvatarUrl,
@@ -838,7 +840,7 @@ export const cardRouter = createTRPCRouter({
 
           // Generate presigned URL for member user avatar (if exists)
           if (activity.member?.user?.image) {
-            const memberAvatarUrl = await generateAvatarUrl(
+            const memberAvatarUrl = await resolveAvatarUrl(
               activity.member.user.image,
             );
             updatedActivity.member = {
@@ -984,13 +986,26 @@ export const cardRouter = createTRPCRouter({
         | undefined;
 
       const previousDueDate = existingCard.dueDate;
+      const normalizedDescription =
+        input.description !== undefined
+          ? normalizeDescription(input.description)
+          : undefined;
+      const descriptionChanged =
+        normalizedDescription !== undefined &&
+        existingCard.description !== normalizedDescription;
 
-      if (input.title || input.description || input.dueDate !== undefined) {
+      if (
+        input.title ||
+        normalizedDescription !== undefined ||
+        input.dueDate !== undefined
+      ) {
         result = await cardRepo.update(
           ctx.db,
           {
             ...(input.title && { title: input.title }),
-            ...(input.description && { description: input.description }),
+            ...(normalizedDescription !== undefined && {
+              description: normalizedDescription,
+            }),
             ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
           },
           { cardPublicId: input.cardPublicId },
@@ -1065,22 +1080,24 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
-      if (input.description && existingCard.description !== input.description) {
+      if (descriptionChanged) {
         activities.push({
           type: "card.updated.description" as const,
           cardId: result.id,
           createdBy: userId,
           fromDescription: existingCard.description ?? undefined,
-          toDescription: input.description,
+          toDescription: normalizedDescription ?? undefined,
         });
 
-        void sendMentionEmails({
-          db: ctx.db,
-          cardPublicId: input.cardPublicId,
-          previousHtml: existingCard.description,
-          nextHtml: input.description,
-          commenterUserId: userId,
-        });
+        if (normalizedDescription) {
+          void sendMentionEmails({
+            db: ctx.db,
+            cardPublicId: input.cardPublicId,
+            previousHtml: existingCard.description,
+            nextHtml: normalizedDescription,
+            commenterUserId: userId,
+          });
+        }
       }
 
       if (
@@ -1128,10 +1145,10 @@ export const cardRouter = createTRPCRouter({
       if (input.title && existingCard.title !== input.title) {
         webhookChanges.title = { from: existingCard.title, to: input.title };
       }
-      if (input.description && existingCard.description !== input.description) {
+      if (descriptionChanged) {
         webhookChanges.description = {
           from: existingCard.description,
-          to: input.description,
+          to: normalizedDescription,
         };
       }
       if (

@@ -147,6 +147,7 @@ describe("board summary repository view", () => {
       labels: [],
       lists: [],
       dueDate: [],
+      customFields: [],
       type: "regular" as const,
     };
     const full = await boardRepo.getByPublicId(db, "board1234567", userId, {

@@ -214,10 +214,17 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
   const [activeChecklistForm, setActiveChecklistForm] = useState<string | null>(
     null,
   );
+  const [recentCommentPublicIds, setRecentCommentPublicIds] = useState<
+    string[]
+  >([]);
 
   const cardId = Array.isArray(router.query.cardId)
     ? router.query.cardId[0]
     : router.query.cardId;
+
+  useEffect(() => {
+    setRecentCommentPublicIds([]);
+  }, [cardId]);
 
   const {
     data: card,
@@ -305,6 +312,10 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
       title: values.title,
       description: values.description,
     });
+  };
+
+  const handleCommentCreated = (commentPublicId: string) => {
+    setRecentCommentPublicIds((current) => [...current, commentPublicId]);
   };
 
   // this adds the new created label to selected labels
@@ -533,6 +544,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         <NewCommentForm
                           cardPublicId={cardId}
                           workspaceMembers={editorWorkspaceMembers}
+                          onCommentCreated={handleCommentCreated}
                         />
                       </div>
                     )}
@@ -541,7 +553,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         cardPublicId={cardId}
                         isLoading={!card}
                         order={activitySortOrder}
-                        isAdmin={workspace.role === "admin"}
+                        recentCommentPublicIds={recentCommentPublicIds}
                       />
                     </div>
                     {!isTemplate && activitySortOrder === "oldest" && (
@@ -549,6 +561,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         <NewCommentForm
                           cardPublicId={cardId}
                           workspaceMembers={editorWorkspaceMembers}
+                          onCommentCreated={handleCommentCreated}
                         />
                       </div>
                     )}

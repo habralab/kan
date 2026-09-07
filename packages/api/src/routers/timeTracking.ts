@@ -154,12 +154,13 @@ const formatWorklog = (
   capabilities: { canManage: boolean; canEdit: boolean; canDelete: boolean },
   userId: string,
 ) => {
-  const own = worklog.workspaceMember.userId === userId;
+  const own = worklog.workspaceMember?.userId === userId;
   const showEmail =
-    worklog.workspaceMember.workspace.showEmailsToMembers === true;
-  const email = showEmail
-    ? (worklog.workspaceMember.user?.email ?? worklog.workspaceMember.email)
-    : null;
+    worklog.workspaceMember?.workspace.showEmailsToMembers === true;
+  const email =
+    showEmail && worklog.workspaceMember
+      ? (worklog.workspaceMember.user?.email ?? worklog.workspaceMember.email)
+      : null;
 
   return {
     publicId: worklog.publicId,
@@ -180,34 +181,41 @@ const formatWorklog = (
             rawElapsedSeconds: worklog.rawElapsedSeconds,
           }
         : null,
-    member: {
-      publicId: worklog.workspaceMember.publicId,
-      displayName: getMemberDisplayName(
-        worklog.workspaceMember.user?.name,
-        worklog.workspaceMember.email,
-        worklog.workspaceMember.publicId,
-        showEmail,
-      ),
-      email,
-      status: worklog.workspaceMember.deletedAt
-        ? "removed"
-        : worklog.workspaceMember.status,
-    },
-    card: {
-      publicId: worklog.card.publicId,
-      title: worklog.card.title,
-      cardNumber: worklog.card.cardNumber,
-      deletedAt: worklog.card.deletedAt,
-      list: {
-        publicId: worklog.card.list.publicId,
-        name: worklog.card.list.name,
-      },
-    },
+    member: worklog.workspaceMember
+      ? {
+          publicId: worklog.workspaceMember.publicId,
+          displayName: getMemberDisplayName(
+            worklog.workspaceMember.user?.name,
+            worklog.workspaceMember.email,
+            worklog.workspaceMember.publicId,
+            showEmail,
+          ),
+          email,
+          status: worklog.workspaceMember.deletedAt
+            ? ("removed" as const)
+            : worklog.workspaceMember.status,
+        }
+      : null,
+    card: worklog.card
+      ? {
+          publicId: worklog.card.publicId,
+          title: worklog.card.title,
+          cardNumber: worklog.card.cardNumber,
+          deletedAt: worklog.card.deletedAt,
+          list: {
+            publicId: worklog.card.list.publicId,
+            name: worklog.card.list.name,
+          },
+        }
+      : null,
     createdAt: worklog.createdAt,
     updatedAt: worklog.updatedAt,
     createdByDisplayName: worklog.createdByUser?.name ?? null,
     updatedByDisplayName: worklog.updatedByUser?.name ?? null,
-    canEdit: capabilities.canManage || (own && capabilities.canEdit),
+    canEdit:
+      worklog.workspaceMember !== null &&
+      worklog.card !== null &&
+      (capabilities.canManage || (own && capabilities.canEdit)),
     canDelete: capabilities.canManage || (own && capabilities.canDelete),
   };
 };
@@ -218,7 +226,7 @@ const formatReportWorklog = (
   userId: string,
 ) => ({
   ...formatWorklog(worklog, capabilities, userId),
-  labels: worklog.card.labels
+  labels: (worklog.card?.labels ?? [])
     .filter(({ label }) => label.deletedAt === null)
     .map(({ label }) => ({ publicId: label.publicId, name: label.name })),
 });
@@ -545,15 +553,21 @@ export const timeTrackingRouter = createTRPCRouter({
         totalSeconds: summary.totalSeconds,
         entryCount: summary.entryCount,
         memberTotals: summary.memberTotals.map((member) => ({
-          member: formatMember({
-            publicId: member.memberPublicId,
-            email: member.memberEmail,
-            status: member.memberStatus,
-            deletedAt: member.memberDeletedAt,
-            displayName: member.memberDisplayName,
-            userEmail: member.userEmail,
-            showEmailsToMembers: member.showEmailsToMembers,
-          }),
+          member:
+            member.memberPublicId &&
+            member.memberEmail &&
+            member.memberStatus &&
+            member.showEmailsToMembers !== null
+              ? formatMember({
+                  publicId: member.memberPublicId,
+                  email: member.memberEmail,
+                  status: member.memberStatus,
+                  deletedAt: member.memberDeletedAt,
+                  displayName: member.memberDisplayName,
+                  userEmail: member.userEmail,
+                  showEmailsToMembers: member.showEmailsToMembers,
+                })
+              : null,
           durationSeconds: member.durationSeconds,
           entryCount: member.entryCount,
         })),

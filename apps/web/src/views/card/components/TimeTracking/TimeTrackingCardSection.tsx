@@ -198,10 +198,12 @@ export function TimeTrackingCardSection({
         .sort((a, b) => b.durationSeconds - a.durationSeconds) ?? [],
     [summary.data?.memberTotals],
   );
-  const filterableMemberCount = memberTotals.length;
+  const filterableMemberCount = memberTotals.filter(
+    ({ member }) => member !== null,
+  ).length;
   const visibleEntryCount = selectedMemberPublicId
     ? (memberTotals.find(
-        ({ member }) => member.publicId === selectedMemberPublicId,
+        ({ member }) => member?.publicId === selectedMemberPublicId,
       )?.entryCount ?? 0)
     : (summary.data?.entryCount ?? 0);
 
@@ -211,7 +213,7 @@ export function TimeTrackingCardSection({
       !summary.data ||
       (filterableMemberCount > 1 &&
         memberTotals.some(
-          ({ member }) => member.publicId === selectedMemberPublicId,
+          ({ member }) => member?.publicId === selectedMemberPublicId,
         ))
     )
       return;
@@ -233,8 +235,9 @@ export function TimeTrackingCardSection({
       if (
         formEntry &&
         formEntry !== "new" &&
+        formEntry.member &&
         !memberOptions.data.members.some(
-          (member) => member.publicId === formEntry.member.publicId,
+          (member) => member.publicId === formEntry.member?.publicId,
         )
       ) {
         return {
@@ -244,7 +247,7 @@ export function TimeTrackingCardSection({
       }
       return memberOptions.data;
     }
-    if (formEntry && formEntry !== "new") {
+    if (formEntry && formEntry !== "new" && formEntry.member) {
       return {
         members: [formEntry.member],
         canManage: false,
@@ -583,19 +586,20 @@ export function TimeTrackingCardSection({
 
       {memberTotals.length > 0 && (
         <div className="mb-5 mt-4 flex flex-wrap gap-2">
-          {memberTotals.map(({ member, durationSeconds }) => {
+          {memberTotals.map(({ member, durationSeconds }, index) => {
             const content = (
               <>
-                {member.displayName}: {formatDuration(durationSeconds)}
+                {member?.displayName ?? t`Unavailable member`}:{" "}
+                {formatDuration(durationSeconds)}
               </>
             );
             const chipClasses =
               "rounded-full border px-2.5 py-1 text-xs transition-colors";
 
-            if (filterableMemberCount <= 1) {
+            if (!member || filterableMemberCount <= 1) {
               return (
                 <span
-                  key={member.publicId}
+                  key={member?.publicId ?? `unavailable-${index}`}
                   className={`${chipClasses} border-transparent bg-light-200 text-light-900 dark:bg-dark-300 dark:text-dark-900`}
                 >
                   {content}
@@ -689,7 +693,8 @@ export function TimeTrackingCardSection({
                         <div className="min-w-0">
                           <p className="text-sm text-light-1000 dark:text-dark-1000">
                             <span className="font-medium">
-                              {entry.member.displayName}
+                              {entry.member?.displayName ??
+                                t`Unavailable member`}
                             </span>
                             {" · "}
                             {formatDuration(entry.durationSeconds)}

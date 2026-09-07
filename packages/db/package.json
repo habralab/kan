@@ -16,6 +16,10 @@
       "types": "./src/schema/index.ts",
       "default": "./src/schema/index.ts"
     },
+    "./timeTrackingImportPlan": {
+      "types": "./src/import/timeTrackingPlan.ts",
+      "default": "./src/import/timeTrackingPlan.ts"
+    },
     "./types/*": {
       "types": "./src/types/*",
       "default": "./src/types/*"
@@ -39,6 +43,8 @@
     "migrate": "pnpm with-env drizzle-kit migrate",
     "push": "pnpm with-env drizzle-kit push",
     "studio": "pnpm with-env drizzle-kit studio",
+    "test": "vitest run",
+    "time-tracking:import-plan": "dotenv -e ../../.env -- tsx src/cli/importTimeTrackingPlan.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -62,7 +68,9 @@
     "drizzle-kit": "^0.28.1",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "tsx": "^4.20.5",
+    "typescript": "catalog:",
+    "vitest": "^3.0.0"
   },
   "prettier": "@kan/prettier-config"
 }

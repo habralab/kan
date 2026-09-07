@@ -24,7 +24,7 @@ import { workspaceMembers } from "./workspaces";
 export const DEFAULT_TIME_ROUNDING_INTERVAL_SECONDS = 60;
 export const DEFAULT_MINIMUM_TIME_ENTRY_SECONDS = 60;
 
-export const timeTrackingEntryMethods = ["manual", "timer"] as const;
+export const timeTrackingEntryMethods = ["manual", "timer", "import"] as const;
 export type TimeTrackingEntryMethod = (typeof timeTrackingEntryMethods)[number];
 export const timeTrackingEntryMethodEnum = pgEnum(
   "time_tracking_entry_method",
@@ -73,12 +73,12 @@ export const timeTrackingWorklogs = pgTable(
     boardId: bigint("boardId", { mode: "number" })
       .notNull()
       .references(() => boards.id, { onDelete: "cascade" }),
-    cardId: bigint("cardId", { mode: "number" })
-      .notNull()
-      .references(() => cards.id, { onDelete: "cascade" }),
-    workspaceMemberId: bigint("workspaceMemberId", { mode: "number" })
-      .notNull()
-      .references(() => workspaceMembers.id, { onDelete: "cascade" }),
+    cardId: bigint("cardId", { mode: "number" }).references(() => cards.id, {
+      onDelete: "cascade",
+    }),
+    workspaceMemberId: bigint("workspaceMemberId", {
+      mode: "number",
+    }).references(() => workspaceMembers.id, { onDelete: "cascade" }),
     workDate: date("workDate", { mode: "string" }).notNull(),
     durationSeconds: integer("durationSeconds").notNull(),
     comment: text("comment"),
@@ -117,17 +117,28 @@ export const timeTrackingWorklogs = pgTable(
       "time_tracking_worklogs_entry_method_fields_check",
       sql`(
         ${table.entryMethod} = 'manual'
+        AND ${table.cardId} IS NOT NULL
+        AND ${table.workspaceMemberId} IS NOT NULL
         AND ${table.timerStartedAt} IS NULL
         AND ${table.timerStoppedAt} IS NULL
         AND ${table.timerTimezone} IS NULL
         AND ${table.rawElapsedSeconds} IS NULL
       ) OR (
         ${table.entryMethod} = 'timer'
+        AND ${table.cardId} IS NOT NULL
+        AND ${table.workspaceMemberId} IS NOT NULL
         AND ${table.timerStartedAt} IS NOT NULL
         AND ${table.timerStoppedAt} IS NOT NULL
         AND ${table.timerTimezone} IS NOT NULL
         AND ${table.rawElapsedSeconds} IS NOT NULL
         AND ${table.timerStoppedAt} >= ${table.timerStartedAt}
+      ) OR (
+        ${table.entryMethod}::text = 'import'
+        AND ${table.timerStartedAt} IS NULL
+        AND ${table.timerStoppedAt} IS NULL
+        AND ${table.timerTimezone} IS NULL
+        AND ${table.rawElapsedSeconds} IS NULL
+        AND ${table.createdBy} IS NULL
       )`,
     ),
     index("time_tracking_worklogs_card_date_idx")

@@ -20,6 +20,10 @@
       "types": "./src/import/timeTrackingPlan.ts",
       "default": "./src/import/timeTrackingPlan.ts"
     },
+    "./timeTrackingImportRecovery": {
+      "types": "./src/import/time-tracking-recovery.ts",
+      "default": "./src/import/time-tracking-recovery.ts"
+    },
     "./types/*": {
       "types": "./src/types/*",
       "default": "./src/types/*"
@@ -45,6 +49,7 @@
     "studio": "pnpm with-env drizzle-kit studio",
     "test": "vitest run",
     "time-tracking:import-plan": "dotenv -e ../../.env -- tsx src/cli/importTimeTrackingPlan.ts",
+    "time-tracking:recover-run": "dotenv -e ../../.env -- tsx src/cli/recover-time-tracking-import-run.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },

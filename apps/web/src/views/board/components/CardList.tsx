@@ -19,6 +19,8 @@ interface CardListProps {
   freezeHeight: boolean;
   getCardHref: (cardPublicId: string) => string;
   onContextMenu: (event: React.MouseEvent, cardPublicId: string) => void;
+  timeTrackingTotalsByCard: ReadonlyMap<string, number>;
+  runningCardPublicId: string | null;
 }
 
 export default function CardList({
@@ -29,6 +31,8 @@ export default function CardList({
   freezeHeight,
   getCardHref,
   onContextMenu,
+  timeTrackingTotalsByCard,
+  runningCardPublicId,
 }: CardListProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -91,6 +95,10 @@ export default function CardList({
               cardHref={getCardHref(card.publicId)}
               canEditCard={canEditCard}
               onContextMenu={onContextMenu}
+              timeTrackingTotalSeconds={timeTrackingTotalsByCard.get(
+                card.publicId,
+              )}
+              isTimerRunning={runningCardPublicId === card.publicId}
             />
           ))}
         </SortableContext>

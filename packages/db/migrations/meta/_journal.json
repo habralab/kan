@@ -274,6 +274,27 @@
       "when": 1788289322947,
       "tag": "20260901190202_AddTimeTrackingMoveGuardIndex",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1788305908913,
+      "tag": "20260901233828_AddTimeTrackingImportSupport",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1788374100837,
+      "tag": "20260902183500_AddTimeTrackingSourceProvenance",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1788398854245,
+      "tag": "20260903012734_RestoreTimeTrackingCascadeDeletes",
+      "breakpoints": true
     }
   ]
 }

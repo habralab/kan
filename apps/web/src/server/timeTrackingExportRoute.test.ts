@@ -259,4 +259,38 @@ describe("time tracking export route", () => {
     expect(response.destroyedWith).toBe(error);
     expect(response.ended).toBe(false);
   });
+
+  it("keeps unresolved import references explicit in the entries CSV", async () => {
+    mockRepo.listBoardWorklogs.mockResolvedValue({
+      items: [
+        {
+          publicId: "worklog12345",
+          workDate: "2026-09-02",
+          durationSeconds: 3600,
+          comment: null,
+          entryMethod: "import",
+          timerStartedAt: null,
+          timerStoppedAt: null,
+          timerTimezone: null,
+          rawElapsedSeconds: null,
+          createdAt: new Date("2026-09-02T10:00:00.000Z"),
+          updatedAt: null,
+          workspaceMember: null,
+          card: null,
+          createdByUser: null,
+          updatedByUser: null,
+        },
+      ],
+      nextCursor: null,
+    } as never);
+    const response = createResponse();
+
+    await handler(createRequest(validQuery), response as never);
+
+    const csv = response.chunks.join("");
+    expect(response.statusCode).toBe(200);
+    expect(csv).toContain("Unavailable member");
+    expect(csv).toContain("Unavailable card");
+    expect(csv).not.toContain("Deleted card");
+  });
 });

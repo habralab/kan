@@ -15,6 +15,7 @@ import {
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
   getTimeTrackingExportFilename,
+  getTimeTrackingSourceTimestamp,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
   TIME_TRACKING_ENTRIES_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
@@ -54,20 +55,23 @@ const getWorklogMember = (
   member: Awaited<
     ReturnType<typeof timeTrackingRepo.listBoardWorklogs>
   >["items"][number]["workspaceMember"],
-) => ({
-  publicId: member.publicId,
-  email: member.email,
-  displayName: member.user?.name ?? null,
-  userEmail: member.user?.email ?? null,
-  showEmailsToMembers: member.workspace.showEmailsToMembers,
-});
+) =>
+  member
+    ? {
+        publicId: member.publicId,
+        email: member.email,
+        displayName: member.user?.name ?? null,
+        userEmail: member.user?.email ?? null,
+        showEmailsToMembers: member.workspace.showEmailsToMembers,
+      }
+    : null;
 
 const getLabels = (
   row: Awaited<
     ReturnType<typeof timeTrackingRepo.listBoardWorklogs>
   >["items"][number],
 ) =>
-  row.card.labels
+  (row.card?.labels ?? [])
     .filter(({ label }) => label.deletedAt === null)
     .map(({ label }) => label);
 
@@ -216,11 +220,25 @@ export default withRateLimit(
           limit: EXPORT_PAGE_SIZE,
           cursor,
         });
+        const sources =
+          profile === "detailed"
+            ? await timeTrackingRepo.listWorklogSourcesByWorklogIds(
+                db,
+                page.items.map((row) => row.id),
+              )
+            : [];
+        const sourcesByWorklogId = new Map(
+          sources.map((source) => [source.worklogId, source]),
+        );
         for (const row of page.items) {
           const labels = getLabels(row);
           const member = getWorklogMember(row.workspaceMember);
-          const memberName = getTimeTrackingCsvMemberDisplayName(member);
-          const memberEmail = getTimeTrackingCsvMemberEmail(member);
+          const memberName = member
+            ? getTimeTrackingCsvMemberDisplayName(member)
+            : "Unavailable member";
+          const memberEmail = member
+            ? getTimeTrackingCsvMemberEmail(member)
+            : null;
           if (profile === "entries") {
             await writeChunk(
               res,
@@ -230,31 +248,32 @@ export default withRateLimit(
                 memberName,
                 memberEmail,
                 boardName: board.boardName,
-                cardName: row.card.title,
-                cardNumber: row.card.cardNumber,
-                listName: row.card.list.name,
+                cardName: row.card?.title ?? "Unavailable card",
+                cardNumber: row.card?.cardNumber ?? null,
+                listName: row.card?.list.name ?? null,
                 labels: labels.map((label) => label.name).join("; "),
                 comment: row.comment,
               }),
             );
             continue;
           }
+          const source = sourcesByWorklogId.get(row.id);
           await writeChunk(
             res,
             encodeCsvRow([
               row.publicId,
               row.workDate,
               row.durationSeconds,
-              row.workspaceMember.publicId,
+              row.workspaceMember?.publicId,
               memberName,
               memberEmail,
               board.boardPublicId,
               board.boardName,
-              row.card.publicId,
-              row.card.title,
-              row.card.cardNumber,
-              row.card.list.publicId,
-              row.card.list.name,
+              row.card?.publicId,
+              row.card?.title ?? "Unavailable card",
+              row.card?.cardNumber,
+              row.card?.list.publicId,
+              row.card?.list.name,
               labels.map((label) => label.publicId).join(";"),
               labels.map((label) => label.name).join("; "),
               row.entryMethod,
@@ -267,6 +286,21 @@ export default withRateLimit(
               row.createdByUser?.name,
               row.updatedAt,
               row.updatedByUser?.name,
+              source?.provider,
+              source?.externalId,
+              getTimeTrackingSourceTimestamp(
+                source?.sourceCreatedAt,
+                source?.sourceCreatedAtRaw,
+              ),
+              source?.sourceTimestampTimezone,
+              source?.sourceCreatedByDisplayName,
+              source?.sourceCreatedByExternalMemberId,
+              getTimeTrackingSourceTimestamp(
+                source?.sourceUpdatedAt,
+                source?.sourceUpdatedAtRaw,
+              ),
+              source?.sourceUpdatedByDisplayName,
+              source?.sourceUpdatedByExternalMemberId,
             ]),
           );
         }

@@ -90,6 +90,8 @@ describe("card cover previews", () => {
       if (!preview) throw new Error(`Missing ${width}px preview`);
       const metadata = await sharp(preview.body).metadata();
       expect(metadata.format).toBe("webp");
+      if (!metadata.width || !metadata.height)
+        throw new Error(`Missing ${width}px preview dimensions`);
       expect(metadata.width).toBeLessThanOrEqual(width);
       expect(metadata.height).toBeGreaterThan(metadata.width);
       expect(metadata.orientation).toBeUndefined();

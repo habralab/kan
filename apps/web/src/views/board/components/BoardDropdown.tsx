@@ -4,6 +4,7 @@ import {
   HiArrowRightOnRectangle,
   HiEllipsisHorizontal,
   HiLink,
+  HiOutlineClock,
   HiOutlineDocumentDuplicate,
   HiOutlineStar,
   HiOutlineTrash,
@@ -109,6 +110,17 @@ export default function BoardDropdown({
             label: t`Edit board URL`,
             action: () => openModal("UPDATE_BOARD_SLUG"),
             icon: <HiLink className="h-[16px] w-[16px] text-dark-900" />,
+          },
+        ]
+      : []),
+    ...(!isTemplate
+      ? [
+          {
+            label: t`Time tracking`,
+            action: () => openModal("TIME_TRACKING_SETTINGS"),
+            icon: (
+              <HiOutlineClock className="h-[16px] w-[16px] text-dark-900" />
+            ),
           },
         ]
       : []),

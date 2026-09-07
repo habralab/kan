@@ -21,10 +21,19 @@ import {
   checklists,
   labels,
   lists,
+  timeTrackingActiveTimers,
+  timeTrackingWorklogs,
   workspaceMembers,
   workspaces,
 } from "@kan/db/schema";
 import { generateUID } from "@kan/shared/utils";
+
+export class CardMoveBlockedByTimeTrackingError extends Error {
+  constructor() {
+    super("TIME_TRACKING_DATA");
+    this.name = "CardMoveBlockedByTimeTrackingError";
+  }
+}
 
 export const getCount = async (db: dbClient) => {
   const result = await db
@@ -265,6 +274,7 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
         columns: {
           publicId: true,
           name: true,
+          boardId: true,
         },
       },
     },
@@ -712,35 +722,39 @@ export const reorder = async (
   },
 ) => {
   return db.transaction(async (tx) => {
-    const card = await tx.query.cards.findFirst({
-      columns: {
-        id: true,
-        index: true,
-      },
-      where: and(eq(cards.id, args.cardId), isNull(cards.deletedAt)),
-      with: {
-        list: {
-          columns: {
-            id: true,
-            index: true,
-          },
-        },
-      },
-    });
+    // Worklog and timer creation take a shared lock on this row before
+    // resolving its board, so a cross-board move cannot race their inserts.
+    const [card] = await tx
+      .select({
+        id: cards.id,
+        index: cards.index,
+        listId: lists.id,
+        boardId: lists.boardId,
+      })
+      .from(cards)
+      .innerJoin(lists, eq(cards.listId, lists.id))
+      .where(and(eq(cards.id, args.cardId), isNull(cards.deletedAt)))
+      .limit(1)
+      .for("update", { of: cards });
 
-    if (!card?.list)
-      throw new Error(`Card not found for public ID ${args.cardId}`);
+    if (!card) throw new Error(`Card not found for public ID ${args.cardId}`);
 
-    const currentList = card.list;
+    const currentList = { id: card.listId, boardId: card.boardId };
     const currentIndex = card.index;
     let newList:
-      | { id: number; index: number; cards: { id: number; index: number }[] }
+      | {
+          id: number;
+          boardId: number;
+          index: number;
+          cards: { id: number; index: number }[];
+        }
       | undefined;
 
     if (args.newListId) {
       newList = await tx.query.lists.findFirst({
         columns: {
           id: true,
+          boardId: true,
           index: true,
         },
         with: {
@@ -758,6 +772,22 @@ export const reorder = async (
 
       if (!newList)
         throw new Error(`List not found for public ID ${args.newListId}`);
+    }
+
+    if (newList && currentList.boardId !== newList.boardId) {
+      const [worklog] = await tx
+        .select({ id: timeTrackingWorklogs.id })
+        .from(timeTrackingWorklogs)
+        .where(eq(timeTrackingWorklogs.cardId, card.id))
+        .limit(1);
+      const [activeTimer] = await tx
+        .select({ id: timeTrackingActiveTimers.id })
+        .from(timeTrackingActiveTimers)
+        .where(eq(timeTrackingActiveTimers.cardId, card.id))
+        .limit(1);
+
+      if (worklog || activeTimer)
+        throw new CardMoveBlockedByTimeTrackingError();
     }
 
     let newIndex = args.newIndex;

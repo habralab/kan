@@ -1,4 +1,5 @@
 import type { DropResult } from "react-beautiful-dnd";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -9,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
 import {
+  HiOutlineClock,
   HiOutlinePlusSmall,
   HiOutlineRectangleStack,
   HiOutlineSquare3Stack3D,
@@ -36,6 +38,7 @@ import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import { formatToArray, isPlaceholderPublicId } from "~/utils/helpers";
+import { TIME_TRACKING_CHANNEL_NAME } from "~/utils/timeTracking";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
 import BoardDropdown from "./components/BoardDropdown";
 import Card from "./components/Card";
@@ -56,6 +59,17 @@ import { NewTemplateForm } from "./components/NewTemplateForm";
 import UpdateBoardSlugButton from "./components/UpdateBoardSlugButton";
 import { UpdateBoardSlugForm } from "./components/UpdateBoardSlugForm";
 import VisibilityButton from "./components/VisibilityButton";
+
+const TimeTrackingReportModal = dynamic(() =>
+  import("./components/TimeTrackingReportModal").then(
+    (module) => module.TimeTrackingReportModal,
+  ),
+);
+const TimeTrackingSettingsForm = dynamic(() =>
+  import("./components/TimeTrackingSettingsForm").then(
+    (module) => module.TimeTrackingSettingsForm,
+  ),
+);
 
 type PublicListId = string;
 
@@ -152,6 +166,46 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     enabled: !!boardId,
     placeholderData: keepPreviousData,
   });
+
+  const timeTrackingSettings = api.timeTracking.getSettings.useQuery(
+    { boardPublicId: boardId ?? "" },
+    { enabled: !!boardId && !isTemplate },
+  );
+  const timeTrackingCardTotals = api.timeTracking.getBoardCardTotals.useQuery(
+    { boardPublicId: boardId ?? "" },
+    { enabled: !!boardId && timeTrackingSettings.data?.enabled === true },
+  );
+  const activeTimer = api.timeTracking.getActiveTimer.useQuery(undefined, {
+    enabled: !isTemplate,
+  });
+  const timeTrackingTotalsByCard = useMemo(
+    () =>
+      timeTrackingSettings.data?.enabled === true
+        ? new Map(
+            timeTrackingCardTotals.data?.map((total) => [
+              total.cardPublicId,
+              total.totalSeconds,
+            ]),
+          )
+        : new Map<string, number>(),
+    [timeTrackingCardTotals.data, timeTrackingSettings.data?.enabled],
+  );
+  const runningCardPublicId =
+    activeTimer.data &&
+    !activeTimer.data.inaccessible &&
+    activeTimer.data.board.publicId === boardId
+      ? activeTimer.data.card.publicId
+      : null;
+
+  useEffect(() => {
+    if (!("BroadcastChannel" in window)) return;
+    const channel = new BroadcastChannel(TIME_TRACKING_CHANNEL_NAME);
+    channel.onmessage = () => {
+      void utils.timeTracking.getActiveTimer.invalidate();
+      void utils.timeTracking.getBoardCardTotals.invalidate();
+    };
+    return () => channel.close();
+  }, [utils.timeTracking]);
 
   // Redirect to 404 if board doesn't exist
   useEffect(() => {
@@ -481,6 +535,19 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
           <MoveBoardForm boardPublicId={boardId ?? ""} />
         </Modal>
 
+        {isOpen && modalContentType === "TIME_TRACKING_SETTINGS" && (
+          <Modal modalSize="sm" isVisible>
+            <TimeTrackingSettingsForm
+              boardPublicId={boardId ?? ""}
+              isArchived={boardData?.isArchived ?? false}
+            />
+          </Modal>
+        )}
+
+        {isOpen && modalContentType === "TIME_TRACKING_REPORT" && (
+          <TimeTrackingReportModal boardPublicId={boardId ?? ""} />
+        )}
+
         <Modal
           modalSize="sm"
           isVisible={isOpen && modalContentType === "CREATE_TEMPLATE"}
@@ -607,6 +674,15 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                   isLoading={!boardData}
                   isAdmin={workspace.role === "admin"}
                 />
+                {timeTrackingSettings.data?.enabled && (
+                  <Button
+                    iconLeft={<HiOutlineClock />}
+                    variant="secondary"
+                    onClick={() => openModal("TIME_TRACKING_REPORT")}
+                  >
+                    {t`Time`}
+                  </Button>
+                )}
                 {boardData && (
                   <Filters
                     labels={boardData.labels}
@@ -796,6 +872,13 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                             comments={card.comments ?? []}
                                             attachments={card.attachments}
                                             dueDate={card.dueDate ?? null}
+                                            timeTrackingTotalSeconds={timeTrackingTotalsByCard.get(
+                                              card.publicId,
+                                            )}
+                                            isTimerRunning={
+                                              runningCardPublicId ===
+                                              card.publicId
+                                            }
                                           />
                                         </Link>
                                       )}

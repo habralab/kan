@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS "time_tracking_worklogs_board_all_idx" ON "time_tracking_worklogs" USING btree ("boardId");

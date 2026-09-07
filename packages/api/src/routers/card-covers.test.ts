@@ -74,6 +74,7 @@ const existingCard = {
   list: {
     publicId: "list-12345678",
     name: "Todo",
+    boardId: 4,
   },
 };
 

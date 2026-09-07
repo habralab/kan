@@ -53,6 +53,7 @@ const board = {
       desc: "",
       idList: "list-2",
       labels: [{ id: "label-2", name: "Feature", color: "blue_light" }],
+      cover: { color: "sky", size: "full" },
     },
   ],
   checklists: [
@@ -91,12 +92,17 @@ const server = createServer((req, res) => {
   }
 
   if (url.pathname === `/boards/${board.id}`) {
-      if (
-        url.searchParams.get("labels_limit") !== "1000" ||
-        url.searchParams.get("token") !== "mock-trello-token" ||
-        url.searchParams.get("customFields") !== "true" ||
-        url.searchParams.get("card_customFieldItems") !== "true"
-      ) {
+    if (
+      url.searchParams.get("labels_limit") !== "1000" ||
+      url.searchParams.get("customFields") !== "true" ||
+      url.searchParams.get("card_customFieldItems") !== "true" ||
+      !url.searchParams.get("card_fields")?.split(",").includes("cover") ||
+      !url.searchParams
+        .get("card_fields")
+        ?.split(",")
+        .includes("idAttachmentCover") ||
+      url.searchParams.get("token") !== "mock-trello-token"
+    ) {
       res.writeHead(400);
       res.end(JSON.stringify({ message: "Required board fields are missing" }));
       return;

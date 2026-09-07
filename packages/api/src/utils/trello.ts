@@ -34,6 +34,17 @@ const trelloLabelColours: Record<string, string> = {
 const defaultLabelColour = "#0d9488";
 const colourlessLabelColour = "#8590a2";
 
+export const trelloCardFields = [
+  "id",
+  "name",
+  "desc",
+  "idList",
+  "labels",
+  "idChecklists",
+  "cover",
+  "idAttachmentCover",
+] as const;
+
 export type TrelloCustomFieldType =
   | "checkbox"
   | "date"
@@ -225,4 +236,10 @@ export const formatTrelloCustomFields = (
     );
 
   return { definitions, values };
+};
+
+export const getTrelloCoverColour = (colour: string | null | undefined) => {
+  if (!colour) return null;
+
+  return trelloLabelColours[colour] ?? null;
 };

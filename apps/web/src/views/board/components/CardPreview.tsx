@@ -4,9 +4,16 @@ import Card from "./Card";
 interface CardPreviewProps {
   card: BoardCard;
   cardPrefix: string;
+  timeTrackingTotalSeconds?: number;
+  isTimerRunning?: boolean;
 }
 
-export default function CardPreview({ card, cardPrefix }: CardPreviewProps) {
+export default function CardPreview({
+  card,
+  cardPrefix,
+  timeTrackingTotalSeconds,
+  isTimerRunning,
+}: CardPreviewProps) {
   return (
     <Card
       title={card.title}
@@ -20,6 +27,8 @@ export default function CardPreview({ card, cardPrefix }: CardPreviewProps) {
       comments={card.comments ?? []}
       attachments={card.attachments}
       dueDate={card.dueDate ?? null}
+      timeTrackingTotalSeconds={timeTrackingTotalSeconds}
+      isTimerRunning={isTimerRunning}
     />
   );
 }

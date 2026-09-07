@@ -47,6 +47,7 @@
     {
       "group": "Guides",
       "pages": [
+        "guides/time-tracking",
         {
           "group": "Self-Hosting",
           "pages": [

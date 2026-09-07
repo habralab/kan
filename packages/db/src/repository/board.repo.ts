@@ -26,6 +26,8 @@ import {
   comments,
   labels,
   lists,
+  timeTrackingActiveTimers,
+  timeTrackingWorklogs,
   userBoardFavorites,
   workspaceMembers,
 } from "@kan/db/schema";
@@ -1001,6 +1003,29 @@ export const moveToWorkspace = async (
   newSlug?: string,
 ) => {
   return db.transaction(async (tx) => {
+    const [lockedBoard] = await tx
+      .select({ id: boards.id })
+      .from(boards)
+      .where(eq(boards.id, boardId))
+      .limit(1)
+      .for("update");
+
+    if (!lockedBoard) throw new Error("Failed to move board");
+
+    const [worklog] = await tx
+      .select({ id: timeTrackingWorklogs.id })
+      .from(timeTrackingWorklogs)
+      .where(eq(timeTrackingWorklogs.boardId, boardId))
+      .limit(1);
+    const [activeTimer] = await tx
+      .select({ id: timeTrackingActiveTimers.id })
+      .from(timeTrackingActiveTimers)
+      .where(eq(timeTrackingActiveTimers.boardId, boardId))
+      .limit(1);
+
+    if (worklog || activeTimer)
+      return { moved: false, reason: "time_tracking_data" } as const;
+
     // Update the board's workspace (and slug if provided)
     const [updatedBoard] = await tx
       .update(boards)
@@ -1045,7 +1070,7 @@ export const moveToWorkspace = async (
       }
     }
 
-    return updatedBoard;
+    return { moved: true, board: updatedBoard } as const;
   });
 };
 

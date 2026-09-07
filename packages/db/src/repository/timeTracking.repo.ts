@@ -25,6 +25,7 @@ import {
   timeTrackingActiveTimers,
   timeTrackingBoardSettings,
   timeTrackingWorklogs,
+  timeTrackingWorklogSources,
   users,
   workspaceMembers,
   workspaces,
@@ -73,6 +74,9 @@ export interface TimeTrackingReportFilters {
 
 export type TimeTrackingReportGroupBy = "member" | "card" | "list";
 export type TimeTrackingExportGroupBy = TimeTrackingReportGroupBy | "date";
+
+export const UNAVAILABLE_TIME_TRACKING_MEMBER_GROUP_ID = "unavailable-member";
+export const UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID = "unavailable-card";
 
 const getReportConditions = (
   db: dbClient,
@@ -194,11 +198,11 @@ export const getCardWorklogSummary = async (
       showEmailsToMembers: workspaces.showEmailsToMembers,
     })
     .from(timeTrackingWorklogs)
-    .innerJoin(
+    .leftJoin(
       workspaceMembers,
       eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
     )
-    .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
+    .leftJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
     .leftJoin(users, eq(workspaceMembers.userId, users.id))
     .where(
       and(
@@ -293,7 +297,7 @@ export const getWorklogContext = async (
     })
     .from(timeTrackingWorklogs)
     .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
-    .innerJoin(
+    .leftJoin(
       workspaceMembers,
       eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
     )
@@ -561,7 +565,7 @@ export const updateWorklog = async (
       .select({ id: timeTrackingWorklogs.id })
       .from(timeTrackingWorklogs)
       .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
-      .innerJoin(
+      .leftJoin(
         workspaceMembers,
         eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
       )
@@ -637,7 +641,7 @@ export const deleteWorklog = async (
       .select({ id: timeTrackingWorklogs.id })
       .from(timeTrackingWorklogs)
       .innerJoin(boards, eq(timeTrackingWorklogs.boardId, boards.id))
-      .innerJoin(
+      .leftJoin(
         workspaceMembers,
         eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
       )
@@ -882,6 +886,36 @@ export const listBoardWorklogs = async (
   };
 };
 
+export const listWorklogSourcesByWorklogIds = (
+  db: dbClient,
+  worklogIds: number[],
+) => {
+  if (worklogIds.length === 0) return Promise.resolve([]);
+
+  return db
+    .select({
+      worklogId: timeTrackingWorklogSources.worklogId,
+      provider: timeTrackingWorklogSources.provider,
+      externalId: timeTrackingWorklogSources.externalId,
+      sourceCreatedAt: timeTrackingWorklogSources.sourceCreatedAt,
+      sourceUpdatedAt: timeTrackingWorklogSources.sourceUpdatedAt,
+      sourceCreatedAtRaw: timeTrackingWorklogSources.sourceCreatedAtRaw,
+      sourceUpdatedAtRaw: timeTrackingWorklogSources.sourceUpdatedAtRaw,
+      sourceTimestampTimezone:
+        timeTrackingWorklogSources.sourceTimestampTimezone,
+      sourceCreatedByExternalMemberId:
+        timeTrackingWorklogSources.sourceCreatedByExternalMemberId,
+      sourceCreatedByDisplayName:
+        timeTrackingWorklogSources.sourceCreatedByDisplayName,
+      sourceUpdatedByExternalMemberId:
+        timeTrackingWorklogSources.sourceUpdatedByExternalMemberId,
+      sourceUpdatedByDisplayName:
+        timeTrackingWorklogSources.sourceUpdatedByDisplayName,
+    })
+    .from(timeTrackingWorklogSources)
+    .where(inArray(timeTrackingWorklogSources.worklogId, worklogIds));
+};
+
 export const getBoardWorklogSummary = async (
   db: dbClient,
   boardId: number,
@@ -987,53 +1021,87 @@ export const getBoardWorklogGroups = async (
   const conditions = and(...getReportConditions(db, boardId, filters));
 
   if (groupBy === "member") {
-    const rows = await db
-      .select({
-        publicId: workspaceMembers.publicId,
-        durationSeconds,
-        entryCount,
-        email: workspaceMembers.email,
-        status: workspaceMembers.status,
-        deletedAt: workspaceMembers.deletedAt,
-        displayName: users.name,
-        userEmail: users.email,
-        showEmailsToMembers: workspaces.showEmailsToMembers,
-      })
-      .from(timeTrackingWorklogs)
-      .innerJoin(
-        workspaceMembers,
-        eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
-      )
-      .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
-      .leftJoin(users, eq(workspaceMembers.userId, users.id))
-      .where(conditions)
-      .groupBy(workspaceMembers.id, users.id, workspaces.showEmailsToMembers)
-      .orderBy(desc(durationSeconds), workspaceMembers.email);
-
-    return rows.map((row) => ({
-      publicId: row.publicId,
-      label: null,
-      member: row,
-      durationSeconds: row.durationSeconds,
-      entryCount: row.entryCount,
-    }));
+    const [rows, unavailable] = await Promise.all([
+      db
+        .select({
+          publicId: workspaceMembers.publicId,
+          durationSeconds,
+          entryCount,
+          email: workspaceMembers.email,
+          status: workspaceMembers.status,
+          deletedAt: workspaceMembers.deletedAt,
+          displayName: users.name,
+          userEmail: users.email,
+          showEmailsToMembers: workspaces.showEmailsToMembers,
+        })
+        .from(timeTrackingWorklogs)
+        .innerJoin(
+          workspaceMembers,
+          eq(timeTrackingWorklogs.workspaceMemberId, workspaceMembers.id),
+        )
+        .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
+        .leftJoin(users, eq(workspaceMembers.userId, users.id))
+        .where(conditions)
+        .groupBy(workspaceMembers.id, users.id, workspaces.showEmailsToMembers)
+        .orderBy(desc(durationSeconds), workspaceMembers.email),
+      db
+        .select({ durationSeconds, entryCount })
+        .from(timeTrackingWorklogs)
+        .where(and(conditions, isNull(timeTrackingWorklogs.workspaceMemberId))),
+    ]);
+    return [
+      ...rows.map((row) => ({
+        publicId: row.publicId,
+        label: null,
+        member: row,
+        durationSeconds: row.durationSeconds,
+        entryCount: row.entryCount,
+      })),
+      ...(unavailable[0]?.entryCount
+        ? [
+            {
+              publicId: UNAVAILABLE_TIME_TRACKING_MEMBER_GROUP_ID,
+              label: "Unavailable member",
+              member: null,
+              durationSeconds: unavailable[0].durationSeconds,
+              entryCount: unavailable[0].entryCount,
+            },
+          ]
+        : []),
+    ].sort((left, right) => right.durationSeconds - left.durationSeconds);
   }
 
   if (groupBy === "card") {
-    const rows = await db
-      .select({
-        publicId: cards.publicId,
-        label: cards.title,
-        durationSeconds,
-        entryCount,
-      })
-      .from(timeTrackingWorklogs)
-      .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
-      .where(conditions)
-      .groupBy(cards.id)
-      .orderBy(desc(durationSeconds), cards.title);
-
-    return rows.map((row) => ({ ...row, member: null }));
+    const [rows, unavailable] = await Promise.all([
+      db
+        .select({
+          publicId: cards.publicId,
+          label: cards.title,
+          durationSeconds,
+          entryCount,
+        })
+        .from(timeTrackingWorklogs)
+        .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
+        .where(conditions)
+        .groupBy(cards.id)
+        .orderBy(desc(durationSeconds), cards.title),
+      db
+        .select({ durationSeconds, entryCount })
+        .from(timeTrackingWorklogs)
+        .where(and(conditions, isNull(timeTrackingWorklogs.cardId))),
+    ]);
+    const groups = rows.map((row) => ({ ...row, member: null }));
+    if (unavailable[0]?.entryCount)
+      groups.push({
+        publicId: UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID,
+        label: "Unavailable card",
+        durationSeconds: unavailable[0].durationSeconds,
+        entryCount: unavailable[0].entryCount,
+        member: null,
+      });
+    return groups.sort(
+      (left, right) => right.durationSeconds - left.durationSeconds,
+    );
   }
 
   if (groupBy === "date") {
@@ -1052,21 +1120,37 @@ export const getBoardWorklogGroups = async (
     return rows.map((row) => ({ ...row, member: null }));
   }
 
-  const rows = await db
-    .select({
-      publicId: lists.publicId,
-      label: lists.name,
-      durationSeconds,
-      entryCount,
-    })
-    .from(timeTrackingWorklogs)
-    .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
-    .innerJoin(lists, eq(cards.listId, lists.id))
-    .where(conditions)
-    .groupBy(lists.id)
-    .orderBy(desc(durationSeconds), lists.name);
-
-  return rows.map((row) => ({ ...row, member: null }));
+  const [rows, unavailable] = await Promise.all([
+    db
+      .select({
+        publicId: lists.publicId,
+        label: lists.name,
+        durationSeconds,
+        entryCount,
+      })
+      .from(timeTrackingWorklogs)
+      .innerJoin(cards, eq(timeTrackingWorklogs.cardId, cards.id))
+      .innerJoin(lists, eq(cards.listId, lists.id))
+      .where(conditions)
+      .groupBy(lists.id)
+      .orderBy(desc(durationSeconds), lists.name),
+    db
+      .select({ durationSeconds, entryCount })
+      .from(timeTrackingWorklogs)
+      .where(and(conditions, isNull(timeTrackingWorklogs.cardId))),
+  ]);
+  const groups = rows.map((row) => ({ ...row, member: null }));
+  if (unavailable[0]?.entryCount)
+    groups.push({
+      publicId: UNAVAILABLE_TIME_TRACKING_CARD_GROUP_ID,
+      label: "Unavailable card",
+      durationSeconds: unavailable[0].durationSeconds,
+      entryCount: unavailable[0].entryCount,
+      member: null,
+    });
+  return groups.sort(
+    (left, right) => right.durationSeconds - left.durationSeconds,
+  );
 };
 
 export const getBoardReportOptions = async (db: dbClient, boardId: number) => {

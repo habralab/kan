@@ -9,6 +9,7 @@ import {
   getTimeTrackingCsvMemberDisplayName,
   getTimeTrackingCsvMemberEmail,
   getTimeTrackingExportFilename,
+  getTimeTrackingSourceTimestamp,
   TIME_TRACKING_DETAILED_CSV_HEADERS,
   TIME_TRACKING_ENTRIES_CSV_HEADERS,
   TIME_TRACKING_SUMMARY_CSV_HEADERS,
@@ -170,6 +171,27 @@ describe("time tracking CSV", () => {
       "Created by",
       "Updated at",
       "Updated by",
+      "Source provider",
+      "Source entry ID",
+      "Source created at",
+      "Source timestamp timezone",
+      "Source created by",
+      "Source created by ID",
+      "Source updated at",
+      "Source updated by",
+      "Source updated by ID",
     ]);
+  });
+
+  it("prefers normalized source timestamps and preserves unzoned raw values", () => {
+    const normalized = new Date("2026-08-29T08:46:00Z");
+
+    expect(
+      getTimeTrackingSourceTimestamp(normalized, "2026-08-29 11:46:00"),
+    ).toBe(normalized);
+    expect(getTimeTrackingSourceTimestamp(null, "2026-08-29 11:46:00")).toBe(
+      "2026-08-29 11:46:00",
+    );
+    expect(getTimeTrackingSourceTimestamp(null, null)).toBeNull();
   });
 });

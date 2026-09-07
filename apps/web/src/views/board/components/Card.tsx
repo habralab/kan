@@ -37,6 +37,7 @@ const Card = ({
   members: {
     publicId: string;
     email: string;
+    status: "active" | "invited" | "removed" | "paused";
     user: { name: string | null; email: string; image: string | null } | null;
   }[];
   summary?: {
@@ -182,18 +183,26 @@ const Card = ({
               )}
               {members.length > 0 && (
                 <div className="isolate flex justify-end -space-x-1 overflow-hidden">
-                  {members.map(({ user, email }) => {
+                  {members.map(({ publicId, user, email, status }) => {
                     const avatarUrl = user?.image
                       ? getAvatarUrl(user.image)
                       : undefined;
 
                     return (
-                      <Avatar
-                        name={user?.name ?? ""}
-                        email={user?.email ?? email}
-                        imageUrl={avatarUrl}
-                        size="sm"
-                      />
+                      <span
+                        key={publicId}
+                        className={
+                          status === "paused" ? "opacity-50" : undefined
+                        }
+                        title={status === "paused" ? t`Paused` : undefined}
+                      >
+                        <Avatar
+                          name={user?.name ?? ""}
+                          email={user?.email ?? email}
+                          imageUrl={avatarUrl}
+                          size="sm"
+                        />
+                      </span>
                     );
                   })}
                 </div>

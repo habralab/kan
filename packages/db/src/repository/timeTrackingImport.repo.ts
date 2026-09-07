@@ -324,6 +324,17 @@ export const startTimeTrackingImportRun = (
     .returning()
     .then((rows) => rows[0] ?? null);
 
+export const getTimeTrackingImportRun = (
+  db: dbClient,
+  importRunPublicId: string,
+) =>
+  db
+    .select()
+    .from(timeTrackingImportRuns)
+    .where(eq(timeTrackingImportRuns.publicId, importRunPublicId))
+    .limit(1)
+    .then((rows) => rows[0] ?? null);
+
 export const validateTimeTrackingImportMappings = async (
   db: dbClient,
   records: TimeTrackingImportMappingRecord[],
@@ -379,6 +390,30 @@ export const failTimeTrackingImportRun = async (
       status: "failed",
       counters: input.counters,
       error: input.error,
+      finishedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(timeTrackingImportRuns.publicId, input.importRunPublicId),
+        eq(timeTrackingImportRuns.status, "running"),
+      ),
+    )
+    .returning();
+
+  if (!run)
+    throw new TimeTrackingImportRepositoryError("IMPORT_RUN_NOT_RUNNING");
+  return run;
+};
+
+export const recoverTimeTrackingImportRun = async (
+  db: dbClient,
+  input: { importRunPublicId: string; reason: string },
+) => {
+  const [run] = await db
+    .update(timeTrackingImportRuns)
+    .set({
+      status: "failed",
+      error: `Manual recovery: ${input.reason}`,
       finishedAt: new Date(),
     })
     .where(

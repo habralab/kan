@@ -13,7 +13,21 @@ import {
 
 import type { TestDbClient } from "./test-db";
 import { boardDetailSchema } from "../src/schemas/board";
+import { formatCardCover } from "../src/utils/cardCover";
 import { createTestDb, seedTestData } from "./test-db";
+
+const formatBoardCovers = <T extends { lists: { cards: unknown[] }[] }>(
+  board: T,
+) => ({
+  ...board,
+  lists: board.lists.map((list) => ({
+    ...list,
+    cards: list.cards.map((card) => ({
+      ...(card as Parameters<typeof formatCardCover>[0]),
+      cover: formatCardCover(card as Parameters<typeof formatCardCover>[0]),
+    })),
+  })),
+});
 
 describe("board summary repository view", () => {
   let db: TestDbClient;
@@ -58,7 +72,7 @@ describe("board summary repository view", () => {
     await db.insert(cards).values({
       publicId: "empty1234567",
       title: "Empty summary",
-      description: null,
+      description: "<p> </p>",
       index: 1,
       listId: list!.id,
       createdBy: user.id,
@@ -147,6 +161,7 @@ describe("board summary repository view", () => {
       labels: [],
       lists: [],
       dueDate: [],
+      customFields: [],
       type: "regular" as const,
     };
     const full = await boardRepo.getByPublicId(db, "board1234567", userId, {
@@ -195,7 +210,11 @@ describe("board summary repository view", () => {
       },
     });
 
-    expect(() => boardDetailSchema.parse(full)).not.toThrow();
-    expect(() => boardDetailSchema.parse(summary)).not.toThrow();
+    expect(() =>
+      boardDetailSchema.parse(formatBoardCovers(full!)),
+    ).not.toThrow();
+    expect(() =>
+      boardDetailSchema.parse(formatBoardCovers(summary!)),
+    ).not.toThrow();
   });
 });

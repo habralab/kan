@@ -672,6 +672,30 @@ describe("time tracking import repository", () => {
     expect(runs.map((run) => run.status).sort()).toEqual(["failed", "running"]);
   });
 
+  it("recovers only a running import and preserves its last counters", async () => {
+    const run = await startRun();
+    if (!run) throw new Error("Unable to create import run");
+
+    const recovered = await importRepo.recoverTimeTrackingImportRun(db, {
+      importRunPublicId: run.publicId,
+      reason: "Worker was terminated after the host rebooted",
+    });
+
+    expect(recovered).toMatchObject({
+      publicId: run.publicId,
+      status: "failed",
+      counters: run.counters,
+      error: "Manual recovery: Worker was terminated after the host rebooted",
+      finishedAt: expect.any(Date),
+    });
+    await expect(
+      importRepo.recoverTimeTrackingImportRun(db, {
+        importRunPublicId: run.publicId,
+        reason: "A repeated recovery must not rewrite the audit record",
+      }),
+    ).rejects.toMatchObject({ code: "IMPORT_RUN_NOT_RUNNING" });
+  });
+
   it("keeps orphan and actor exceptions exclusive to imported records", async () => {
     await expect(
       db.insert(timeTrackingWorklogs).values({

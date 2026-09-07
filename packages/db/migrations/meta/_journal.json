@@ -323,6 +323,20 @@
       "when": 1788699430216,
       "tag": "20260906125710_AddCustomFieldLayout",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1788781560413,
+      "tag": "20260907114600_AddCardCovers",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1788788062533,
+      "tag": "20260907133422_AddImageCardCovers",
+      "breakpoints": true
     }
   ]
 }

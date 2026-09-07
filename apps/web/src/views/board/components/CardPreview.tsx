@@ -34,6 +34,7 @@ export default function CardPreview({
       isTimerRunning={isTimerRunning}
       customFields={customFields}
       customFieldValues={card.customFieldValues}
+      cover={card.cover}
     />
   );
 }

@@ -215,6 +215,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
       dueDateFilters: semanticFilters,
     }),
     type: boardType,
+    cardView: "summary" as const,
   };
 
   const {
@@ -285,7 +286,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
   }, [boardWorkspacePublicId, selectWorkspaceById]);
 
   const refetchBoard = async () => {
-    if (boardId) await utils.board.byId.refetch({ boardPublicId: boardId });
+    if (boardId) await utils.board.byId.refetch(queryParams);
   };
 
   useEffect(() => {
@@ -502,10 +503,6 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
       return;
     }
     if (action === "duplicate") {
-      setModalState("CARD_CONTEXT_DUPLICATE", {
-        boardPublicId: boardId ?? "",
-        isTemplate: !!isTemplate,
-      });
       openModal("CARD_CONTEXT_DUPLICATE", cardPublicId);
       return;
     }
@@ -777,7 +774,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
         >
           <NewCardForm
             isTemplate={!!isTemplate}
-            boardPublicId={boardId ?? ""}
+            boardData={boardData}
             listPublicId={selectedPublicListId}
             queryParams={queryParams}
             initialDueDate={newCardInitialDueDate}
@@ -907,10 +904,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
           modalSize="md"
           isVisible={isOpen && modalContentType === "CARD_CONTEXT_DUPLICATE"}
         >
-          <CardContextDuplicateModal
-            boardPublicId={boardId ?? ""}
-            isTemplate={!!isTemplate}
-          />
+          <CardContextDuplicateModal lists={boardData?.lists ?? []} />
         </Modal>
         <Modal
           modalSize="sm"

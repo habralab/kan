@@ -22,6 +22,7 @@ export default function CardPreview({
       }
       labels={card.labels}
       members={card.members}
+      summary={card.summary}
       checklists={card.checklists ?? []}
       description={card.description ?? null}
       comments={card.comments ?? []}

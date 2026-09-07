@@ -186,6 +186,26 @@ export const getByPublicId = async (
   const includeCardDetails = filters.cardView !== "summary";
   let cardIds: string[] = [];
 
+  const assignedMembers = await db
+    .selectDistinct({ publicId: workspaceMembers.publicId })
+    .from(cardToWorkspaceMembers)
+    .innerJoin(cards, eq(cardToWorkspaceMembers.cardId, cards.id))
+    .innerJoin(lists, eq(cards.listId, lists.id))
+    .innerJoin(boards, eq(lists.boardId, boards.id))
+    .innerJoin(
+      workspaceMembers,
+      eq(cardToWorkspaceMembers.workspaceMemberId, workspaceMembers.id),
+    )
+    .where(
+      and(
+        eq(boards.publicId, boardPublicId),
+        isNull(boards.deletedAt),
+        isNull(lists.deletedAt),
+        isNull(cards.deletedAt),
+        isNull(workspaceMembers.deletedAt),
+      ),
+    );
+
   if (filters.labels.length > 0 || filters.members.length > 0) {
     const filteredCards = await db
       .select({
@@ -308,6 +328,7 @@ export const getByPublicId = async (
                       publicId: true,
                       email: true,
                       deletedAt: true,
+                      status: true,
                     },
                     with: {
                       user: {
@@ -499,6 +520,7 @@ export const getByPublicId = async (
 
   const formattedResult = {
     ...board,
+    assignedMemberPublicIds: assignedMembers.map((member) => member.publicId),
     favorite: board.userFavorites.length > 0,
     userFavorites: undefined,
     lists: board.lists.map((list) => ({

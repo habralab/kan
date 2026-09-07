@@ -14,6 +14,8 @@ interface SortableCardProps {
   cardHref: string;
   canEditCard: boolean;
   onContextMenu: (event: React.MouseEvent, cardPublicId: string) => void;
+  timeTrackingTotalSeconds?: number;
+  isTimerRunning: boolean;
 }
 
 export default function SortableCard({
@@ -23,6 +25,8 @@ export default function SortableCard({
   cardHref,
   canEditCard,
   onContextMenu,
+  timeTrackingTotalSeconds,
+  isTimerRunning,
 }: SortableCardProps) {
   const isPlaceholder = card.publicId.startsWith("PLACEHOLDER");
 
@@ -69,7 +73,12 @@ export default function SortableCard({
       {...attributes}
       {...listeners}
     >
-      <CardPreview card={card} cardPrefix={cardPrefix} />
+      <CardPreview
+        card={card}
+        cardPrefix={cardPrefix}
+        timeTrackingTotalSeconds={timeTrackingTotalSeconds}
+        isTimerRunning={isTimerRunning}
+      />
     </Link>
   );
 }

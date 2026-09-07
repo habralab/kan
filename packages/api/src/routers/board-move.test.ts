@@ -26,6 +26,10 @@ vi.mock("@kan/db/repository/workspace.repo", () => ({
   getByPublicId: vi.fn(),
 }));
 
+vi.mock("@kan/db/repository/timeTracking.repo", () => ({
+  getBoardTimeTrackingMoveBlockers: vi.fn(),
+}));
+
 vi.mock("@kan/db/repository/card.repo", () => ({
   getByPublicId: vi.fn(),
   create: vi.fn(),
@@ -65,6 +69,7 @@ vi.mock("@kan/shared/constants", () => ({
 }));
 
 import * as boardRepo from "@kan/db/repository/board.repo";
+import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { assertCanEdit, assertPermission } from "../utils/permissions";
 
@@ -72,6 +77,8 @@ const mockGetBoardForMove = boardRepo.getBoardForMove as ReturnType<typeof vi.fn
 const mockIsBoardSlugAvailable = boardRepo.isBoardSlugAvailable as ReturnType<typeof vi.fn>;
 const mockMoveToWorkspace = boardRepo.moveToWorkspace as ReturnType<typeof vi.fn>;
 const mockWorkspaceGetByPublicId = workspaceRepo.getByPublicId as ReturnType<typeof vi.fn>;
+const mockGetTimeTrackingMoveBlockers =
+  timeTrackingRepo.getBoardTimeTrackingMoveBlockers as ReturnType<typeof vi.fn>;
 const mockAssertCanEdit = assertCanEdit as ReturnType<typeof vi.fn>;
 const mockAssertPermission = assertPermission as ReturnType<typeof vi.fn>;
 
@@ -97,6 +104,14 @@ describe("board.move", () => {
     vi.clearAllMocks();
     mockAssertCanEdit.mockResolvedValue(undefined);
     mockAssertPermission.mockResolvedValue(undefined);
+    mockGetTimeTrackingMoveBlockers.mockResolvedValue({
+      hasWorklogs: false,
+      hasActiveTimers: false,
+    });
+    mockMoveToWorkspace.mockResolvedValue({
+      moved: true,
+      board: { publicId: mockInput.boardPublicId, name: mockBoard.name },
+    });
   });
 
   it("throws UNAUTHORIZED when user is not authenticated", async () => {
@@ -175,6 +190,29 @@ describe("board.move", () => {
     ).rejects.toThrow(TRPCError);
   });
 
+  it.each([
+    {
+      blockers: { hasWorklogs: true, hasActiveTimers: false },
+      label: "worklogs",
+    },
+    {
+      blockers: { hasWorklogs: false, hasActiveTimers: true },
+      label: "active timers",
+    },
+  ])("blocks a cross-workspace move with $label", async ({ blockers }) => {
+    const { boardRouter } = await import("./board");
+    mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
+    mockGetTimeTrackingMoveBlockers.mockResolvedValueOnce(blockers);
+
+    const ctx = { user: mockUser, db: mockDb } as never;
+
+    await expect(
+      boardRouter.createCaller(ctx).move(mockInput),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(mockWorkspaceGetByPublicId).not.toHaveBeenCalled();
+    expect(mockMoveToWorkspace).not.toHaveBeenCalled();
+  });
+
   it("throws NOT_FOUND when target workspace is soft-deleted", async () => {
     const { boardRouter } = await import("./board");
     mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
@@ -232,7 +270,6 @@ describe("board.move", () => {
     mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
     mockWorkspaceGetByPublicId.mockResolvedValueOnce(mockTargetWorkspace);
     mockIsBoardSlugAvailable.mockResolvedValueOnce(false);
-    mockMoveToWorkspace.mockResolvedValueOnce(undefined);
 
     const ctx = { user: mockUser, db: mockDb } as never;
 
@@ -251,7 +288,6 @@ describe("board.move", () => {
     mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
     mockWorkspaceGetByPublicId.mockResolvedValueOnce(mockTargetWorkspace);
     mockIsBoardSlugAvailable.mockResolvedValueOnce(true);
-    mockMoveToWorkspace.mockResolvedValueOnce(undefined);
 
     const ctx = { user: mockUser, db: mockDb } as never;
 
@@ -264,5 +300,22 @@ describe("board.move", () => {
       mockTargetWorkspace.id,
       "my-board",
     );
+  });
+
+  it("returns CONFLICT when the transactional guard catches a concurrent entry", async () => {
+    const { boardRouter } = await import("./board");
+    mockGetBoardForMove.mockResolvedValueOnce(mockBoard);
+    mockWorkspaceGetByPublicId.mockResolvedValueOnce(mockTargetWorkspace);
+    mockIsBoardSlugAvailable.mockResolvedValueOnce(true);
+    mockMoveToWorkspace.mockResolvedValueOnce({
+      moved: false,
+      reason: "time_tracking_data",
+    });
+
+    const ctx = { user: mockUser, db: mockDb } as never;
+
+    await expect(
+      boardRouter.createCaller(ctx).move(mockInput),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
   });
 });

@@ -193,7 +193,9 @@ export const ensureCardCoverPreviews = async (args: {
     const sourceContentType =
       metadata.format === "heif" && metadata.compression === "av1"
         ? "image/avif"
-        : supportedFormats.get(metadata.format);
+        : metadata.format
+          ? supportedFormats.get(metadata.format)
+          : undefined;
 
     if (!sourceContentType)
       throw new CardCoverPreviewError(

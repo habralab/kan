@@ -5,6 +5,7 @@ import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
 import * as customFieldRepo from "@kan/db/repository/custom-field.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
+import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 
 import { assertPermission } from "../utils/permissions";
@@ -44,6 +45,9 @@ vi.mock("@kan/db/repository/label.repo", () => ({
 vi.mock("@kan/db/repository/list.repo", () => ({
   getWorkspaceAndListIdByListPublicId: vi.fn(),
 }));
+vi.mock("@kan/db/repository/timeTracking.repo", () => ({
+  getCardTimeTrackingMoveBlockers: vi.fn(),
+}));
 vi.mock("@kan/db/repository/workspace.repo", () => ({
   getAllMembersByPublicIds: vi.fn(),
   getMemberByPublicId: vi.fn(),
@@ -57,7 +61,10 @@ vi.mock("@kan/auth/server", () => ({
 vi.mock("@kan/shared/utils", () => ({
   generateAttachmentUrl: vi.fn(),
   generateAvatarUrl: vi.fn(),
-  normalizeDescription: vi.fn((description: string) => description),
+  normalizeDescription: vi.fn(
+    (description: string | null | undefined): string | null =>
+      description ?? null,
+  ),
 }));
 vi.mock("../utils/notifications", () => ({
   sendMentionEmails: vi.fn(),
@@ -102,6 +109,8 @@ const mockReorderCard = cardRepo.reorder as ReturnType<typeof vi.fn>;
 const mockGetList = listRepo.getWorkspaceAndListIdByListPublicId as ReturnType<
   typeof vi.fn
 >;
+const mockGetMoveBlockers =
+  timeTrackingRepo.getCardTimeTrackingMoveBlockers as ReturnType<typeof vi.fn>;
 const mockGetMembers = workspaceRepo.getAllMembersByPublicIds as ReturnType<
   typeof vi.fn
 >;
@@ -123,6 +132,10 @@ describe("card member workspace scoping", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockAssertPermission.mockResolvedValue(undefined);
+    mockGetMoveBlockers.mockResolvedValue({
+      hasWorklogs: false,
+      hasActiveTimers: false,
+    });
   });
 
   describe("create", () => {
@@ -293,17 +306,20 @@ describe("card member workspace scoping", () => {
     it("does not copy paused member assignments", async () => {
       const { cardRouter } = await import("./card");
       mockGetCard.mockResolvedValueOnce({ id: 17, workspaceId: 7 });
-      mockGetList.mockResolvedValueOnce({ id: 11, workspaceId: 7 });
+      mockGetList.mockResolvedValueOnce({
+        id: 11,
+        workspaceId: 7,
+        boardPublicId: "board-1234567",
+      });
       mockGetCardWithMembers.mockResolvedValueOnce({
         title: "Source card",
         description: "",
         dueDate: null,
         labels: [],
         checklists: [],
-        members: [
-          { publicId: "active-member" },
-          { publicId: "paused-member" },
-        ],
+        customFieldValues: [],
+        list: { board: { publicId: "board-1234567" } },
+        members: [{ publicId: "active-member" }, { publicId: "paused-member" }],
       });
       mockCardCreate.mockResolvedValueOnce({
         id: 18,
@@ -348,6 +364,7 @@ describe("card member workspace scoping", () => {
       mockGetList.mockResolvedValueOnce({
         id: 11,
         workspaceId: 7,
+        boardPublicId: "board-1234567",
       });
       mockGetCardWithMembers.mockResolvedValueOnce({
         title: "Source card",
@@ -357,6 +374,7 @@ describe("card member workspace scoping", () => {
         labels: [],
         checklists: [],
         customFieldValues: [],
+        list: { board: { publicId: "board-1234567" } },
       });
       mockCardCreate.mockResolvedValueOnce({
         id: 18,

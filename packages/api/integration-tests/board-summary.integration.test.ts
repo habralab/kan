@@ -13,21 +13,33 @@ import {
 
 import type { TestDbClient } from "./test-db";
 import { boardDetailSchema } from "../src/schemas/board";
+import { formatBoardBackground } from "../src/utils/boardBackground";
 import { formatCardCover } from "../src/utils/cardCover";
 import { createTestDb, seedTestData } from "./test-db";
 
 const formatBoardCovers = <T extends { lists: { cards: unknown[] }[] }>(
   board: T,
-) => ({
-  ...board,
-  lists: board.lists.map((list) => ({
-    ...list,
-    cards: list.cards.map((card) => ({
-      ...(card as Parameters<typeof formatCardCover>[0]),
-      cover: formatCardCover(card as Parameters<typeof formatCardCover>[0]),
+) => {
+  const backgroundSource = board as T &
+    Parameters<typeof formatBoardBackground>[0];
+  const { backgroundColourCode, backgroundImageKey, ...boardResult } =
+    backgroundSource;
+
+  return {
+    ...boardResult,
+    background: formatBoardBackground({
+      backgroundColourCode,
+      backgroundImageKey,
+    }),
+    lists: board.lists.map((list) => ({
+      ...list,
+      cards: list.cards.map((card) => ({
+        ...(card as Parameters<typeof formatCardCover>[0]),
+        cover: formatCardCover(card as Parameters<typeof formatCardCover>[0]),
+      })),
     })),
-  })),
-});
+  };
+};
 
 describe("board summary repository view", () => {
   let db: TestDbClient;

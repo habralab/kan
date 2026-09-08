@@ -12,11 +12,23 @@ import {
   customFieldValueSchema,
 } from "./custom-field";
 
+export const boardBackgroundSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("colour"),
+    colourCode: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+  }),
+  z.object({
+    kind: z.literal("image"),
+    version: z.string().regex(/^[0-9a-f]{16}$/),
+  }),
+]);
+
 // ─── board.all ───────────────────────────────────────────────
 export const boardListItemSchema = z.object({
   publicId: z.string(),
   name: z.string(),
   favorite: z.boolean(),
+  background: boardBackgroundSchema.nullable(),
   lists: z.array(
     z.object({
       publicId: z.string(),
@@ -75,6 +87,7 @@ export const boardDetailSchema = z.object({
   isArchived: z.boolean(),
   favorite: z.boolean(),
   assignedMemberPublicIds: z.array(z.string()),
+  background: boardBackgroundSchema.nullable(),
   workspace: z.object({
     publicId: z.string(),
     cardPrefix: z.string(),
@@ -119,6 +132,7 @@ export const boardBySlugSchema = z.object({
   name: z.string(),
   slug: z.string(),
   visibility: z.enum(["private", "public"]),
+  background: boardBackgroundSchema.nullable(),
   workspace: z.object({
     publicId: z.string(),
     name: z.string(),

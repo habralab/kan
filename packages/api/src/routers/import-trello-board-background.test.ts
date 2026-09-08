@@ -15,6 +15,9 @@ vi.mock("@kan/db/repository/board.repo", () => ({ create: vi.fn() }));
 vi.mock("@kan/db/repository/card.repo", () => ({}));
 vi.mock("@kan/db/repository/cardActivity.repo", () => ({}));
 vi.mock("@kan/db/repository/checklist.repo", () => ({}));
+vi.mock("@kan/db/repository/custom-field-import.repo", () => ({
+  importBoardCustomFields: vi.fn(),
+}));
 vi.mock("@kan/db/repository/import.repo", () => ({
   create: vi.fn(),
   update: vi.fn(),

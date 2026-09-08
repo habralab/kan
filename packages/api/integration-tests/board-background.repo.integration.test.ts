@@ -60,6 +60,7 @@ describe("board background repository", () => {
         name: "Source board",
         labels: [],
         lists: [],
+        customFields: [],
       },
       workspaceId: workspace.id,
       createdBy: user.id,

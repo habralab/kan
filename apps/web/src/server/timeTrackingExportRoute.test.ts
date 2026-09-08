@@ -1,13 +1,13 @@
 import { EventEmitter } from "node:events";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createNextApiContext } from "@kan/api/trpc";
+import { createNextApiContext } from "@kan/api/trpc-context";
 import { assertPermission } from "@kan/api/utils/permissions";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 
 import handler from "../pages/api/time-tracking/export";
 
-vi.mock("@kan/api/trpc", () => ({ createNextApiContext: vi.fn() }));
+vi.mock("@kan/api/trpc-context", () => ({ createNextApiContext: vi.fn() }));
 vi.mock("@kan/api/utils/apiLogging", () => ({
   withApiLogging: <T>(handler: T) => handler,
 }));

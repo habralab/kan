@@ -1,4 +1,5 @@
 import {
+  CopyObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
@@ -134,6 +135,25 @@ export async function putObject(
       Key: key,
       Body: body,
       ContentType: contentType,
+    }),
+  );
+}
+
+export async function copyObject(
+  bucket: string,
+  sourceKey: string,
+  targetKey: string,
+) {
+  const client = createS3Client();
+  const copySource = encodeURIComponent(`${bucket}/${sourceKey}`).replace(
+    /%2F/g,
+    "/",
+  );
+  await client.send(
+    new CopyObjectCommand({
+      Bucket: bucket,
+      CopySource: copySource,
+      Key: targetKey,
     }),
   );
 }

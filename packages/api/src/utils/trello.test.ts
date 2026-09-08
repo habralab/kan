@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { TrelloCustomField } from "./trello";
 import {
   formatTrelloCustomFields,
+  getTrelloBoardBackground,
   getTrelloCoverColour,
   getTrelloLabelColour,
   trelloCardFields,
@@ -323,5 +324,50 @@ describe("trelloCardFields", () => {
     expect(trelloCardFields).toEqual(
       expect.arrayContaining(["cover", "idAttachmentCover"]),
     );
+  });
+});
+
+describe("getTrelloBoardBackground", () => {
+  it("selects the largest scaled image rendition", () => {
+    expect(
+      getTrelloBoardBackground({
+        backgroundColor: "#0B50AF",
+        backgroundImage: "https://example.com/original.jpg",
+        backgroundImageScaled: [
+          { width: 480, height: 320, url: "https://example.com/480.jpg" },
+          { width: 1920, height: 1080, url: "https://example.com/1920.jpg" },
+          { width: 960, height: 640, url: "https://example.com/960.jpg" },
+        ],
+      }),
+    ).toEqual({
+      kind: "image",
+      url: "https://example.com/1920.jpg",
+      fallbackColourCode: "#0B50AF",
+    });
+  });
+
+  it("uses the original image when no scaled rendition is available", () => {
+    expect(
+      getTrelloBoardBackground({
+        backgroundImage: "https://example.com/original.jpg",
+        backgroundImageScaled: [],
+      }),
+    ).toEqual({
+      kind: "image",
+      url: "https://example.com/original.jpg",
+      fallbackColourCode: null,
+    });
+  });
+
+  it("retains an arbitrary valid Trello colour", () => {
+    expect(getTrelloBoardBackground({ backgroundColor: "#EF763A" })).toEqual({
+      kind: "colour",
+      colourCode: "#EF763A",
+    });
+  });
+
+  it("ignores malformed and empty background preferences", () => {
+    expect(getTrelloBoardBackground({ backgroundColor: "orange" })).toBeNull();
+    expect(getTrelloBoardBackground(undefined)).toBeNull();
   });
 });

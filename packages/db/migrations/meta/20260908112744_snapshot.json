@@ -1,6 +1,6 @@
 {
   "id": "645fce05-252c-49d1-9ada-c9175b9c442e",
-  "prevId": "0a957d57-84fa-4cda-bf23-33671a559873",
+  "prevId": "4851d218-52f8-4445-82a9-68296e969f4c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1354,6 +1354,26 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "coverColourCode": {
+          "name": "coverColourCode",
+          "type": "varchar(7)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coverAttachmentId": {
+          "name": "coverAttachmentId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coverSize": {
+          "name": "coverSize",
+          "type": "card_cover_size",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'normal'"
         }
       },
       "indexes": {
@@ -1368,6 +1388,21 @@
             },
             {
               "expression": "cardNumber",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "card_cover_attachment_idx": {
+          "name": "card_cover_attachment_idx",
+          "columns": [
+            {
+              "expression": "coverAttachmentId",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1431,6 +1466,19 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "card_coverAttachmentId_card_attachment_id_fk": {
+          "name": "card_coverAttachmentId_card_attachment_id_fk",
+          "tableFrom": "card",
+          "tableTo": "card_attachment",
+          "columnsFrom": [
+            "coverAttachmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1444,7 +1492,16 @@
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "card_cover_colour_code_check": {
+          "name": "card_cover_colour_code_check",
+          "value": "\"card\".\"coverColourCode\" IS NULL OR \"card\".\"coverColourCode\" ~ '^#[0-9A-Fa-f]{6}$'"
+        },
+        "card_cover_source_check": {
+          "name": "card_cover_source_check",
+          "value": "\"card\".\"coverColourCode\" IS NULL OR \"card\".\"coverAttachmentId\" IS NULL"
+        }
+      },
       "isRLSEnabled": true
     },
     "public._card_labels": {
@@ -1927,6 +1984,1067 @@
           "nullsNotDistinct": false,
           "columns": [
             "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.card_custom_field_value": {
+      "name": "card_custom_field_value",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardId": {
+          "name": "cardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customFieldId": {
+          "name": "customFieldId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fieldType": {
+          "name": "fieldType",
+          "type": "custom_field_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "optionId": {
+          "name": "optionId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "textValue": {
+          "name": "textValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numberValue": {
+          "name": "numberValue",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateValue": {
+          "name": "dateValue",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "checkboxValue": {
+          "name": "checkboxValue",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "importId": {
+          "name": "importId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "card_custom_field_value_field_option_idx": {
+          "name": "card_custom_field_value_field_option_idx",
+          "columns": [
+            {
+              "expression": "customFieldId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "optionId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"card_custom_field_value\".\"optionId\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "card_custom_field_value_field_checkbox_idx": {
+          "name": "card_custom_field_value_field_checkbox_idx",
+          "columns": [
+            {
+              "expression": "customFieldId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "checkboxValue",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"card_custom_field_value\".\"checkboxValue\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "card_custom_field_value_cardId_card_id_fk": {
+          "name": "card_custom_field_value_cardId_card_id_fk",
+          "tableFrom": "card_custom_field_value",
+          "tableTo": "card",
+          "columnsFrom": [
+            "cardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "card_custom_field_value_createdBy_user_id_fk": {
+          "name": "card_custom_field_value_createdBy_user_id_fk",
+          "tableFrom": "card_custom_field_value",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "card_custom_field_value_updatedBy_user_id_fk": {
+          "name": "card_custom_field_value_updatedBy_user_id_fk",
+          "tableFrom": "card_custom_field_value",
+          "tableTo": "user",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "card_custom_field_value_importId_import_id_fk": {
+          "name": "card_custom_field_value_importId_import_id_fk",
+          "tableFrom": "card_custom_field_value",
+          "tableTo": "import",
+          "columnsFrom": [
+            "importId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "card_custom_field_value_field_type_fk": {
+          "name": "card_custom_field_value_field_type_fk",
+          "tableFrom": "card_custom_field_value",
+          "tableTo": "custom_field",
+          "columnsFrom": [
+            "customFieldId",
+            "fieldType"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "card_custom_field_value_option_field_fk": {
+          "name": "card_custom_field_value_option_field_fk",
+          "tableFrom": "card_custom_field_value",
+          "tableTo": "custom_field_option",
+          "columnsFrom": [
+            "optionId",
+            "customFieldId"
+          ],
+          "columnsTo": [
+            "id",
+            "customFieldId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "card_custom_field_value_publicId_unique": {
+          "name": "card_custom_field_value_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        },
+        "card_custom_field_value_card_field_unique": {
+          "name": "card_custom_field_value_card_field_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "cardId",
+            "customFieldId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "card_custom_field_value_shape_check": {
+          "name": "card_custom_field_value_shape_check",
+          "value": "(\n        \"card_custom_field_value\".\"fieldType\" = 'text'\n        AND \"card_custom_field_value\".\"textValue\" IS NOT NULL\n        AND \"card_custom_field_value\".\"numberValue\" IS NULL\n        AND \"card_custom_field_value\".\"dateValue\" IS NULL\n        AND \"card_custom_field_value\".\"checkboxValue\" IS NULL\n        AND \"card_custom_field_value\".\"optionId\" IS NULL\n      ) OR (\n        \"card_custom_field_value\".\"fieldType\" = 'number'\n        AND \"card_custom_field_value\".\"textValue\" IS NULL\n        AND \"card_custom_field_value\".\"numberValue\" IS NOT NULL\n        AND \"card_custom_field_value\".\"dateValue\" IS NULL\n        AND \"card_custom_field_value\".\"checkboxValue\" IS NULL\n        AND \"card_custom_field_value\".\"optionId\" IS NULL\n      ) OR (\n        \"card_custom_field_value\".\"fieldType\" = 'date'\n        AND \"card_custom_field_value\".\"textValue\" IS NULL\n        AND \"card_custom_field_value\".\"numberValue\" IS NULL\n        AND \"card_custom_field_value\".\"dateValue\" IS NOT NULL\n        AND \"card_custom_field_value\".\"checkboxValue\" IS NULL\n        AND \"card_custom_field_value\".\"optionId\" IS NULL\n      ) OR (\n        \"card_custom_field_value\".\"fieldType\" = 'checkbox'\n        AND \"card_custom_field_value\".\"textValue\" IS NULL\n        AND \"card_custom_field_value\".\"numberValue\" IS NULL\n        AND \"card_custom_field_value\".\"dateValue\" IS NULL\n        AND \"card_custom_field_value\".\"checkboxValue\" IS NOT NULL\n        AND \"card_custom_field_value\".\"optionId\" IS NULL\n      ) OR (\n        \"card_custom_field_value\".\"fieldType\" = 'select'\n        AND \"card_custom_field_value\".\"textValue\" IS NULL\n        AND \"card_custom_field_value\".\"numberValue\" IS NULL\n        AND \"card_custom_field_value\".\"dateValue\" IS NULL\n        AND \"card_custom_field_value\".\"checkboxValue\" IS NULL\n        AND \"card_custom_field_value\".\"optionId\" IS NOT NULL\n      )"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "public.custom_field_default_value": {
+      "name": "custom_field_default_value",
+      "schema": "",
+      "columns": {
+        "customFieldId": {
+          "name": "customFieldId",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fieldType": {
+          "name": "fieldType",
+          "type": "custom_field_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "optionId": {
+          "name": "optionId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "textValue": {
+          "name": "textValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numberValue": {
+          "name": "numberValue",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateValue": {
+          "name": "dateValue",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "checkboxValue": {
+          "name": "checkboxValue",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_field_default_value_createdBy_user_id_fk": {
+          "name": "custom_field_default_value_createdBy_user_id_fk",
+          "tableFrom": "custom_field_default_value",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_default_value_updatedBy_user_id_fk": {
+          "name": "custom_field_default_value_updatedBy_user_id_fk",
+          "tableFrom": "custom_field_default_value",
+          "tableTo": "user",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_default_value_field_type_fk": {
+          "name": "custom_field_default_value_field_type_fk",
+          "tableFrom": "custom_field_default_value",
+          "tableTo": "custom_field",
+          "columnsFrom": [
+            "customFieldId",
+            "fieldType"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_default_value_option_field_fk": {
+          "name": "custom_field_default_value_option_field_fk",
+          "tableFrom": "custom_field_default_value",
+          "tableTo": "custom_field_option",
+          "columnsFrom": [
+            "optionId",
+            "customFieldId"
+          ],
+          "columnsTo": [
+            "id",
+            "customFieldId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "custom_field_default_value_shape_check": {
+          "name": "custom_field_default_value_shape_check",
+          "value": "(\n        \"custom_field_default_value\".\"fieldType\" = 'text'\n        AND \"custom_field_default_value\".\"textValue\" IS NOT NULL\n        AND \"custom_field_default_value\".\"numberValue\" IS NULL\n        AND \"custom_field_default_value\".\"dateValue\" IS NULL\n        AND \"custom_field_default_value\".\"checkboxValue\" IS NULL\n        AND \"custom_field_default_value\".\"optionId\" IS NULL\n      ) OR (\n        \"custom_field_default_value\".\"fieldType\" = 'number'\n        AND \"custom_field_default_value\".\"textValue\" IS NULL\n        AND \"custom_field_default_value\".\"numberValue\" IS NOT NULL\n        AND \"custom_field_default_value\".\"dateValue\" IS NULL\n        AND \"custom_field_default_value\".\"checkboxValue\" IS NULL\n        AND \"custom_field_default_value\".\"optionId\" IS NULL\n      ) OR (\n        \"custom_field_default_value\".\"fieldType\" = 'date'\n        AND \"custom_field_default_value\".\"textValue\" IS NULL\n        AND \"custom_field_default_value\".\"numberValue\" IS NULL\n        AND \"custom_field_default_value\".\"dateValue\" IS NOT NULL\n        AND \"custom_field_default_value\".\"checkboxValue\" IS NULL\n        AND \"custom_field_default_value\".\"optionId\" IS NULL\n      ) OR (\n        \"custom_field_default_value\".\"fieldType\" = 'checkbox'\n        AND \"custom_field_default_value\".\"textValue\" IS NULL\n        AND \"custom_field_default_value\".\"numberValue\" IS NULL\n        AND \"custom_field_default_value\".\"dateValue\" IS NULL\n        AND \"custom_field_default_value\".\"checkboxValue\" IS NOT NULL\n        AND \"custom_field_default_value\".\"optionId\" IS NULL\n      ) OR (\n        \"custom_field_default_value\".\"fieldType\" = 'select'\n        AND \"custom_field_default_value\".\"textValue\" IS NULL\n        AND \"custom_field_default_value\".\"numberValue\" IS NULL\n        AND \"custom_field_default_value\".\"dateValue\" IS NULL\n        AND \"custom_field_default_value\".\"checkboxValue\" IS NULL\n        AND \"custom_field_default_value\".\"optionId\" IS NOT NULL\n      )"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "public.custom_field_mapping": {
+      "name": "custom_field_mapping",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sourceFieldId": {
+          "name": "sourceFieldId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetBoardId": {
+          "name": "targetBoardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetFieldId": {
+          "name": "targetFieldId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_field_mapping_sourceFieldId_custom_field_id_fk": {
+          "name": "custom_field_mapping_sourceFieldId_custom_field_id_fk",
+          "tableFrom": "custom_field_mapping",
+          "tableTo": "custom_field",
+          "columnsFrom": [
+            "sourceFieldId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_mapping_targetBoardId_board_id_fk": {
+          "name": "custom_field_mapping_targetBoardId_board_id_fk",
+          "tableFrom": "custom_field_mapping",
+          "tableTo": "board",
+          "columnsFrom": [
+            "targetBoardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_mapping_createdBy_user_id_fk": {
+          "name": "custom_field_mapping_createdBy_user_id_fk",
+          "tableFrom": "custom_field_mapping",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_mapping_target_field_board_fk": {
+          "name": "custom_field_mapping_target_field_board_fk",
+          "tableFrom": "custom_field_mapping",
+          "tableTo": "custom_field",
+          "columnsFrom": [
+            "targetFieldId",
+            "targetBoardId"
+          ],
+          "columnsTo": [
+            "id",
+            "boardId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "custom_field_mapping_source_board_unique": {
+          "name": "custom_field_mapping_source_board_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "sourceFieldId",
+            "targetBoardId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.custom_field_option_mapping": {
+      "name": "custom_field_option_mapping",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sourceOptionId": {
+          "name": "sourceOptionId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetFieldId": {
+          "name": "targetFieldId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetOptionId": {
+          "name": "targetOptionId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_field_option_mapping_sourceOptionId_custom_field_option_id_fk": {
+          "name": "custom_field_option_mapping_sourceOptionId_custom_field_option_id_fk",
+          "tableFrom": "custom_field_option_mapping",
+          "tableTo": "custom_field_option",
+          "columnsFrom": [
+            "sourceOptionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_mapping_targetFieldId_custom_field_id_fk": {
+          "name": "custom_field_option_mapping_targetFieldId_custom_field_id_fk",
+          "tableFrom": "custom_field_option_mapping",
+          "tableTo": "custom_field",
+          "columnsFrom": [
+            "targetFieldId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_mapping_createdBy_user_id_fk": {
+          "name": "custom_field_option_mapping_createdBy_user_id_fk",
+          "tableFrom": "custom_field_option_mapping",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_mapping_target_option_field_fk": {
+          "name": "custom_field_option_mapping_target_option_field_fk",
+          "tableFrom": "custom_field_option_mapping",
+          "tableTo": "custom_field_option",
+          "columnsFrom": [
+            "targetOptionId",
+            "targetFieldId"
+          ],
+          "columnsTo": [
+            "id",
+            "customFieldId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "custom_field_option_mapping_source_field_unique": {
+          "name": "custom_field_option_mapping_source_field_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "sourceOptionId",
+            "targetFieldId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.custom_field_option": {
+      "name": "custom_field_option",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customFieldId": {
+          "name": "customFieldId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "colourCode": {
+          "name": "colourCode",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedBy": {
+          "name": "deletedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "importId": {
+          "name": "importId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "custom_field_option_field_position_idx": {
+          "name": "custom_field_option_field_position_idx",
+          "columns": [
+            {
+              "expression": "customFieldId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"custom_field_option\".\"deletedAt\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "custom_field_option_customFieldId_custom_field_id_fk": {
+          "name": "custom_field_option_customFieldId_custom_field_id_fk",
+          "tableFrom": "custom_field_option",
+          "tableTo": "custom_field",
+          "columnsFrom": [
+            "customFieldId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_createdBy_user_id_fk": {
+          "name": "custom_field_option_createdBy_user_id_fk",
+          "tableFrom": "custom_field_option",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_updatedBy_user_id_fk": {
+          "name": "custom_field_option_updatedBy_user_id_fk",
+          "tableFrom": "custom_field_option",
+          "tableTo": "user",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_deletedBy_user_id_fk": {
+          "name": "custom_field_option_deletedBy_user_id_fk",
+          "tableFrom": "custom_field_option",
+          "tableTo": "user",
+          "columnsFrom": [
+            "deletedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_option_importId_import_id_fk": {
+          "name": "custom_field_option_importId_import_id_fk",
+          "tableFrom": "custom_field_option",
+          "tableTo": "import",
+          "columnsFrom": [
+            "importId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "custom_field_option_publicId_unique": {
+          "name": "custom_field_option_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        },
+        "custom_field_option_id_field_unique": {
+          "name": "custom_field_option_id_field_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "customFieldId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.custom_field": {
+      "name": "custom_field",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "boardId": {
+          "name": "boardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "placeholder": {
+          "name": "placeholder",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sectionLabel": {
+          "name": "sectionLabel",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "placement": {
+          "name": "placement",
+          "type": "custom_field_placement",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'sidebar'"
+        },
+        "type": {
+          "name": "type",
+          "type": "custom_field_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "showOnCard": {
+          "name": "showOnCard",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedBy": {
+          "name": "deletedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "importId": {
+          "name": "importId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "custom_field_board_position_idx": {
+          "name": "custom_field_board_position_idx",
+          "columns": [
+            {
+              "expression": "boardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"custom_field\".\"deletedAt\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "custom_field_boardId_board_id_fk": {
+          "name": "custom_field_boardId_board_id_fk",
+          "tableFrom": "custom_field",
+          "tableTo": "board",
+          "columnsFrom": [
+            "boardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "custom_field_createdBy_user_id_fk": {
+          "name": "custom_field_createdBy_user_id_fk",
+          "tableFrom": "custom_field",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_updatedBy_user_id_fk": {
+          "name": "custom_field_updatedBy_user_id_fk",
+          "tableFrom": "custom_field",
+          "tableTo": "user",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_deletedBy_user_id_fk": {
+          "name": "custom_field_deletedBy_user_id_fk",
+          "tableFrom": "custom_field",
+          "tableTo": "user",
+          "columnsFrom": [
+            "deletedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "custom_field_importId_import_id_fk": {
+          "name": "custom_field_importId_import_id_fk",
+          "tableFrom": "custom_field",
+          "tableTo": "import",
+          "columnsFrom": [
+            "importId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "custom_field_publicId_unique": {
+          "name": "custom_field_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        },
+        "custom_field_id_type_unique": {
+          "name": "custom_field_id_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "type"
+          ]
+        },
+        "custom_field_id_board_unique": {
+          "name": "custom_field_id_board_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "boardId"
           ]
         }
       },
@@ -3923,6 +5041,1185 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": true
+    },
+    "public.time_tracking_active_timers": {
+      "name": "time_tracking_active_timers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workspaceMemberId": {
+          "name": "workspaceMemberId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "boardId": {
+          "name": "boardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardId": {
+          "name": "cardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startedAt": {
+          "name": "startedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startTimezone": {
+          "name": "startTimezone",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "time_tracking_active_timers_user_idx": {
+          "name": "time_tracking_active_timers_user_idx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_active_timers_board_idx": {
+          "name": "time_tracking_active_timers_board_idx",
+          "columns": [
+            {
+              "expression": "boardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_active_timers_card_idx": {
+          "name": "time_tracking_active_timers_card_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "time_tracking_active_timers_userId_user_id_fk": {
+          "name": "time_tracking_active_timers_userId_user_id_fk",
+          "tableFrom": "time_tracking_active_timers",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_active_timers_workspaceMemberId_workspace_members_id_fk": {
+          "name": "time_tracking_active_timers_workspaceMemberId_workspace_members_id_fk",
+          "tableFrom": "time_tracking_active_timers",
+          "tableTo": "workspace_members",
+          "columnsFrom": [
+            "workspaceMemberId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_active_timers_boardId_board_id_fk": {
+          "name": "time_tracking_active_timers_boardId_board_id_fk",
+          "tableFrom": "time_tracking_active_timers",
+          "tableTo": "board",
+          "columnsFrom": [
+            "boardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_active_timers_cardId_card_id_fk": {
+          "name": "time_tracking_active_timers_cardId_card_id_fk",
+          "tableFrom": "time_tracking_active_timers",
+          "tableTo": "card",
+          "columnsFrom": [
+            "cardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "time_tracking_active_timers_publicId_unique": {
+          "name": "time_tracking_active_timers_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.time_tracking_board_settings": {
+      "name": "time_tracking_board_settings",
+      "schema": "",
+      "columns": {
+        "boardId": {
+          "name": "boardId",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "roundingIntervalSeconds": {
+          "name": "roundingIntervalSeconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 60
+        },
+        "minimumDurationSeconds": {
+          "name": "minimumDurationSeconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 60
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "time_tracking_board_settings_boardId_board_id_fk": {
+          "name": "time_tracking_board_settings_boardId_board_id_fk",
+          "tableFrom": "time_tracking_board_settings",
+          "tableTo": "board",
+          "columnsFrom": [
+            "boardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_board_settings_createdBy_user_id_fk": {
+          "name": "time_tracking_board_settings_createdBy_user_id_fk",
+          "tableFrom": "time_tracking_board_settings",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "time_tracking_board_settings_updatedBy_user_id_fk": {
+          "name": "time_tracking_board_settings_updatedBy_user_id_fk",
+          "tableFrom": "time_tracking_board_settings",
+          "tableTo": "user",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "time_tracking_board_settings_rounding_interval_check": {
+          "name": "time_tracking_board_settings_rounding_interval_check",
+          "value": "\"time_tracking_board_settings\".\"roundingIntervalSeconds\" BETWEEN 1 AND 3600"
+        },
+        "time_tracking_board_settings_minimum_duration_check": {
+          "name": "time_tracking_board_settings_minimum_duration_check",
+          "value": "\"time_tracking_board_settings\".\"minimumDurationSeconds\" BETWEEN 1 AND 86400"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "public.time_tracking_worklogs": {
+      "name": "time_tracking_worklogs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "boardId": {
+          "name": "boardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardId": {
+          "name": "cardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workspaceMemberId": {
+          "name": "workspaceMemberId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workDate": {
+          "name": "workDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "durationSeconds": {
+          "name": "durationSeconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "entryMethod": {
+          "name": "entryMethod",
+          "type": "time_tracking_entry_method",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timerStartedAt": {
+          "name": "timerStartedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timerStoppedAt": {
+          "name": "timerStoppedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timerTimezone": {
+          "name": "timerTimezone",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rawElapsedSeconds": {
+          "name": "rawElapsedSeconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedBy": {
+          "name": "deletedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "time_tracking_worklogs_card_date_idx": {
+          "name": "time_tracking_worklogs_card_date_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workDate",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"time_tracking_worklogs\".\"deletedAt\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_worklogs_board_date_idx": {
+          "name": "time_tracking_worklogs_board_date_idx",
+          "columns": [
+            {
+              "expression": "boardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workDate",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"time_tracking_worklogs\".\"deletedAt\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_worklogs_member_date_idx": {
+          "name": "time_tracking_worklogs_member_date_idx",
+          "columns": [
+            {
+              "expression": "workspaceMemberId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workDate",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"time_tracking_worklogs\".\"deletedAt\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_worklogs_board_card_idx": {
+          "name": "time_tracking_worklogs_board_card_idx",
+          "columns": [
+            {
+              "expression": "boardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"time_tracking_worklogs\".\"deletedAt\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_worklogs_board_all_idx": {
+          "name": "time_tracking_worklogs_board_all_idx",
+          "columns": [
+            {
+              "expression": "boardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "time_tracking_worklogs_boardId_board_id_fk": {
+          "name": "time_tracking_worklogs_boardId_board_id_fk",
+          "tableFrom": "time_tracking_worklogs",
+          "tableTo": "board",
+          "columnsFrom": [
+            "boardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_worklogs_cardId_card_id_fk": {
+          "name": "time_tracking_worklogs_cardId_card_id_fk",
+          "tableFrom": "time_tracking_worklogs",
+          "tableTo": "card",
+          "columnsFrom": [
+            "cardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_worklogs_workspaceMemberId_workspace_members_id_fk": {
+          "name": "time_tracking_worklogs_workspaceMemberId_workspace_members_id_fk",
+          "tableFrom": "time_tracking_worklogs",
+          "tableTo": "workspace_members",
+          "columnsFrom": [
+            "workspaceMemberId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_worklogs_createdBy_user_id_fk": {
+          "name": "time_tracking_worklogs_createdBy_user_id_fk",
+          "tableFrom": "time_tracking_worklogs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "time_tracking_worklogs_updatedBy_user_id_fk": {
+          "name": "time_tracking_worklogs_updatedBy_user_id_fk",
+          "tableFrom": "time_tracking_worklogs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "time_tracking_worklogs_deletedBy_user_id_fk": {
+          "name": "time_tracking_worklogs_deletedBy_user_id_fk",
+          "tableFrom": "time_tracking_worklogs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "deletedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "time_tracking_worklogs_publicId_unique": {
+          "name": "time_tracking_worklogs_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "time_tracking_worklogs_duration_check": {
+          "name": "time_tracking_worklogs_duration_check",
+          "value": "\"time_tracking_worklogs\".\"durationSeconds\" > 0"
+        },
+        "time_tracking_worklogs_raw_elapsed_check": {
+          "name": "time_tracking_worklogs_raw_elapsed_check",
+          "value": "\"time_tracking_worklogs\".\"rawElapsedSeconds\" IS NULL OR \"time_tracking_worklogs\".\"rawElapsedSeconds\" >= 0"
+        },
+        "time_tracking_worklogs_work_date_check": {
+          "name": "time_tracking_worklogs_work_date_check",
+          "value": "\"time_tracking_worklogs\".\"workDate\" BETWEEN DATE '1970-01-01' AND DATE '9999-12-31'"
+        },
+        "time_tracking_worklogs_entry_method_fields_check": {
+          "name": "time_tracking_worklogs_entry_method_fields_check",
+          "value": "(\n        \"time_tracking_worklogs\".\"entryMethod\" = 'manual'\n        AND \"time_tracking_worklogs\".\"cardId\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"workspaceMemberId\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"timerStartedAt\" IS NULL\n        AND \"time_tracking_worklogs\".\"timerStoppedAt\" IS NULL\n        AND \"time_tracking_worklogs\".\"timerTimezone\" IS NULL\n        AND \"time_tracking_worklogs\".\"rawElapsedSeconds\" IS NULL\n      ) OR (\n        \"time_tracking_worklogs\".\"entryMethod\" = 'timer'\n        AND \"time_tracking_worklogs\".\"cardId\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"workspaceMemberId\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"timerStartedAt\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"timerStoppedAt\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"timerTimezone\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"rawElapsedSeconds\" IS NOT NULL\n        AND \"time_tracking_worklogs\".\"timerStoppedAt\" >= \"time_tracking_worklogs\".\"timerStartedAt\"\n      ) OR (\n        \"time_tracking_worklogs\".\"entryMethod\"::text = 'import'\n        AND \"time_tracking_worklogs\".\"timerStartedAt\" IS NULL\n        AND \"time_tracking_worklogs\".\"timerStoppedAt\" IS NULL\n        AND \"time_tracking_worklogs\".\"timerTimezone\" IS NULL\n        AND \"time_tracking_worklogs\".\"rawElapsedSeconds\" IS NULL\n        AND \"time_tracking_worklogs\".\"createdBy\" IS NULL\n      )"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "public.time_tracking_import_quarantine": {
+      "name": "time_tracking_import_quarantine",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "importRunId": {
+          "name": "importRunId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "externalId": {
+          "name": "externalId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "externalBoardId": {
+          "name": "externalBoardId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "externalCardId": {
+          "name": "externalCardId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "externalMemberId": {
+          "name": "externalMemberId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "durationSeconds": {
+          "name": "durationSeconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "normalizedRecord": {
+          "name": "normalizedRecord",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceHash": {
+          "name": "sourceHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "overrideReference": {
+          "name": "overrideReference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "resolvedAt": {
+          "name": "resolvedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "time_tracking_import_quarantine_provider_external_idx": {
+          "name": "time_tracking_import_quarantine_provider_external_idx",
+          "columns": [
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "externalId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_import_quarantine_run_idx": {
+          "name": "time_tracking_import_quarantine_run_idx",
+          "columns": [
+            {
+              "expression": "importRunId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "time_tracking_import_quarantine_importRunId_time_tracking_import_runs_id_fk": {
+          "name": "time_tracking_import_quarantine_importRunId_time_tracking_import_runs_id_fk",
+          "tableFrom": "time_tracking_import_quarantine",
+          "tableTo": "time_tracking_import_runs",
+          "columnsFrom": [
+            "importRunId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "time_tracking_import_quarantine_publicId_unique": {
+          "name": "time_tracking_import_quarantine_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "time_tracking_import_quarantine_duration_check": {
+          "name": "time_tracking_import_quarantine_duration_check",
+          "value": "\"time_tracking_import_quarantine\".\"durationSeconds\" IS NULL OR \"time_tracking_import_quarantine\".\"durationSeconds\" > 0"
+        },
+        "time_tracking_import_quarantine_hash_check": {
+          "name": "time_tracking_import_quarantine_hash_check",
+          "value": "\"time_tracking_import_quarantine\".\"sourceHash\" ~ '^[0-9a-f]{64}$'"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "public.time_tracking_import_runs": {
+      "name": "time_tracking_import_runs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bundleVersion": {
+          "name": "bundleVersion",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "manifestSha256": {
+          "name": "manifestSha256",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "time_tracking_import_run_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'running'"
+        },
+        "counters": {
+          "name": "counters",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startedAt": {
+          "name": "startedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "finishedAt": {
+          "name": "finishedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "time_tracking_import_runs_provider_running_idx": {
+          "name": "time_tracking_import_runs_provider_running_idx",
+          "columns": [
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"time_tracking_import_runs\".\"status\" = 'running'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_import_runs_provider_started_idx": {
+          "name": "time_tracking_import_runs_provider_started_idx",
+          "columns": [
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "startedAt",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "time_tracking_import_runs_publicId_unique": {
+          "name": "time_tracking_import_runs_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "time_tracking_import_runs_manifest_hash_check": {
+          "name": "time_tracking_import_runs_manifest_hash_check",
+          "value": "\"time_tracking_import_runs\".\"manifestSha256\" ~ '^[0-9a-f]{64}$'"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "public.time_tracking_worklog_sources": {
+      "name": "time_tracking_worklog_sources",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "worklogId": {
+          "name": "worklogId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "importRunId": {
+          "name": "importRunId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "externalId": {
+          "name": "externalId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "externalBoardId": {
+          "name": "externalBoardId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "externalCardId": {
+          "name": "externalCardId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "externalMemberId": {
+          "name": "externalMemberId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceCreatedAt": {
+          "name": "sourceCreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceUpdatedAt": {
+          "name": "sourceUpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceCreatedAtRaw": {
+          "name": "sourceCreatedAtRaw",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceUpdatedAtRaw": {
+          "name": "sourceUpdatedAtRaw",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceTimestampTimezone": {
+          "name": "sourceTimestampTimezone",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceCreatedByExternalMemberId": {
+          "name": "sourceCreatedByExternalMemberId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceCreatedByDisplayName": {
+          "name": "sourceCreatedByDisplayName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceUpdatedByExternalMemberId": {
+          "name": "sourceUpdatedByExternalMemberId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceUpdatedByDisplayName": {
+          "name": "sourceUpdatedByDisplayName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "billable": {
+          "name": "billable",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "invoiced": {
+          "name": "invoiced",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceHash": {
+          "name": "sourceHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "time_tracking_worklog_sources_worklog_idx": {
+          "name": "time_tracking_worklog_sources_worklog_idx",
+          "columns": [
+            {
+              "expression": "worklogId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_worklog_sources_provider_external_idx": {
+          "name": "time_tracking_worklog_sources_provider_external_idx",
+          "columns": [
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "externalId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "time_tracking_worklog_sources_run_idx": {
+          "name": "time_tracking_worklog_sources_run_idx",
+          "columns": [
+            {
+              "expression": "importRunId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "time_tracking_worklog_sources_worklogId_time_tracking_worklogs_id_fk": {
+          "name": "time_tracking_worklog_sources_worklogId_time_tracking_worklogs_id_fk",
+          "tableFrom": "time_tracking_worklog_sources",
+          "tableTo": "time_tracking_worklogs",
+          "columnsFrom": [
+            "worklogId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "time_tracking_worklog_sources_importRunId_time_tracking_import_runs_id_fk": {
+          "name": "time_tracking_worklog_sources_importRunId_time_tracking_import_runs_id_fk",
+          "tableFrom": "time_tracking_worklog_sources",
+          "tableTo": "time_tracking_import_runs",
+          "columnsFrom": [
+            "importRunId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "time_tracking_worklog_sources_hash_check": {
+          "name": "time_tracking_worklog_sources_hash_check",
+          "value": "\"time_tracking_worklog_sources\".\"sourceHash\" ~ '^[0-9a-f]{64}$'"
+        }
+      },
+      "isRLSEnabled": true
     }
   },
   "enums": {
@@ -3971,7 +6268,35 @@
         "card.updated.dueDate.added",
         "card.updated.dueDate.updated",
         "card.updated.dueDate.removed",
+        "card.updated.cover",
         "card.archived"
+      ]
+    },
+    "public.card_cover_size": {
+      "name": "card_cover_size",
+      "schema": "public",
+      "values": [
+        "normal",
+        "full"
+      ]
+    },
+    "public.custom_field_placement": {
+      "name": "custom_field_placement",
+      "schema": "public",
+      "values": [
+        "main",
+        "sidebar"
+      ]
+    },
+    "public.custom_field_type": {
+      "name": "custom_field_type",
+      "schema": "public",
+      "values": [
+        "text",
+        "number",
+        "date",
+        "checkbox",
+        "select"
       ]
     },
     "public.source": {
@@ -4044,6 +6369,24 @@
         "workspace.member.added",
         "workspace.member.removed",
         "workspace.role.changed"
+      ]
+    },
+    "public.time_tracking_entry_method": {
+      "name": "time_tracking_entry_method",
+      "schema": "public",
+      "values": [
+        "manual",
+        "timer",
+        "import"
+      ]
+    },
+    "public.time_tracking_import_run_status": {
+      "name": "time_tracking_import_run_status",
+      "schema": "public",
+      "values": [
+        "running",
+        "completed",
+        "failed"
       ]
     }
   },

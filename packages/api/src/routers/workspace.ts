@@ -19,6 +19,7 @@ import {
 } from "../schemas";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { createAvatarUrlResolver } from "../utils/avatarUrls";
+import { formatBoardBackground } from "../utils/boardBackground";
 import { assertPermission, isWorkspaceAdmin } from "../utils/permissions";
 
 export const workspaceRouter = createTRPCRouter({
@@ -265,7 +266,18 @@ export const workspaceRouter = createTRPCRouter({
         });
       await assertPermission(ctx.db, userId, result.id, "workspace:view");
 
-      return result;
+      return {
+        ...result,
+        boards: result.boards.map(
+          ({ backgroundColourCode, backgroundImageKey, ...board }) => ({
+            ...board,
+            background: formatBoardBackground({
+              backgroundColourCode,
+              backgroundImageKey,
+            }),
+          }),
+        ),
+      };
     }),
   create: protectedProcedure
     .meta({

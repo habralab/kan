@@ -46,6 +46,14 @@ CONTRIBUTING.md
 AGENTS.md
 CHANGELOG.md
 
+# Local development and migration artifacts
+/artifacts/
+/deployment/
+/.migration-legacy/
+/.private/
+/.local/
+/tmp/
+
 # Test files
 **/*.test.ts
 **/*.test.tsx

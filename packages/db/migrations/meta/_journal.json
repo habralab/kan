@@ -295,6 +295,34 @@
       "when": 1788398854245,
       "tag": "20260903012734_RestoreTimeTrackingCascadeDeletes",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1788553158783,
+      "tag": "20260904201918_AddCustomFields",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1788597450108,
+      "tag": "20260905083730_AddCustomFieldMappings",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1788697474807,
+      "tag": "20260906122434_AddCustomFieldMetadataAndDefaults",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1788699430216,
+      "tag": "20260906125710_AddCustomFieldLayout",
+      "breakpoints": true
     }
   ]
 }

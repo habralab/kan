@@ -6,6 +6,10 @@ import {
   workspaceMemberSchema,
   workspaceMemberStatusSchema,
 } from "./common";
+import {
+  customFieldDefinitionSchema,
+  customFieldValueSchema,
+} from "./custom-field";
 
 // ─── board.all ───────────────────────────────────────────────
 export const boardListItemSchema = z.object({
@@ -57,6 +61,7 @@ const boardDetailCardSchema = z.object({
       completedChecklistItemCount: z.number().int().nonnegative(),
     })
     .optional(),
+  customFieldValues: z.array(customFieldValueSchema),
 });
 
 // ─── board.byId ──────────────────────────────────────────────
@@ -64,7 +69,7 @@ export const boardDetailSchema = z.object({
   publicId: z.string(),
   name: z.string(),
   slug: z.string(),
-  visibility: z.string(),
+  visibility: z.enum(["private", "public"]),
   isArchived: z.boolean(),
   favorite: z.boolean(),
   assignedMemberPublicIds: z.array(z.string()),
@@ -74,6 +79,7 @@ export const boardDetailSchema = z.object({
     members: z.array(workspaceMemberSchema),
   }),
   labels: z.array(labelSchema),
+  customFields: z.array(customFieldDefinitionSchema),
   lists: z.array(
     z.object({
       publicId: z.string(),
@@ -101,6 +107,7 @@ const boardSlugCardSchema = z.object({
   attachments: z.array(z.object({ publicId: z.string() })),
   checklists: z.array(checklistResponseSchema),
   comments: z.array(z.object({ publicId: z.string() })),
+  customFieldValues: z.array(customFieldValueSchema),
 });
 
 // ─── board.bySlug ────────────────────────────────────────────
@@ -108,13 +115,14 @@ export const boardBySlugSchema = z.object({
   publicId: z.string(),
   name: z.string(),
   slug: z.string(),
-  visibility: z.string(),
+  visibility: z.enum(["private", "public"]),
   workspace: z.object({
     publicId: z.string(),
     name: z.string(),
     slug: z.string(),
   }),
   labels: z.array(labelSchema),
+  customFields: z.array(customFieldDefinitionSchema),
   lists: z.array(
     z.object({
       publicId: z.string(),

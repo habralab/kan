@@ -51,6 +51,7 @@ vi.mock("@kan/shared/utils", () => ({
   generateAttachmentUrl: vi.fn(),
   generateAvatarUrl: vi.fn(),
   generateUID: vi.fn(() => "generated-id"),
+  workspacePlans: ["free", "team", "pro", "enterprise"],
 }));
 
 vi.mock("../utils/permissions", () => ({

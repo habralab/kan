@@ -30,6 +30,7 @@ vi.mock("@kan/shared/utils", () => ({
   convertDueDateFiltersToRanges: vi.fn(),
   generateSlug: vi.fn(),
   generateUID: vi.fn(),
+  workspacePlans: ["free", "team", "pro", "enterprise"],
 }));
 
 vi.mock("@kan/shared/constants", () => ({ colours: [] }));

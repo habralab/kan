@@ -27,13 +27,16 @@
     "translation": "Utwórz nowe pole"
   },
   "zawWn4": {
+    "translation": "Zaimportowany kolor",
     "message": "Imported colour",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-colour-picker.tsx", 33]
-    ],
-    "translation": "Zaimportowany kolor"
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        160
+      ]
+    ]
   },
   "BQuR+c": {
     "message": "Manage custom fields",
@@ -86,7 +89,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 365]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        405
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 678]
     ],
     "translation": "Dodaj"
   },
@@ -95,7 +102,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 490]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 554]
     ],
     "translation": "Dodaj pole"
   },
@@ -104,7 +111,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 220]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        228
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 372]
     ],
     "translation": "Archiwizuj"
   },
@@ -113,7 +124,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 186]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 194]
     ],
     "translation": "Archiwizuj pole niestandardowe"
   },
@@ -122,7 +133,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 330]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 341]
     ],
     "translation": "Archiwizuj opcję"
   },
@@ -131,7 +142,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 196]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 204]
     ],
     "translation": "Zarchiwizować to pole? Istniejące wartości na kartach zostaną ukryte, ale zachowane."
   },
@@ -140,7 +151,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 340]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 350]
     ],
     "translation": "Zarchiwizować tę opcję? Istniejące wartości na kartach zachowają ją do czasu zmiany."
   },
@@ -149,7 +160,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 370]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 410]
     ],
     "translation": "Zarchiwizowane opcje"
   },
@@ -158,7 +169,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 38]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 43]
     ],
     "translation": "Pole wyboru"
   },
@@ -168,9 +179,9 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/custom-fields/custom-field-badges.tsx", 28],
-      ["src/views/board/components/Filters.tsx", 190],
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 23],
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 223]
+      ["src/views/board/components/Filters.tsx", 232],
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 34],
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 294]
     ],
     "translation": "Zaznaczone"
   },
@@ -179,7 +190,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/CardContextDuplicateModal.tsx", 279]
+      ["src/views/board/components/CardContextDuplicateModal.tsx", 267]
     ],
     "translation": "Kopiuj pola niestandardowe"
   },
@@ -188,7 +199,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 131]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 139]
     ],
     "translation": "Nazwa pola niestandardowego"
   },
@@ -197,12 +208,12 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/BoardDropdown.tsx", 110],
+      ["src/views/board/components/BoardDropdown.tsx", 111],
       [
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
-        416
+        472
       ],
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 275]
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 386]
     ],
     "translation": "Pola niestandardowe"
   },
@@ -211,7 +222,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 36]
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 462],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 152]
     ],
     "translation": "Data"
   },
@@ -220,7 +232,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 40]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 45]
     ],
     "translation": "Lista rozwijana"
   },
@@ -229,7 +241,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 467]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 531]
     ],
     "translation": "Nazwa pola"
   },
@@ -238,7 +250,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 475]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 539]
     ],
     "translation": "Typ pola"
   },
@@ -247,7 +259,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 419]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 475]
     ],
     "translation": "Pola będą dostępne od razu po utworzeniu pierwszego."
   },
@@ -256,7 +268,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 166]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 174]
     ],
     "translation": "Przenieś pole w dół"
   },
@@ -265,7 +277,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 149]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 157]
     ],
     "translation": "Przenieś pole w górę"
   },
@@ -274,7 +286,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 308]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        319
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 626]
     ],
     "translation": "Przenieś opcję w dół"
   },
@@ -283,7 +299,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 289]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        300
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 612]
     ],
     "translation": "Przenieś opcję w górę"
   },
@@ -292,7 +312,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 354]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        394
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 660]
     ],
     "translation": "Nowa opcja"
   },
@@ -301,8 +325,9 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 176],
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 222]
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 244],
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 296],
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 334]
     ],
     "translation": "Nie ustawiono"
   },
@@ -311,7 +336,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 34]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 39]
     ],
     "translation": "Liczba"
   },
@@ -320,7 +345,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 251]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        260
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 577]
     ],
     "translation": "Kolor opcji"
   },
@@ -329,7 +358,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 262]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        272
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 594]
     ],
     "translation": "Nazwa opcji"
   },
@@ -338,7 +371,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 244]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        252
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 568]
     ],
     "translation": "Opcje"
   },
@@ -347,7 +384,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 228]
+      [
+        "src/views/board/components/custom-fields/custom-field-manager.tsx",
+        236
+      ],
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 558]
     ],
     "translation": "Pokaż na przodzie karty"
   },
@@ -356,7 +397,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 32]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 37]
     ],
     "translation": "Tekst"
   },
@@ -365,7 +406,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 446]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 502]
     ],
     "translation": "Ta tablica nie ma jeszcze pól niestandardowych."
   },
@@ -374,7 +415,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 97]
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 122]
     ],
     "translation": "Nie udało się wyczyścić pola niestandardowego"
   },
@@ -383,7 +424,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 405]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 451]
     ],
     "translation": "Nie udało się utworzyć pola niestandardowego"
   },
@@ -392,7 +433,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 75]
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 99]
     ],
     "translation": "Nie udało się zaktualizować pola niestandardowego"
   },
@@ -401,7 +442,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 81]
+      ["src/views/board/components/custom-fields/custom-field-manager.tsx", 89]
     ],
     "translation": "Nie udało się zaktualizować pól niestandardowych"
   },
@@ -411,8 +452,8 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/custom-fields/custom-field-badges.tsx", 28],
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 23],
-      ["src/views/card/components/custom-fields/custom-fields.tsx", 224]
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 34],
+      ["src/views/card/components/custom-fields/custom-fields.tsx", 295]
     ],
     "translation": "Niezaznaczone"
   },
@@ -420,7 +461,7 @@
     "message": "Unchecked or not set",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 191]],
+    "origin": [["src/views/board/components/Filters.tsx", 233]],
     "translation": "Niezaznaczone lub nieustawione"
   },
   "NawEr2": {
@@ -428,140 +469,158 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 186],
-      ["src/views/board/components/Filters.tsx", 182]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        185
+      ],
+      ["src/views/board/components/Filters.tsx", 193]
     ],
     "translation": "Po"
-  }
-,
+  },
   "DB8zMK": {
     "message": "Apply",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 307]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        306
+      ]
     ],
     "translation": "Zastosuj"
-  }
-,
+  },
   "EmSrGB": {
     "message": "Before",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 185],
-      ["src/views/board/components/Filters.tsx", 182]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        184
+      ],
+      ["src/views/board/components/Filters.tsx", 193]
     ],
     "translation": "Przed"
-  }
-,
+  },
   "xCJdfg": {
     "message": "Clear",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 289]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        288
+      ]
     ],
     "translation": "Wyczyść"
-  }
-,
+  },
   "/5mghO": {
     "message": "Contains",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 178],
-      ["src/views/board/components/Filters.tsx", 172]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        177
+      ],
+      ["src/views/board/components/Filters.tsx", 183]
     ],
     "translation": "Zawiera"
-  }
-,
+  },
   "f9yJNM": {
     "message": "Equals",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 181],
-      ["src/views/board/components/Filters.tsx", 176]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        180
+      ],
+      ["src/views/board/components/Filters.tsx", 187]
     ],
     "translation": "Równa się"
-  }
-,
+  },
   "wP7Cju": {
     "message": "Filter by value",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 213]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        212
+      ]
     ],
     "translation": "Filtruj według wartości"
-  }
-,
+  },
   "ejVYRQ": {
     "message": "From",
     "placeholders": {},
     "comments": [],
-    "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 244],
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 247]
-    ],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 228]],
     "translation": "Od"
-  }
-,
+  },
   "tgPwON": {
     "message": "Operator",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 224],
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 226]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        223
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        225
+      ]
     ],
     "translation": "Operator"
-  }
-,
+  },
   "6jAi8c": {
     "message": "Range",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 182],
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 187]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        181
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        186
+      ]
     ],
     "translation": "Zakres"
-  }
-,
+  },
   "+9/nz4": {
     "message": "Set filter",
     "placeholders": {},
     "comments": [],
-    "origin": [
-      ["src/views/board/components/Filters.tsx", 166]
-    ],
+    "origin": [["src/views/board/components/Filters.tsx", 177]],
     "translation": "Ustaw filtr"
-  }
-,
+  },
   "/jQctM": {
     "message": "To",
     "placeholders": {},
     "comments": [],
-    "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 265],
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 267]
-    ],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 237]],
     "translation": "Do"
-  }
-,
+  },
   "wMHvYH": {
     "message": "Value",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 244],
-      ["src/views/board/components/custom-fields/custom-field-filter-panel.tsx", 247]
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        243
+      ],
+      [
+        "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
+        246
+      ]
     ],
     "translation": "Wartość"
-  }
-,
+  },
   "X0N0PA": {
     "message": " (edited)",
     "placeholders": {},
@@ -632,7 +691,7 @@
       "0": ["isTemplate ? \"Template\" : \"Board\""]
     },
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 579]],
+    "origin": [["src/views/board/index.tsx", 571]],
     "translation": "{0} nie znaleziono"
   },
   "0xWkkH": {
@@ -824,7 +883,7 @@
     "message": "Add a card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 140]],
+    "origin": [["src/views/board/components/List.tsx", 138]],
     "translation": "Dodaj kartę"
   },
   "qtE5nt": {
@@ -838,7 +897,7 @@
     "message": "Add card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 127]],
+    "origin": [["src/views/board/components/List.tsx", 125]],
     "translation": "Dodaj kartę"
   },
   "Gxxi5J": {
@@ -1372,10 +1431,7 @@
     "message": "Back",
     "placeholders": {},
     "comments": [],
-    "origin": [
-      ["src/views/board/components/Filters.tsx", 221],
-      ["src/views/onboarding/workspace-details/index.tsx", 284]
-    ],
+    "origin": [["src/views/onboarding/workspace-details/index.tsx", 284]],
     "translation": "Wstecz"
   },
   "KNKCTb": {
@@ -1495,7 +1551,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 551],
+      ["src/views/board/index.tsx", 543],
       ["src/views/card/index.tsx", 321],
       ["src/views/public/board/index.tsx", 125]
     ],
@@ -1529,7 +1585,7 @@
     "message": "Board name",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 569]],
+    "origin": [["src/views/board/index.tsx", 561]],
     "translation": "Nazwa tablicy"
   },
   "wewm3j": {
@@ -2124,7 +2180,7 @@
     "message": "Clear filters",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 230]],
+    "origin": [["src/views/board/components/Filters.tsx", 227]],
     "translation": "Wyczyść filtry"
   },
   "RRn9jf": {
@@ -2552,7 +2608,7 @@
     "comments": [],
     "origin": [
       ["src/views/board/index.tsx", 99],
-      ["src/views/board/index.tsx", 693]
+      ["src/views/board/index.tsx", 685]
     ],
     "translation": "Utwórz nową listę"
   },
@@ -2817,7 +2873,7 @@
     "message": "Delete list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 151]],
+    "origin": [["src/views/board/components/List.tsx", 149]],
     "translation": "Usuń listę"
   },
   "DFjdv0": {
@@ -3024,7 +3080,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/Filters.tsx", 178],
+      ["src/views/board/components/Filters.tsx", 171],
       ["src/views/board/components/NewCardForm.tsx", 575],
       ["src/views/card/index.tsx", 153]
     ],
@@ -3034,28 +3090,28 @@
     "message": "Due next month",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 129]],
+    "origin": [["src/views/board/components/Filters.tsx", 132]],
     "translation": "Termin w przyszłym miesiącu"
   },
   "iHcdea": {
     "message": "Due next week",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 124]],
+    "origin": [["src/views/board/components/Filters.tsx", 127]],
     "translation": "Termin w przyszłym tygodniu"
   },
   "1iShX0": {
     "message": "Due today",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 114]],
+    "origin": [["src/views/board/components/Filters.tsx", 117]],
     "translation": "Termin dzisiaj"
   },
   "zxKs+y": {
     "message": "Due tomorrow",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 119]],
+    "origin": [["src/views/board/components/Filters.tsx", 122]],
     "translation": "Termin jutro"
   },
   "euc6Ns": {
@@ -3652,7 +3708,7 @@
     "message": "Filter",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 240]],
+    "origin": [["src/views/board/components/Filters.tsx", 221]],
     "translation": "Filtruj"
   },
   "l31EoQ": {
@@ -3788,7 +3844,7 @@
     "message": "Get started by creating a new list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 678]],
+    "origin": [["src/views/board/index.tsx", 670]],
     "translation": "Rozpocznij, tworząc nową listę"
   },
   "oW13KZ": {
@@ -4310,7 +4366,7 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/CardContextLabelsModal.tsx", 31],
-      ["src/views/board/components/Filters.tsx", 160],
+      ["src/views/board/components/Filters.tsx", 155],
       ["src/views/board/components/NewCardForm.tsx", 524],
       ["src/views/card/components/LabelSelector.tsx", 102],
       ["src/views/card/index.tsx", 133]
@@ -4456,7 +4512,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/List.tsx", 110],
+      ["src/views/board/components/List.tsx", 108],
       ["src/views/board/components/NewListForm.tsx", 144]
     ],
     "translation": "Nazwa listy"
@@ -4465,14 +4521,14 @@
     "message": "List options",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 167]],
+    "origin": [["src/views/board/components/List.tsx", 165]],
     "translation": "Opcje listy"
   },
   "h16FyT": {
     "message": "Lists",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 169]],
+    "origin": [["src/views/board/components/Filters.tsx", 163]],
     "translation": "Listy"
   },
   "1rVAfU": {
@@ -4632,7 +4688,7 @@
     "comments": [],
     "origin": [
       ["src/components/SideNavigation.tsx", 122],
-      ["src/views/board/components/Filters.tsx", 151],
+      ["src/views/board/components/Filters.tsx", 147],
       ["src/views/board/components/NewCardForm.tsx", 482],
       ["src/views/card/components/MemberSelector.tsx", 116],
       ["src/views/card/index.tsx", 143],
@@ -4832,7 +4888,7 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/NewListForm.tsx", 128],
-      ["src/views/board/index.tsx", 642]
+      ["src/views/board/index.tsx", 634]
     ],
     "translation": "Nowa lista"
   },
@@ -4937,7 +4993,7 @@
     "message": "No dates",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 134]],
+    "origin": [["src/views/board/components/Filters.tsx", 137]],
     "translation": "Brak dat"
   },
   "sY2lzr": {
@@ -4965,14 +5021,14 @@
     "message": "No lists",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 674]],
+    "origin": [["src/views/board/index.tsx", 666]],
     "translation": "Brak list"
   },
   "fvLNDy": {
     "message": "No lists have been created yet",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 679]],
+    "origin": [["src/views/board/index.tsx", 671]],
     "translation": "Nie utworzono jeszcze żadnych list"
   },
   "i30J2U": {
@@ -5107,7 +5163,7 @@
     "message": "Overdue",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 109]],
+    "origin": [["src/views/board/components/Filters.tsx", 112]],
     "translation": "Zaległe"
   },
   "P6dJdq": {
@@ -6439,8 +6495,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 551],
-      ["src/views/board/index.tsx", 588]
+      ["src/views/board/index.tsx", 543],
+      ["src/views/board/index.tsx", 580]
     ],
     "translation": "Szablon"
   },
@@ -7753,7 +7809,7 @@
     "comments": [],
     "origin": [
       ["src/components/SettingsLayout.tsx", 47],
-      ["src/views/board/index.tsx", 551],
+      ["src/views/board/index.tsx", 543],
       ["src/views/boards/index.tsx", 58],
       ["src/views/members/index.tsx", 279],
       ["src/views/public/board/index.tsx", 125],
@@ -7994,11 +8050,11 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/List.tsx", 120],
+      ["src/views/board/components/List.tsx", 118],
       ["src/views/board/components/UpdateBoardSlugButton.tsx", 58],
       ["src/views/board/components/VisibilityButton.tsx", 72],
-      ["src/views/board/index.tsx", 626],
-      ["src/views/board/index.tsx", 684],
+      ["src/views/board/index.tsx", 618],
+      ["src/views/board/index.tsx", 676],
       ["src/views/boards/components/BoardsList.tsx", 71],
       ["src/views/boards/index.tsx", 69],
       ["src/views/boards/index.tsx", 90]
@@ -8371,5 +8427,1208 @@
     "comments": [],
     "origin": [["src/views/board/components/custom-fields/custom-field-manager.tsx",320],["src/views/board/components/custom-fields/custom-field-manager.tsx",832]],
     "translation": "Panel boczny"
+  },
+  "VEnTjc": {
+    "message": "{0, plural, one {1 active timer can still be stopped or discarded if time tracking is disabled.} other {{1} active timers can still be stopped or discarded if time tracking is disabled.}}",
+    "placeholders": {
+      "0": ["settings.data.activeTimerCount"],
+      "1": ["settings.data.activeTimerCount"]
+    },
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 114]
+    ],
+    "translation": "{0, plural, one {1 aktywny stoper można nadal zatrzymać lub odrzucić po wyłączeniu rejestrowania czasu.} few {{1} aktywne stopery można nadal zatrzymać lub odrzucić po wyłączeniu rejestrowania czasu.} many {{1} aktywnych stoperów można nadal zatrzymać lub odrzucić po wyłączeniu rejestrowania czasu.} other {{1} aktywnego stopera można nadal zatrzymać lub odrzucić po wyłączeniu rejestrowania czasu.}}"
+  },
+  "INSeGm": {
+    "message": "{0, plural, one {1 entry} other {{1} entries}}",
+    "placeholders": { "0": ["group.entryCount"], "1": ["group.entryCount"] },
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 378]],
+    "translation": "{0, plural, one {1 wpis} few {{1} wpisy} many {{1} wpisów} other {{1} wpisu}}"
+  },
+  "PqP8GL": {
+    "message": "1h 30m",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 136]
+    ],
+    "translation": "1 godz. 30 min"
+  },
+  "MdyqML": {
+    "message": "Add time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 99],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        326
+      ]
+    ],
+    "translation": "Dodaj czas"
+  },
+  "4upC5z": {
+    "message": "All cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 287]],
+    "translation": "Wszystkie karty"
+  },
+  "zDDU1o": {
+    "message": "All labels",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 307]],
+    "translation": "Wszystkie etykiety"
+  },
+  "qe9rVr": {
+    "message": "All lists",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 272]],
+    "translation": "Wszystkie listy"
+  },
+  "RevbX8": {
+    "message": "All members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 254]],
+    "translation": "Wszyscy członkowie"
+  },
+  "VPUvtP": {
+    "message": "Can add time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 151],
+      ["src/views/settings/components/RolePermissions.tsx", 40]
+    ],
+    "translation": "Może dodawać wpisy czasu"
+  },
+  "2BD2mA": {
+    "message": "Can delete own time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 153],
+      ["src/views/settings/components/RolePermissions.tsx", 42]
+    ],
+    "translation": "Może usuwać własne wpisy czasu"
+  },
+  "kImq1u": {
+    "message": "Can edit own time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 152],
+      ["src/views/settings/components/RolePermissions.tsx", 41]
+    ],
+    "translation": "Może edytować własne wpisy czasu"
+  },
+  "xLuBnq": {
+    "message": "Can manage all time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 154],
+      ["src/views/settings/components/RolePermissions.tsx", 43]
+    ],
+    "translation": "Może zarządzać wszystkimi wpisami czasu"
+  },
+  "DgC8eZ": {
+    "message": "Can view time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/members/components/EditMemberPermissionsModal.tsx", 150],
+      ["src/views/settings/components/RolePermissions.tsx", 39]
+    ],
+    "translation": "Może wyświetlać wpisy czasu"
+  },
+  "Ccpbzh": {
+    "message": "Cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 331]],
+    "translation": "Karty"
+  },
+  "WQ5uca": {
+    "message": "Choose a grouping to export a summary",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 412]],
+    "translation": "Wybierz grupowanie, aby wyeksportować podsumowanie"
+  },
+  "NBdIgR": {
+    "message": "Comment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 471],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 165]
+    ],
+    "translation": "Komentarz"
+  },
+  "8rZVt4": {
+    "message": "Current month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 208]],
+    "translation": "Bieżący miesiąc",
+    "obsolete": true
+  },
+  "ioxL7D": {
+    "message": "Custom range",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 219]],
+    "translation": "Niestandardowy zakres"
+  },
+  "AmfkGS": {
+    "message": "Delete this time entry?",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        503
+      ]
+    ],
+    "translation": "Usunąć ten wpis czasu?"
+  },
+  "bzSI52": {
+    "message": "Discard",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        254
+      ]
+    ],
+    "translation": "Odrzuć"
+  },
+  "CtkaqE": {
+    "message": "Edit time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 99]
+    ],
+    "translation": "Edytuj wpis czasu"
+  },
+  "WY7Cmx": {
+    "message": "Enable time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 93],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 102]
+    ],
+    "translation": "Włącz rejestrowanie czasu"
+  },
+  "vJiLfv": {
+    "message": "Enter a duration such as 2h, 90m, or 1:30.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 147]
+    ],
+    "translation": "Wprowadź czas trwania, na przykład 2h, 90m lub 1:30."
+  },
+  "ef6vAZ": {
+    "message": "Entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 329]],
+    "translation": "Wpisy"
+  },
+  "WoSfea": {
+    "message": "Export entries CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 424]],
+    "translation": "Eksportuj wpisy do CSV"
+  },
+  "85rIwg": {
+    "message": "Export full CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 449]],
+    "translation": "Eksportuj pełny plik CSV"
+  },
+  "o7dpgY": {
+    "message": "Export summary CSV",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 415]],
+    "translation": "Eksportuj podsumowanie CSV"
+  },
+  "ALoP4W": {
+    "message": "Group by",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 349]],
+    "translation": "Grupuj według"
+  },
+  "Dn4OyV": {
+    "message": "Invited",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 43]
+    ],
+    "translation": "Zaproszony"
+  },
+  "87a/t/": {
+    "message": "Label",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 301]],
+    "translation": "Etykieta"
+  },
+  "uq2BmQ": {
+    "message": "Last 30 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 222]],
+    "translation": "Ostatnie 30 dni",
+    "obsolete": true
+  },
+  "yQ2kGp": {
+    "message": "Load more",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 526],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        539
+      ]
+    ],
+    "translation": "Wczytaj więcej"
+  },
+  "BWTzAb": {
+    "message": "Manual",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 503]],
+    "translation": "Ręcznie"
+  },
+  "bNv3ig": {
+    "message": "Members can add time entries and run timers on cards. Disabling this feature keeps existing history.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 96]],
+    "translation": "Członkowie mogą dodawać wpisy czasu i uruchamiać stopery na kartach. Wyłączenie tej funkcji zachowuje istniejącą historię."
+  },
+  "fiPesM": {
+    "message": "Method",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 467]],
+    "translation": "Metoda"
+  },
+  "dNhH8G": {
+    "message": "No grouping",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 359]],
+    "translation": "Bez grupowania"
+  },
+  "3M/nm+": {
+    "message": "No time entries match these filters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 455]],
+    "translation": "Żadne wpisy czasu nie pasują do tych filtrów."
+  },
+  "L2Mlhd": {
+    "message": "No time has been logged on this card yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        452
+      ]
+    ],
+    "translation": "Na tej karcie nie zarejestrowano jeszcze czasu."
+  },
+  "1xwZj/": {
+    "message": "Previous month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 215]],
+    "translation": "Poprzedni miesiąc",
+    "obsolete": true
+  },
+  "eps54V": {
+    "message": "Removed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 42]
+    ],
+    "translation": "Usunięty"
+  },
+  "RiQMUh": {
+    "message": "Running",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/Card.tsx", 148]],
+    "translation": "Uruchomiony"
+  },
+  "ZQyeYU": {
+    "message": "Running on this card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        226
+      ]
+    ],
+    "translation": "Uruchomiony na tej karcie"
+  },
+  "E5eC82": {
+    "message": "Select a member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 112]
+    ],
+    "translation": "Wybierz członka"
+  },
+  "UBj8RW": {
+    "message": "Start timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        334
+      ]
+    ],
+    "translation": "Uruchom stoper"
+  },
+  "IzcP+r": {
+    "message": "Starting this timer will stop the timer on “{0}” and save its elapsed time.",
+    "placeholders": { "0": ["timer.card.title"] },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        348
+      ]
+    ],
+    "translation": "Uruchomienie tego stopera zatrzyma stoper na karcie „{0}” i zapisze zmierzony czas."
+  },
+  "Gwsani": {
+    "message": "Starting this timer will stop the timer on the inaccessible card and save its elapsed time.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        347
+      ]
+    ],
+    "translation": "Uruchomienie tego stopera zatrzyma stoper na niedostępnej karcie i zapisze zmierzony czas."
+  },
+  "ygCKqB": {
+    "message": "Stop",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        245
+      ]
+    ],
+    "translation": "Zatrzymaj"
+  },
+  "hQk1gv": {
+    "message": "Stop and start",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        365
+      ]
+    ],
+    "translation": "Zatrzymaj i uruchom"
+  },
+  "t24lpS": {
+    "message": "The start date must not be after the end date.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 319]],
+    "translation": "Data początkowa nie może być późniejsza niż data końcowa."
+  },
+  "LhMjLm": {
+    "message": "Time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 469],
+      ["src/views/board/index.tsx", 647],
+      ["src/views/card/components/TimeTracking/TimeEntryForm.tsx", 127]
+    ],
+    "translation": "Czas"
+  },
+  "Ebh8y/": {
+    "message": "Time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 398]],
+    "translation": "Wpisy czasu"
+  },
+  "5YFXV7": {
+    "message": "Time report",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 189]],
+    "translation": "Raport czasu"
+  },
+  "SMjp8F": {
+    "message": "Time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/BoardDropdown.tsx", 116],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 63],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        311
+      ]
+    ],
+    "translation": "Rejestrowanie czasu"
+  },
+  "EMqDFj": {
+    "message": "Time tracking has been disabled. Existing history is preserved.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 42]],
+    "translation": "Rejestrowanie czasu zostało wyłączone. Istniejąca historia została zachowana."
+  },
+  "Vvl2CI": {
+    "message": "Time tracking is now available on this board.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 41]],
+    "translation": "Rejestrowanie czasu jest teraz dostępne na tej tablicy."
+  },
+  "zHHNK3": {
+    "message": "Time tracking updated",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 39]],
+    "translation": "Zaktualizowano rejestrowanie czasu"
+  },
+  "obwKN+": {
+    "message": "Timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 502]],
+    "translation": "Stoper"
+  },
+  "dMbLQM": {
+    "message": "Timer on an inaccessible card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        224
+      ]
+    ],
+    "translation": "Stoper na niedostępnej karcie"
+  },
+  "/kXBrK": {
+    "message": "Total time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 326]],
+    "translation": "Łączny czas"
+  },
+  "KDw4GX": {
+    "message": "Try again",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 446],
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 85],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        280
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        298
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        407
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        445
+      ]
+    ],
+    "translation": "Spróbuj ponownie"
+  },
+  "SBMyw7": {
+    "message": "Unavailable card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 390],
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 510]
+    ],
+    "translation": "Niedostępna karta"
+  },
+  "aGbZ2d": {
+    "message": "Unavailable member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 375],
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 481],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        425
+      ],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        472
+      ]
+    ],
+    "translation": "Niedostępny członek"
+  },
+  "zvcXZs": {
+    "message": "Unable to add time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        131
+      ]
+    ],
+    "translation": "Nie udało się dodać czasu"
+  },
+  "Q9E45Q": {
+    "message": "Unable to delete time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        145
+      ]
+    ],
+    "translation": "Nie udało się usunąć wpisu czasu"
+  },
+  "4IUsF2": {
+    "message": "Unable to discard timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        160
+      ]
+    ],
+    "translation": "Nie udało się odrzucić stopera"
+  },
+  "IIaGLD": {
+    "message": "Unable to load members.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        396
+      ]
+    ],
+    "translation": "Nie udało się wczytać członków."
+  },
+  "ZvZ7/B": {
+    "message": "Unable to load more time entries",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingReportModal.tsx", 136],
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        207
+      ]
+    ],
+    "translation": "Nie udało się wczytać kolejnych wpisów czasu"
+  },
+  "vsYAKj": {
+    "message": "Unable to load the active timer.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        273
+      ]
+    ],
+    "translation": "Nie udało się wczytać aktywnego stopera."
+  },
+  "ka1erB": {
+    "message": "Unable to load the time report.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingReportModal.tsx", 435]],
+    "translation": "Nie udało się wczytać raportu czasu."
+  },
+  "EK8TGG": {
+    "message": "Unable to load time entries.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        435
+      ]
+    ],
+    "translation": "Nie udało się wczytać wpisów czasu."
+  },
+  "ZfaaiP": {
+    "message": "Unable to load time tracking settings.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 82]],
+    "translation": "Nie udało się wczytać ustawień rejestrowania czasu."
+  },
+  "563CZw": {
+    "message": "Unable to load time tracking.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        291
+      ]
+    ],
+    "translation": "Nie udało się wczytać rejestrowania czasu."
+  },
+  "VyfeA+": {
+    "message": "Unable to start timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        152
+      ]
+    ],
+    "translation": "Nie udało się uruchomić stopera"
+  },
+  "Je4xFx": {
+    "message": "Unable to stop timer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        156
+      ]
+    ],
+    "translation": "Nie udało się zatrzymać stopera"
+  },
+  "cdvzpG": {
+    "message": "Unable to update time entry",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        138
+      ]
+    ],
+    "translation": "Nie udało się zaktualizować wpisu czasu"
+  },
+  "MKM8bX": {
+    "message": "Unable to update time tracking",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/TimeTrackingSettingsForm.tsx", 48]],
+    "translation": "Nie udało się zaktualizować rejestrowania czasu"
+  },
+  "x0vUTB": {
+    "message": "Unarchive this board before enabling time tracking.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 126]
+    ],
+    "translation": "Przywróć tę tablicę z archiwum przed włączeniem rejestrowania czasu."
+  },
+  "rfdrJY": {
+    "message": "You don't have permission to change this setting.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/TimeTrackingSettingsForm.tsx", 132]
+    ],
+    "translation": "Nie masz uprawnień do zmiany tego ustawienia."
+  },
+  "XOJDc9": {
+    "message": "All time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        376
+      ]
+    ],
+    "translation": "Cały okres"
+  },
+  "vfe90m": {
+    "message": "Last 14 days",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        381
+      ]
+    ],
+    "translation": "Ostatnie 14 dni"
+  },
+  "rTwgPH": {
+    "message": "Last month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        383
+      ]
+    ],
+    "translation": "Poprzedni miesiąc"
+  },
+  "xSn9Fa": {
+    "message": "Last quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        385
+      ]
+    ],
+    "translation": "Poprzedni kwartał"
+  },
+  "j9tmna": {
+    "message": "Last week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        380
+      ]
+    ],
+    "translation": "Poprzedni tydzień"
+  },
+  "ayy6IJ": {
+    "message": "Last year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        387
+      ]
+    ],
+    "translation": "Poprzedni rok"
+  },
+  "NtQvjo": {
+    "message": "Period",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        368
+      ]
+    ],
+    "translation": "Okres"
+  },
+  "oW3yYY": {
+    "message": "This month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        382
+      ]
+    ],
+    "translation": "Ten miesiąc"
+  },
+  "jkA2we": {
+    "message": "This quarter",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        384
+      ]
+    ],
+    "translation": "Ten kwartał"
+  },
+  "yByRxz": {
+    "message": "This week",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        379
+      ]
+    ],
+    "translation": "Ten tydzień"
+  },
+  "xYHlfW": {
+    "message": "This year",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        386
+      ]
+    ],
+    "translation": "Ten rok"
+  },
+  "ecUA8p": {
+    "message": "Today",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        377
+      ]
+    ],
+    "translation": "Dzisiaj"
+  },
+  "y/0uwd": {
+    "message": "Yesterday",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
+        378
+      ]
+    ],
+    "translation": "Wczoraj"
+  },
+  "0Mb5Vr": {
+    "message": "Activity order",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/settings/AccountSettings.tsx", 71]],
+    "translation": "Kolejność aktywności"
+  },
+  "niRekC": {
+    "message": "Choose whether newer or older activity appears first.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/settings/AccountSettings.tsx", 74]],
+    "translation": "Wybierz, czy najpierw mają być wyświetlane nowsze, czy starsze aktywności."
+  },
+  "cTUByn": {
+    "message": "Newest first",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/ActivitySortOrderSelector.tsx", 15]],
+    "translation": "Najnowsze najpierw"
+  },
+  "n6QD94": {
+    "message": "Oldest first",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/ActivitySortOrderSelector.tsx", 14]],
+    "translation": "Najstarsze najpierw"
+  },
+  "0XmVWH": {
+    "message": "Show newest activity first",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivitySortOrderToggle.tsx", 17]],
+    "translation": "Pokaż najpierw najnowszą aktywność"
+  },
+  "EL+7I2": {
+    "message": "Show oldest activity first",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivitySortOrderToggle.tsx", 16]],
+    "translation": "Pokaż najpierw najstarszą aktywność"
+  },
+  "3kS8Hp": {
+    "message": "Add cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 121]],
+    "translation": "Dodaj okładkę"
+  },
+  "zw1cIi": {
+    "message": "Card cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 105]],
+    "translation": "Okładka karty"
+  },
+  "isn2eh": {
+    "message": "Change cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 116]],
+    "translation": "Zmień okładkę"
+  },
+  "WfLyB5": {
+    "message": "changed the card cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 146]],
+    "translation": "zmienił(a) okładkę karty"
+  },
+  "IF7RiR": {
+    "message": "Cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/index.tsx", 165]],
+    "translation": "Okładka"
+  },
+  "g2Tj8R": {
+    "message": "Full",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 152]],
+    "translation": "Pełna"
+  },
+  "CsekCi": {
+    "message": "Normal",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 152]],
+    "translation": "Normalna"
+  },
+  "xhcj8E": {
+    "message": "Remove cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 183]],
+    "translation": "Usuń okładkę"
+  },
+  "Cj2Gtd": {
+    "message": "Size",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 140]],
+    "translation": "Rozmiar"
+  },
+  "PNvbHM": {
+    "message": "Unable to update card cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 53]],
+    "translation": "Nie udało się zaktualizować okładki karty"
+  },
+  "kH+aRv": {
+    "message": "Image attachment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 285]],
+    "translation": "Załącznik graficzny"
+  },
+  "an5hVd": {
+    "message": "Images",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 272]],
+    "translation": "Obrazy"
+  },
+  "Qa4Uz+": {
+    "message": "Upload an image or attach one to this card.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 313]],
+    "translation": "Prześlij obraz lub dołącz go do tej karty."
+  },
+  "6MxxvO": {
+    "message": "Upload image",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 331]],
+    "translation": "Prześlij obraz"
+  },
+  "gANddk": {
+    "message": "Uploading…",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardCoverSelector.tsx", 331]],
+    "translation": "Przesyłanie…"
+  },
+  "32ptHT": {
+    "message": "Card covers",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/settings/AccountSettings.tsx", 71]],
+    "translation": "Okładki kart"
+  },
+  "R6XtNF": {
+    "message": "Choose how card covers appear on this device.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/settings/AccountSettings.tsx", 74]],
+    "translation": "Wybierz sposób wyświetlania okładek kart na tym urządzeniu."
+  },
+  "D+zLDD": {
+    "message": "Hidden",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/CardCoverDisplaySelector.tsx", 14]],
+    "translation": "Ukryte"
+  },
+  "OQlTMJ": {
+    "message": "Prominent",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/CardCoverDisplaySelector.tsx", 12]],
+    "translation": "Wyróżnione"
+  },
+  "A/Wt3l": {
+    "message": "Subdued",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/CardCoverDisplaySelector.tsx", 13]],
+    "translation": "Przygaszone"
+  },
+  "sIpTuZ": {
+    "translation": "Zmień tło",
+    "message": "Change background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        146
+      ],
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        112
+      ]
+    ]
+  },
+  "jM7ASy": {
+    "translation": "Wybierz obraz JPEG, PNG, WebP, GIF lub AVIF.",
+    "message": "Choose a JPEG, PNG, WebP, GIF, or AVIF image.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        87
+      ]
+    ]
+  },
+  "SYb0Ub": {
+    "translation": "Wybierz obraz mniejszy niż 50 MB.",
+    "message": "Choose an image smaller than 50 MB.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        96
+      ]
+    ]
+  },
+  "xHwgs0": {
+    "translation": "Kolory",
+    "message": "Colours",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        172
+      ]
+    ]
+  },
+  "MnzgwU": {
+    "translation": "Nie udało się przesłać tła tablicy. Spróbuj ponownie.",
+    "message": "Failed to upload the board background. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        132
+      ]
+    ]
+  },
+  "4HhvKN": {
+    "translation": "Obraz jest zbyt duży",
+    "message": "Image is too large",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        95
+      ]
+    ]
+  },
+  "ylbfBl": {
+    "translation": "Usuń tło",
+    "message": "Remove background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        225
+      ]
+    ]
+  },
+  "wBhT2m": {
+    "translation": "Nie udało się zaktualizować tła tablicy",
+    "message": "Unable to update board background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        59
+      ]
+    ]
+  },
+  "8a8jKE": {
+    "translation": "Nieobsługiwany obraz",
+    "message": "Unsupported image",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundForm.tsx",
+        86
+      ]
+    ]
   }
 }

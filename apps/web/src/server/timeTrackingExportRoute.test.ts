@@ -247,6 +247,24 @@ describe("time tracking export route", () => {
     expect(filters).not.toHaveProperty("dateTo");
   });
 
+  it("reuses one drain listener while applying response backpressure", async () => {
+    const response = createResponse();
+    const onSpy = vi.spyOn(response, "on");
+    response.write = (chunk) => {
+      response.chunks.push(chunk);
+      queueMicrotask(() => response.emit("drain"));
+      return false;
+    };
+
+    await handler(createRequest(validQuery), response as never);
+
+    expect(
+      onSpy.mock.calls.filter(([eventName]) => eventName === "drain"),
+    ).toHaveLength(1);
+    expect(response.listenerCount("drain")).toBe(0);
+    expect(response.ended).toBe(true);
+  });
+
   it("destroys a started stream and forwards export errors to logging", async () => {
     const error = new Error("export failed");
     mockRepo.listBoardWorklogs.mockRejectedValue(error);

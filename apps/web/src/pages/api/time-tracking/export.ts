@@ -1,4 +1,4 @@
-import { once } from "node:events";
+import { on } from "node:events";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createNextApiContext } from "@kan/api/trpc";
@@ -71,13 +71,26 @@ const getLabels = (
     .filter(({ label }) => label.deletedAt === null)
     .map(({ label }) => label);
 
-const writeChunk = async (res: NextApiResponse, chunk: string) => {
-  if (!res.write(chunk)) await once(res, "drain");
+const createChunkWriter = (res: NextApiResponse) => {
+  const drainEvents = on(res, "drain");
+
+  return {
+    write: async (chunk: string) => {
+      if (res.write(chunk)) return;
+      const { done } = await drainEvents.next();
+      if (done) throw new Error("CSV response ended before it drained");
+    },
+    close: async () => {
+      await drainEvents.return?.();
+    },
+  };
 };
 
 export default withRateLimit(
   { points: 20, duration: 60 },
   withApiLogging(async (req: NextApiRequest, res: NextApiResponse) => {
+    let chunkWriter: ReturnType<typeof createChunkWriter> | undefined;
+
     if (req.method !== "GET")
       return res.status(405).json({ error: "Method not allowed" });
 
@@ -176,16 +189,18 @@ export default withRateLimit(
       );
       res.setHeader("Cache-Control", "private, no-store");
       res.flushHeaders();
+      chunkWriter = createChunkWriter(res);
 
-      await writeChunk(res, "\uFEFF");
+      await chunkWriter.write("\uFEFF");
 
       if (profile === "summary") {
         if (!isExportGroupBy(groupBy) || !summaryGroups)
           throw new Error("Validated export grouping is missing");
-        await writeChunk(res, encodeCsvRow(TIME_TRACKING_SUMMARY_CSV_HEADERS));
+        await chunkWriter.write(
+          encodeCsvRow(TIME_TRACKING_SUMMARY_CSV_HEADERS),
+        );
         for (const group of summaryGroups) {
-          await writeChunk(
-            res,
+          await chunkWriter.write(
             encodeTimeTrackingSummaryCsvRow({
               groupBy,
               groupLabel: getGroupLabel(group),
@@ -199,8 +214,7 @@ export default withRateLimit(
         return;
       }
 
-      await writeChunk(
-        res,
+      await chunkWriter.write(
         encodeCsvRow(
           profile === "entries"
             ? TIME_TRACKING_ENTRIES_CSV_HEADERS
@@ -222,8 +236,7 @@ export default withRateLimit(
           const memberName = getTimeTrackingCsvMemberDisplayName(member);
           const memberEmail = getTimeTrackingCsvMemberEmail(member);
           if (profile === "entries") {
-            await writeChunk(
-              res,
+            await chunkWriter.write(
               encodeTimeTrackingEntriesCsvRow({
                 workDate: row.workDate,
                 durationSeconds: row.durationSeconds,
@@ -239,8 +252,7 @@ export default withRateLimit(
             );
             continue;
           }
-          await writeChunk(
-            res,
+          await chunkWriter.write(
             encodeCsvRow([
               row.publicId,
               row.workDate,
@@ -279,6 +291,8 @@ export default withRateLimit(
         res.destroy(error instanceof Error ? error : undefined);
       }
       throw error;
+    } finally {
+      await chunkWriter?.close();
     }
   }),
 );

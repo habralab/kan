@@ -35,6 +35,7 @@ vi.mock("@kan/shared/utils", () => ({
   generateSlug: vi.fn(),
   generateUID: vi.fn(),
   normalizeDescription: vi.fn(),
+  workspacePlans: ["free", "team", "pro", "enterprise"],
 }));
 vi.mock("../utils/permissions", () => ({ assertPermission: vi.fn() }));
 vi.mock("../utils/encryption", () => ({ decryptToken: vi.fn() }));

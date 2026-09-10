@@ -33,6 +33,9 @@ vi.mock("@kan/db/repository/cardAttachment.repo", () => ({
   createImportedCover: vi.fn(),
 }));
 vi.mock("@kan/db/repository/checklist.repo", () => ({}));
+vi.mock("@kan/db/repository/custom-field-import.repo", () => ({
+  importBoardCustomFields: vi.fn(),
+}));
 vi.mock("@kan/db/repository/import.repo", () => ({
   create: vi.fn(),
   update: vi.fn(),
@@ -51,6 +54,7 @@ vi.mock("@kan/shared/utils", () => ({
   generateSlug: vi.fn(),
   generateUID: vi.fn(),
   normalizeDescription: vi.fn((description: string) => description),
+  workspacePlans: ["free", "team", "pro", "enterprise"],
 }));
 vi.mock("../utils/cardCoverPreview", () => ({
   deleteCardCoverObjects: vi.fn(() => Promise.resolve([])),

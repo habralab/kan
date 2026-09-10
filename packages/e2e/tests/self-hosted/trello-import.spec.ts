@@ -37,7 +37,13 @@ test(
     await imported;
 
     await expect(page.getByRole("dialog")).toHaveCount(0);
-    await page.getByText("Mock Trello Board", { exact: true }).click();
+    const importedBoard = page.locator("a", {
+      has: page.getByText("Mock Trello Board", { exact: true }),
+    });
+    await expect(
+      importedBoard.locator('[data-board-background="colour"]'),
+    ).toHaveCSS("background-color", "rgb(11, 80, 175)");
+    await importedBoard.click();
     await page.waitForURL(/\/boards\/[^/]+$/);
 
     const listNameTextboxes = page.getByRole("textbox", {
@@ -56,7 +62,9 @@ test(
     await expect(
       importedCard.getByText("Route:", { exact: true }),
     ).toBeVisible();
-    await expect(importedCard.getByText("North", { exact: true })).toBeVisible();
+    await expect(
+      importedCard.getByText("North", { exact: true }),
+    ).toBeVisible();
     await expect(page.getByText("Add dark mode")).toHaveCSS(
       "color",
       "rgb(0, 0, 0)",

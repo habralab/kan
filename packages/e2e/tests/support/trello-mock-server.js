@@ -101,6 +101,11 @@ const server = createServer((req, res) => {
         .get("card_fields")
         ?.split(",")
         .includes("idAttachmentCover") ||
+      url.searchParams.get("card_attachments") !== "cover" ||
+      !url.searchParams
+        .get("card_attachment_fields")
+        ?.split(",")
+        .includes("isUpload") ||
       url.searchParams.get("token") !== "mock-trello-token"
     ) {
       res.writeHead(400);

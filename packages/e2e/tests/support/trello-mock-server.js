@@ -5,6 +5,7 @@ const port = process.env.TRELLO_MOCK_PORT ?? "4025";
 const board = {
   id: "mock-board-1",
   name: "Mock Trello Board",
+  prefs: { backgroundColor: "#0B50AF" },
   labels: [
     { id: "label-1", name: "Bug", color: "red_dark" },
     { id: "label-2", name: "Feature", color: "blue_light" },

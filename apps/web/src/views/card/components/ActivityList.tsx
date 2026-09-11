@@ -145,6 +145,8 @@ const getActivityText = ({
     "card.updated.dueDate.updated": t`updated the due date`,
     "card.updated.dueDate.removed": t`removed the due date`,
     "card.updated.cover": t`changed the card cover`,
+    "card.updated.completed": t`marked the card as complete`,
+    "card.updated.uncompleted": t`marked the card as incomplete`,
   } as const;
 
   if (!(type in ACTIVITY_TYPE_MAP)) return null;
@@ -346,6 +348,8 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.checklist.item.updated": <HiOutlinePencil />,
     "card.updated.checklist.item.completed": <HiOutlineCheckCircle />,
     "card.updated.checklist.item.uncompleted": <HiOutlineCheckCircle />,
+    "card.updated.completed": <HiOutlineCheckCircle />,
+    "card.updated.uncompleted": <HiOutlineCheckCircle />,
     "card.updated.checklist.item.deleted": <HiOutlineTrash />,
     "card.updated.attachment.added": <HiOutlinePaperClip />,
     "card.updated.attachment.removed": <HiOutlinePaperClip />,

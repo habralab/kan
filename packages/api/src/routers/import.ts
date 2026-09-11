@@ -33,6 +33,7 @@ import {
   getTrelloCardCoverSource,
   getTrelloCoverColour,
   getTrelloLabelColour,
+  parseTrelloDueDate,
   trelloCardFields,
 } from "../utils/trello";
 import { importTrelloBoardBackground } from "../utils/trello-board-background";
@@ -244,6 +245,8 @@ interface TrelloCard {
   name: string | null;
   desc: string;
   idList: string;
+  due?: string | null;
+  dueComplete?: boolean;
   labels: TrelloLabel[];
   idChecklists: string[];
   checkItemStates: TrelloCheckItemState[];
@@ -423,6 +426,8 @@ export const importRouter = createTRPCRouter({
                   sourceId: _card.id,
                   name: _card.name,
                   description: _card.desc,
+                  dueDate: parseTrelloDueDate(_card.due),
+                  completed: _card.dueComplete === true,
                   coverSource: getTrelloCardCoverSource(_card),
                   coverColourCode: getTrelloCoverColour(_card.cover?.color),
                   coverSize:
@@ -580,6 +585,8 @@ export const importRouter = createTRPCRouter({
                 workspaceId: workspace.id,
                 index,
                 importId: newImportId,
+                dueDate: card.dueDate,
+                completed: card.completed,
                 coverColourCode: card.coverColourCode,
                 coverSize: card.coverSize,
               }));

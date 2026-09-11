@@ -1251,6 +1251,7 @@ export const cardRouter = createTRPCRouter({
         index: z.number().optional(),
         listPublicId: z.string().min(12).optional(),
         dueDate: z.date().nullable().optional(),
+        completed: z.boolean().optional(),
       }),
     )
     .output(cardUpdateResponseSchema)
@@ -1362,10 +1363,12 @@ export const cardRouter = createTRPCRouter({
             description: string | null;
             publicId: string;
             dueDate: Date | null;
+            completed: boolean;
           }
         | undefined;
 
       const previousDueDate = existingCard.dueDate;
+      const previousCompleted = existingCard.completed;
       const normalizedDescription =
         input.description !== undefined
           ? normalizeDescription(input.description)
@@ -1377,7 +1380,8 @@ export const cardRouter = createTRPCRouter({
       if (
         input.title ||
         normalizedDescription !== undefined ||
-        input.dueDate !== undefined
+        input.dueDate !== undefined ||
+        input.completed !== undefined
       ) {
         result = await cardRepo.update(
           ctx.db,
@@ -1387,6 +1391,9 @@ export const cardRouter = createTRPCRouter({
               description: normalizedDescription,
             }),
             ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
+            ...(input.completed !== undefined && {
+              completed: input.completed,
+            }),
           },
           { cardPublicId: input.cardPublicId },
         );
@@ -1506,6 +1513,19 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
+      if (
+        input.completed !== undefined &&
+        previousCompleted !== input.completed
+      ) {
+        activities.push({
+          type: input.completed
+            ? ("card.updated.completed" as const)
+            : ("card.updated.uncompleted" as const),
+          cardId: result.id,
+          createdBy: userId,
+        });
+      }
+
       if (newListId && existingCard.listId !== newListId) {
         activities.push({
           type: "card.updated.list" as const,
@@ -1564,6 +1584,15 @@ export const cardRouter = createTRPCRouter({
       ) {
         webhookChanges.dueDate = { from: previousDueDate, to: input.dueDate };
       }
+      if (
+        input.completed !== undefined &&
+        previousCompleted !== input.completed
+      ) {
+        webhookChanges.completed = {
+          from: previousCompleted,
+          to: input.completed,
+        };
+      }
       const movedToNewList = Boolean(
         newListId && existingCard.listId !== newListId,
       );
@@ -1593,6 +1622,7 @@ export const cardRouter = createTRPCRouter({
             title: result.title,
             description: result.description,
             dueDate: result.dueDate,
+            completed: result.completed,
             listId: currentWebhookListPublicId,
           },
           {

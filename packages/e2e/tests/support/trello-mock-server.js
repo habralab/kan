@@ -38,6 +38,8 @@ const board = {
       name: "Fix login bug",
       desc: "Users can't log in",
       idList: "list-1",
+      due: "2026-01-15T12:00:00.000Z",
+      dueComplete: true,
       labels: [{ id: "label-1", name: "Bug", color: "red_dark" }],
       customFieldItems: [
         {
@@ -53,6 +55,8 @@ const board = {
       name: "Add dark mode",
       desc: "",
       idList: "list-2",
+      due: null,
+      dueComplete: false,
       labels: [{ id: "label-2", name: "Feature", color: "blue_light" }],
       cover: { color: "sky", size: "full" },
     },
@@ -107,6 +111,10 @@ const server = createServer((req, res) => {
         .get("card_attachment_fields")
         ?.split(",")
         .includes("isUpload") ||
+      !url.searchParams
+        .get("card_fields")
+        ?.split(",")
+        .includes("dueComplete") ||
       url.searchParams.get("token") !== "mock-trello-token"
     ) {
       res.writeHead(400);

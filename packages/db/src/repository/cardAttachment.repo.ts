@@ -155,6 +155,17 @@ export const getAllByCardId = (db: dbClient, cardId: number) => {
   });
 };
 
+export const getStorageObjectsByBoardId = (db: dbClient, boardId: number) =>
+  db
+    .select({
+      publicId: cardAttachments.publicId,
+      s3Key: cardAttachments.s3Key,
+    })
+    .from(cardAttachments)
+    .innerJoin(cards, eq(cards.id, cardAttachments.cardId))
+    .innerJoin(lists, eq(lists.id, cards.listId))
+    .where(eq(lists.boardId, boardId));
+
 export const updateContentType = async (
   db: dbClient,
   args: { attachmentId: number; contentType: string },

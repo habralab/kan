@@ -39,6 +39,7 @@ export const cardUpdateResponseSchema = z.object({
   title: z.string(),
   description: z.string().nullable(),
   dueDate: z.date().nullable(),
+  completed: z.boolean(),
 });
 
 export const cardUpdateCoverResponseSchema = z.object({
@@ -78,6 +79,7 @@ export const cardDetailSchema = z.object({
   index: z.number(),
   dueDate: z.date().nullable(),
   cover: cardCoverSchema,
+  completed: z.boolean(),
   createdBy: z.string().nullable(),
   customFieldValues: z.array(customFieldValueSchema),
   labels: z.array(labelSchema),

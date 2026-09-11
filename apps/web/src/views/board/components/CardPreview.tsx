@@ -35,6 +35,7 @@ export default function CardPreview({
       customFields={customFields}
       customFieldValues={card.customFieldValues}
       cover={card.cover}
+      completed={card.completed}
     />
   );
 }

@@ -4,6 +4,7 @@ import { HiOutlinePaperClip } from "react-icons/hi";
 import {
   HiBars3BottomLeft,
   HiChatBubbleLeft,
+  HiCheckCircle,
   HiOutlineClock,
   HiOutlinePlayCircle,
 } from "react-icons/hi2";
@@ -40,6 +41,7 @@ const Card = ({
   customFields,
   customFieldValues,
   cover,
+  completed,
 }: {
   title: string;
   ticketNumber?: string | null;
@@ -83,6 +85,7 @@ const Card = ({
         | { kind: "attachment"; attachmentPublicId: string }
       ))
     | null;
+  completed: boolean;
 }) => {
   const { dateLocale } = useLocalisation();
   const { display: coverDisplay, isReady: isCoverDisplayReady } =
@@ -99,7 +102,9 @@ const Card = ({
   } = useCardCoverImage(attachmentPublicId);
   const coverImage = getCardCoverImageAttributes(coverSources);
   const showYear = dueDate ? !isSameYear(dueDate, new Date()) : false;
-  const isOverdue = dueDate ? isBefore(dueDate, startOfDay(new Date())) : false;
+  const isOverdue = dueDate
+    ? !completed && isBefore(dueDate, startOfDay(new Date()))
+    : false;
   const cardSummary = summary ?? {
     hasDescription:
       (description?.replace(/<[^>]*>/g, "").trim().length ?? 0) > 0,
@@ -220,22 +225,27 @@ const Card = ({
           {ticketNumber}
         </span>
       )}
-      <span
-        className={twMerge(
-          "relative z-[1] break-words",
-          isFullCover && "text-base font-semibold",
-          isFullImageCover && "text-white drop-shadow-sm",
+      <div className="relative z-[1] flex items-start gap-1.5">
+        {completed && (
+          <HiCheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
         )}
-        style={
-          isFullColourCover
-            ? coverDisplay === "subdued"
-              ? undefined
-              : { color: getContrastingTextColour(cover.colourCode) }
-            : undefined
-        }
-      >
-        {title}
-      </span>
+        <span
+          className={twMerge(
+            "break-words",
+            isFullCover && "text-base font-semibold",
+            isFullImageCover && "text-white drop-shadow-sm",
+          )}
+          style={
+            isFullColourCover
+              ? coverDisplay === "subdued"
+                ? undefined
+                : { color: getContrastingTextColour(cover.colourCode) }
+              : undefined
+          }
+        >
+          {title}
+        </span>
+      </div>
       {!isFullCover && (
         <CustomFieldBadges
           definitions={customFields}
@@ -272,9 +282,11 @@ const Card = ({
                 <div
                   className={twMerge(
                     "flex items-center gap-1",
-                    isOverdue
-                      ? "text-red-600 dark:text-red-400"
-                      : "text-light-800 dark:text-dark-800",
+                    completed
+                      ? "text-green-600 dark:text-green-400"
+                      : isOverdue
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-light-800 dark:text-dark-800",
                   )}
                 >
                   <HiOutlineClock className="h-4 w-4" />

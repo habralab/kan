@@ -156,6 +156,7 @@ export function NewCardForm({
               listId: 2,
               description: "",
               dueDate: args.dueDate ?? null,
+              completed: false,
               cardNumber: null,
               cover: null,
               comments: [],

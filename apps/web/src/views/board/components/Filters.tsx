@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { useState } from "react";
 import {
   HiMiniXMark,
+  HiOutlineCheckCircle,
   HiOutlineClock,
   HiOutlineSquare3Stack3D,
   HiOutlineTableCells,
@@ -90,6 +91,7 @@ const Filters = ({
           lists: [],
           dueDate: [],
           customFields: [],
+          completion: [],
         },
       });
     } catch (error) {
@@ -167,11 +169,25 @@ const Filters = ({
     },
   ];
 
+  const completionItems = [
+    {
+      key: "complete",
+      value: t`Complete`,
+      selected: !!router.query.completion?.includes("complete"),
+    },
+    {
+      key: "incomplete",
+      value: t`Incomplete`,
+      selected: !!router.query.completion?.includes("incomplete"),
+    },
+  ];
+
   const filterCounts = {
     members: formatToArray(router.query.members).length,
     labels: formatToArray(router.query.labels).length,
     lists: formatToArray(router.query.lists).length,
     dueDate: formatToArray(router.query.dueDate).length,
+    completion: formatToArray(router.query.completion).length,
   };
 
   const selectedCustomFieldFilters = formatToArray(router.query.customFields);
@@ -304,6 +320,13 @@ const Filters = ({
           },
         ]
       : []),
+    {
+      key: "completion",
+      label: t`Card status`,
+      icon: <HiOutlineCheckCircle size={16} />,
+      items: completionItems,
+      selectedCount: filterCounts.completion,
+    },
     {
       key: "dueDate",
       label: t`Due date`,

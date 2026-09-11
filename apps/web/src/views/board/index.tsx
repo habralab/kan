@@ -54,8 +54,8 @@ import { CardContextLabelsModal } from "./components/CardContextLabelsModal";
 import { CardContextMembersModal } from "./components/CardContextMembersModal";
 import { CardContextMenu } from "./components/CardContextMenu";
 import { CardContextMoveListModal } from "./components/CardContextMoveListModal";
-import { CustomFieldManager } from "./components/custom-fields/custom-field-manager";
 import { CardCoverImagesProvider } from "./components/CardCoverImages";
+import { CustomFieldManager } from "./components/custom-fields/custom-field-manager";
 import { DeleteBoardConfirmation } from "./components/DeleteBoardConfirmation";
 import { DeleteListConfirmation } from "./components/DeleteListConfirmation";
 import Filters from "./components/Filters";
@@ -161,6 +161,10 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     | "no-due-date"
   )[];
   const customFieldFilters = formatToArray(router.query.customFields);
+  const completionFilters = formatToArray(router.query.completion) as (
+    | "complete"
+    | "incomplete"
+  )[];
 
   const boardType: "regular" | "template" = isTemplate ? "template" : "regular";
 
@@ -196,6 +200,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     ...(customFieldFilters.length > 0 && {
       customFields: customFieldFilters,
     }),
+    ...(completionFilters.length > 0 && { completionFilters }),
     type: boardType,
     cardView: "summary" as const,
   };
@@ -1010,6 +1015,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                                 card.customFieldValues
                                               }
                                               cover={card.cover}
+                                              completed={card.completed}
                                             />
                                           </Link>
                                         )}

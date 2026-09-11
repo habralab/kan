@@ -805,9 +805,11 @@ export const getWithListIdsByPublicId = (
   return db.query.boards.findFirst({
     columns: {
       id: true,
+      publicId: true,
       workspaceId: true,
       createdBy: true,
       type: true,
+      backgroundImageKey: true,
     },
     with: {
       lists: {

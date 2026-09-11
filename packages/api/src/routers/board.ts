@@ -34,6 +34,7 @@ import {
   cloneBoardBackgroundObjects,
   deleteBoardBackgroundObjects,
 } from "../utils/boardBackgroundPreview";
+import { deleteBoardStorageObjects } from "../utils/boardStorageCleanup";
 import { formatCardCover } from "../utils/cardCover";
 import {
   getCardCoverPreviewKey,
@@ -901,6 +902,10 @@ export const boardRouter = createTRPCRouter({
       await assertBoardAccess(ctx.db, userId, board);
 
       const listIds = board.lists.map((list) => list.id);
+      const bucket = process.env.NEXT_PUBLIC_ATTACHMENTS_BUCKET_NAME;
+      const storageAttachments = bucket
+        ? await cardAttachmentRepo.getStorageObjectsByBoardId(ctx.db, board.id)
+        : [];
 
       const deletedAt = new Date();
 
@@ -946,6 +951,28 @@ export const boardRouter = createTRPCRouter({
 
           await activityRepo.bulkCreate(ctx.db, activities);
         }
+      }
+
+      if (bucket) {
+        const deletions = await deleteBoardStorageObjects({
+          bucket,
+          boardPublicId: board.publicId,
+          backgroundImageKey: board.backgroundImageKey,
+          attachments: storageAttachments,
+        });
+        const failedDeletions = deletions.filter(
+          ({ result }) => result.status === "rejected",
+        );
+        if (failedDeletions.length)
+          logger.warn(
+            {
+              err: failedDeletions[0]?.result.reason,
+              failedObjectCount: failedDeletions.length,
+              sampleKeys: failedDeletions.slice(0, 10).map(({ key }) => key),
+              boardPublicId: board.publicId,
+            },
+            "Failed to delete some board-owned storage objects",
+          );
       }
 
       return { success: true };

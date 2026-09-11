@@ -1,6 +1,7 @@
 import {
   CopyObjectCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
@@ -75,6 +76,109 @@ export async function deleteObject(bucket: string, key: string) {
       Key: key,
     }),
   );
+}
+
+export interface BatchDeleteError {
+  key: string;
+  code?: string;
+  message?: string;
+}
+
+export interface BatchDeleteResult {
+  deleted: string[];
+  errors: BatchDeleteError[];
+}
+
+const maxDeleteObjectsBatchSize = 1000;
+const maxConcurrentDeleteObjectsRequests = 4;
+
+export async function deleteObjects(
+  bucket: string,
+  keys: readonly string[],
+): Promise<BatchDeleteResult> {
+  const uniqueKeys = [...new Set(keys)];
+  if (uniqueKeys.length === 0) return { deleted: [], errors: [] };
+
+  const batches: string[][] = [];
+  for (
+    let index = 0;
+    index < uniqueKeys.length;
+    index += maxDeleteObjectsBatchSize
+  )
+    batches.push(uniqueKeys.slice(index, index + maxDeleteObjectsBatchSize));
+
+  const client = createS3Client();
+  const errors: BatchDeleteError[] = [];
+  let nextBatchIndex = 0;
+
+  const worker = async () => {
+    while (nextBatchIndex < batches.length) {
+      const batch = batches[nextBatchIndex++];
+      if (!batch) continue;
+
+      try {
+        const result = await client.send(
+          new DeleteObjectsCommand({
+            Bucket: bucket,
+            Delete: {
+              Objects: batch.map((key) => ({ Key: key })),
+              Quiet: true,
+            },
+          }),
+        );
+        const resultErrors = (result.Errors ?? []).filter(
+          (error) => error.Code !== "NoSuchKey",
+        );
+
+        if (resultErrors.some((error) => !error.Key)) {
+          const error = resultErrors.find((item) => !item.Key);
+          errors.push(
+            ...batch.map((key) => ({
+              key,
+              code: error?.Code,
+              message: error?.Message,
+            })),
+          );
+          continue;
+        }
+
+        errors.push(
+          ...resultErrors.flatMap((error) =>
+            error.Key
+              ? [
+                  {
+                    key: error.Key,
+                    code: error.Code,
+                    message: error.Message,
+                  },
+                ]
+              : [],
+          ),
+        );
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        errors.push(...batch.map((key) => ({ key, message })));
+      }
+    }
+  };
+
+  await Promise.all(
+    Array.from(
+      {
+        length: Math.min(maxConcurrentDeleteObjectsRequests, batches.length),
+      },
+      worker,
+    ),
+  );
+
+  const errorsByKey = new Map(errors.map((error) => [error.key, error]));
+  return {
+    deleted: uniqueKeys.filter((key) => !errorsByKey.has(key)),
+    errors: uniqueKeys.flatMap((key) => {
+      const error = errorsByKey.get(key);
+      return error ? [error] : [];
+    }),
+  };
 }
 
 export async function getObjectMetadata(bucket: string, key: string) {

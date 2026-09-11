@@ -237,6 +237,9 @@ export const boardRouter = createTRPCRouter({
             ]),
           )
           .optional(),
+        completionFilters: z
+          .array(z.enum(["complete", "incomplete"]))
+          .optional(),
         type: z.enum(["regular", "template"]).optional(),
         cardView: z.enum(["full", "summary"]).default("full"),
       }),
@@ -271,6 +274,10 @@ export const boardRouter = createTRPCRouter({
       const customFieldFilters = parseCustomFieldFilterTokens(
         input.customFields ?? [],
       );
+      const completed =
+        input.completionFilters?.length === 1
+          ? input.completionFilters[0] === "complete"
+          : undefined;
 
       const result = await boardRepo.getByPublicId(
         ctx.db,
@@ -282,6 +289,7 @@ export const boardRouter = createTRPCRouter({
           lists: input.lists ?? [],
           customFields: customFieldFilters,
           dueDate: dueDateFilters,
+          completed,
           type: input.type,
           cardView: input.cardView,
         },
@@ -412,6 +420,9 @@ export const boardRouter = createTRPCRouter({
             ]),
           )
           .optional(),
+        completionFilters: z
+          .array(z.enum(["complete", "incomplete"]))
+          .optional(),
       }),
     )
     .output(boardBySlugSchema.nullable())
@@ -434,6 +445,10 @@ export const boardRouter = createTRPCRouter({
       const customFieldFilters = parseCustomFieldFilterTokens(
         input.customFields ?? [],
       );
+      const completed =
+        input.completionFilters?.length === 1
+          ? input.completionFilters[0] === "complete"
+          : undefined;
 
       const result = await boardRepo.getBySlug(
         ctx.db,
@@ -445,6 +460,7 @@ export const boardRouter = createTRPCRouter({
           lists: input.lists ?? [],
           customFields: customFieldFilters,
           dueDate: dueDateFilters,
+          completed,
         },
       );
 

@@ -189,6 +189,10 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     | "no-due-date"
   )[];
   const customFieldFilters = formatToArray(router.query.customFields);
+  const completionFilters = formatToArray(router.query.completion) as (
+    | "complete"
+    | "incomplete"
+  )[];
 
   const boardType: "regular" | "template" = isTemplate ? "template" : "regular";
 
@@ -224,6 +228,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     ...(customFieldFilters.length > 0 && {
       customFields: customFieldFilters,
     }),
+    ...(completionFilters.length > 0 && { completionFilters }),
     type: boardType,
     cardView: "summary" as const,
   };

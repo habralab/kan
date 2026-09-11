@@ -7,6 +7,7 @@ import {
   getTrelloCardCoverSource,
   getTrelloCoverColour,
   getTrelloLabelColour,
+  parseTrelloDueDate,
   trelloCardFields,
 } from "./trello";
 
@@ -56,6 +57,21 @@ describe("getTrelloLabelColour", () => {
   it("uses the default Kan colour for an unknown Trello colour", () => {
     expect(getTrelloLabelColour("future_colour")).toBe("#0d9488");
   });
+});
+
+describe("parseTrelloDueDate", () => {
+  it("parses a valid Trello due date", () => {
+    expect(parseTrelloDueDate("2026-01-15T12:00:00.000Z")).toEqual(
+      new Date("2026-01-15T12:00:00.000Z"),
+    );
+  });
+
+  it.each([null, undefined, "", "not-a-date"])(
+    "returns null for an absent or invalid due date",
+    (value) => {
+      expect(parseTrelloDueDate(value)).toBeNull();
+    },
+  );
 });
 
 describe("formatTrelloCustomFields", () => {
@@ -321,9 +337,14 @@ describe("getTrelloCoverColour", () => {
 });
 
 describe("trelloCardFields", () => {
-  it("requests the current and legacy Trello cover fields", () => {
+  it("requests due state and the current and legacy Trello cover fields", () => {
     expect(trelloCardFields).toEqual(
-      expect.arrayContaining(["cover", "idAttachmentCover"]),
+      expect.arrayContaining([
+        "due",
+        "dueComplete",
+        "cover",
+        "idAttachmentCover",
+      ]),
     );
   });
 });

@@ -91,6 +91,9 @@ export const trelloCardFields = [
   "idList",
   "labels",
   "idChecklists",
+  "checkItemStates",
+  "due",
+  "dueComplete",
   "cover",
   "idAttachmentCover",
 ] as const;
@@ -161,6 +164,13 @@ export const getTrelloLabelColour = (colour: string | null | undefined) => {
   if (!colour) return colourlessLabelColour;
 
   return trelloLabelColours[colour] ?? defaultLabelColour;
+};
+
+export const parseTrelloDueDate = (value: string | null | undefined) => {
+  if (!value) return null;
+
+  const dueDate = new Date(value);
+  return Number.isNaN(dueDate.getTime()) ? null : dueDate;
 };
 
 export const getTrelloBoardBackground = (

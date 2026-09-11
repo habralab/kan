@@ -174,6 +174,7 @@ export const getByPublicId = async (
     lists: string[];
     customFields: BoardCustomFieldFilter[];
     dueDate: DueDateFilter[];
+    completed?: boolean;
     type: "regular" | "template" | undefined;
     cardView?: "full" | "summary";
   },
@@ -307,6 +308,7 @@ export const getByPublicId = async (
               listId: true,
               index: true,
               dueDate: true,
+              completed: true,
               cardNumber: true,
               coverColourCode: true,
               coverSize: true,
@@ -432,6 +434,9 @@ export const getByPublicId = async (
                 ? inArray(cards.publicId, customFieldCardIds)
                 : undefined,
               buildDueDateWhere(filters.dueDate),
+              filters.completed === undefined
+                ? undefined
+                : eq(cards.completed, filters.completed),
             ),
             orderBy: [asc(cards.index)],
           },
@@ -517,6 +522,7 @@ export const getBySlug = async (
     lists: string[];
     customFields: BoardCustomFieldFilter[];
     dueDate: DueDateFilter[];
+    completed?: boolean;
   },
 ) => {
   let cardIds: string[] = [];
@@ -589,6 +595,7 @@ export const getBySlug = async (
               listId: true,
               index: true,
               dueDate: true,
+              completed: true,
               cardNumber: true,
               coverColourCode: true,
               coverSize: true,
@@ -653,6 +660,9 @@ export const getBySlug = async (
                 ? inArray(cards.publicId, customFieldCardIds)
                 : undefined,
               buildDueDateWhere(filters.dueDate),
+              filters.completed === undefined
+                ? undefined
+                : eq(cards.completed, filters.completed),
             ),
             orderBy: [asc(cards.index)],
           },

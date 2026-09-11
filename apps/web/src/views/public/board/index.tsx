@@ -57,6 +57,10 @@ export default function PublicBoardView() {
     | "no-due-date"
   )[];
   const customFieldFilters = formatToArray(router.query.customFields);
+  const completionFilters = formatToArray(router.query.completion) as (
+    | "complete"
+    | "incomplete"
+  )[];
 
   const { data, isLoading } = api.board.bySlug.useQuery(
     {
@@ -71,6 +75,7 @@ export default function PublicBoardView() {
       ...(customFieldFilters.length > 0 && {
         customFields: customFieldFilters,
       }),
+      ...(completionFilters.length > 0 && { completionFilters }),
     },
     {
       enabled: router.isReady && !!boardSlug,
@@ -246,6 +251,7 @@ export default function PublicBoardView() {
                               customFields={data.customFields}
                               customFieldValues={card.customFieldValues}
                               cover={card.cover}
+                              completed={card.completed}
                             />
                           </Link>
                         );

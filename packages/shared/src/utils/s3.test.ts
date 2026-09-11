@@ -1,7 +1,7 @@
-import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { deleteObjects } from "./s3";
+import { createS3Client, deleteObjects } from "./s3";
 
 const { send } = vi.hoisted(() => ({ send: vi.fn() }));
 
@@ -20,6 +20,22 @@ vi.mock("@aws-sdk/client-s3", () => {
     PutObjectCommand: Command,
     S3Client: vi.fn(() => ({ send })),
   };
+});
+
+describe("createS3Client", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("does not add optional checksums to presigned browser uploads", () => {
+    createS3Client();
+
+    expect(S3Client).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestChecksumCalculation: "WHEN_REQUIRED",
+      }),
+    );
+  });
 });
 
 describe("deleteObjects", () => {

@@ -42,6 +42,7 @@ const Card = ({
   customFieldValues,
   cover,
   completed,
+  dueDateHasTime,
 }: {
   title: string;
   ticketNumber?: string | null;
@@ -86,6 +87,7 @@ const Card = ({
       ))
     | null;
   completed: boolean;
+  dueDateHasTime?: boolean;
 }) => {
   const { dateLocale } = useLocalisation();
   const { display: coverDisplay, isReady: isCoverDisplayReady } =
@@ -103,7 +105,8 @@ const Card = ({
   const coverImage = getCardCoverImageAttributes(coverSources);
   const showYear = dueDate ? !isSameYear(dueDate, new Date()) : false;
   const isOverdue = dueDate
-    ? !completed && isBefore(dueDate, startOfDay(new Date()))
+    ? !completed &&
+      isBefore(dueDate, dueDateHasTime ? new Date() : startOfDay(new Date()))
     : false;
   const cardSummary = summary ?? {
     hasDescription:
@@ -278,8 +281,11 @@ const Card = ({
                   <HiBars3BottomLeft className="h-4 w-4" />
                 </div>
               )}
-              {hasDueDate && dueDate && (
+              {dueDate && (
                 <div
+                  title={format(dueDate, dueDateHasTime ? "PPpp" : "PP", {
+                    locale: dateLocale,
+                  })}
                   className={twMerge(
                     "flex items-center gap-1",
                     completed

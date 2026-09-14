@@ -10618,6 +10618,22 @@
     ],
     "translation": "Sags-ID kopieret til udklipsholderen"
   },
+  "LhMjLm": {
+    "message": "Time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/DateSelector.tsx",
+        203
+      ],
+      [
+        "src/components/DateSelector.tsx",
+        208
+      ]
+    ],
+    "translation": "Tid"
+  },
   "MHrjPM": {
     "message": "Title",
     "placeholders": {},

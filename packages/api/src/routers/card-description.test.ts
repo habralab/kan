@@ -51,6 +51,7 @@ const mockExistingCard = (completed = false) => {
     description: "<p>Existing description</p>",
     listId: 3,
     dueDate: null,
+    dueDateHasTime: false,
     completed,
     coverColourCode: null,
     coverAttachment: null,
@@ -70,6 +71,7 @@ const mockUpdatedCard = (completed = false) => {
     title: "Card",
     description: null,
     dueDate: null,
+    dueDateHasTime: false,
     completed,
   });
 };
@@ -196,5 +198,82 @@ describe("card updates", () => {
       expect.anything(),
       expect.objectContaining({ changes: undefined }),
     );
+  });
+
+  it("records a due-time change even when the timestamp stays the same", async () => {
+    vi.clearAllMocks();
+    const mockDb = {} as never;
+    const cardPublicId = "card-12345678";
+    const dueDate = new Date("2026-09-15T18:00:00.000Z");
+    const ctx = {
+      user: {
+        id: "user-123",
+        name: "Test User",
+        email: "test@example.com",
+      },
+      db: mockDb,
+    } as never;
+
+    vi.mocked(assertCanEdit).mockResolvedValue(undefined);
+    vi.mocked(cardRepo.getWorkspaceAndCardIdByCardPublicId).mockResolvedValue({
+      id: 1,
+      createdBy: "user-123",
+      workspaceId: 2,
+      workspaceVisibility: "private",
+      listPublicId: "list-12345678",
+      listName: "Todo",
+      boardPublicId: "board-1234567",
+      boardName: "Board",
+    });
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValue({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      listId: 3,
+      dueDate,
+      dueDateHasTime: false,
+      completed: false,
+      coverColourCode: null,
+      coverAttachment: null,
+      coverSize: "normal",
+      list: {
+        publicId: "list-12345678",
+        name: "Todo",
+        boardId: 4,
+      },
+    });
+    vi.mocked(cardRepo.update).mockResolvedValue({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      dueDate,
+      dueDateHasTime: true,
+      completed: false,
+    });
+    vi.mocked(cardActivityRepo.bulkCreate).mockResolvedValue([]);
+    vi.mocked(sendWebhooksForWorkspace).mockResolvedValue(undefined);
+
+    const { cardRouter } = await import("./card");
+    await cardRouter.createCaller(ctx).update({
+      cardPublicId,
+      dueDate,
+      dueDateHasTime: true,
+    });
+
+    expect(cardRepo.update).toHaveBeenCalledWith(
+      mockDb,
+      { dueDate, dueDateHasTime: true },
+      { cardPublicId },
+    );
+    expect(cardActivityRepo.bulkCreate).toHaveBeenCalledWith(mockDb, [
+      expect.objectContaining({
+        type: "card.updated.dueDate.updated",
+        fromDueDate: dueDate,
+        toDueDate: dueDate,
+        toDueDateHasTime: true,
+      }),
+    ]);
   });
 });

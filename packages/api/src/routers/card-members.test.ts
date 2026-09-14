@@ -466,6 +466,7 @@ describe("card member workspace scoping", () => {
             title: "Moved card",
             description: null,
             dueDate: null,
+            dueDateHasTime: false,
             completed: false,
           });
         },

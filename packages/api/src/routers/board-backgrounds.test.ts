@@ -28,6 +28,7 @@ vi.mock("../utils/permissions", () => ({
 
 vi.mock("@kan/shared/utils", () => ({
   convertDueDateFiltersToRanges: vi.fn(),
+  isValidViewerTimeZone: vi.fn(() => true),
   generateSlug: vi.fn(),
   generateUID: vi.fn(),
   workspacePlans: ["free", "team", "pro", "enterprise"],

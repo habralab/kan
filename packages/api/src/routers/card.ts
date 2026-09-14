@@ -93,6 +93,7 @@ export const cardRouter = createTRPCRouter({
               values.length,
           )
           .default([]),
+        dueDateHasTime: z.boolean().optional(),
       }),
     )
     .output(cardCreateResponseSchema)
@@ -175,6 +176,9 @@ export const cardRouter = createTRPCRouter({
           workspaceId: list.workspaceId,
           position: input.position,
           dueDate: input.dueDate ?? null,
+          dueDateHasTime: input.dueDate
+            ? (input.dueDateHasTime ?? false)
+            : false,
           customFieldValues: input.customFieldValues,
         })
         .catch(throwCustomFieldRepositoryError);
@@ -264,6 +268,9 @@ export const cardRouter = createTRPCRouter({
             title: input.title,
             description: input.description,
             dueDate: input.dueDate ?? null,
+            dueDateHasTime: input.dueDate
+              ? (input.dueDateHasTime ?? false)
+              : false,
             listId: list.publicId,
           },
           {
@@ -1170,15 +1177,27 @@ export const cardRouter = createTRPCRouter({
       },
     })
     .input(
-      z.object({
-        cardPublicId: z.string().min(12),
-        title: z.string().min(1).max(2000).optional(),
-        description: z.string().optional(),
-        index: z.number().optional(),
-        listPublicId: z.string().min(12).optional(),
-        dueDate: z.date().nullable().optional(),
-        completed: z.boolean().optional(),
-      }),
+      z
+        .object({
+          cardPublicId: z.string().min(12),
+          title: z.string().min(1).max(2000).optional(),
+          description: z.string().optional(),
+          index: z.number().optional(),
+          listPublicId: z.string().min(12).optional(),
+          dueDate: z.date().nullable().optional(),
+          dueDateHasTime: z.boolean().optional(),
+          completed: z.boolean().optional(),
+        })
+        .refine(
+          (input) =>
+            input.dueDateHasTime === undefined ||
+            (input.dueDate !== undefined &&
+              (!input.dueDateHasTime || input.dueDate instanceof Date)),
+          {
+            message: "dueDateHasTime requires dueDate (non-null when true)",
+            path: ["dueDateHasTime"],
+          },
+        ),
     )
     .output(cardUpdateResponseSchema)
     .mutation(async ({ ctx, input }) => {
@@ -1278,11 +1297,17 @@ export const cardRouter = createTRPCRouter({
             publicId: string;
             dueDate: Date | null;
             completed: boolean;
+            dueDateHasTime: boolean;
           }
         | undefined;
 
       const previousDueDate = existingCard.dueDate;
       const previousCompleted = existingCard.completed;
+      const dueDateChanged =
+        input.dueDate !== undefined &&
+        (previousDueDate?.getTime() !== input.dueDate?.getTime() ||
+          existingCard.dueDateHasTime !==
+            (input.dueDate ? (input.dueDateHasTime ?? false) : false));
       const normalizedDescription =
         input.description !== undefined
           ? normalizeDescription(input.description)
@@ -1307,6 +1332,9 @@ export const cardRouter = createTRPCRouter({
             ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
             ...(input.completed !== undefined && {
               completed: input.completed,
+            }),
+            ...(input.dueDate !== undefined && {
+              dueDateHasTime: input.dueDateHasTime ?? false,
             }),
           },
           { cardPublicId: input.cardPublicId },
@@ -1401,10 +1429,7 @@ export const cardRouter = createTRPCRouter({
         }
       }
 
-      if (
-        input.dueDate !== undefined &&
-        previousDueDate?.getTime() !== input.dueDate?.getTime()
-      ) {
+      if (dueDateChanged) {
         let activityType:
           | "card.updated.dueDate.added"
           | "card.updated.dueDate.updated"
@@ -1424,6 +1449,9 @@ export const cardRouter = createTRPCRouter({
           createdBy: userId,
           fromDueDate: previousDueDate ?? undefined,
           toDueDate: input.dueDate ?? undefined,
+          toDueDateHasTime: input.dueDate
+            ? (input.dueDateHasTime ?? false)
+            : false,
         });
       }
 
@@ -1465,11 +1493,14 @@ export const cardRouter = createTRPCRouter({
           to: normalizedDescription,
         };
       }
-      if (
-        input.dueDate !== undefined &&
-        previousDueDate?.getTime() !== input.dueDate?.getTime()
-      ) {
+      if (dueDateChanged) {
         webhookChanges.dueDate = { from: previousDueDate, to: input.dueDate };
+        if (existingCard.dueDateHasTime !== (input.dueDateHasTime ?? false)) {
+          webhookChanges.dueDateHasTime = {
+            from: existingCard.dueDateHasTime,
+            to: input.dueDateHasTime ?? false,
+          };
+        }
       }
       if (
         input.completed !== undefined &&
@@ -1510,6 +1541,7 @@ export const cardRouter = createTRPCRouter({
             description: result.description,
             dueDate: result.dueDate,
             completed: result.completed,
+            dueDateHasTime: result.dueDateHasTime,
             listId: currentWebhookListPublicId,
           },
           {
@@ -1606,6 +1638,7 @@ export const cardRouter = createTRPCRouter({
               title: fullCard.title,
               description: fullCard.description,
               dueDate: fullCard.dueDate,
+              dueDateHasTime: fullCard.dueDateHasTime,
               listId: fullCard.list.publicId,
             },
             {
@@ -1750,6 +1783,7 @@ export const cardRouter = createTRPCRouter({
         applyCustomFieldDefaults: !input.copyCustomFields,
         coverColourCode: sourceCard.coverColourCode,
         coverSize: sourceCard.coverSize,
+        dueDateHasTime: sourceCard.dueDateHasTime,
       });
 
       if (input.index !== undefined && input.index >= 0) {

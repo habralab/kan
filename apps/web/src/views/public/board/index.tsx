@@ -61,6 +61,10 @@ export default function PublicBoardView() {
     | "complete"
     | "incomplete"
   )[];
+  const viewerTimeZone =
+    typeof window === "undefined"
+      ? undefined
+      : Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const { data, isLoading } = api.board.bySlug.useQuery(
     {
@@ -71,6 +75,7 @@ export default function PublicBoardView() {
       lists: formatToArray(router.query.lists),
       ...(dueDateFilters.length > 0 && {
         dueDateFilters: dueDateFilters,
+        ...(viewerTimeZone && { viewerTimeZone }),
       }),
       ...(customFieldFilters.length > 0 && {
         customFields: customFieldFilters,
@@ -252,6 +257,7 @@ export default function PublicBoardView() {
                               customFieldValues={card.customFieldValues}
                               cover={card.cover}
                               completed={card.completed}
+                              dueDateHasTime={card.dueDateHasTime}
                             />
                           </Link>
                         );

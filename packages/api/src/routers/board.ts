@@ -16,6 +16,7 @@ import {
   generateDownloadUrl,
   generateSlug,
   generateUID,
+  isValidViewerTimeZone,
 } from "@kan/shared/utils";
 
 import {
@@ -240,6 +241,13 @@ export const boardRouter = createTRPCRouter({
         completionFilters: z
           .array(z.enum(["complete", "incomplete"]))
           .optional(),
+        viewerTimeZone: z
+          .string()
+          .max(100)
+          .refine(isValidViewerTimeZone, {
+            message: "Invalid IANA timezone",
+          })
+          .optional(),
         type: z.enum(["regular", "template"]).optional(),
         cardView: z.enum(["full", "summary"]).default("full"),
       }),
@@ -269,7 +277,10 @@ export const boardRouter = createTRPCRouter({
 
       // Convert semantic string filters to date ranges expected by the repo
       const dueDateFilters = input.dueDateFilters
-        ? convertDueDateFiltersToRanges(input.dueDateFilters)
+        ? convertDueDateFiltersToRanges(
+            input.dueDateFilters,
+            input.viewerTimeZone,
+          )
         : [];
       const customFieldFilters = parseCustomFieldFilterTokens(
         input.customFields ?? [],
@@ -423,6 +434,13 @@ export const boardRouter = createTRPCRouter({
         completionFilters: z
           .array(z.enum(["complete", "incomplete"]))
           .optional(),
+        viewerTimeZone: z
+          .string()
+          .max(100)
+          .refine(isValidViewerTimeZone, {
+            message: "Invalid IANA timezone",
+          })
+          .optional(),
       }),
     )
     .output(boardBySlugSchema.nullable())
@@ -440,7 +458,10 @@ export const boardRouter = createTRPCRouter({
 
       // Convert semantic string filters to date ranges expected by the repo
       const dueDateFilters = input.dueDateFilters
-        ? convertDueDateFiltersToRanges(input.dueDateFilters)
+        ? convertDueDateFiltersToRanges(
+            input.dueDateFilters,
+            input.viewerTimeZone,
+          )
         : [];
       const customFieldFilters = parseCustomFieldFilterTokens(
         input.customFields ?? [],

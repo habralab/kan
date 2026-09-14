@@ -69,6 +69,7 @@ export const create = async (
     applyCustomFieldDefaults?: boolean;
     coverColourCode?: string | null;
     coverSize?: "normal" | "full";
+    dueDateHasTime?: boolean;
   },
 ) => {
   return db.transaction(async (tx) => {
@@ -132,6 +133,9 @@ export const create = async (
         dueDate: cardInput.dueDate ?? null,
         coverColourCode: cardInput.coverColourCode ?? null,
         coverSize: cardInput.coverSize ?? "normal",
+        dueDateHasTime: cardInput.dueDate
+          ? (cardInput.dueDateHasTime ?? false)
+          : false,
       })
       .returning({
         id: cards.id,
@@ -357,6 +361,7 @@ export const update = async (
     description?: string | null;
     dueDate?: Date | null;
     completed?: boolean;
+    dueDateHasTime?: boolean;
   },
   args: {
     cardPublicId: string;
@@ -369,6 +374,12 @@ export const update = async (
       description: cardInput.description,
       dueDate: cardInput.dueDate !== undefined ? cardInput.dueDate : undefined,
       completed: cardInput.completed,
+      dueDateHasTime:
+        cardInput.dueDate === null
+          ? false
+          : cardInput.dueDate !== undefined
+            ? (cardInput.dueDateHasTime ?? false)
+            : undefined,
       updatedAt: new Date(),
     })
     .where(and(eq(cards.publicId, args.cardPublicId), isNull(cards.deletedAt)))
@@ -379,6 +390,7 @@ export const update = async (
       description: cards.description,
       dueDate: cards.dueDate,
       completed: cards.completed,
+      dueDateHasTime: cards.dueDateHasTime,
     });
 
   return result;
@@ -490,6 +502,7 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       coverColourCode: true,
       coverSize: true,
       completed: true,
+      dueDateHasTime: true,
     },
     with: {
       coverAttachment: {
@@ -536,6 +549,7 @@ export const bulkCreate = async (
     coverSize?: "normal" | "full";
     dueDate?: Date | null;
     completed?: boolean;
+    dueDateHasTime?: boolean;
   }[],
 ) => {
   if (cardInput.length === 0) return [];
@@ -589,6 +603,7 @@ export const bulkCreate = async (
       coverSize?: "normal" | "full";
       dueDate?: Date | null;
       completed?: boolean;
+      dueDateHasTime: boolean;
     }[] = [];
 
     // For each list, append incoming cards after current max index, preserving incoming order
@@ -621,6 +636,7 @@ export const bulkCreate = async (
           coverSize: it.coverSize ?? "normal",
           dueDate: it.dueDate ?? null,
           completed: it.completed ?? false,
+          dueDateHasTime: it.dueDate ? (it.dueDateHasTime ?? false) : false,
         });
       }
     }
@@ -738,6 +754,7 @@ export const getWithListAndMembersByPublicId = async (
       coverColourCode: true,
       coverSize: true,
       completed: true,
+      dueDateHasTime: true,
       createdBy: true,
       cardNumber: true,
       index: true,
@@ -885,6 +902,7 @@ export const getWithListAndMembersByPublicId = async (
           toDescription: true,
           fromDueDate: true,
           toDueDate: true,
+          toDueDateHasTime: true,
         },
         with: {
           fromList: {
@@ -1176,6 +1194,7 @@ export const reorder = async (
         description: true,
         dueDate: true,
         completed: true,
+        dueDateHasTime: true,
       },
       where: eq(cards.id, card.id),
     });

@@ -97,6 +97,7 @@ export const cards = pgTable(
       onDelete: "set null",
     }),
     coverSize: cardCoverSizeEnum("coverSize").notNull().default("normal"),
+    dueDateHasTime: boolean("dueDateHasTime").notNull().default(false),
   },
   (table) => [
     index("card_list_number_idx").on(table.listId, table.cardNumber),
@@ -185,6 +186,7 @@ export const cardActivities = pgTable("card_activity", {
   toComment: text("toComment"),
   fromDueDate: timestamp("fromDueDate"),
   toDueDate: timestamp("toDueDate"),
+  toDueDateHasTime: boolean("toDueDateHasTime").notNull().default(false),
   sourceBoardId: bigint("sourceBoardId", { mode: "number" }).references(
     () => boards.id,
     { onDelete: "set null" },

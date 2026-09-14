@@ -79,6 +79,29 @@ test(
       page.getByRole("button", { name: "Mark card as incomplete" }),
     ).toBeVisible();
     await expect(page.getByText("Jan 15, 2026", { exact: true })).toBeVisible();
+    const cardPublicId = page.url().split("/cards/")[1];
+    if (!cardPublicId) throw new Error("Could not resolve cardPublicId");
+
+    const cardResponse = await page.request.get(
+      `/api/trpc/card.byId?batch=1&input=${encodeURIComponent(
+        JSON.stringify({ "0": { json: { cardPublicId } } }),
+      )}`,
+    );
+    expect(cardResponse.ok()).toBe(true);
+    const cardBody = (await cardResponse.json()) as [
+      {
+        result: {
+          data: {
+            json: { dueDate: string | null; dueDateHasTime: boolean };
+          };
+        };
+      },
+    ];
+    expect(cardBody[0].result.data.json.dueDate).toBe(
+      "2026-01-15T12:00:00.000Z",
+    );
+    expect(cardBody[0].result.data.json.dueDateHasTime).toBe(true);
+
     const bugLabel = card.assignedLabelBadge("Bug");
     await expect(bugLabel).toBeVisible();
     await expect(bugLabel.locator("..").locator("svg")).toHaveAttribute(

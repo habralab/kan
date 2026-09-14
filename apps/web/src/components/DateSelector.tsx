@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import {
   addMonths,
   eachDayOfInterval,
@@ -10,7 +11,7 @@ import {
   startOfWeek,
   subMonths,
 } from "date-fns";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
@@ -18,13 +19,22 @@ interface DateSelectorProps {
   selectedDate?: Date | null;
   onDateSelect?: (date: Date | undefined) => void;
   weekStartsOn?: 0 | 1 | 6;
+  showTime?: boolean;
+  timeEnabled?: boolean;
+  onTimeEnabledChange?: (enabled: boolean) => void;
+  defaultTime?: string;
 }
 
 const DateSelector = ({
   selectedDate,
   onDateSelect,
   weekStartsOn = 1,
+  showTime = false,
+  timeEnabled = false,
+  onTimeEnabledChange,
+  defaultTime = "18:00",
 }: DateSelectorProps) => {
+  const timeInputId = useId();
   const [currentMonth, setCurrentMonth] = useState(() => {
     return selectedDate ? startOfMonth(selectedDate) : startOfMonth(new Date());
   });
@@ -68,14 +78,59 @@ const DateSelector = ({
     setCurrentMonth(addMonths(currentMonth, 1));
   };
 
+  const parseTime = (time: string) => {
+    const [hours = 0, minutes = 0] = time.split(":").map(Number);
+    return { hours, minutes };
+  };
+
   const handleDateClick = (date: Date, e: React.MouseEvent) => {
     e.stopPropagation();
     // If clicking the same date that's already selected, unselect it
     if (selectedDate && isSameDay(date, selectedDate)) {
       onDateSelect?.(undefined);
-    } else {
+    } else if (!showTime || !timeEnabled) {
       onDateSelect?.(date);
+    } else {
+      const selectedTime = selectedDate
+        ? {
+            hours: selectedDate.getHours(),
+            minutes: selectedDate.getMinutes(),
+            seconds: selectedDate.getSeconds(),
+            milliseconds: selectedDate.getMilliseconds(),
+          }
+        : { ...parseTime(defaultTime), seconds: 0, milliseconds: 0 };
+      const dateWithSelectedTime = new Date(date);
+      dateWithSelectedTime.setHours(
+        selectedTime.hours,
+        selectedTime.minutes,
+        selectedTime.seconds,
+        selectedTime.milliseconds,
+      );
+      onDateSelect?.(dateWithSelectedTime);
     }
+  };
+
+  const handleTimeChange = (time: string) => {
+    if (!selectedDate) return;
+
+    const { hours, minutes } = parseTime(time);
+    const dateWithUpdatedTime = new Date(selectedDate);
+    dateWithUpdatedTime.setHours(hours, minutes, 0, 0);
+    onDateSelect?.(dateWithUpdatedTime);
+  };
+
+  const handleTimeEnabledChange = (enabled: boolean) => {
+    onTimeEnabledChange?.(enabled);
+    if (!selectedDate) return;
+
+    const updatedDate = new Date(selectedDate);
+    if (enabled) {
+      const { hours, minutes } = parseTime(defaultTime);
+      updatedDate.setHours(hours, minutes, 0, 0);
+    } else {
+      updatedDate.setHours(0, 0, 0, 0);
+    }
+    onDateSelect?.(updatedDate);
   };
 
   return (
@@ -134,6 +189,32 @@ const DateSelector = ({
           </button>
         ))}
       </div>
+      {showTime && (
+        <div className="mt-4 flex items-center justify-between gap-3 text-sm text-light-900 dark:text-dark-900">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              className="h-[14px] w-[14px] rounded bg-transparent"
+              checked={timeEnabled}
+              onChange={(event) =>
+                handleTimeEnabledChange(event.target.checked)
+              }
+            />
+            {t`Time`}
+          </label>
+          {timeEnabled && (
+            <input
+              id={timeInputId}
+              aria-label={t`Time`}
+              type="time"
+              value={selectedDate ? format(selectedDate, "HH:mm") : defaultTime}
+              disabled={!selectedDate}
+              onChange={(event) => handleTimeChange(event.target.value)}
+              className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

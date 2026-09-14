@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { HiMiniPlus } from "react-icons/hi2";
 
 import DateSelector from "~/components/DateSelector";
+import { useLocalisation } from "~/hooks/useLocalisation";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
@@ -12,6 +13,7 @@ import { invalidateCard } from "~/utils/cardInvalidation";
 interface DueDateSelectorProps {
   cardPublicId: string;
   dueDate: Date | null | undefined;
+  dueDateHasTime: boolean;
   isLoading?: boolean;
   disabled?: boolean;
 }
@@ -19,23 +21,27 @@ interface DueDateSelectorProps {
 export function DueDateSelector({
   cardPublicId,
   dueDate,
+  dueDateHasTime,
   isLoading = false,
   disabled = false,
 }: DueDateSelectorProps) {
   const { showPopup } = usePopup();
   const { workspace } = useWorkspace();
+  const { dateLocale } = useLocalisation();
   const utils = api.useUtils();
   const [isOpen, setIsOpen] = useState(false);
   const [pendingDate, setPendingDate] = useState<Date | null | undefined>(
     dueDate,
   );
+  const [pendingHasTime, setPendingHasTime] = useState(dueDateHasTime);
 
   // Sync pendingDate with dueDate when it changes externally
   useEffect(() => {
     if (!isOpen) {
       setPendingDate(dueDate);
+      setPendingHasTime(dueDateHasTime);
     }
-  }, [dueDate, isOpen]);
+  }, [dueDate, dueDateHasTime, isOpen]);
 
   const updateDueDate = api.card.update.useMutation({
     onMutate: async (update) => {
@@ -50,8 +56,9 @@ export function DueDateSelector({
           ...oldCard,
           dueDate:
             update.dueDate !== undefined
-              ? (update.dueDate as Date | null)
+              ? update.dueDate
               : oldCard.dueDate,
+          dueDateHasTime: update.dueDateHasTime ?? oldCard.dueDateHasTime,
         };
       });
 
@@ -92,6 +99,9 @@ export function DueDateSelector({
         dateChanged = pendingDate.getTime() !== dueDate.getTime();
       }
     }
+    if (!pendingIsNull && pendingHasTime !== dueDateHasTime) {
+      dateChanged = true;
+    }
 
     // Close popover immediately
     setIsOpen(false);
@@ -101,6 +111,7 @@ export function DueDateSelector({
       updateDueDate.mutate({
         cardPublicId,
         dueDate: pendingDate ?? null,
+        dueDateHasTime: pendingDate ? pendingHasTime : false,
       });
     }
   };
@@ -114,7 +125,15 @@ export function DueDateSelector({
         className={`flex h-full w-full items-center rounded-[5px] border-[1px] border-light-50 py-1 pl-2 text-left text-xs text-neutral-900 dark:border-dark-50 dark:text-dark-1000 ${disabled ? "cursor-not-allowed opacity-60" : "hover:border-light-300 hover:bg-light-200 dark:hover:border-dark-200 dark:hover:bg-dark-100"}`}
       >
         {dueDate ? (
-          <span>{format(dueDate, "MMM d, yyyy")}</span>
+          <span>
+            {format(
+              dueDate,
+              dueDateHasTime ? "MMM d, yyyy, p" : "MMM d, yyyy",
+              {
+                locale: dateLocale,
+              },
+            )}
+          </span>
         ) : (
           <>
             <HiMiniPlus size={22} className="pr-2" />
@@ -138,6 +157,9 @@ export function DueDateSelector({
               selectedDate={pendingDate ?? undefined}
               onDateSelect={handleDateSelect}
               weekStartsOn={workspace.weekStartDay}
+              showTime
+              timeEnabled={pendingHasTime}
+              onTimeEnabledChange={setPendingHasTime}
             />
           </div>
         </>

@@ -68,6 +68,7 @@ const getActivityText = ({
   label,
   fromTitle,
   toDueDate,
+  toDueDateHasTime,
   dateLocale,
   mergedLabels,
   attachmentName,
@@ -83,6 +84,7 @@ const getActivityText = ({
   fromTitle?: string | null;
   fromDueDate?: Date | null;
   toDueDate?: Date | null;
+  toDueDateHasTime?: boolean;
   dateLocale: DateFnsLocale;
   mergedLabels?: string[];
   attachmentName?: string | null;
@@ -299,9 +301,10 @@ const getActivityText = ({
 
   if (type === "card.updated.dueDate.added" && toDueDate) {
     const showYear = !isSameYear(toDueDate, new Date());
+    const datePattern = showYear ? "do MMM yyyy" : "do MMM";
     const formattedDate = format(
       toDueDate,
-      showYear ? "do MMM yyyy" : "do MMM",
+      toDueDateHasTime ? `${datePattern}, p` : datePattern,
       { locale: dateLocale },
     );
     return (
@@ -313,9 +316,10 @@ const getActivityText = ({
 
   if (type === "card.updated.dueDate.updated" && toDueDate) {
     const showYear = !isSameYear(toDueDate, new Date());
+    const datePattern = showYear ? "do MMM yyyy" : "do MMM";
     const formattedDate = format(
       toDueDate,
-      showYear ? "do MMM yyyy" : "do MMM",
+      toDueDateHasTime ? `${datePattern}, p` : datePattern,
       { locale: dateLocale },
     );
     return (
@@ -403,6 +407,7 @@ const ActivityItems = ({
       fromTitle: activity.fromTitle ?? null,
       fromDueDate: activity.fromDueDate ?? null,
       toDueDate: activity.toDueDate ?? null,
+      toDueDateHasTime: activity.toDueDateHasTime,
       dateLocale,
       mergedLabels: (activity as ActivityWithMergedLabels).mergedLabels,
       attachmentName:

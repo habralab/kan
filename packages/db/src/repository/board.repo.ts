@@ -154,6 +154,7 @@ export const getIdByPublicId = async (db: dbClient, boardPublicId: string) => {
 interface DueDateFilter {
   startDate?: Date;
   endDate?: Date;
+  timedEndDate?: Date;
   hasNoDueDate?: boolean;
 }
 
@@ -172,7 +173,22 @@ const buildDueDateWhere = (filters: DueDateFilter[]) => {
         if (filter.startDate)
           conditions.push(gte(cards.dueDate, filter.startDate));
 
-        if (filter.endDate) conditions.push(lt(cards.dueDate, filter.endDate));
+        if (filter.endDate && filter.timedEndDate) {
+          conditions.push(
+            or(
+              and(
+                eq(cards.dueDateHasTime, false),
+                lt(cards.dueDate, filter.endDate),
+              ),
+              and(
+                eq(cards.dueDateHasTime, true),
+                lt(cards.dueDate, filter.timedEndDate),
+              ),
+            ),
+          );
+        } else if (filter.endDate) {
+          conditions.push(lt(cards.dueDate, filter.endDate));
+        }
       }
 
       return conditions.length > 0 ? and(...conditions) : undefined;
@@ -332,6 +348,7 @@ export const getByPublicId = async (
               index: true,
               dueDate: true,
               completed: true,
+              dueDateHasTime: true,
               cardNumber: true,
               coverColourCode: true,
               coverSize: true,
@@ -687,6 +704,7 @@ export const getBySlug = async (
               index: true,
               dueDate: true,
               completed: true,
+              dueDateHasTime: true,
               cardNumber: true,
               coverColourCode: true,
               coverSize: true,

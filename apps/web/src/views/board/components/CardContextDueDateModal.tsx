@@ -25,6 +25,7 @@ export function CardContextDueDateModal() {
         <DueDateSelector
           cardPublicId={cardPublicId}
           dueDate={card?.dueDate ?? null}
+          dueDateHasTime={card?.dueDateHasTime ?? false}
         />
       )}
       <div className="mt-4 flex justify-end">

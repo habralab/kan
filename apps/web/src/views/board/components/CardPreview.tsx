@@ -36,6 +36,7 @@ export default function CardPreview({
       customFieldValues={card.customFieldValues}
       cover={card.cover}
       completed={card.completed}
+      dueDateHasTime={card.dueDateHasTime}
     />
   );
 }

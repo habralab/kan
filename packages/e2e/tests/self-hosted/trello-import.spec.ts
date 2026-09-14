@@ -69,7 +69,7 @@ test(
       "color",
       "rgb(0, 0, 0)",
     );
-    await expect(page.getByText("Add dark mode").locator("..")).toHaveCSS(
+    await expect(page.getByText("Add dark mode").locator("../..")).toHaveCSS(
       "background-color",
       "rgb(108, 195, 224)",
     );
@@ -78,7 +78,9 @@ test(
     await expect(
       page.getByRole("button", { name: "Mark card as incomplete" }),
     ).toBeVisible();
-    await expect(page.getByText("Jan 15, 2026", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Jan 15, 2026, 12:00" }),
+    ).toBeVisible();
     const cardPublicId = page.url().split("/cards/")[1];
     if (!cardPublicId) throw new Error("Could not resolve cardPublicId");
 

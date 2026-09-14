@@ -33,6 +33,7 @@ export interface WebhookPayload {
       title: string;
       description?: string | null;
       dueDate?: string | null; // ISO string after JSON serialization
+      startDate?: string | null;
       cover?: WebhookCardCover;
       completed?: boolean;
       dueDateHasTime?: boolean;
@@ -260,6 +261,7 @@ export function createCardWebhookPayload(
     title: string;
     description?: string | null;
     dueDate?: Date | null;
+    startDate?: Date | null;
     cover?: WebhookCardCover;
     completed?: boolean;
     dueDateHasTime?: boolean;
@@ -286,6 +288,7 @@ export function createCardWebhookPayload(
         title: card.title,
         description: card.description,
         dueDate: card.dueDate?.toISOString() ?? null,
+        startDate: card.startDate?.toISOString() ?? null,
         ...(card.cover !== undefined && { cover: card.cover }),
         completed: card.completed,
         dueDateHasTime: card.dueDateHasTime ?? false,

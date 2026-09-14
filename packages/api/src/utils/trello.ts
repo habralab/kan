@@ -93,6 +93,7 @@ export const trelloCardFields = [
   "idChecklists",
   "checkItemStates",
   "due",
+  "start",
   "dueComplete",
   "cover",
   "idAttachmentCover",

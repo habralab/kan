@@ -39,6 +39,7 @@ export const cardUpdateResponseSchema = z.object({
   title: z.string(),
   description: z.string().nullable(),
   dueDate: z.date().nullable(),
+  startDate: z.date().nullable(),
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
 });
@@ -79,6 +80,7 @@ export const cardDetailSchema = z.object({
   cardNumber: z.number().nullable(),
   index: z.number(),
   dueDate: z.date().nullable(),
+  startDate: z.date().nullable(),
   cover: cardCoverSchema,
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
@@ -132,6 +134,8 @@ export const cardDetailSchema = z.object({
       fromDueDate: z.date().nullable(),
       toDueDate: z.date().nullable(),
       toDueDateHasTime: z.boolean(),
+      fromStartDate: z.date().nullable(),
+      toStartDate: z.date().nullable(),
       fromList: z
         .object({
           publicId: z.string(),
@@ -196,6 +200,8 @@ export const activityItemSchema = z.object({
   fromDueDate: z.date().nullable(),
   toDueDate: z.date().nullable(),
   toDueDateHasTime: z.boolean(),
+  fromStartDate: z.date().nullable(),
+  toStartDate: z.date().nullable(),
   fromList: z
     .object({
       publicId: z.string(),

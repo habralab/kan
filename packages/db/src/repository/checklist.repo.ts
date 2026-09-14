@@ -63,6 +63,9 @@ export const createItem = async (
     title: string;
     createdBy: string;
     completed?: boolean;
+    dueDate?: Date | null;
+    dueDateHasTime?: boolean;
+    assigneeId?: number | null;
   },
 ) => {
   return db.transaction(async (tx) => {
@@ -83,12 +86,19 @@ export const createItem = async (
         checklistId: checklistItemInput.checklistId,
         index: lastItem ? lastItem.index + 1 : 0,
         completed: checklistItemInput.completed ?? false,
+        dueDate: checklistItemInput.dueDate ?? null,
+        dueDateHasTime: checklistItemInput.dueDate
+          ? (checklistItemInput.dueDateHasTime ?? false)
+          : false,
+        assigneeId: checklistItemInput.assigneeId ?? null,
       })
       .returning({
         id: checklistItems.id,
         publicId: checklistItems.publicId,
         title: checklistItems.title,
         completed: checklistItems.completed,
+        dueDate: checklistItems.dueDate,
+        dueDateHasTime: checklistItems.dueDateHasTime,
       });
 
     return result;
@@ -134,6 +144,10 @@ export const getChecklistItemByPublicIdWithChecklist = async (
       isNull(checklistItems.deletedAt),
     ),
     with: {
+      assignee: {
+        columns: { publicId: true, email: true, status: true },
+        with: { user: { columns: { name: true } } },
+      },
       checklist: {
         with: {
           card: {
@@ -157,13 +171,29 @@ export const getChecklistItemByPublicIdWithChecklist = async (
 
 export const updateItemById = async (
   db: dbClient,
-  args: { id: number; title?: string; completed?: boolean },
+  args: {
+    id: number;
+    title?: string;
+    completed?: boolean;
+    dueDate?: Date | null;
+    dueDateHasTime?: boolean;
+    assigneeId?: number | null;
+  },
 ) => {
   const [result] = await db
     .update(checklistItems)
     .set({
       ...(args.title !== undefined ? { title: args.title } : {}),
       ...(args.completed !== undefined ? { completed: args.completed } : {}),
+      ...(args.dueDate !== undefined
+        ? {
+            dueDate: args.dueDate,
+            dueDateHasTime: args.dueDate
+              ? (args.dueDateHasTime ?? false)
+              : false,
+          }
+        : {}),
+      ...(args.assigneeId !== undefined ? { assigneeId: args.assigneeId } : {}),
       updatedAt: new Date(),
     })
     .where(eq(checklistItems.id, args.id))
@@ -171,6 +201,8 @@ export const updateItemById = async (
       publicId: checklistItems.publicId,
       title: checklistItems.title,
       completed: checklistItems.completed,
+      dueDate: checklistItems.dueDate,
+      dueDateHasTime: checklistItems.dueDateHasTime,
     });
 
   return result;
@@ -291,6 +323,9 @@ export const bulkCreateItems = async (
     createdBy: string;
     index: number;
     completed: boolean;
+    dueDate?: Date | null;
+    dueDateHasTime?: boolean;
+    assigneeId?: number | null;
   }[],
 ) => {
   if (checklistItemInput.length === 0) return [];
@@ -305,6 +340,9 @@ export const bulkCreateItems = async (
       createdBy: string;
       index: number;
       completed: boolean;
+      dueDate?: Date | null;
+      dueDateHasTime: boolean;
+      assigneeId?: number | null;
     }[] = [];
 
     for (const [checklistId, items] of byChecklist.entries()) {
@@ -325,6 +363,7 @@ export const bulkCreateItems = async (
         allValuesToInsert.push({
           publicId: generateUID(),
           ...item,
+          dueDateHasTime: item.dueDate ? (item.dueDateHasTime ?? false) : false,
           index: nextIndex++,
         });
       }
@@ -338,6 +377,8 @@ export const bulkCreateItems = async (
         publicId: checklistItems.publicId,
         title: checklistItems.title,
         completed: checklistItems.completed,
+        dueDate: checklistItems.dueDate,
+        dueDateHasTime: checklistItems.dueDateHasTime,
       });
 
     return inserted;
@@ -391,6 +432,8 @@ export const reorderItem = async (
           publicId: true,
           title: true,
           completed: true,
+          dueDate: true,
+          dueDateHasTime: true,
         },
         where: and(
           eq(checklistItems.id, args.itemId),
@@ -433,6 +476,8 @@ export const reorderItem = async (
         publicId: checklistItems.publicId,
         title: checklistItems.title,
         completed: checklistItems.completed,
+        dueDate: checklistItems.dueDate,
+        dueDateHasTime: checklistItems.dueDateHasTime,
       });
 
     if (!updated) {

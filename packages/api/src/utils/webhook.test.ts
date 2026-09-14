@@ -62,6 +62,7 @@ describe("webhook utilities", () => {
         title: "Test Card",
         description: undefined,
         dueDate: null,
+        startDate: null,
         completed: undefined,
         dueDateHasTime: false,
         listId: "list-456",

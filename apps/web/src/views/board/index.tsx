@@ -165,6 +165,10 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     | "complete"
     | "incomplete"
   )[];
+  const viewerTimeZone =
+    typeof window === "undefined"
+      ? undefined
+      : Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const boardType: "regular" | "template" = isTemplate ? "template" : "regular";
 
@@ -196,6 +200,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     lists: formatToArray(router.query.lists),
     ...(semanticFilters.length > 0 && {
       dueDateFilters: semanticFilters,
+      ...(viewerTimeZone && { viewerTimeZone }),
     }),
     ...(customFieldFilters.length > 0 && {
       customFields: customFieldFilters,
@@ -1016,6 +1021,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                               }
                                               cover={card.cover}
                                               completed={card.completed}
+                                              dueDateHasTime={card.dueDateHasTime}
                                             />
                                           </Link>
                                         )}

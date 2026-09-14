@@ -427,6 +427,7 @@ export const importRouter = createTRPCRouter({
                   name: _card.name,
                   description: _card.desc,
                   dueDate: parseTrelloDueDate(_card.due),
+                  dueDateHasTime: Boolean(_card.due),
                   completed: _card.dueComplete === true,
                   coverSource: getTrelloCardCoverSource(_card),
                   coverColourCode: getTrelloCoverColour(_card.cover?.color),
@@ -589,6 +590,7 @@ export const importRouter = createTRPCRouter({
                 completed: card.completed,
                 coverColourCode: card.coverColourCode,
                 coverSize: card.coverSize,
+                dueDateHasTime: card.dueDateHasTime,
               }));
 
               const newCards = await cardRepo.bulkCreate(ctx.db, cardsInsert);

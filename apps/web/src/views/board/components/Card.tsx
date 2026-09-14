@@ -36,6 +36,7 @@ const Card = ({
   comments,
   attachments,
   dueDate,
+  startDate,
   timeTrackingTotalSeconds,
   isTimerRunning,
   customFields,
@@ -68,12 +69,21 @@ const Card = ({
       title: string;
       completed: boolean;
       index: number;
+      dueDate: Date | null;
+      dueDateHasTime: boolean;
+      assignee: {
+        publicId: string;
+        email: string;
+        status: "active" | "invited" | "removed" | "paused";
+        user: { name: string | null } | null;
+      } | null;
     }[];
   }[];
   description: string | null;
   comments: { publicId: string }[];
   attachments: { publicId: string }[];
   dueDate?: Date | null;
+  startDate?: Date | null;
   timeTrackingTotalSeconds?: number;
   isTimerRunning?: boolean;
   customFields: BoardCustomFields["definitions"];
@@ -281,11 +291,18 @@ const Card = ({
                   <HiBars3BottomLeft className="h-4 w-4" />
                 </div>
               )}
-              {dueDate && (
+              {(startDate || dueDate) && (
                 <div
-                  title={format(dueDate, dueDateHasTime ? "PPpp" : "PP", {
-                    locale: dateLocale,
-                  })}
+                  title={[
+                    startDate &&
+                      format(startDate, "PP", { locale: dateLocale }),
+                    dueDate &&
+                      format(dueDate, dueDateHasTime ? "PPpp" : "PP", {
+                        locale: dateLocale,
+                      }),
+                  ]
+                    .filter(Boolean)
+                    .join(" – ")}
                   className={twMerge(
                     "flex items-center gap-1",
                     completed
@@ -297,9 +314,19 @@ const Card = ({
                 >
                   <HiOutlineClock className="h-4 w-4" />
                   <span className="text-[11px]">
-                    {format(dueDate, showYear ? "do MMM yyyy" : "do MMM", {
-                      locale: dateLocale,
-                    })}
+                    {startDate &&
+                      format(
+                        startDate,
+                        !isSameYear(startDate, new Date())
+                          ? "do MMM yyyy"
+                          : "do MMM",
+                        { locale: dateLocale },
+                      )}
+                    {startDate && dueDate && " – "}
+                    {dueDate &&
+                      format(dueDate, showYear ? "do MMM yyyy" : "do MMM", {
+                        locale: dateLocale,
+                      })}
                   </span>
                 </div>
               )}

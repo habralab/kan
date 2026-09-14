@@ -13,6 +13,7 @@ import {
 
 import { cards } from "./cards";
 import { users } from "./users";
+import { workspaceMembers } from "./workspaces";
 
 export const checklists = pgTable("card_checklist", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
@@ -59,6 +60,12 @@ export const checklistItems = pgTable("card_checklist_item", {
   publicId: varchar("publicId", { length: 12 }).notNull().unique(),
   title: varchar("title", { length: 500 }).notNull(),
   completed: boolean("completed").notNull().default(false),
+  dueDate: timestamp("dueDate"),
+  dueDateHasTime: boolean("dueDateHasTime").notNull().default(false),
+  assigneeId: bigint("assigneeId", { mode: "number" }).references(
+    () => workspaceMembers.id,
+    { onDelete: "set null" },
+  ),
   index: integer("index").notNull(),
   checklistId: bigint("checklistId", { mode: "number" })
     .notNull()
@@ -84,6 +91,11 @@ export const checklistItemsRelations = relations(checklistItems, ({ one }) => ({
     fields: [checklistItems.checklistId],
     references: [checklists.id],
     relationName: "checklistItemsChecklist",
+  }),
+  assignee: one(workspaceMembers, {
+    fields: [checklistItems.assigneeId],
+    references: [workspaceMembers.id],
+    relationName: "checklistItemAssignee",
   }),
   createdBy: one(users, {
     fields: [checklistItems.createdBy],

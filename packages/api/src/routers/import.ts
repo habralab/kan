@@ -193,6 +193,7 @@ interface TrelloCheckItem {
   name: string;
   state: "complete" | "incomplete";
   pos: number;
+  due?: string | null;
 }
 
 interface GitHubProjectsResponse {
@@ -246,6 +247,7 @@ interface TrelloCard {
   desc: string;
   idList: string;
   due?: string | null;
+  start?: string | null;
   dueComplete?: boolean;
   labels: TrelloLabel[];
   idChecklists: string[];
@@ -427,6 +429,7 @@ export const importRouter = createTRPCRouter({
                   name: _card.name,
                   description: _card.desc,
                   dueDate: parseTrelloDueDate(_card.due),
+                  startDate: parseTrelloDueDate(_card.start),
                   dueDateHasTime: Boolean(_card.due),
                   completed: _card.dueComplete === true,
                   coverSource: getTrelloCardCoverSource(_card),
@@ -449,6 +452,7 @@ export const importRouter = createTRPCRouter({
                         title: _item.name,
                         completed: _item.state === "complete",
                         index: _item.pos,
+                        dueDate: parseTrelloDueDate(_item.due),
                       })),
                     })),
                 })),
@@ -587,6 +591,7 @@ export const importRouter = createTRPCRouter({
                 index,
                 importId: newImportId,
                 dueDate: card.dueDate,
+                startDate: card.startDate,
                 completed: card.completed,
                 coverColourCode: card.coverColourCode,
                 coverSize: card.coverSize,
@@ -682,6 +687,7 @@ export const importRouter = createTRPCRouter({
                   sourceId: string;
                   title: string;
                   completed: boolean;
+                  dueDate: Date | null;
                   index: number;
                 }[];
               }[] = [];
@@ -711,6 +717,7 @@ export const importRouter = createTRPCRouter({
                       sourceId: item.sourceId,
                       title: item.title,
                       completed: item.completed,
+                      dueDate: item.dueDate,
                       index: item.index,
                     })),
                   });
@@ -734,6 +741,8 @@ export const importRouter = createTRPCRouter({
                   createdBy: string;
                   index: number;
                   completed: boolean;
+                  dueDate: Date | null;
+                  dueDateHasTime: boolean;
                 }[] = [];
 
                 for (let i = 0; i < checklistsToCreate.length; i++) {
@@ -754,6 +763,8 @@ export const importRouter = createTRPCRouter({
                       createdBy: userId,
                       index: item.index,
                       completed: item.completed,
+                      dueDate: item.dueDate,
+                      dueDateHasTime: Boolean(item.dueDate),
                     });
                   }
                 }

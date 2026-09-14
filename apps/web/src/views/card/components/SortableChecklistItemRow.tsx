@@ -1,17 +1,22 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import type { ChecklistAssignee } from "./ChecklistItemAssignee";
 import ChecklistItemRow from "./ChecklistItemRow";
 
 interface ChecklistItem {
   publicId: string;
   title: string;
   completed: boolean;
+  dueDate: Date | null;
+  dueDateHasTime: boolean;
+  assignee: ChecklistAssignee | null;
   clientId?: string;
 }
 
 interface SortableChecklistItemRowProps {
   item: ChecklistItem;
+  workspaceMembers?: ChecklistAssignee[];
   cardPublicId: string;
   onCreateNewItem: () => void;
   viewOnly: boolean;
@@ -19,6 +24,7 @@ interface SortableChecklistItemRowProps {
 
 export default function SortableChecklistItemRow({
   item,
+  workspaceMembers = [],
   cardPublicId,
   onCreateNewItem,
   viewOnly,
@@ -44,6 +50,7 @@ export default function SortableChecklistItemRow({
     <div ref={setNodeRef} style={style}>
       <ChecklistItemRow
         item={item}
+        workspaceMembers={workspaceMembers}
         cardPublicId={cardPublicId}
         onCreateNewItem={onCreateNewItem}
         viewOnly={viewOnly}

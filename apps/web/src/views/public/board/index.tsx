@@ -253,6 +253,7 @@ export default function PublicBoardView() {
                               comments={card.comments ?? []}
                               attachments={card.attachments}
                               dueDate={card.dueDate ?? null}
+                              startDate={card.startDate ?? null}
                               customFields={data.customFields}
                               customFieldValues={card.customFieldValues}
                               cover={card.cover}

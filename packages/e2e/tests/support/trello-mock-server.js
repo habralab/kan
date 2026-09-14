@@ -39,6 +39,7 @@ const board = {
       desc: "Users can't log in",
       idList: "list-1",
       due: "2026-01-15T12:00:00.000Z",
+      start: "2026-01-12T05:00:00.000Z",
       dueComplete: true,
       labels: [{ id: "label-1", name: "Bug", color: "red_dark" }],
       customFieldItems: [
@@ -115,6 +116,7 @@ const server = createServer((req, res) => {
         .get("card_fields")
         ?.split(",")
         .includes("dueComplete") ||
+      !url.searchParams.get("card_fields")?.split(",").includes("start") ||
       url.searchParams.get("token") !== "mock-trello-token"
     ) {
       res.writeHead(400);

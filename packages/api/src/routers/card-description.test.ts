@@ -52,6 +52,7 @@ const mockExistingCard = (completed = false) => {
     description: "<p>Existing description</p>",
     listId: 3,
     dueDate: null,
+    startDate: null,
     dueDateHasTime: false,
     completed,
     coverColourCode: null,
@@ -72,6 +73,7 @@ const mockUpdatedCard = (completed = false) => {
     title: "Card",
     description: null,
     dueDate: null,
+    startDate: null,
     dueDateHasTime: false,
     completed,
   });
@@ -96,6 +98,44 @@ describe("card updates", () => {
     });
     vi.mocked(cardActivityRepo.bulkCreate).mockResolvedValue([]);
     vi.mocked(sendWebhooksForWorkspace).mockResolvedValue(undefined);
+  });
+
+  it("records a start date change without changing the due date", async () => {
+    const startDate = new Date("2026-09-13T05:00:00.000Z");
+    mockExistingCard();
+    mockUpdatedCard();
+    vi.mocked(cardRepo.update).mockResolvedValueOnce({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      dueDate: null,
+      startDate,
+      dueDateHasTime: false,
+      completed: false,
+    });
+
+    const { cardRouter } = await import("./card");
+    await cardRouter.createCaller(ctx).update({ cardPublicId, startDate });
+
+    expect(cardRepo.update).toHaveBeenCalledWith(
+      mockDb,
+      { startDate },
+      { cardPublicId },
+    );
+    expect(cardActivityRepo.bulkCreate).toHaveBeenCalledWith(mockDb, [
+      expect.objectContaining({
+        type: "card.updated.startDate.added",
+        toStartDate: startDate,
+      }),
+    ]);
+    expect(createCardWebhookPayload).toHaveBeenCalledWith(
+      "card.updated",
+      expect.objectContaining({ startDate }),
+      expect.objectContaining({
+        changes: { startDate: { from: null, to: startDate } },
+      }),
+    );
   });
 
   it("stores an empty editor document as null", async () => {
@@ -235,6 +275,7 @@ describe("card updates", () => {
       description: null,
       listId: 3,
       dueDate,
+      startDate: null,
       dueDateHasTime: false,
       completed: false,
       coverColourCode: null,
@@ -252,6 +293,7 @@ describe("card updates", () => {
       title: "Card",
       description: null,
       dueDate,
+      startDate: null,
       dueDateHasTime: true,
       completed: false,
     });

@@ -69,6 +69,7 @@ const getActivityText = ({
   fromTitle,
   toDueDate,
   toDueDateHasTime,
+  toStartDate,
   dateLocale,
   mergedLabels,
   attachmentName,
@@ -85,6 +86,7 @@ const getActivityText = ({
   fromDueDate?: Date | null;
   toDueDate?: Date | null;
   toDueDateHasTime?: boolean;
+  toStartDate?: Date | null;
   dateLocale: DateFnsLocale;
   mergedLabels?: string[];
   attachmentName?: string | null;
@@ -140,6 +142,11 @@ const getActivityText = ({
     "card.updated.checklist.item.updated": t`updated a checklist item`,
     "card.updated.checklist.item.completed": t`completed a checklist item`,
     "card.updated.checklist.item.uncompleted": t`marked a checklist item as incomplete`,
+    "card.updated.checklist.item.dueDate.added": t`set a checklist item due date`,
+    "card.updated.checklist.item.dueDate.updated": t`updated a checklist item due date`,
+    "card.updated.checklist.item.dueDate.removed": t`removed a checklist item due date`,
+    "card.updated.checklist.item.assignee.assigned": t`assigned a checklist item`,
+    "card.updated.checklist.item.assignee.unassigned": t`unassigned a checklist item`,
     "card.updated.checklist.item.deleted": t`deleted a checklist item`,
     "card.updated.attachment.added": t`added an attachment`,
     "card.updated.attachment.removed": t`removed an attachment`,
@@ -269,6 +276,24 @@ const getActivityText = ({
     );
   }
 
+  if (type === "card.updated.checklist.item.assignee.assigned" && toTitle) {
+    return (
+      <Trans>
+        assigned <TextHighlight>{truncate(displayName)}</TextHighlight> to
+        checklist item <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.checklist.item.assignee.unassigned" && toTitle) {
+    return (
+      <Trans>
+        unassigned <TextHighlight>{truncate(displayName)}</TextHighlight> from
+        checklist item <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
   if (type === "card.updated.checklist.item.deleted" && fromTitle) {
     return (
       <Trans>
@@ -333,6 +358,25 @@ const getActivityText = ({
     return <Trans>removed the due date</Trans>;
   }
 
+  if (
+    (type === "card.updated.startDate.added" ||
+      type === "card.updated.startDate.updated") &&
+    toStartDate
+  ) {
+    return (
+      <Trans>
+        changed the start date to{" "}
+        <TextHighlight>
+          {format(toStartDate, "PP", { locale: dateLocale })}
+        </TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.startDate.removed") {
+    return <Trans>removed the start date</Trans>;
+  }
+
   return baseText;
 };
 
@@ -352,6 +396,11 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.checklist.item.updated": <HiOutlinePencil />,
     "card.updated.checklist.item.completed": <HiOutlineCheckCircle />,
     "card.updated.checklist.item.uncompleted": <HiOutlineCheckCircle />,
+    "card.updated.checklist.item.dueDate.added": <HiOutlineClock />,
+    "card.updated.checklist.item.dueDate.updated": <HiOutlineClock />,
+    "card.updated.checklist.item.dueDate.removed": <HiOutlineClock />,
+    "card.updated.checklist.item.assignee.assigned": <HiOutlineUserPlus />,
+    "card.updated.checklist.item.assignee.unassigned": <HiOutlineUserMinus />,
     "card.updated.completed": <HiOutlineCheckCircle />,
     "card.updated.uncompleted": <HiOutlineCheckCircle />,
     "card.updated.checklist.item.deleted": <HiOutlineTrash />,
@@ -360,6 +409,9 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.dueDate.added": <HiOutlineClock />,
     "card.updated.dueDate.updated": <HiOutlineClock />,
     "card.updated.dueDate.removed": <HiOutlineClock />,
+    "card.updated.startDate.added": <HiOutlineClock />,
+    "card.updated.startDate.updated": <HiOutlineClock />,
+    "card.updated.startDate.removed": <HiOutlineClock />,
     "card.updated.cover": <HiOutlineSwatch />,
   } as const;
 
@@ -408,6 +460,7 @@ const ActivityItems = ({
       fromDueDate: activity.fromDueDate ?? null,
       toDueDate: activity.toDueDate ?? null,
       toDueDateHasTime: activity.toDueDateHasTime,
+      toStartDate: activity.toStartDate ?? null,
       dateLocale,
       mergedLabels: (activity as ActivityWithMergedLabels).mergedLabels,
       attachmentName:

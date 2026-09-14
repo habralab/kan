@@ -30,6 +30,7 @@ export default function CardPreview({
       comments={card.comments ?? []}
       attachments={card.attachments}
       dueDate={card.dueDate ?? null}
+      startDate={card.startDate ?? null}
       timeTrackingTotalSeconds={timeTrackingTotalSeconds}
       isTimerRunning={isTimerRunning}
       customFields={customFields}

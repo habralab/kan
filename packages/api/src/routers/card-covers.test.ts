@@ -68,6 +68,7 @@ const existingCard = {
   description: null,
   listId: 3,
   dueDate: null,
+  startDate: null,
   dueDateHasTime: false,
   completed: false,
   coverColourCode: null,

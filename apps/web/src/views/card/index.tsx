@@ -186,6 +186,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         <DueDateSelector
           cardPublicId={cardId ?? ""}
           dueDate={card?.dueDate}
+          dueDateHasTime={card?.dueDateHasTime ?? false}
           isLoading={!card}
           disabled={!canEdit}
         />

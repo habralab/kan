@@ -344,6 +344,13 @@
       "when": 1789146243427,
       "tag": "20260911170403_AddCardCompletion",
       "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1789407799285,
+      "tag": "20260914174319_AddDueDatePrecision",
+      "breakpoints": true
     }
   ]
 }

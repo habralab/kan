@@ -23,6 +23,7 @@ import Editor from "~/components/Editor";
 import Input from "~/components/Input";
 import LabelIcon from "~/components/LabelIcon";
 import Toggle from "~/components/Toggle";
+import { useLocalisation } from "~/hooks/useLocalisation";
 import { useModalFormState } from "~/hooks/useModalFormState";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
@@ -34,6 +35,7 @@ import { CustomFieldDraftInput } from "./custom-fields/custom-field-draft-input"
 type NewCardFormInput = NewCardInput & {
   isCreateAnotherEnabled: boolean;
   dueDate?: Date | null;
+  dueDateHasTime: boolean;
 };
 
 interface QueryParams {
@@ -59,6 +61,7 @@ export function NewCardForm({
 }: NewCardFormProps) {
   const { showPopup } = usePopup();
   const { workspace } = useWorkspace();
+  const { dateLocale } = useLocalisation();
   const { closeModal, openModal, modalStates, clearModalState } = useModal();
 
   const utils = api.useUtils();
@@ -76,6 +79,7 @@ export function NewCardForm({
       isCreateAnotherEnabled: false,
       position: "start",
       dueDate: null,
+      dueDateHasTime: false,
     },
     resetOnClose: true,
   });
@@ -93,6 +97,7 @@ export function NewCardForm({
   const title = watch("title");
   const description = watch("description");
   const dueDate = watch("dueDate");
+  const dueDateHasTime = watch("dueDateHasTime");
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
 
   // Files queued for upload after the card is created. Kept outside of
@@ -155,6 +160,7 @@ export function NewCardForm({
               description: "",
               dueDate: args.dueDate ?? null,
               completed: false,
+              dueDateHasTime: args.dueDateHasTime ?? false,
               cardNumber: null,
               cover: null,
               comments: [],
@@ -226,6 +232,7 @@ export function NewCardForm({
           isCreateAnotherEnabled,
           position,
           dueDate: null,
+          dueDateHasTime: false,
         };
         reset(newFormState);
         saveFormState(newFormState);
@@ -330,6 +337,7 @@ export function NewCardForm({
         position: data.position,
         dueDate: data.dueDate ?? null,
         customFieldValues: data.customFieldValues,
+        dueDateHasTime: data.dueDateHasTime,
       });
     } catch {
       // onError already surfaced the failure; keep the files queued for retry.
@@ -640,7 +648,13 @@ export function NewCardForm({
               className="flex h-full w-full items-center rounded-[5px] border-[1px] border-light-600 bg-light-200 px-2 py-1 text-left text-xs text-light-800 hover:bg-light-300 dark:border-dark-600 dark:bg-dark-400 dark:text-dark-1000 dark:hover:bg-dark-500"
             >
               {dueDate ? (
-                <span>{format(dueDate, "MMM d, yyyy")}</span>
+                <span>
+                  {format(
+                    dueDate,
+                    dueDateHasTime ? "MMM d, yyyy, p" : "MMM d, yyyy",
+                    { locale: dateLocale },
+                  )}
+                </span>
               ) : (
                 <>{t`Due date`}</>
               )}
@@ -664,9 +678,13 @@ export function NewCardForm({
                     selectedDate={dueDate ?? undefined}
                     onDateSelect={(date) => {
                       setValue("dueDate", date ?? null);
-                      setIsDateSelectorOpen(false);
                     }}
                     weekStartsOn={workspace.weekStartDay}
+                    showTime
+                    timeEnabled={dueDateHasTime}
+                    onTimeEnabledChange={(enabled) =>
+                      setValue("dueDateHasTime", enabled)
+                    }
                   />
                 </div>
               </>

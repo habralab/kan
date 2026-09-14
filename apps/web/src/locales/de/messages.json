@@ -6231,6 +6231,13 @@
     "origin": [["src/views/card/components/Dropdown.tsx", 93]],
     "translation": "Ticket-ID in die Zwischenablage kopiert"
   },
+  "LhMjLm": {
+    "message": "Time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/DateSelector.tsx", 203], ["src/components/DateSelector.tsx", 208]],
+    "translation": "Uhrzeit"
+  },
   "MHrjPM": {
     "message": "Title",
     "placeholders": {},

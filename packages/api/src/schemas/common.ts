@@ -12,6 +12,16 @@ export const checklistItemResponseSchema = z.object({
   publicId: z.string(),
   title: z.string(),
   completed: z.boolean(),
+  dueDate: z.date().nullable(),
+  dueDateHasTime: z.boolean(),
+  assignee: z
+    .object({
+      publicId: z.string(),
+      email: z.string(),
+      status: z.enum(["active", "invited", "removed", "paused"]),
+      user: z.object({ name: z.string().nullable() }).nullable(),
+    })
+    .nullable(),
   index: z.number(),
 });
 

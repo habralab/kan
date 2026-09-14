@@ -62,6 +62,7 @@ export const create = async (
     workspaceId: number;
     position: "start" | "end";
     dueDate?: Date | null;
+    startDate?: Date | null;
     customFieldValues?: {
       fieldPublicId: string;
       value: CustomFieldValueInput | null;
@@ -131,6 +132,7 @@ export const create = async (
         index: index,
         cardNumber,
         dueDate: cardInput.dueDate ?? null,
+        startDate: cardInput.startDate ?? null,
         coverColourCode: cardInput.coverColourCode ?? null,
         coverSize: cardInput.coverSize ?? "normal",
         dueDateHasTime: cardInput.dueDate
@@ -241,6 +243,7 @@ export const update = async (
     title?: string;
     description?: string | null;
     dueDate?: Date | null;
+    startDate?: Date | null;
     completed?: boolean;
     dueDateHasTime?: boolean;
   },
@@ -254,6 +257,7 @@ export const update = async (
       title: cardInput.title,
       description: cardInput.description,
       dueDate: cardInput.dueDate !== undefined ? cardInput.dueDate : undefined,
+      startDate: cardInput.startDate,
       completed: cardInput.completed,
       dueDateHasTime:
         cardInput.dueDate === null
@@ -270,6 +274,7 @@ export const update = async (
       title: cards.title,
       description: cards.description,
       dueDate: cards.dueDate,
+      startDate: cards.startDate,
       completed: cards.completed,
       dueDateHasTime: cards.dueDateHasTime,
     });
@@ -380,6 +385,7 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       description: true,
       listId: true,
       dueDate: true,
+      startDate: true,
       coverColourCode: true,
       coverSize: true,
       completed: true,
@@ -429,6 +435,7 @@ export const bulkCreate = async (
     coverColourCode?: string | null;
     coverSize?: "normal" | "full";
     dueDate?: Date | null;
+    startDate?: Date | null;
     completed?: boolean;
     dueDateHasTime?: boolean;
   }[],
@@ -483,6 +490,7 @@ export const bulkCreate = async (
       coverColourCode?: string | null;
       coverSize?: "normal" | "full";
       dueDate?: Date | null;
+      startDate?: Date | null;
       completed?: boolean;
       dueDateHasTime: boolean;
     }[] = [];
@@ -516,6 +524,7 @@ export const bulkCreate = async (
           coverColourCode: it.coverColourCode ?? null,
           coverSize: it.coverSize ?? "normal",
           dueDate: it.dueDate ?? null,
+          startDate: it.startDate ?? null,
           completed: it.completed ?? false,
           dueDateHasTime: it.dueDate ? (it.dueDateHasTime ?? false) : false,
         });
@@ -634,6 +643,7 @@ export const getWithListAndMembersByPublicId = async (
       title: true,
       description: true,
       dueDate: true,
+      startDate: true,
       coverColourCode: true,
       coverSize: true,
       completed: true,
@@ -685,9 +695,18 @@ export const getWithListAndMembersByPublicId = async (
               title: true,
               completed: true,
               index: true,
+              dueDate: true,
+              dueDateHasTime: true,
+              assigneeId: true,
             },
             where: isNull(checklistItems.deletedAt),
             orderBy: asc(checklistItems.index),
+            with: {
+              assignee: {
+                columns: { publicId: true, email: true, status: true },
+                with: { user: { columns: { name: true } } },
+              },
+            },
           },
         },
       },
@@ -786,6 +805,8 @@ export const getWithListAndMembersByPublicId = async (
           fromDueDate: true,
           toDueDate: true,
           toDueDateHasTime: true,
+          fromStartDate: true,
+          toStartDate: true,
         },
         with: {
           fromList: {
@@ -1076,6 +1097,7 @@ export const reorder = async (
         title: true,
         description: true,
         dueDate: true,
+        startDate: true,
         completed: true,
         dueDateHasTime: true,
       },

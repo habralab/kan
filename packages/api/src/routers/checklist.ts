@@ -4,6 +4,7 @@ import { z } from "zod";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
 import * as checklistRepo from "@kan/db/repository/checklist.repo";
+import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { stripHtml } from "@kan/shared/utils";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -18,6 +19,8 @@ const checklistItemSchema = z.object({
   publicId: z.string().length(12),
   title: z.string().min(1).max(500),
   completed: z.boolean(),
+  dueDate: z.date().nullable(),
+  dueDateHasTime: z.boolean(),
 });
 
 export const checklistRouter = createTRPCRouter({
@@ -281,7 +284,8 @@ export const checklistRouter = createTRPCRouter({
         summary: "Update a checklist item",
         method: "PATCH",
         path: "/checklists/items/{checklistItemPublicId}",
-        description: "Updates a checklist item (title/completed)",
+        description:
+          "Updates a checklist item (title/completed/due date/assignee)",
         tags: ["Cards"],
         protect: true,
       },
@@ -292,6 +296,9 @@ export const checklistRouter = createTRPCRouter({
         title: z.string().min(1).max(500).transform(stripHtml).optional(),
         completed: z.boolean().optional(),
         index: z.number().int().min(0).optional(),
+        dueDate: z.date().nullable().optional(),
+        dueDateHasTime: z.boolean().optional(),
+        assigneePublicId: z.string().length(12).nullable().optional(),
       }),
     )
     .output(checklistItemSchema)
@@ -307,10 +314,12 @@ export const checklistRouter = createTRPCRouter({
       if (
         input.title === undefined &&
         input.completed === undefined &&
-        input.index === undefined
+        input.index === undefined &&
+        input.dueDate === undefined &&
+        input.assigneePublicId === undefined
       )
         throw new TRPCError({
-          message: `At least one of title, completed, or index must be provided`,
+          message: `At least one of title, completed, index, dueDate, or assigneePublicId must be provided`,
           code: "BAD_REQUEST",
         });
 
@@ -332,14 +341,52 @@ export const checklistRouter = createTRPCRouter({
       );
 
       const previousTitle = item.title;
+      let assigneeId: number | null | undefined;
+
+      if (input.assigneePublicId !== undefined) {
+        if (input.assigneePublicId === null) {
+          assigneeId = null;
+        } else {
+          const member = await workspaceRepo.getMemberByPublicId(
+            ctx.db,
+            input.assigneePublicId,
+            item.checklist.card.list.board.workspace.id,
+          );
+          if (!member)
+            throw new TRPCError({
+              message: `Member not found in this workspace`,
+              code: "NOT_FOUND",
+            });
+          if (member.status !== "active" && member.status !== "invited")
+            throw new TRPCError({
+              message: `Inactive members cannot be assigned to checklist items`,
+              code: "BAD_REQUEST",
+            });
+          assigneeId = member.id;
+        }
+      }
+
+      if (input.dueDateHasTime !== undefined && input.dueDate === undefined)
+        throw new TRPCError({
+          message: `dueDate is required when dueDateHasTime is provided`,
+          code: "BAD_REQUEST",
+        });
 
       let updatedItem;
 
-      if (input.title !== undefined || input.completed !== undefined) {
+      if (
+        input.title !== undefined ||
+        input.completed !== undefined ||
+        input.dueDate !== undefined ||
+        assigneeId !== undefined
+      ) {
         updatedItem = await checklistRepo.updateItemById(ctx.db, {
           id: item.id,
           title: input.title,
           completed: input.completed,
+          dueDate: input.dueDate,
+          dueDateHasTime: input.dueDateHasTime ?? item.dueDateHasTime,
+          assigneeId,
         });
       }
 
@@ -376,6 +423,38 @@ export const checklistRouter = createTRPCRouter({
           cardId: item.checklist.cardId,
           fromTitle: previousTitle,
           toTitle: updatedItem.title,
+          createdBy: userId,
+        });
+      }
+
+      if (
+        input.dueDate !== undefined &&
+        (item.dueDate?.getTime() !== updatedItem.dueDate?.getTime() ||
+          item.dueDateHasTime !== updatedItem.dueDateHasTime)
+      ) {
+        await cardActivityRepo.create(ctx.db, {
+          type: !item.dueDate
+            ? "card.updated.checklist.item.dueDate.added"
+            : !updatedItem.dueDate
+              ? "card.updated.checklist.item.dueDate.removed"
+              : "card.updated.checklist.item.dueDate.updated",
+          cardId: item.checklist.cardId,
+          toTitle: updatedItem.title,
+          fromDueDate: item.dueDate ?? undefined,
+          toDueDate: updatedItem.dueDate ?? undefined,
+          toDueDateHasTime: updatedItem.dueDateHasTime,
+          createdBy: userId,
+        });
+      }
+
+      if (assigneeId !== undefined && assigneeId !== item.assigneeId) {
+        await cardActivityRepo.create(ctx.db, {
+          type: assigneeId
+            ? "card.updated.checklist.item.assignee.assigned"
+            : "card.updated.checklist.item.assignee.unassigned",
+          cardId: item.checklist.cardId,
+          toTitle: updatedItem.title,
+          workspaceMemberId: assigneeId ?? item.assigneeId ?? undefined,
           createdBy: userId,
         });
       }

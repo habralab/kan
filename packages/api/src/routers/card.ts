@@ -79,6 +79,7 @@ export const cardRouter = createTRPCRouter({
         memberPublicIds: z.array(z.string().min(12)),
         position: z.enum(["start", "end"]),
         dueDate: z.date().nullable().optional(),
+        startDate: z.date().nullable().optional(),
         customFieldValues: z
           .array(
             z.object({
@@ -176,6 +177,7 @@ export const cardRouter = createTRPCRouter({
           workspaceId: list.workspaceId,
           position: input.position,
           dueDate: input.dueDate ?? null,
+          startDate: input.startDate ?? null,
           dueDateHasTime: input.dueDate
             ? (input.dueDateHasTime ?? false)
             : false,
@@ -268,6 +270,7 @@ export const cardRouter = createTRPCRouter({
             title: input.title,
             description: input.description,
             dueDate: input.dueDate ?? null,
+            startDate: input.startDate ?? null,
             dueDateHasTime: input.dueDate
               ? (input.dueDateHasTime ?? false)
               : false,
@@ -1146,6 +1149,7 @@ export const cardRouter = createTRPCRouter({
             title: result.title,
             description: result.description,
             dueDate: result.dueDate,
+            startDate: existingCard.startDate,
             listId: existingCard.list.publicId,
             cover: nextCover,
           },
@@ -1185,6 +1189,7 @@ export const cardRouter = createTRPCRouter({
           index: z.number().optional(),
           listPublicId: z.string().min(12).optional(),
           dueDate: z.date().nullable().optional(),
+          startDate: z.date().nullable().optional(),
           dueDateHasTime: z.boolean().optional(),
           completed: z.boolean().optional(),
         })
@@ -1296,18 +1301,23 @@ export const cardRouter = createTRPCRouter({
             description: string | null;
             publicId: string;
             dueDate: Date | null;
+            startDate: Date | null;
             completed: boolean;
             dueDateHasTime: boolean;
           }
         | undefined;
 
       const previousDueDate = existingCard.dueDate;
+      const previousStartDate = existingCard.startDate;
       const previousCompleted = existingCard.completed;
       const dueDateChanged =
         input.dueDate !== undefined &&
         (previousDueDate?.getTime() !== input.dueDate?.getTime() ||
           existingCard.dueDateHasTime !==
             (input.dueDate ? (input.dueDateHasTime ?? false) : false));
+      const startDateChanged =
+        input.startDate !== undefined &&
+        previousStartDate?.getTime() !== input.startDate?.getTime();
       const normalizedDescription =
         input.description !== undefined
           ? normalizeDescription(input.description)
@@ -1320,6 +1330,7 @@ export const cardRouter = createTRPCRouter({
         input.title ||
         normalizedDescription !== undefined ||
         input.dueDate !== undefined ||
+        input.startDate !== undefined ||
         input.completed !== undefined
       ) {
         result = await cardRepo.update(
@@ -1330,6 +1341,9 @@ export const cardRouter = createTRPCRouter({
               description: normalizedDescription,
             }),
             ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
+            ...(input.startDate !== undefined && {
+              startDate: input.startDate,
+            }),
             ...(input.completed !== undefined && {
               completed: input.completed,
             }),
@@ -1455,6 +1469,24 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
+      if (startDateChanged) {
+        const type:
+          | "card.updated.startDate.added"
+          | "card.updated.startDate.updated"
+          | "card.updated.startDate.removed" = !previousStartDate
+          ? "card.updated.startDate.added"
+          : !input.startDate
+            ? "card.updated.startDate.removed"
+            : "card.updated.startDate.updated";
+        activities.push({
+          type,
+          cardId: result.id,
+          createdBy: userId,
+          fromStartDate: previousStartDate ?? undefined,
+          toStartDate: input.startDate ?? undefined,
+        });
+      }
+
       if (
         input.completed !== undefined &&
         previousCompleted !== input.completed
@@ -1502,6 +1534,12 @@ export const cardRouter = createTRPCRouter({
           };
         }
       }
+      if (startDateChanged) {
+        webhookChanges.startDate = {
+          from: previousStartDate,
+          to: input.startDate,
+        };
+      }
       if (
         input.completed !== undefined &&
         previousCompleted !== input.completed
@@ -1540,6 +1578,7 @@ export const cardRouter = createTRPCRouter({
             title: result.title,
             description: result.description,
             dueDate: result.dueDate,
+            startDate: result.startDate,
             completed: result.completed,
             dueDateHasTime: result.dueDateHasTime,
             listId: currentWebhookListPublicId,
@@ -1638,6 +1677,7 @@ export const cardRouter = createTRPCRouter({
               title: fullCard.title,
               description: fullCard.description,
               dueDate: fullCard.dueDate,
+              startDate: fullCard.startDate,
               dueDateHasTime: fullCard.dueDateHasTime,
               listId: fullCard.list.publicId,
             },
@@ -1780,6 +1820,7 @@ export const cardRouter = createTRPCRouter({
         workspaceId: targetList.workspaceId,
         position: "end",
         dueDate: sourceCard.dueDate ?? null,
+        startDate: sourceCard.startDate ?? null,
         applyCustomFieldDefaults: !input.copyCustomFields,
         coverColourCode: sourceCard.coverColourCode,
         coverSize: sourceCard.coverSize,
@@ -1864,6 +1905,13 @@ export const cardRouter = createTRPCRouter({
                 title: item.title,
                 createdBy: userId,
                 completed: false,
+                dueDate: item.dueDate,
+                dueDateHasTime: item.dueDateHasTime,
+                assigneeId:
+                  item.assignee?.status === "active" ||
+                  item.assignee?.status === "invited"
+                    ? item.assigneeId
+                    : null,
               });
             }
           }

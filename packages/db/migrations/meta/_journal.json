@@ -351,6 +351,27 @@
       "when": 1789407799285,
       "tag": "20260914174319_AddDueDatePrecision",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1789415138298,
+      "tag": "20260914194538_AddCardStartDate",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1789417697041,
+      "tag": "20260914202817_AddChecklistItemDueDate",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1789419346651,
+      "tag": "20260914205546_AddChecklistItemAssignee",
+      "breakpoints": true
     }
   ]
 }

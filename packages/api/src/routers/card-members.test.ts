@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
+import * as checklistRepo from "@kan/db/repository/checklist.repo";
 import * as customFieldRepo from "@kan/db/repository/custom-field.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
@@ -28,7 +29,10 @@ vi.mock("@kan/db/repository/cardActivity.repo", () => ({
 }));
 
 vi.mock("@kan/db/repository/cardComment.repo", () => ({}));
-vi.mock("@kan/db/repository/checklist.repo", () => ({}));
+vi.mock("@kan/db/repository/checklist.repo", () => ({
+  create: vi.fn(),
+  createItem: vi.fn(),
+}));
 vi.mock("@kan/db/repository/custom-field.repo", () => ({
   MAX_CUSTOM_FIELDS_PER_BOARD: 50,
   copyActiveCardValues: vi.fn(),
@@ -304,6 +308,77 @@ describe("card member workspace scoping", () => {
   });
 
   describe("duplicate", () => {
+    it("copies checklist dates and active assignees within the workspace", async () => {
+      const { cardRouter } = await import("./card");
+      mockGetCard.mockResolvedValueOnce({ id: 17, workspaceId: 7 });
+      mockGetList.mockResolvedValueOnce({
+        id: 11,
+        workspaceId: 7,
+        boardPublicId: "board-1234567",
+      });
+      const dueDate = new Date("2026-09-15T18:00:00.000Z");
+      mockGetCardWithMembers.mockResolvedValueOnce({
+        title: "Source card",
+        description: "",
+        dueDate: null,
+        members: [],
+        labels: [],
+        customFieldValues: [],
+        list: { board: { publicId: "board-1234567" } },
+        checklists: [
+          {
+            name: "Steps",
+            items: [
+              {
+                title: "Active step",
+                dueDate,
+                dueDateHasTime: true,
+                assigneeId: 21,
+                assignee: { status: "active" },
+              },
+              {
+                title: "Paused step",
+                dueDate: null,
+                dueDateHasTime: false,
+                assigneeId: 22,
+                assignee: { status: "paused" },
+              },
+            ],
+          },
+        ],
+      });
+      mockCardCreate.mockResolvedValueOnce({
+        id: 18,
+        publicId: "duplicate-123",
+      });
+      vi.mocked(checklistRepo.create).mockResolvedValueOnce({
+        id: 19,
+        name: "Steps",
+      } as never);
+
+      await cardRouter.createCaller(ctx).duplicate({
+        cardPublicId: "source-card-1",
+        listPublicId: "target-list-1",
+        copyLabels: false,
+        copyMembers: false,
+        copyChecklists: true,
+      });
+
+      expect(checklistRepo.createItem).toHaveBeenCalledWith(
+        mockDb,
+        expect.objectContaining({
+          title: "Active step",
+          dueDate,
+          dueDateHasTime: true,
+          assigneeId: 21,
+        }),
+      );
+      expect(checklistRepo.createItem).toHaveBeenCalledWith(
+        mockDb,
+        expect.objectContaining({ title: "Paused step", assigneeId: null }),
+      );
+    });
+
     it("does not copy paused member assignments", async () => {
       const { cardRouter } = await import("./card");
       mockGetCard.mockResolvedValueOnce({ id: 17, workspaceId: 7 });
@@ -466,6 +541,7 @@ describe("card member workspace scoping", () => {
             title: "Moved card",
             description: null,
             dueDate: null,
+            startDate: null,
             dueDateHasTime: false,
             completed: false,
           });

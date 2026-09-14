@@ -341,6 +341,7 @@ describe("trelloCardFields", () => {
     expect(trelloCardFields).toEqual(
       expect.arrayContaining([
         "due",
+        "start",
         "dueComplete",
         "cover",
         "idAttachmentCover",

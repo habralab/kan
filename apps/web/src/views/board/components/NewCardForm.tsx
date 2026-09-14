@@ -35,6 +35,7 @@ import { CustomFieldDraftInput } from "./custom-fields/custom-field-draft-input"
 type NewCardFormInput = NewCardInput & {
   isCreateAnotherEnabled: boolean;
   dueDate?: Date | null;
+  startDate?: Date | null;
   dueDateHasTime: boolean;
 };
 
@@ -79,6 +80,7 @@ export function NewCardForm({
       isCreateAnotherEnabled: false,
       position: "start",
       dueDate: null,
+      startDate: null,
       dueDateHasTime: false,
     },
     resetOnClose: true,
@@ -97,8 +99,10 @@ export function NewCardForm({
   const title = watch("title");
   const description = watch("description");
   const dueDate = watch("dueDate");
+  const startDate = watch("startDate");
   const dueDateHasTime = watch("dueDateHasTime");
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
+  const [isStartDateSelectorOpen, setIsStartDateSelectorOpen] = useState(false);
 
   // Files queued for upload after the card is created. Kept outside of
   // useModalFormState: File objects do not survive serialization.
@@ -159,6 +163,7 @@ export function NewCardForm({
               listId: 2,
               description: "",
               dueDate: args.dueDate ?? null,
+              startDate: args.startDate ?? null,
               completed: false,
               dueDateHasTime: args.dueDateHasTime ?? false,
               cardNumber: null,
@@ -232,6 +237,7 @@ export function NewCardForm({
           isCreateAnotherEnabled,
           position,
           dueDate: null,
+          startDate: null,
           dueDateHasTime: false,
         };
         reset(newFormState);
@@ -336,6 +342,7 @@ export function NewCardForm({
         memberPublicIds: data.memberPublicIds,
         position: data.position,
         dueDate: data.dueDate ?? null,
+        startDate: data.startDate ?? null,
         customFieldValues: data.customFieldValues,
         dueDateHasTime: data.dueDateHasTime,
       });
@@ -640,6 +647,34 @@ export function NewCardForm({
                 )}
               </div>
             </CheckboxDropdown>
+          </div>
+          <div className="relative w-fit">
+            <button
+              type="button"
+              onClick={() =>
+                setIsStartDateSelectorOpen(!isStartDateSelectorOpen)
+              }
+              className="flex h-full w-full items-center rounded-[5px] border-[1px] border-light-600 bg-light-200 px-2 py-1 text-left text-xs text-light-800 hover:bg-light-300 dark:border-dark-600 dark:bg-dark-400 dark:text-dark-1000 dark:hover:bg-dark-500"
+            >
+              {startDate
+                ? format(startDate, "MMM d, yyyy", { locale: dateLocale })
+                : t`Start date`}
+            </button>
+            {isStartDateSelectorOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setIsStartDateSelectorOpen(false)}
+                />
+                <div className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100">
+                  <DateSelector
+                    selectedDate={startDate ?? undefined}
+                    onDateSelect={(date) => setValue("startDate", date ?? null)}
+                    weekStartsOn={workspace.weekStartDay}
+                  />
+                </div>
+              </>
+            )}
           </div>
           <div className="relative w-fit">
             <button

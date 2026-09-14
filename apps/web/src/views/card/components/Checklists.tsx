@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { HiPlus, HiXMark } from "react-icons/hi2";
 
+import type { ChecklistAssignee } from "./ChecklistItemAssignee";
 import CircularProgress from "~/components/CircularProgress";
 import { StrictModeDroppable as Droppable } from "~/components/StrictModeDroppable";
 import { useModal } from "~/providers/modal";
@@ -16,6 +17,9 @@ interface ChecklistItem {
   publicId: string;
   title: string;
   completed: boolean;
+  dueDate: Date | null;
+  dueDateHasTime: boolean;
+  assignee: ChecklistAssignee | null;
   clientId?: string;
 }
 
@@ -31,6 +35,7 @@ interface ChecklistsProps {
   activeChecklistForm?: string | null;
   setActiveChecklistForm?: (id: string | null) => void;
   viewOnly?: boolean;
+  workspaceMembers?: ChecklistAssignee[];
 }
 
 export default function Checklists({
@@ -39,6 +44,7 @@ export default function Checklists({
   activeChecklistForm,
   setActiveChecklistForm,
   viewOnly = false,
+  workspaceMembers = [],
 }: ChecklistsProps) {
   const { openModal } = useModal();
   const { showPopup } = usePopup();
@@ -212,7 +218,11 @@ export default function Checklists({
                                   title: item.title,
                                   completed: item.completed,
                                   clientId: item.clientId,
+                                  dueDate: item.dueDate,
+                                  dueDateHasTime: item.dueDateHasTime,
+                                  assignee: item.assignee,
                                 }}
+                                workspaceMembers={workspaceMembers}
                                 cardPublicId={cardPublicId}
                                 onCreateNewItem={() =>
                                   setActiveChecklistForm?.(checklist.publicId)

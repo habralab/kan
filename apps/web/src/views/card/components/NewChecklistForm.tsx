@@ -49,6 +49,14 @@ export function NewChecklistForm({ cardPublicId }: { cardPublicId: string }) {
             title: string;
             completed: boolean;
             index: number;
+            dueDate: Date | null;
+            dueDateHasTime: boolean;
+            assignee: {
+              publicId: string;
+              email: string;
+              status: "active" | "invited" | "removed" | "paused";
+              user: { name: string | null } | null;
+            } | null;
           }[],
         };
         return {

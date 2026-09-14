@@ -81,6 +81,9 @@ test(
     await expect(
       page.getByRole("button", { name: "Jan 15, 2026, 12:00" }),
     ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Jan 12, 2026" }),
+    ).toBeVisible();
     const cardPublicId = page.url().split("/cards/")[1];
     if (!cardPublicId) throw new Error("Could not resolve cardPublicId");
 
@@ -94,7 +97,11 @@ test(
       {
         result: {
           data: {
-            json: { dueDate: string | null; dueDateHasTime: boolean };
+            json: {
+              dueDate: string | null;
+              dueDateHasTime: boolean;
+              startDate: string | null;
+            };
           };
         };
       },
@@ -103,6 +110,9 @@ test(
       "2026-01-15T12:00:00.000Z",
     );
     expect(cardBody[0].result.data.json.dueDateHasTime).toBe(true);
+    expect(cardBody[0].result.data.json.startDate).toBe(
+      "2026-01-12T05:00:00.000Z",
+    );
 
     const bugLabel = card.assignedLabelBadge("Bug");
     await expect(bugLabel).toBeVisible();

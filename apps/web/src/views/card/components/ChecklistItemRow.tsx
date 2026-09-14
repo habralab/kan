@@ -1,22 +1,32 @@
 import type { DraggableProvided } from "react-beautiful-dnd";
 import { t } from "@lingui/core/macro";
-import { useState } from "react";
-import { HiXMark } from "react-icons/hi2";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { HiOutlineCalendarDays, HiXMark } from "react-icons/hi2";
 import { RiDraggable } from "react-icons/ri";
 import { twMerge } from "tailwind-merge";
 
+import type { ChecklistAssignee } from "./ChecklistItemAssignee";
+import DateSelector from "~/components/DateSelector";
 import PlainTextEditor from "~/components/PlainTextEditor";
+import { useLocalisation } from "~/hooks/useLocalisation";
 import { usePopup } from "~/providers/popup";
+import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import { invalidateCard } from "~/utils/cardInvalidation";
+import { ChecklistItemAssignee } from "./ChecklistItemAssignee";
 
 interface ChecklistItemRowProps {
   item: {
     publicId: string;
     title: string;
     completed: boolean;
+    dueDate: Date | null;
+    dueDateHasTime: boolean;
+    assignee: ChecklistAssignee | null;
     clientId?: string;
   };
+  workspaceMembers?: ChecklistAssignee[];
   cardPublicId: string;
   onCreateNewItem?: () => void;
   viewOnly?: boolean;
@@ -26,6 +36,7 @@ interface ChecklistItemRowProps {
 
 export default function ChecklistItemRow({
   item,
+  workspaceMembers = [],
   cardPublicId,
   onCreateNewItem,
   viewOnly = false,
@@ -34,14 +45,26 @@ export default function ChecklistItemRow({
 }: ChecklistItemRowProps) {
   const utils = api.useUtils();
   const { showPopup } = usePopup();
+  const { workspace } = useWorkspace();
+  const { dateLocale } = useLocalisation();
   const [completed, setCompleted] = useState(item.completed);
+  const [dateOpen, setDateOpen] = useState(false);
+  const [pendingDate, setPendingDate] = useState(item.dueDate);
+  const [pendingHasTime, setPendingHasTime] = useState(item.dueDateHasTime);
+
+  useEffect(() => {
+    if (!dateOpen) {
+      setPendingDate(item.dueDate);
+      setPendingHasTime(item.dueDateHasTime);
+    }
+  }, [dateOpen, item.dueDate, item.dueDateHasTime]);
 
   const updateItem = api.checklist.updateItem.useMutation({
     onMutate: async (vars) => {
       await utils.card.byId.cancel({ cardPublicId });
       const previous = utils.card.byId.getData({ cardPublicId });
       utils.card.byId.setData({ cardPublicId }, (old) => {
-        if (!old) return old as any;
+        if (!old) return old;
         const updatedChecklists = old.checklists.map((cl) => ({
           ...cl,
           items: cl.items.map((ci) =>
@@ -51,6 +74,24 @@ export default function ChecklistItemRow({
                   ...(vars.title !== undefined ? { title: vars.title } : {}),
                   ...(vars.completed !== undefined
                     ? { completed: vars.completed }
+                    : {}),
+                  ...(vars.dueDate !== undefined
+                    ? {
+                        dueDate: vars.dueDate,
+                        dueDateHasTime: vars.dueDate
+                          ? (vars.dueDateHasTime ?? false)
+                          : false,
+                      }
+                    : {}),
+                  ...(vars.assigneePublicId !== undefined
+                    ? {
+                        assignee: vars.assigneePublicId
+                          ? (workspaceMembers.find(
+                              (member) =>
+                                member.publicId === vars.assigneePublicId,
+                            ) ?? null)
+                          : null,
+                      }
                     : {}),
                 }
               : ci,
@@ -79,7 +120,7 @@ export default function ChecklistItemRow({
       await utils.card.byId.cancel({ cardPublicId });
       const previous = utils.card.byId.getData({ cardPublicId });
       utils.card.byId.setData({ cardPublicId }, (old) => {
-        if (!old) return old as any;
+        if (!old) return old;
         const updatedChecklists = old.checklists.map((cl) => ({
           ...cl,
           items: cl.items.filter((ci) => ci.publicId !== item.publicId),
@@ -122,6 +163,20 @@ export default function ChecklistItemRow({
   const handleDelete = () => {
     if (viewOnly) return;
     deleteItem.mutate({ checklistItemPublicId: item.publicId });
+  };
+
+  const commitDueDate = () => {
+    setDateOpen(false);
+    if (
+      pendingDate?.getTime() === item.dueDate?.getTime() &&
+      (!pendingDate || pendingHasTime === item.dueDateHasTime)
+    )
+      return;
+    updateItem.mutate({
+      checklistItemPublicId: item.publicId,
+      dueDate: pendingDate,
+      dueDateHasTime: pendingDate ? pendingHasTime : false,
+    });
   };
 
   return (
@@ -179,6 +234,67 @@ export default function ChecklistItemRow({
             viewOnly && "cursor-default",
           )}
         />
+        {(!viewOnly || item.dueDate !== null || item.assignee !== null) && (
+          <div className="relative mt-1 flex items-center gap-1">
+            {viewOnly ? (
+              item.dueDate && (
+                <span className="inline-flex items-center gap-1 text-xs text-light-700 dark:text-dark-700">
+                  <HiOutlineCalendarDays size={14} />
+                  {format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
+                    locale: dateLocale,
+                  })}
+                </span>
+              )
+            ) : (
+              <button
+                type="button"
+                onClick={() => setDateOpen(true)}
+                aria-label={item.dueDate ? t`Edit due date` : t`Set due date`}
+                className={twMerge(
+                  "inline-flex items-center gap-1 rounded px-1 py-0.5 text-xs text-light-700 hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200",
+                  !item.dueDate &&
+                    "sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100",
+                )}
+              >
+                <HiOutlineCalendarDays size={14} />
+                {item.dueDate &&
+                  format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
+                    locale: dateLocale,
+                  })}
+              </button>
+            )}
+            {dateOpen && !viewOnly && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={commitDueDate} />
+                <div
+                  className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
+                  onClick={(event) => event.stopPropagation()}
+                  onMouseDown={(event) => event.stopPropagation()}
+                >
+                  <DateSelector
+                    selectedDate={pendingDate ?? undefined}
+                    onDateSelect={(date) => setPendingDate(date ?? null)}
+                    weekStartsOn={workspace.weekStartDay}
+                    showTime
+                    timeEnabled={pendingHasTime}
+                    onTimeEnabledChange={setPendingHasTime}
+                  />
+                </div>
+              </>
+            )}
+            <ChecklistItemAssignee
+              assignee={item.assignee}
+              workspaceMembers={workspaceMembers}
+              viewOnly={viewOnly}
+              onSelect={(assigneePublicId) =>
+                updateItem.mutate({
+                  checklistItemPublicId: item.publicId,
+                  assigneePublicId,
+                })
+              }
+            />
+          </div>
+        )}
       </div>
 
       {!viewOnly && (

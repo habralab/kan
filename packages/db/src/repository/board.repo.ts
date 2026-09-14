@@ -324,6 +324,7 @@ export const getByPublicId = async (
               listId: true,
               index: true,
               dueDate: true,
+              startDate: true,
               completed: true,
               dueDateHasTime: true,
               cardNumber: true,
@@ -427,9 +428,19 @@ export const getByPublicId = async (
                       title: true,
                       completed: true,
                       index: true,
+                      dueDate: true,
+                      dueDateHasTime: true,
                     },
                     where: isNull(checklistItems.deletedAt),
                     orderBy: asc(checklistItems.index),
+                    with: {
+                      assignee: {
+                        columns: { publicId: true, email: true, status: true },
+                        with: {
+                          user: { columns: { name: true } },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -612,6 +623,7 @@ export const getBySlug = async (
               listId: true,
               index: true,
               dueDate: true,
+              startDate: true,
               completed: true,
               dueDateHasTime: true,
               cardNumber: true,
@@ -664,9 +676,19 @@ export const getBySlug = async (
                       title: true,
                       completed: true,
                       index: true,
+                      dueDate: true,
+                      dueDateHasTime: true,
                     },
                     where: isNull(checklistItems.deletedAt),
                     orderBy: asc(checklistItems.index),
+                    with: {
+                      assignee: {
+                        columns: { publicId: true, email: true, status: true },
+                        with: {
+                          user: { columns: { name: true } },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -1078,6 +1100,8 @@ export const createFromSnapshot = async (
               title: string;
               completed: boolean;
               index: number;
+              dueDate: Date | null;
+              dueDateHasTime: boolean;
             }[];
           }[];
           customFieldValues: {
@@ -1472,6 +1496,8 @@ export const createFromSnapshot = async (
                   checklistId: createdChecklist.id,
                   index: checklistItem.index,
                   completed: !!checklistItem.completed,
+                  dueDate: checklistItem.dueDate,
+                  dueDateHasTime: checklistItem.dueDateHasTime,
                 }));
 
               if (itemValues.length) {

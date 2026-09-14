@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import * as boardRepo from "@kan/db/repository/board.repo";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
+import * as checklistRepo from "@kan/db/repository/checklist.repo";
 import * as customFieldImportRepo from "@kan/db/repository/custom-field-import.repo";
 import * as importRepo from "@kan/db/repository/import.repo";
 import * as integrationsRepo from "@kan/db/repository/integration.repo";
@@ -19,6 +20,10 @@ vi.mock("@kan/db/repository/board.repo", () => ({ create: vi.fn() }));
 vi.mock("@kan/db/repository/card.repo", () => ({ bulkCreate: vi.fn() }));
 vi.mock("@kan/db/repository/cardActivity.repo", () => ({
   bulkCreate: vi.fn(),
+}));
+vi.mock("@kan/db/repository/checklist.repo", () => ({
+  bulkCreate: vi.fn(),
+  bulkCreateItems: vi.fn(),
 }));
 vi.mock("@kan/db/repository/custom-field-import.repo", () => ({
   importBoardCustomFields: vi.fn(),
@@ -51,8 +56,8 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe("Trello due date import", () => {
-  it("passes exact due times and absent dates to card bulk creation", async () => {
+describe("Trello card date import", () => {
+  it("passes start dates, exact due times and absent dates to card bulk creation", async () => {
     const db = {} as never;
     vi.mocked(integrationsRepo.getProviderForUser).mockResolvedValue({
       accessToken: "encrypted-token",
@@ -72,6 +77,8 @@ describe("Trello due date import", () => {
       { id: 6 },
     ] as never);
     vi.mocked(cardActivityRepo.bulkCreate).mockResolvedValue([]);
+    vi.mocked(checklistRepo.bulkCreate).mockResolvedValue([{ id: 7 }] as never);
+    vi.mocked(checklistRepo.bulkCreateItems).mockResolvedValue([]);
     vi.mocked(customFieldImportRepo.importBoardCustomFields).mockResolvedValue({
       definitionsCreated: 0,
       optionsCreated: 0,
@@ -94,6 +101,7 @@ describe("Trello due date import", () => {
                 desc: "",
                 idList: "list-1",
                 due: "2026-09-15T18:00:00.000Z",
+                start: "2026-09-13T05:00:00.000Z",
                 labels: [],
               },
               {
@@ -102,10 +110,19 @@ describe("Trello due date import", () => {
                 desc: "",
                 idList: "list-1",
                 due: null,
+                start: null,
                 labels: [],
               },
             ],
-            checklists: [],
+            checklists: [{
+              id: "checklist-1",
+              idCard: "card-1",
+              name: "Steps",
+              checkItems: [
+                { id: "item-1", name: "Timed step", state: "incomplete", pos: 1, due: "2026-09-15T18:00:00.000Z" },
+                { id: "item-2", name: "Unscheduled step", state: "complete", pos: 2, due: null },
+              ],
+            }],
           }),
           { status: 200 },
         ),
@@ -129,10 +146,26 @@ describe("Trello due date import", () => {
       expect.objectContaining({
         title: "Timed",
         dueDate: new Date("2026-09-15T18:00:00.000Z"),
+        startDate: new Date("2026-09-13T05:00:00.000Z"),
         dueDateHasTime: true,
       }),
       expect.objectContaining({
         title: "No due date",
+        dueDate: null,
+        startDate: null,
+        dueDateHasTime: false,
+      }),
+    ]);
+    expect(checklistRepo.bulkCreateItems).toHaveBeenCalledWith(db, [
+      expect.objectContaining({
+        checklistId: 7,
+        title: "Timed step",
+        dueDate: new Date("2026-09-15T18:00:00.000Z"),
+        dueDateHasTime: true,
+      }),
+      expect.objectContaining({
+        checklistId: 7,
+        title: "Unscheduled step",
         dueDate: null,
         dueDateHasTime: false,
       }),

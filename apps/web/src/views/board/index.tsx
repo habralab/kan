@@ -912,6 +912,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                             comments={card.comments}
                                             attachments={card.attachments}
                                             dueDate={card.dueDate ?? null}
+                                            startDate={card.startDate ?? null}
                                             timeTrackingTotalSeconds={timeTrackingTotalsByCard.get(
                                               card.publicId,
                                             )}

@@ -1,0 +1,29 @@
+import { S3Client } from "@aws-sdk/client-s3";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { createS3Client } from "./s3";
+
+vi.mock("@aws-sdk/client-s3", () => ({
+  CopyObjectCommand: class {},
+  DeleteObjectCommand: class {},
+  GetObjectCommand: class {},
+  HeadObjectCommand: class {},
+  PutObjectCommand: class {},
+  S3Client: vi.fn(),
+}));
+
+describe("createS3Client options", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("does not add optional checksums to presigned browser uploads", () => {
+    createS3Client();
+
+    expect(S3Client).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestChecksumCalculation: "WHEN_REQUIRED",
+      }),
+    );
+  });
+});

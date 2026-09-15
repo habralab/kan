@@ -1,5 +1,6 @@
 import type { DropResult } from "react-beautiful-dnd";
 import { t } from "@lingui/core/macro";
+import { useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { HiPlus, HiXMark } from "react-icons/hi2";
 
@@ -9,6 +10,10 @@ import { StrictModeDroppable as Droppable } from "~/components/StrictModeDroppab
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
+import {
+  checklistDestinationIndex,
+  visibleChecklistItems,
+} from "./checklist-items";
 import ChecklistItemRow from "./ChecklistItemRow";
 import ChecklistNameInput from "./ChecklistNameInput";
 import NewChecklistItemForm from "./NewChecklistItemForm";
@@ -48,6 +53,7 @@ export default function Checklists({
 }: ChecklistsProps) {
   const { openModal } = useModal();
   const { showPopup } = usePopup();
+  const [hiddenCompleted, setHiddenCompleted] = useState<string[]>([]);
 
   const utils = api.useUtils();
 
@@ -103,9 +109,21 @@ export default function Checklists({
 
     if (source.index === destination.index) return;
 
+    const checklist = checklists.find(
+      (item) => item.publicId === source.droppableId,
+    );
+    if (!checklist) return;
+
+    const destinationIndex = checklistDestinationIndex(
+      checklist.items,
+      hiddenCompleted.includes(checklist.publicId),
+      destination.index,
+    );
+    if (destinationIndex === -1) return;
+
     reorderItemMutation.mutate({
       checklistItemPublicId: draggableId,
-      index: destination.index,
+      index: destinationIndex,
     });
   };
 
@@ -123,6 +141,11 @@ export default function Checklists({
               checklist.items.length > 0 && completedItems.length > 0
                 ? (completedItems.length / checklist.items.length) * 100
                 : 2;
+            const hideCompleted = hiddenCompleted.includes(checklist.publicId);
+            const visibleItems = visibleChecklistItems(
+              checklist.items,
+              hideCompleted,
+            );
 
             return (
               <div key={checklist.publicId} className="mb-4">
@@ -185,6 +208,26 @@ export default function Checklists({
                   )}
                 </div>
 
+                {completedItems.length > 0 && (
+                  <div className="mb-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setHiddenCompleted((current) =>
+                          hideCompleted
+                            ? current.filter((id) => id !== checklist.publicId)
+                            : [...current, checklist.publicId],
+                        )
+                      }
+                      className="rounded-md px-1 text-xs text-light-900 hover:text-light-1000 dark:text-dark-900 dark:hover:text-dark-1000"
+                    >
+                      {hideCompleted
+                        ? t`Show completed items`
+                        : t`Hide completed items`}
+                    </button>
+                  </div>
+                )}
+
                 <Droppable
                   droppableId={checklist.publicId}
                   type="CHECKLIST_ITEM"
@@ -196,7 +239,7 @@ export default function Checklists({
                       {...provided.droppableProps}
                       className="ml-1"
                     >
-                      {checklist.items.map((item, index) => (
+                      {visibleItems.map((item, index) => (
                         <Draggable
                           key={item.clientId ?? item.publicId}
                           draggableId={item.publicId}

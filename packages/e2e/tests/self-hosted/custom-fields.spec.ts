@@ -136,6 +136,17 @@ test(
     await expect(
       planningSection.getByRole("textbox", { name: "Estimate" }),
     ).toBeVisible();
+    const coverBox = await page
+      .getByText("Cover", { exact: true })
+      .boundingBox();
+    const planningBox = await page
+      .getByRole("heading", { name: "Planning" })
+      .boundingBox();
+    expect(coverBox).not.toBeNull();
+    expect(planningBox).not.toBeNull();
+    expect(coverBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(
+      planningBox?.y ?? Number.NEGATIVE_INFINITY,
+    );
     const field = page.getByRole("textbox", { name: "Effort notes" });
     await field.fill("  Preserve\nthese spaces  ");
     const valueStored = waitForTrpcMutation(page, "customField.setValue");

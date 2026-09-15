@@ -201,6 +201,17 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
           disabled={!canEdit}
         />
       </div>
+      {canEdit && (
+        <div className="mb-4 flex w-full flex-row">
+          <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Cover`}</p>
+          <CardCoverSelector
+            cardPublicId={cardId ?? ""}
+            cover={card?.cover}
+            attachments={card?.attachments}
+            isLoading={!card}
+          />
+        </div>
+      )}
       <CustomFields
         cardPublicId={cardId ?? ""}
         definitions={card?.list.board.customFields ?? []}
@@ -213,17 +224,6 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
             : undefined
         }
       />
-      {canEdit && (
-        <div className="mb-4 flex w-full flex-row">
-          <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Cover`}</p>
-          <CardCoverSelector
-            cardPublicId={cardId ?? ""}
-            cover={card?.cover}
-            attachments={card?.attachments}
-            isLoading={!card}
-          />
-        </div>
-      )}
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { t } from "@lingui/core/macro";
-import { useMemo } from "react";
+import { useState } from "react";
 import { HiPlus, HiXMark } from "react-icons/hi2";
 
 import type { ChecklistAssignee } from "./ChecklistItemAssignee";
@@ -21,6 +21,10 @@ import CircularProgress from "~/components/CircularProgress";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
+import {
+  checklistDestinationIndex,
+  visibleChecklistItems,
+} from "./checklist-items";
 import ChecklistNameInput from "./ChecklistNameInput";
 import NewChecklistItemForm from "./NewChecklistItemForm";
 import SortableChecklistItemRow from "./SortableChecklistItemRow";
@@ -60,6 +64,7 @@ export default function Checklists({
 }: ChecklistsProps) {
   const { openModal } = useModal();
   const { showPopup } = usePopup();
+  const [hiddenCompleted, setHiddenCompleted] = useState<string[]>([]);
 
   const utils = api.useUtils();
 
@@ -113,17 +118,6 @@ export default function Checklists({
     }),
   );
 
-  const itemIdsByChecklist = useMemo(
-    () =>
-      new Map(
-        checklists.map((checklist) => [
-          checklist.publicId,
-          checklist.items.map((item) => item.publicId),
-        ]),
-      ),
-    [checklists],
-  );
-
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return;
 
@@ -132,7 +126,12 @@ export default function Checklists({
     );
     if (!checklist) return;
 
-    const overIndex = checklist.items.findIndex(
+    const hideCompleted = hiddenCompleted.includes(checklist.publicId);
+    const visibleItems = visibleChecklistItems(
+      checklist.items,
+      hideCompleted,
+    );
+    const overIndex = visibleItems.findIndex(
       (item) => item.publicId === over.id,
     );
     if (overIndex === -1) return;
@@ -140,11 +139,16 @@ export default function Checklists({
     const oldIndex = checklist.items.findIndex(
       (item) => item.publicId === active.id,
     );
-    if (oldIndex === overIndex) return;
+    const destinationIndex = checklistDestinationIndex(
+      checklist.items,
+      hideCompleted,
+      overIndex,
+    );
+    if (destinationIndex === -1 || oldIndex === destinationIndex) return;
 
     reorderItemMutation.mutate({
       checklistItemPublicId: String(active.id),
-      index: overIndex,
+      index: destinationIndex,
     });
   };
 
@@ -166,6 +170,11 @@ export default function Checklists({
               checklist.items.length > 0 && completedItems.length > 0
                 ? (completedItems.length / checklist.items.length) * 100
                 : 2;
+            const hideCompleted = hiddenCompleted.includes(checklist.publicId);
+            const visibleItems = visibleChecklistItems(
+              checklist.items,
+              hideCompleted,
+            );
 
             return (
               <div key={checklist.publicId} className="mb-4">
@@ -228,12 +237,32 @@ export default function Checklists({
                   )}
                 </div>
 
+                {completedItems.length > 0 && (
+                  <div className="mb-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setHiddenCompleted((current) =>
+                          hideCompleted
+                            ? current.filter((id) => id !== checklist.publicId)
+                            : [...current, checklist.publicId],
+                        )
+                      }
+                      className="rounded-md px-1 text-xs text-light-900 hover:text-light-1000 dark:text-dark-900 dark:hover:text-dark-1000"
+                    >
+                      {hideCompleted
+                        ? t`Show completed items`
+                        : t`Hide completed items`}
+                    </button>
+                  </div>
+                )}
+
                 <SortableContext
-                  items={itemIdsByChecklist.get(checklist.publicId) ?? []}
+                  items={visibleItems.map((item) => item.publicId)}
                   strategy={verticalListSortingStrategy}
                 >
                   <div className="ml-1">
-                    {checklist.items.map((item) => (
+                    {visibleItems.map((item) => (
                       <SortableChecklistItemRow
                         key={item.clientId ?? item.publicId}
                         item={{

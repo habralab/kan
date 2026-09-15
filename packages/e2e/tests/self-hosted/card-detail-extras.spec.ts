@@ -6,6 +6,7 @@ import { CardPage } from "../support/pages/card-page";
 import { DashboardPage } from "../support/pages/dashboard-page";
 import { SelfHostedOnboardingPage } from "../support/pages/self-hosted-onboarding-page";
 import { createTestUser } from "../support/test-user";
+import { waitForTrpcMutation } from "../support/wait-for-trpc";
 
 test(
   "comments, checklists, member assignment, and due dates can be managed on a card",
@@ -48,6 +49,68 @@ test(
     await card.toggleChecklistItem("Buy milk");
     await page.reload();
     await expect(page.getByText("1/1")).toBeVisible();
+
+    const itemEditor = page.locator(".plain-text-editor").filter({
+      hasText: "Buy milk",
+    });
+    await page.getByRole("button", { name: "Hide completed items" }).click();
+    await expect(itemEditor).toHaveCount(0);
+    await expect(page.getByText("1/1")).toBeVisible();
+    await page.getByRole("button", { name: "Show completed items" }).click();
+    await expect(itemEditor).toBeVisible();
+
+    const itemRow = itemEditor.locator(
+      "xpath=ancestor::div[contains(@class, 'items-start')][1]",
+    );
+    await expect(
+      page.getByRole("checkbox", { name: "Mark “Buy milk” incomplete" }),
+    ).toBeVisible();
+    await itemRow
+      .getByRole("button", { name: "Checklist item assignee" })
+      .click();
+    const memberSearch = page.getByRole("searchbox", {
+      name: "Search members",
+    });
+    await memberSearch.fill("no-such-member");
+    await expect(page.getByText("No members found.")).toBeVisible();
+    await memberSearch.fill(user.email);
+    const memberOption = page.getByRole("button").filter({
+      hasText: user.email,
+    });
+    await expect(memberOption).toHaveCount(1);
+    const assigned = waitForTrpcMutation(page, "checklist.updateItem");
+    await memberOption.click();
+    await assigned;
+    await expect(itemRow.getByText(user.name)).toBeVisible();
+
+    await itemRow
+      .getByRole("button", { name: "Set checklist item due date" })
+      .click();
+    const itemDueDate = new Date().toISOString().slice(0, 10);
+    await page
+      .locator(`time[datetime="${itemDueDate}"]`)
+      .filter({ visible: true })
+      .click();
+    const dated = waitForTrpcMutation(page, "checklist.updateItem");
+    await page.mouse.click(10, 10);
+    await dated;
+    await expect(
+      itemRow.getByRole("button", { name: "Edit checklist item due date" }),
+    ).toBeVisible();
+
+    await card.addChecklistItem("Remove me");
+    const removableItem = page.locator(".plain-text-editor").filter({
+      hasText: "Remove me",
+    });
+    const deleteItemButton = page.getByRole("button", {
+      name: "Delete checklist item “Remove me”",
+    });
+    await deleteItemButton.focus();
+    await expect(deleteItemButton).toBeFocused();
+    const deletedItem = waitForTrpcMutation(page, "checklist.deleteItem");
+    await deleteItemButton.press("Enter");
+    await deletedItem;
+    await expect(removableItem).toHaveCount(0);
 
     await card.assignMember(user.name);
     await card.setDueDateToday();

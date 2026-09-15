@@ -179,6 +179,78 @@ export default function ChecklistItemRow({
     });
   };
 
+  const hasMetadata =
+    item.dueDate !== null || item.assignee !== null || dateOpen;
+  const metadataControls = (!viewOnly || hasMetadata) && (
+    <div
+      className={twMerge(
+        "relative flex items-center gap-1",
+        hasMetadata
+          ? "mt-1 flex-wrap"
+          : "flex-shrink-0 sm:opacity-0 sm:transition-opacity sm:group-focus-within:opacity-100 sm:group-hover:opacity-100",
+      )}
+    >
+      {viewOnly ? (
+        item.dueDate && (
+          <span className="inline-flex items-center gap-1 text-xs text-light-700 dark:text-dark-700">
+            <HiOutlineCalendarDays size={14} />
+            {format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
+              locale: dateLocale,
+            })}
+          </span>
+        )
+      ) : (
+        <button
+          type="button"
+          onClick={() => setDateOpen(true)}
+          aria-label={
+            item.dueDate
+              ? t`Edit checklist item due date`
+              : t`Set checklist item due date`
+          }
+          className="inline-flex h-7 items-center gap-1 rounded px-1 text-xs text-light-700 hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200 sm:h-5"
+        >
+          <HiOutlineCalendarDays size={14} />
+          {item.dueDate &&
+            format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
+              locale: dateLocale,
+            })}
+        </button>
+      )}
+      {dateOpen && !viewOnly && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={commitDueDate} />
+          <div
+            className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
+            onClick={(event) => event.stopPropagation()}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <DateSelector
+              selectedDate={pendingDate ?? undefined}
+              onDateSelect={(date) => setPendingDate(date ?? null)}
+              weekStartsOn={workspace.weekStartDay}
+              showTime
+              timeEnabled={pendingHasTime}
+              onTimeEnabledChange={setPendingHasTime}
+            />
+          </div>
+        </>
+      )}
+      <ChecklistItemAssignee
+        assignee={item.assignee}
+        workspaceMembers={workspaceMembers}
+        viewOnly={viewOnly}
+        align={hasMetadata ? "left" : "right"}
+        onSelect={(assigneePublicId) =>
+          updateItem.mutate({
+            checklistItemPublicId: item.publicId,
+            assigneePublicId,
+          })
+        }
+      />
+    </div>
+  );
+
   return (
     <div
       className={twMerge(
@@ -202,6 +274,11 @@ export default function ChecklistItemRow({
       >
         <input
           type="checkbox"
+          aria-label={
+            completed
+              ? t`Mark “${item.title}” incomplete`
+              : t`Mark “${item.title}” complete`
+          }
           checked={completed}
           onChange={(e) => {
             if (viewOnly) {
@@ -217,93 +294,37 @@ export default function ChecklistItemRow({
         />
       </label>
 
-      <div className="flex-1 pr-7">
-        <PlainTextEditor
-          key={item.clientId ?? item.publicId}
-          content={item.title}
-          readOnly={viewOnly}
-          placeholder={t`Add details...`}
-          onBlur={commitTitle}
-          onEnter={(plain) => {
-            commitTitle(plain);
-            onCreateNewItem?.();
-          }}
-          onEscape={() => undefined}
-          className={twMerge(
-            "m-0 min-h-[20px] w-full p-0 text-sm leading-[20px] text-light-950 dark:text-dark-950",
-            viewOnly && "cursor-default",
-          )}
-        />
-        {(!viewOnly || item.dueDate !== null || item.assignee !== null) && (
-          <div className="relative mt-1 flex items-center gap-1">
-            {viewOnly ? (
-              item.dueDate && (
-                <span className="inline-flex items-center gap-1 text-xs text-light-700 dark:text-dark-700">
-                  <HiOutlineCalendarDays size={14} />
-                  {format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
-                    locale: dateLocale,
-                  })}
-                </span>
-              )
-            ) : (
-              <button
-                type="button"
-                onClick={() => setDateOpen(true)}
-                aria-label={item.dueDate ? t`Edit due date` : t`Set due date`}
-                className={twMerge(
-                  "inline-flex items-center gap-1 rounded px-1 py-0.5 text-xs text-light-700 hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200",
-                  !item.dueDate &&
-                    "sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100",
-                )}
-              >
-                <HiOutlineCalendarDays size={14} />
-                {item.dueDate &&
-                  format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
-                    locale: dateLocale,
-                  })}
-              </button>
+      <div className="flex min-w-0 flex-1 items-start gap-1 pr-7">
+        <div className="min-w-0 flex-1">
+          <PlainTextEditor
+            key={item.clientId ?? item.publicId}
+            content={item.title}
+            readOnly={viewOnly}
+            placeholder={t`Add details...`}
+            onBlur={commitTitle}
+            onEnter={(plain) => {
+              commitTitle(plain);
+              onCreateNewItem?.();
+            }}
+            onEscape={() => undefined}
+            className={twMerge(
+              "m-0 min-h-[20px] w-full p-0 text-sm leading-[20px] text-light-950 dark:text-dark-950",
+              viewOnly && "cursor-default",
             )}
-            {dateOpen && !viewOnly && (
-              <>
-                <div className="fixed inset-0 z-10" onClick={commitDueDate} />
-                <div
-                  className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
-                  onClick={(event) => event.stopPropagation()}
-                  onMouseDown={(event) => event.stopPropagation()}
-                >
-                  <DateSelector
-                    selectedDate={pendingDate ?? undefined}
-                    onDateSelect={(date) => setPendingDate(date ?? null)}
-                    weekStartsOn={workspace.weekStartDay}
-                    showTime
-                    timeEnabled={pendingHasTime}
-                    onTimeEnabledChange={setPendingHasTime}
-                  />
-                </div>
-              </>
-            )}
-            <ChecklistItemAssignee
-              assignee={item.assignee}
-              workspaceMembers={workspaceMembers}
-              viewOnly={viewOnly}
-              onSelect={(assigneePublicId) =>
-                updateItem.mutate({
-                  checklistItemPublicId: item.publicId,
-                  assigneePublicId,
-                })
-              }
-            />
-          </div>
-        )}
+          />
+          {hasMetadata && metadataControls}
+        </div>
+        {!hasMetadata && metadataControls}
       </div>
 
       {!viewOnly && (
         <button
           type="button"
+          aria-label={t`Delete checklist item “${item.title}”`}
           onClick={handleDelete}
-          className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded-md p-1 text-light-900 group-hover:block hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200"
+          className="absolute right-1 top-1/2 -translate-y-1/2 rounded-md p-1 text-light-900 transition-opacity hover:bg-light-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-700 dark:text-dark-700 dark:hover:bg-dark-200 dark:focus-visible:ring-dark-700 sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100"
         >
-          <HiXMark size={16} />
+          <HiXMark size={16} aria-hidden="true" />
         </button>
       )}
     </div>

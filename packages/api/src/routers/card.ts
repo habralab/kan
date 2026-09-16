@@ -5,14 +5,12 @@ import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
 import * as cardCommentRepo from "@kan/db/repository/cardComment.repo";
 import * as checklistRepo from "@kan/db/repository/checklist.repo";
+import * as customFieldRepo from "@kan/db/repository/custom-field.repo";
 import * as labelRepo from "@kan/db/repository/label.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
-import {
-  generateAttachmentUrl,
-  normalizeDescription,
-} from "@kan/shared/utils";
+import { generateAttachmentUrl, normalizeDescription } from "@kan/shared/utils";
 
 import {
   activityItemSchema,
@@ -21,6 +19,7 @@ import {
   cardUpdateResponseSchema,
   commentDeleteResponseSchema,
   commentResponseSchema,
+  customFieldValueInputSchema,
 } from "../schemas";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { mergeActivities } from "../utils/activities";
@@ -35,6 +34,20 @@ import {
   createCardWebhookPayload,
   sendWebhooksForWorkspace,
 } from "../utils/webhook";
+
+const throwCustomFieldRepositoryError = (error: unknown): never => {
+  if (!(error instanceof customFieldRepo.CustomFieldRepositoryError))
+    throw error;
+
+  throw new TRPCError({
+    message: error.message,
+    code:
+      error.code === "FIELD_NOT_FOUND" || error.code === "OPTION_NOT_FOUND"
+        ? "NOT_FOUND"
+        : "BAD_REQUEST",
+    cause: error,
+  });
+};
 
 export const cardRouter = createTRPCRouter({
   create: protectedProcedure
@@ -57,6 +70,20 @@ export const cardRouter = createTRPCRouter({
         memberPublicIds: z.array(z.string().min(12)),
         position: z.enum(["start", "end"]),
         dueDate: z.date().nullable().optional(),
+        customFieldValues: z
+          .array(
+            z.object({
+              fieldPublicId: z.string().length(12),
+              value: customFieldValueInputSchema.nullable(),
+            }),
+          )
+          .max(customFieldRepo.MAX_CUSTOM_FIELDS_PER_BOARD)
+          .refine(
+            (values) =>
+              new Set(values.map((value) => value.fieldPublicId)).size ===
+              values.length,
+          )
+          .default([]),
       }),
     )
     .output(cardCreateResponseSchema)
@@ -102,15 +129,18 @@ export const cardRouter = createTRPCRouter({
           code: "BAD_REQUEST",
         });
 
-      const newCard = await cardRepo.create(ctx.db, {
-        title: input.title,
-        description: normalizeDescription(input.description),
-        createdBy: userId,
-        listId: list.id,
-        workspaceId: list.workspaceId,
-        position: input.position,
-        dueDate: input.dueDate ?? null,
-      });
+      const newCard = await cardRepo
+        .create(ctx.db, {
+          title: input.title,
+          description: normalizeDescription(input.description),
+          createdBy: userId,
+          listId: list.id,
+          workspaceId: list.workspaceId,
+          position: input.position,
+          dueDate: input.dueDate ?? null,
+          customFieldValues: input.customFieldValues,
+        })
+        .catch(throwCustomFieldRepositoryError);
 
       const newCardId = newCard.id;
 
@@ -925,20 +955,31 @@ export const cardRouter = createTRPCRouter({
             publicId: string;
             name: string;
             boardId: number;
-            index: number;
+            workspaceId: number;
+            boardPublicId: string;
           }
         | undefined;
 
       if (input.listPublicId) {
-        newList = await listRepo.getByPublicId(ctx.db, input.listPublicId);
+        const targetList = await listRepo.getWorkspaceAndListIdByListPublicId(
+          ctx.db,
+          input.listPublicId,
+        );
 
-        if (!newList)
+        if (!targetList)
           throw new TRPCError({
             message: `List with public ID ${input.listPublicId} not found`,
             code: "NOT_FOUND",
           });
 
-        newListId = newList.id;
+        newList = targetList;
+        newListId = targetList.id;
+
+        if (targetList.workspaceId !== card.workspaceId)
+          throw new TRPCError({
+            message: `Target list must be in the same workspace`,
+            code: "BAD_REQUEST",
+          });
       }
 
       if (!existingCard) {
@@ -963,7 +1004,6 @@ export const cardRouter = createTRPCRouter({
             message: `Cards with time entries or active timers cannot be moved between boards`,
           });
       }
-
       let result:
         | {
             id: number;
@@ -1002,19 +1042,52 @@ export const cardRouter = createTRPCRouter({
       }
 
       if (input.index !== undefined || newListId !== undefined) {
-        try {
-          result = await cardRepo.reorder(ctx.db, {
-            cardId: existingCard.id,
-            newIndex: input.index,
-            newListId: newListId,
-          });
-        } catch (error) {
-          if (error instanceof cardRepo.CardMoveBlockedByTimeTrackingError)
-            throw new TRPCError({
-              code: "CONFLICT",
-              message: `Cards with time entries or active timers cannot be moved between boards`,
+        const reorderInput = {
+          cardId: existingCard.id,
+          newIndex: input.index,
+          newListId,
+        };
+        const targetBoardId = newList?.boardId;
+        const isCrossBoardMove =
+          targetBoardId !== undefined &&
+          targetBoardId !== existingCard.list.boardId;
+
+        if (isCrossBoardMove) {
+          try {
+            result = await cardRepo.reorder(ctx.db, reorderInput, {
+              beforeReorder: async (transaction) => {
+                await customFieldRepo.moveCardValuesToBoard(transaction, {
+                  cardId: existingCard.id,
+                  targetBoardId,
+                  actorUserId: userId,
+                });
+              },
             });
-          throw error;
+          } catch (error) {
+            if (error instanceof customFieldRepo.CustomFieldRepositoryError) {
+              const message =
+                error.code === "FIELD_MAPPING_AMBIGUOUS"
+                  ? "Multiple target custom fields have the same name and type"
+                  : error.code === "OPTION_MAPPING_AMBIGUOUS"
+                    ? "Multiple target custom field options have the same name"
+                    : error.code === "ARCHIVED_FIELD_MOVE_UNSUPPORTED"
+                      ? "Cards with archived custom field values cannot be moved between boards"
+                      : error.message;
+              throw new TRPCError({
+                message,
+                code: "BAD_REQUEST",
+                cause: error,
+              });
+            }
+            if (error instanceof cardRepo.CardMoveBlockedByTimeTrackingError)
+              throw new TRPCError({
+                code: "CONFLICT",
+                message: `Cards with time entries or active timers cannot be moved between boards`,
+              });
+            throw error;
+          }
+        } else {
+          result = await cardRepo.reorder(ctx.db, reorderInput);
         }
       }
 
@@ -1276,6 +1349,7 @@ export const cardRouter = createTRPCRouter({
         copyLabels: z.boolean(),
         copyMembers: z.boolean(),
         copyChecklists: z.boolean(),
+        copyCustomFields: z.boolean().default(true),
       }),
     )
     .output(
@@ -1338,6 +1412,16 @@ export const cardRouter = createTRPCRouter({
           code: "NOT_FOUND",
         });
 
+      if (
+        input.copyCustomFields &&
+        sourceCard.customFieldValues.length > 0 &&
+        targetList.boardPublicId !== sourceCard.list.board.publicId
+      )
+        throw new TRPCError({
+          message: `Custom fields can only be copied within the same board`,
+          code: "BAD_REQUEST",
+        });
+
       const newCard = await cardRepo.create(ctx.db, {
         title: input.title ?? sourceCard.title,
         description: normalizeDescription(sourceCard.description),
@@ -1346,6 +1430,7 @@ export const cardRouter = createTRPCRouter({
         workspaceId: targetList.workspaceId,
         position: "end",
         dueDate: sourceCard.dueDate ?? null,
+        applyCustomFieldDefaults: !input.copyCustomFields,
       });
 
       if (input.index !== undefined && input.index >= 0) {
@@ -1353,6 +1438,14 @@ export const cardRouter = createTRPCRouter({
           cardId: newCard.id,
           newIndex: input.index,
           newListId: targetList.id,
+        });
+      }
+
+      if (input.copyCustomFields && sourceCard.customFieldValues.length > 0) {
+        await customFieldRepo.copyActiveCardValues(ctx.db, {
+          sourceCardPublicId: input.cardPublicId,
+          targetCardId: newCard.id,
+          actorUserId: userId,
         });
       }
 

@@ -22,6 +22,8 @@ import {
   boardBySlugSchema,
   boardCreateResponseSchema,
   boardUpdateResponseSchema,
+  customFieldFilterTokensSchema,
+  parseCustomFieldFilterTokens,
 } from "../schemas";
 import { createAvatarUrlResolver } from "../utils/avatarUrls";
 import { assertCanDelete, assertCanEdit, assertPermission } from "../utils/permissions";
@@ -97,6 +99,7 @@ export const boardRouter = createTRPCRouter({
         members: z.array(z.string().min(12)).optional(),
         labels: z.array(z.string().min(12)).optional(),
         lists: z.array(z.string().min(12)).optional(),
+        customFields: customFieldFilterTokensSchema.optional(),
         dueDateFilters: z
           .array(
             z.enum([
@@ -140,6 +143,9 @@ export const boardRouter = createTRPCRouter({
       const dueDateFilters = input.dueDateFilters
         ? convertDueDateFiltersToRanges(input.dueDateFilters)
         : [];
+      const customFieldFilters = parseCustomFieldFilterTokens(
+        input.customFields ?? [],
+      );
 
       const result = await boardRepo.getByPublicId(
         ctx.db,
@@ -149,6 +155,7 @@ export const boardRouter = createTRPCRouter({
           members: input.members ?? [],
           labels: input.labels ?? [],
           lists: input.lists ?? [],
+          customFields: customFieldFilters,
           dueDate: dueDateFilters,
           type: input.type,
           cardView: input.cardView,
@@ -258,6 +265,7 @@ export const boardRouter = createTRPCRouter({
         members: z.array(z.string().min(12)).optional(),
         labels: z.array(z.string().min(12)).optional(),
         lists: z.array(z.string().min(12)).optional(),
+        customFields: customFieldFilterTokensSchema.optional(),
         dueDateFilters: z
           .array(
             z.enum([
@@ -289,6 +297,9 @@ export const boardRouter = createTRPCRouter({
       const dueDateFilters = input.dueDateFilters
         ? convertDueDateFiltersToRanges(input.dueDateFilters)
         : [];
+      const customFieldFilters = parseCustomFieldFilterTokens(
+        input.customFields ?? [],
+      );
 
       const result = await boardRepo.getBySlug(
         ctx.db,
@@ -298,6 +309,7 @@ export const boardRouter = createTRPCRouter({
           members: input.members ?? [],
           labels: input.labels ?? [],
           lists: input.lists ?? [],
+          customFields: customFieldFilters,
           dueDate: dueDateFilters,
         },
       );
@@ -371,6 +383,7 @@ export const boardRouter = createTRPCRouter({
             members: [],
             labels: [],
             lists: [],
+            customFields: [],
             dueDate: [],
             type: sourceBoardInfo.type,
           },

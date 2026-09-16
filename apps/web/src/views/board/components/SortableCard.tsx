@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { env } from "next-runtime-env";
 
 import type { CardDragData } from "../dnd/types";
-import type { BoardCard } from "../types";
+import type { BoardCard, BoardData } from "../types";
 import CardPreview from "./CardPreview";
 
 interface SortableCardProps {
@@ -16,6 +16,7 @@ interface SortableCardProps {
   onContextMenu: (event: React.MouseEvent, cardPublicId: string) => void;
   timeTrackingTotalSeconds?: number;
   isTimerRunning: boolean;
+  customFields: BoardData["customFields"];
 }
 
 export default function SortableCard({
@@ -27,6 +28,7 @@ export default function SortableCard({
   onContextMenu,
   timeTrackingTotalSeconds,
   isTimerRunning,
+  customFields,
 }: SortableCardProps) {
   const isPlaceholder = card.publicId.startsWith("PLACEHOLDER");
 
@@ -78,6 +80,7 @@ export default function SortableCard({
         cardPrefix={cardPrefix}
         timeTrackingTotalSeconds={timeTrackingTotalSeconds}
         isTimerRunning={isTimerRunning}
+        customFields={customFields}
       />
     </Link>
   );

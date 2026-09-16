@@ -1,4 +1,4 @@
-import type { BoardCard } from "../types";
+import type { BoardCard, BoardData } from "../types";
 import Card from "./Card";
 
 interface CardPreviewProps {
@@ -6,6 +6,7 @@ interface CardPreviewProps {
   cardPrefix: string;
   timeTrackingTotalSeconds?: number;
   isTimerRunning?: boolean;
+  customFields: BoardData["customFields"];
 }
 
 export default function CardPreview({
@@ -13,6 +14,7 @@ export default function CardPreview({
   cardPrefix,
   timeTrackingTotalSeconds,
   isTimerRunning,
+  customFields,
 }: CardPreviewProps) {
   return (
     <Card
@@ -30,6 +32,8 @@ export default function CardPreview({
       dueDate={card.dueDate ?? null}
       timeTrackingTotalSeconds={timeTrackingTotalSeconds}
       isTimerRunning={isTimerRunning}
+      customFields={customFields}
+      customFieldValues={card.customFieldValues}
     />
   );
 }

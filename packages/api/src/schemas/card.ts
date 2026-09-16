@@ -6,6 +6,10 @@ import {
   workspaceMemberSchema,
   workspaceMemberStatusSchema,
 } from "./common";
+import {
+  customFieldDefinitionSchema,
+  customFieldValueSchema,
+} from "./custom-field";
 
 // ─── card.create ─────────────────────────────────────────────
 export const cardCreateResponseSchema = z.object({
@@ -52,6 +56,7 @@ export const cardDetailSchema = z.object({
   index: z.number(),
   dueDate: z.date().nullable(),
   createdBy: z.string().nullable(),
+  customFieldValues: z.array(customFieldValueSchema),
   labels: z.array(labelSchema),
   attachments: z.array(
     z.object({
@@ -70,6 +75,7 @@ export const cardDetailSchema = z.object({
     board: z.object({
       publicId: z.string(),
       name: z.string(),
+      customFields: z.array(customFieldDefinitionSchema),
       labels: z.array(labelSchema),
       lists: z.array(
         z.object({

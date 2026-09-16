@@ -6,7 +6,7 @@ import {
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { ListBodyDragData } from "../dnd/types";
-import type { BoardCard } from "../types";
+import type { BoardCard, BoardData } from "../types";
 import { isPlaceholderPublicId } from "~/utils/helpers";
 import { getListBodyId } from "../dnd/ids";
 import SortableCard from "./SortableCard";
@@ -21,6 +21,7 @@ interface CardListProps {
   onContextMenu: (event: React.MouseEvent, cardPublicId: string) => void;
   timeTrackingTotalsByCard: ReadonlyMap<string, number>;
   runningCardPublicId: string | null;
+  customFields: BoardData["customFields"];
 }
 
 export default function CardList({
@@ -33,6 +34,7 @@ export default function CardList({
   onContextMenu,
   timeTrackingTotalsByCard,
   runningCardPublicId,
+  customFields,
 }: CardListProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +101,7 @@ export default function CardList({
                 card.publicId,
               )}
               isTimerRunning={runningCardPublicId === card.publicId}
+              customFields={customFields}
             />
           ))}
         </SortableContext>

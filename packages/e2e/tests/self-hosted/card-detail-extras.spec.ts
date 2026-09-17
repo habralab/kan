@@ -113,7 +113,17 @@ test(
     await expect(removableItem).toHaveCount(0);
 
     await card.assignMember(user.name);
-    await card.setDueDateToday();
+    let cardDateUpdateCount = 0;
+    page.on("request", (request) => {
+      if (
+        request.method() === "POST" &&
+        request.url().includes("/api/trpc/card.update")
+      ) {
+        cardDateUpdateCount += 1;
+      }
+    });
+    await card.setDateRange("2026-09-20", "2026-09-25", "15:30");
+    expect(cardDateUpdateCount).toBe(1);
 
     const cardPublicId = page.url().split("/cards/")[1];
     if (!cardPublicId) throw new Error("Could not resolve cardPublicId");
@@ -133,6 +143,8 @@ test(
                 user: { name: string | null } | null;
               }[];
               dueDate: string | null;
+              startDate: string | null;
+              dueDateHasTime: boolean;
             };
           };
         };
@@ -145,6 +157,8 @@ test(
       ),
     ).toBe(true);
     expect(cardJson.dueDate).not.toBeNull();
+    expect(cardJson.startDate).not.toBeNull();
+    expect(cardJson.dueDateHasTime).toBe(true);
 
     const boardResponse = await page.request.get(
       `/api/trpc/board.byId?batch=1&input=${encodeURIComponent(

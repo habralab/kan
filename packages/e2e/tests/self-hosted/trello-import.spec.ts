@@ -82,10 +82,9 @@ test(
       page.getByRole("button", { name: "Mark card as incomplete" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Jan 15, 2026, 12:00" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "Jan 12, 2026" }),
+      page.getByRole("button", {
+        name: "Jan 12, 2026 – Jan 15, 2026, 12:00",
+      }),
     ).toBeVisible();
     const cardPublicId = page.url().split("/cards/")[1];
     if (!cardPublicId) throw new Error("Could not resolve cardPublicId");

@@ -1,7 +1,7 @@
 import type { Locale as DateFnsLocale } from "date-fns";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { format, formatDistanceToNow, isSameYear } from "date-fns";
+import { formatDistanceToNow, isSameYear } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import {
   HiOutlineArrowLeft,
@@ -28,6 +28,7 @@ import type { ActivitySortOrder } from "~/hooks/useActivitySortOrder";
 import Avatar from "~/components/Avatar";
 import { useLocalisation } from "~/hooks/useLocalisation";
 import { api } from "~/utils/api";
+import { formatCardDate } from "~/utils/cardDates";
 import { getAvatarUrl } from "~/utils/helpers";
 import Comment from "./Comment";
 
@@ -326,12 +327,11 @@ const getActivityText = ({
 
   if (type === "card.updated.dueDate.added" && toDueDate) {
     const showYear = !isSameYear(toDueDate, new Date());
-    const datePattern = showYear ? "do MMM yyyy" : "do MMM";
-    const formattedDate = format(
-      toDueDate,
-      toDueDateHasTime ? `${datePattern}, p` : datePattern,
-      { locale: dateLocale },
-    );
+    const formattedDate = formatCardDate(toDueDate, {
+      locale: dateLocale,
+      includeYear: showYear,
+      includeTime: toDueDateHasTime,
+    });
     return (
       <Trans>
         changed the due date to <TextHighlight>{formattedDate}</TextHighlight>
@@ -341,12 +341,11 @@ const getActivityText = ({
 
   if (type === "card.updated.dueDate.updated" && toDueDate) {
     const showYear = !isSameYear(toDueDate, new Date());
-    const datePattern = showYear ? "do MMM yyyy" : "do MMM";
-    const formattedDate = format(
-      toDueDate,
-      toDueDateHasTime ? `${datePattern}, p` : datePattern,
-      { locale: dateLocale },
-    );
+    const formattedDate = formatCardDate(toDueDate, {
+      locale: dateLocale,
+      includeYear: showYear,
+      includeTime: toDueDateHasTime,
+    });
     return (
       <Trans>
         changed the due date to <TextHighlight>{formattedDate}</TextHighlight>
@@ -367,7 +366,7 @@ const getActivityText = ({
       <Trans>
         changed the start date to{" "}
         <TextHighlight>
-          {format(toStartDate, "PP", { locale: dateLocale })}
+          {formatCardDate(toStartDate, { locale: dateLocale })}
         </TextHighlight>
       </Trans>
     );

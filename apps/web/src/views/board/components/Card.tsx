@@ -1,5 +1,5 @@
 import { t } from "@lingui/core/macro";
-import { format, isBefore, isSameYear, startOfDay } from "date-fns";
+import { isSameYear } from "date-fns";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import {
   HiBars3BottomLeft,
@@ -19,6 +19,7 @@ import { useLocalisation } from "~/hooks/useLocalisation";
 import { useCardCoverDisplay } from "~/providers/card-cover-display";
 import { getContrastingTextColour } from "~/utils/cardCovers";
 import { getCardCoverImageAttributes } from "~/utils/cardCoverUrls";
+import { formatCardDate, getCardDeadlineState } from "~/utils/cardDates";
 import { getAvatarUrl } from "~/utils/helpers";
 import { formatDuration } from "~/utils/timeTracking";
 import { useCardCoverImage } from "./CardCoverImages";
@@ -121,10 +122,13 @@ const Card = ({
   } = useCardCoverImage(attachmentPublicId);
   const coverImage = getCardCoverImageAttributes(coverSources);
   const showYear = dueDate ? !isSameYear(dueDate, new Date()) : false;
-  const isOverdue = dueDate
-    ? !completed &&
-      isBefore(dueDate, dueDateHasTime ? new Date() : startOfDay(new Date()))
-    : false;
+  const deadlineState = dueDate
+    ? getCardDeadlineState({
+        completed,
+        dueDate,
+        dueDateHasTime: dueDateHasTime ?? false,
+      })
+    : null;
   const cardSummary = summary ?? {
     hasDescription:
       (description?.replace(/<[^>]*>/g, "").trim().length ?? 0) > 0,
@@ -326,23 +330,24 @@ const Card = ({
                   <HiBars3BottomLeft className="h-4 w-4" />
                 </div>
               )}
-              {(startDate || dueDate) && (
+              {(startDate ?? dueDate) && (
                 <div
                   title={[
                     startDate &&
-                      format(startDate, "PP", { locale: dateLocale }),
+                      formatCardDate(startDate, { locale: dateLocale }),
                     dueDate &&
-                      format(dueDate, dueDateHasTime ? "PPpp" : "PP", {
+                      formatCardDate(dueDate, {
                         locale: dateLocale,
+                        includeTime: dueDateHasTime,
                       }),
                   ]
                     .filter(Boolean)
                     .join(" – ")}
                   className={twMerge(
                     "flex items-center gap-1",
-                    completed
+                    deadlineState === "completed"
                       ? "text-green-600 dark:text-green-400"
-                      : isOverdue
+                      : deadlineState === "overdue"
                         ? "text-red-600 dark:text-red-400"
                         : "text-light-800 dark:text-dark-800",
                   )}
@@ -350,21 +355,17 @@ const Card = ({
                   <HiOutlineClock className="h-4 w-4" />
                   <span className="text-[11px]">
                     {startDate &&
-                      format(
-                        startDate,
-                        !isSameYear(startDate, new Date())
-                          ? "do MMM yyyy"
-                          : "do MMM",
-                        { locale: dateLocale },
-                      )}
+                      formatCardDate(startDate, {
+                        locale: dateLocale,
+                        includeYear: !isSameYear(startDate, new Date()),
+                      })}
                     {startDate && dueDate && " – "}
                     {dueDate &&
-                      format(dueDate, showYear ? "do MMM yyyy" : "do MMM", {
+                      formatCardDate(dueDate, {
                         locale: dateLocale,
+                        includeYear: showYear,
+                        includeTime: dueDateHasTime,
                       })}
-                    {dueDate &&
-                      dueDateHasTime &&
-                      `, ${format(dueDate, "p", { locale: dateLocale })}`}
                   </span>
                 </div>
               )}

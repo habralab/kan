@@ -7,6 +7,9 @@ interface CardPreviewProps {
   timeTrackingTotalSeconds?: number;
   isTimerRunning?: boolean;
   customFields: BoardData["customFields"];
+  canToggleCompletion?: boolean;
+  isCompletionPending?: boolean;
+  onToggleCompletion?: () => void;
 }
 
 export default function CardPreview({
@@ -15,6 +18,9 @@ export default function CardPreview({
   timeTrackingTotalSeconds,
   isTimerRunning,
   customFields,
+  canToggleCompletion,
+  isCompletionPending,
+  onToggleCompletion,
 }: CardPreviewProps) {
   return (
     <Card
@@ -38,6 +44,9 @@ export default function CardPreview({
       cover={card.cover}
       completed={card.completed}
       dueDateHasTime={card.dueDateHasTime}
+      canToggleCompletion={canToggleCompletion}
+      isCompletionPending={isCompletionPending}
+      onToggleCompletion={onToggleCompletion}
     />
   );
 }

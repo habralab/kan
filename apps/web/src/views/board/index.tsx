@@ -60,6 +60,7 @@ import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
+import { invalidateCard } from "~/utils/cardInvalidation";
 import { formatToArray, isPlaceholderPublicId } from "~/utils/helpers";
 import { TIME_TRACKING_CHANNEL_NAME } from "~/utils/timeTracking";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
@@ -454,6 +455,46 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     },
     onSettled: async () => {
       await utils.board.byId.invalidate(queryParams);
+    },
+  });
+
+  const updateCardCompletionMutation = api.card.update.useMutation({
+    onMutate: async (args) => {
+      await utils.board.byId.cancel(queryParams);
+
+      const previousState = utils.board.byId.getData(queryParams);
+
+      utils.board.byId.setData(queryParams, (oldBoard) => {
+        if (!oldBoard || args.completed === undefined) return oldBoard;
+
+        return {
+          ...oldBoard,
+          lists: oldBoard.lists.map((list) => ({
+            ...list,
+            cards: list.cards.map((card) =>
+              card.publicId === args.cardPublicId
+                ? { ...card, completed: args.completed ?? card.completed }
+                : card,
+            ),
+          })),
+        };
+      });
+
+      return { previousState };
+    },
+    onError: (_error, _update, context) => {
+      utils.board.byId.setData(queryParams, context?.previousState);
+      showPopup({
+        header: t`Unable to update card status`,
+        message: t`Please try again later, or contact customer support.`,
+        icon: "error",
+      });
+    },
+    onSettled: async (_data, _error, update) => {
+      await Promise.all([
+        utils.board.byId.invalidate(queryParams),
+        invalidateCard(utils, update.cardPublicId),
+      ]);
     },
   });
 
@@ -1027,9 +1068,9 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                       members={boardData.workspace.members.filter(
                         (member) => member.user !== null,
                       )}
-                      assignedMemberPublicIds={new Set(
-                        boardData.assignedMemberPublicIds,
-                      )}
+                      assignedMemberPublicIds={
+                        new Set(boardData.assignedMemberPublicIds)
+                      }
                       lists={boardData.allLists}
                       customFields={boardData.customFields}
                       isLoading={!boardData}
@@ -1177,6 +1218,24 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                               }
                               runningCardPublicId={runningCardPublicId}
                               customFields={boardData.customFields}
+                              canToggleCompletion={
+                                !!canEditCard && !isTemplate
+                              }
+                              pendingCompletionCardPublicId={
+                                updateCardCompletionMutation.isPending
+                                  ? updateCardCompletionMutation.variables
+                                      .cardPublicId
+                                  : null
+                              }
+                              onToggleCompletion={(
+                                cardPublicId,
+                                completed,
+                              ) => {
+                                updateCardCompletionMutation.mutate({
+                                  cardPublicId,
+                                  completed: !completed,
+                                });
+                              }}
                             />
                           </List>
                         ))}

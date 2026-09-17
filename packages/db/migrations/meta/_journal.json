@@ -372,6 +372,13 @@
       "when": 1789419346651,
       "tag": "20260914205546_AddChecklistItemAssignee",
       "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1789652981143,
+      "tag": "20260917134941_AddCardRecurrence",
+      "breakpoints": true
     }
   ]
 }

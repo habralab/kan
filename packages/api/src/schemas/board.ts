@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { cardCoverSchema } from "./card";
+import { cardCoverSchema, cardRecurrenceRuleSchema } from "./card";
 import {
   checklistResponseSchema,
   labelSchema,
@@ -64,6 +64,9 @@ const boardDetailCardSchema = z.object({
   cover: cardCoverSchema,
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
+  recurrenceRule: cardRecurrenceRuleSchema.nullable(),
+  recurrenceTimezone: z.string().nullable(),
+  recurrenceAnchorDate: z.date().nullable(),
   labels: z.array(labelSchema),
   members: z.array(boardCardMemberSchema),
   attachments: z.array(z.object({ publicId: z.string() })),
@@ -125,6 +128,9 @@ const boardSlugCardSchema = z.object({
   cover: cardCoverSchema,
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
+  recurrenceRule: cardRecurrenceRuleSchema.nullable(),
+  recurrenceTimezone: z.string().nullable(),
+  recurrenceAnchorDate: z.date().nullable(),
   labels: z.array(labelSchema),
   attachments: z.array(z.object({ publicId: z.string() })),
   checklists: z.array(checklistResponseSchema),

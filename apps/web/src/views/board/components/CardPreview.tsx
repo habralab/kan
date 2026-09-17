@@ -44,6 +44,7 @@ export default function CardPreview({
       cover={card.cover}
       completed={card.completed}
       dueDateHasTime={card.dueDateHasTime}
+      recurrenceRule={card.recurrenceRule}
       canToggleCompletion={canToggleCompletion}
       isCompletionPending={isCompletionPending}
       onToggleCompletion={onToggleCompletion}

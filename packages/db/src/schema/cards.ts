@@ -60,6 +60,8 @@ export const activityTypes = [
   "card.updated.startDate.added",
   "card.updated.startDate.updated",
   "card.updated.startDate.removed",
+  "card.updated.recurrence.updated",
+  "card.updated.recurrence.advanced",
   "card.updated.cover",
   "card.updated.completed",
   "card.updated.uncompleted",
@@ -71,6 +73,13 @@ export type ActivityType = (typeof activityTypes)[number];
 export const activityTypeEnum = pgEnum("card_activity_type", activityTypes);
 
 export const cardCoverSizeEnum = pgEnum("card_cover_size", ["normal", "full"]);
+
+export const cardRecurrenceRuleEnum = pgEnum("card_recurrence_rule", [
+  "daily",
+  "weekdays",
+  "weekly",
+  "monthly",
+]);
 
 export const cards = pgTable(
   "card",
@@ -107,6 +116,9 @@ export const cards = pgTable(
     }),
     coverSize: cardCoverSizeEnum("coverSize").notNull().default("normal"),
     dueDateHasTime: boolean("dueDateHasTime").notNull().default(false),
+    recurrenceRule: cardRecurrenceRuleEnum("recurrenceRule"),
+    recurrenceTimezone: varchar("recurrenceTimezone", { length: 255 }),
+    recurrenceAnchorDate: timestamp("recurrenceAnchorDate"),
   },
   (table) => [
     index("card_list_number_idx").on(table.listId, table.cardNumber),
@@ -118,6 +130,10 @@ export const cards = pgTable(
     check(
       "card_cover_source_check",
       sql`${table.coverColourCode} IS NULL OR ${table.coverAttachmentId} IS NULL`,
+    ),
+    check(
+      "card_recurrence_configuration_check",
+      sql`(${table.recurrenceRule} IS NULL AND ${table.recurrenceTimezone} IS NULL AND ${table.recurrenceAnchorDate} IS NULL) OR (${table.recurrenceRule} IS NOT NULL AND ${table.dueDate} IS NOT NULL AND ${table.recurrenceTimezone} IS NOT NULL AND ${table.recurrenceAnchorDate} IS NOT NULL)`,
     ),
   ],
 ).enableRLS();

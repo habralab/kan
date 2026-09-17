@@ -259,6 +259,7 @@ export default function PublicBoardView() {
                               cover={card.cover}
                               completed={card.completed}
                               dueDateHasTime={card.dueDateHasTime}
+                              recurrenceRule={card.recurrenceRule}
                             />
                           </Link>
                         );

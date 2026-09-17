@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import * as boardRepo from "@kan/db/repository/board.repo";
 import * as cardRepo from "@kan/db/repository/card.repo";
-import { boards, cards, lists } from "@kan/db/schema";
+import { boards, cardActivities, cards, lists } from "@kan/db/schema";
 
 import { createTestDb, seedTestData } from "./test-db";
 
@@ -143,5 +143,40 @@ describe("card completion repository", () => {
     });
 
     expect(importedCard).toMatchObject({ dueDate, completed: true });
+  });
+
+  it("advances a recurring occurrence once for a stale completion retry", async () => {
+    const { db, user, card } = await createCard();
+    const dueDate = new Date("2026-09-16T18:00:00.000Z");
+
+    await db
+      .update(cards)
+      .set({
+        dueDate,
+        recurrenceRule: "weekly",
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: dueDate,
+      })
+      .where(eq(cards.id, card.id));
+
+    const input = {
+      cardPublicId: card.publicId,
+      expectedDueDate: dueDate,
+      createdBy: user.id,
+    };
+    const first = await cardRepo.completeRecurringOccurrence(db, input);
+    const retry = await cardRepo.completeRecurringOccurrence(db, input);
+
+    expect(first?.advanced).toBe(true);
+    expect(first?.card).toMatchObject({
+      completed: false,
+      dueDate: new Date("2026-09-23T18:00:00.000Z"),
+    });
+    expect(retry?.advanced).toBe(false);
+
+    const recurrenceActivities = await db.query.cardActivities.findMany({
+      where: eq(cardActivities.type, "card.updated.recurrence.advanced"),
+    });
+    expect(recurrenceActivities).toHaveLength(1);
   });
 });

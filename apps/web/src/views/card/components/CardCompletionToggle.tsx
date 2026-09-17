@@ -27,6 +27,7 @@ export function CardCompletionToggle({
 
       utils.card.byId.setData({ cardPublicId }, (oldCard) => {
         if (!oldCard || update.completed === undefined) return oldCard;
+        if (update.completed && oldCard.recurrenceRule) return oldCard;
         return { ...oldCard, completed: update.completed };
       });
 

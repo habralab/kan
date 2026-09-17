@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 import { isSameYear } from "date-fns";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import {
+  HiArrowPath,
   HiBars3BottomLeft,
   HiChatBubbleLeft,
   HiCheckCircle,
@@ -46,6 +47,7 @@ const Card = ({
   cover,
   completed,
   dueDateHasTime,
+  recurrenceRule,
   canToggleCompletion = false,
   isCompletionPending = false,
   onToggleCompletion,
@@ -103,6 +105,7 @@ const Card = ({
     | null;
   completed: boolean;
   dueDateHasTime?: boolean;
+  recurrenceRule?: "daily" | "weekdays" | "weekly" | "monthly" | null;
   canToggleCompletion?: boolean;
   isCompletionPending?: boolean;
   onToggleCompletion?: () => void;
@@ -366,6 +369,12 @@ const Card = ({
                         includeYear: showYear,
                         includeTime: dueDateHasTime,
                       })}
+                    {recurrenceRule && (
+                      <HiArrowPath
+                        className="ml-1 inline h-3 w-3"
+                        title={t`Recurring deadline`}
+                      />
+                    )}
                   </span>
                 </div>
               )}

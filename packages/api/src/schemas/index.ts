@@ -14,6 +14,7 @@ export {
   cardUpdateResponseSchema,
   cardUpdateCoverResponseSchema,
   cardDetailSchema,
+  cardRecurrenceRuleSchema,
   commentResponseSchema,
   commentDeleteResponseSchema,
   activityItemSchema,

@@ -56,7 +56,9 @@ export class BoardPage {
   }
 
   async openCard(title: string) {
-    await this.page.getByText(title, { exact: true }).click();
+    await this.page
+      .getByRole("link", { name: `Open card ${title}`, exact: true })
+      .click();
     await this.page.waitForURL(/\/cards\/[^/]+$/);
     await this.page
       .getByRole("button", { name: "Card options", exact: true })

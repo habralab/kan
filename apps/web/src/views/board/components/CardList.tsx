@@ -22,6 +22,9 @@ interface CardListProps {
   timeTrackingTotalsByCard: ReadonlyMap<string, number>;
   runningCardPublicId: string | null;
   customFields: BoardData["customFields"];
+  canToggleCompletion: boolean;
+  pendingCompletionCardPublicId: string | null;
+  onToggleCompletion: (cardPublicId: string, completed: boolean) => void;
 }
 
 export default function CardList({
@@ -35,6 +38,9 @@ export default function CardList({
   timeTrackingTotalsByCard,
   runningCardPublicId,
   customFields,
+  canToggleCompletion,
+  pendingCompletionCardPublicId,
+  onToggleCompletion,
 }: CardListProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -102,6 +108,11 @@ export default function CardList({
               )}
               isTimerRunning={runningCardPublicId === card.publicId}
               customFields={customFields}
+              canToggleCompletion={canToggleCompletion}
+              isCompletionPending={
+                pendingCompletionCardPublicId === card.publicId
+              }
+              onToggleCompletion={onToggleCompletion}
             />
           ))}
         </SortableContext>

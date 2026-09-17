@@ -14,6 +14,7 @@ vi.mock("@kan/db/repository/card.repo", () => ({
   getWorkspaceAndCardIdByCardPublicId: vi.fn(),
   getByPublicId: vi.fn(),
   update: vi.fn(),
+  completeRecurringOccurrence: vi.fn(),
   reorder: vi.fn(),
 }));
 vi.mock("@kan/db/repository/cardActivity.repo", () => ({
@@ -44,7 +45,7 @@ const ctx = {
 } as never;
 
 const mockExistingCard = (completed = false) => {
-  vi.mocked(cardRepo.getByPublicId).mockResolvedValue({
+  const card = {
     id: 1,
     publicId: cardPublicId,
     title: "Card",
@@ -54,15 +55,20 @@ const mockExistingCard = (completed = false) => {
     startDate: null,
     dueDateHasTime: false,
     completed,
+    recurrenceRule: null,
+    recurrenceTimezone: null,
+    recurrenceAnchorDate: null,
     coverColourCode: null,
     coverAttachment: null,
-    coverSize: "normal",
+    coverSize: "normal" as const,
     list: {
       boardId: 4,
       publicId: "list-12345678",
       name: "Todo",
     },
-  });
+  };
+  vi.mocked(cardRepo.getByPublicId).mockResolvedValue(card);
+  return card;
 };
 
 const mockUpdatedCard = (completed = false) => {
@@ -75,6 +81,9 @@ const mockUpdatedCard = (completed = false) => {
     startDate: null,
     dueDateHasTime: false,
     completed,
+    recurrenceRule: null,
+    recurrenceTimezone: null,
+    recurrenceAnchorDate: null,
   });
 };
 
@@ -110,6 +119,9 @@ describe("card updates", () => {
       startDate,
       dueDateHasTime: false,
       completed: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
+      recurrenceAnchorDate: null,
     });
 
     const { cardRouter } = await import("./card");
@@ -240,6 +252,174 @@ describe("card updates", () => {
     );
   });
 
+  it("advances a recurring card instead of persisting completion", async () => {
+    const dueDate = new Date("2026-09-16T18:00:00.000Z");
+    const nextDueDate = new Date("2026-09-23T18:00:00.000Z");
+    const existingCard = mockExistingCard();
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValueOnce({
+      ...existingCard,
+      dueDate,
+      recurrenceRule: "weekly",
+      recurrenceTimezone: "UTC",
+      recurrenceAnchorDate: dueDate,
+    });
+    vi.mocked(cardRepo.completeRecurringOccurrence).mockResolvedValue({
+      card: {
+        id: 1,
+        publicId: cardPublicId,
+        title: "Card",
+        description: null,
+        dueDate: nextDueDate,
+        startDate: null,
+        completed: false,
+        dueDateHasTime: true,
+        recurrenceRule: "weekly",
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: dueDate,
+      },
+      advanced: true,
+      previousDueDate: dueDate,
+      previousStartDate: null,
+    });
+
+    const { cardRouter } = await import("./card");
+    const result = await cardRouter.createCaller(ctx).update({
+      cardPublicId,
+      completed: true,
+    });
+
+    expect(result).toMatchObject({ completed: false, dueDate: nextDueDate });
+    expect(cardRepo.update).not.toHaveBeenCalled();
+    expect(cardActivityRepo.bulkCreate).not.toHaveBeenCalled();
+    expect(createCardWebhookPayload).toHaveBeenCalledWith(
+      "card.updated",
+      expect.objectContaining({ completed: false, dueDate: nextDueDate }),
+      expect.objectContaining({
+        changes: {
+          dueDate: { from: dueDate, to: nextDueDate },
+        },
+      }),
+    );
+  });
+
+  it("does not emit completion side effects for a stale recurring retry", async () => {
+    const dueDate = new Date("2026-09-16T18:00:00.000Z");
+    const nextDueDate = new Date("2026-09-23T18:00:00.000Z");
+    const existingCard = mockExistingCard();
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValueOnce({
+      ...existingCard,
+      dueDate,
+      recurrenceRule: "weekly",
+      recurrenceTimezone: "UTC",
+      recurrenceAnchorDate: dueDate,
+    });
+    vi.mocked(cardRepo.completeRecurringOccurrence).mockResolvedValue({
+      card: {
+        id: 1,
+        publicId: cardPublicId,
+        title: "Card",
+        description: null,
+        dueDate: nextDueDate,
+        startDate: null,
+        completed: false,
+        dueDateHasTime: true,
+        recurrenceRule: "weekly",
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: dueDate,
+      },
+      advanced: false,
+    });
+
+    const { cardRouter } = await import("./card");
+    const result = await cardRouter.createCaller(ctx).update({
+      cardPublicId,
+      completed: true,
+    });
+
+    expect(result).toMatchObject({ completed: false, dueDate: nextDueDate });
+    expect(cardActivityRepo.bulkCreate).not.toHaveBeenCalled();
+    expect(createCardWebhookPayload).not.toHaveBeenCalled();
+    expect(sendWebhooksForWorkspace).not.toHaveBeenCalled();
+  });
+
+  it("anchors a newly configured recurrence to its due date", async () => {
+    const dueDate = new Date("2026-09-16T18:00:00.000Z");
+    mockExistingCard();
+    vi.mocked(cardRepo.update).mockResolvedValueOnce({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      dueDate,
+      startDate: null,
+      completed: false,
+      dueDateHasTime: true,
+      recurrenceRule: "weekly",
+      recurrenceTimezone: "UTC",
+      recurrenceAnchorDate: dueDate,
+    });
+
+    const { cardRouter } = await import("./card");
+    await cardRouter.createCaller(ctx).update({
+      cardPublicId,
+      dueDate,
+      dueDateHasTime: true,
+      recurrenceRule: "weekly",
+      recurrenceTimezone: "UTC",
+    });
+
+    expect(cardRepo.update).toHaveBeenCalledWith(
+      mockDb,
+      expect.objectContaining({
+        dueDate,
+        dueDateHasTime: true,
+        recurrenceRule: "weekly",
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: dueDate,
+      }),
+      { cardPublicId },
+    );
+    expect(createCardWebhookPayload).toHaveBeenCalledWith(
+      "card.updated",
+      expect.objectContaining({
+        recurrenceRule: "weekly",
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: dueDate,
+      }),
+      expect.objectContaining({
+        changes: {
+          dueDate: { from: null, to: dueDate },
+          dueDateHasTime: { from: false, to: true },
+          recurrence: {
+            from: { rule: null, timezone: null, anchorDate: null },
+            to: {
+              rule: "weekly",
+              timezone: "UTC",
+              anchorDate: dueDate,
+            },
+          },
+        },
+      }),
+    );
+  });
+
+  it("rejects a recurrence timezone without a recurrence rule", async () => {
+    const { cardRouter } = await import("./card");
+
+    await expect(
+      cardRouter.createCaller(ctx).create({
+        title: "Card",
+        description: "",
+        listPublicId: "list-12345678",
+        labelPublicIds: [],
+        memberPublicIds: [],
+        position: "start",
+        customFieldValues: [],
+        recurrenceTimezone: "UTC",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
   it("records a due-time change even when the timestamp stays the same", async () => {
     vi.clearAllMocks();
     const mockDb = {} as never;
@@ -275,6 +455,9 @@ describe("card updates", () => {
       startDate: null,
       dueDateHasTime: false,
       completed: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
+      recurrenceAnchorDate: null,
       coverColourCode: null,
       coverAttachment: null,
       coverSize: "normal",
@@ -293,6 +476,9 @@ describe("card updates", () => {
       startDate: null,
       dueDateHasTime: true,
       completed: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
+      recurrenceAnchorDate: null,
     });
     vi.mocked(cardActivityRepo.bulkCreate).mockResolvedValue([]);
     vi.mocked(sendWebhooksForWorkspace).mockResolvedValue(undefined);

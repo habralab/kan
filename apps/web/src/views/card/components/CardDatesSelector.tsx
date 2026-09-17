@@ -4,6 +4,8 @@ import { useEffect, useId, useState } from "react";
 import { HiMiniPlus } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
+import type { CardRecurrenceRule } from "@kan/shared/utils";
+
 import Button from "~/components/Button";
 import DateSelector from "~/components/DateSelector";
 import { useLocalisation } from "~/hooks/useLocalisation";
@@ -24,6 +26,8 @@ interface CardDatesSelectorProps {
   dueDate: Date | null | undefined;
   dueDateHasTime: boolean;
   completed: boolean;
+  recurrenceRule: CardRecurrenceRule | null;
+  recurrenceTimezone: string | null;
   isLoading?: boolean;
   disabled?: boolean;
 }
@@ -45,6 +49,8 @@ export function CardDatesSelector({
   dueDate,
   dueDateHasTime,
   completed,
+  recurrenceRule,
+  recurrenceTimezone,
   isLoading = false,
   disabled = false,
 }: CardDatesSelectorProps) {
@@ -63,6 +69,8 @@ export function CardDatesSelector({
   const [pendingHasTime, setPendingHasTime] = useState(dueDateHasTime);
   const [startDateEnabled, setStartDateEnabled] = useState(!!startDate);
   const [rangeAnchor, setRangeAnchor] = useState<Date | null>(null);
+  const [pendingRecurrenceRule, setPendingRecurrenceRule] =
+    useState<CardRecurrenceRule | null>(recurrenceRule);
 
   useEffect(() => {
     if (isOpen) return;
@@ -71,7 +79,8 @@ export function CardDatesSelector({
     setPendingHasTime(dueDateHasTime);
     setStartDateEnabled(!!startDate);
     setRangeAnchor(null);
-  }, [dueDate, dueDateHasTime, isOpen, startDate]);
+    setPendingRecurrenceRule(recurrenceRule);
+  }, [dueDate, dueDateHasTime, isOpen, recurrenceRule, startDate]);
 
   const updateDates = api.card.update.useMutation({
     onMutate: async (update) => {
@@ -87,6 +96,8 @@ export function CardDatesSelector({
               dueDateHasTime: update.dueDate
                 ? (update.dueDateHasTime ?? false)
                 : false,
+              recurrenceRule: update.recurrenceRule ?? null,
+              recurrenceTimezone: update.recurrenceTimezone ?? null,
             }
           : card,
       );
@@ -101,7 +112,12 @@ export function CardDatesSelector({
         icon: "error",
       });
     },
-    onSuccess: () => setIsOpen(false),
+    onSuccess: (updatedCard) => {
+      utils.card.byId.setData({ cardPublicId }, (card) =>
+        card ? { ...card, ...updatedCard } : card,
+      );
+      setIsOpen(false);
+    },
     onSettled: async () => {
       await Promise.all([
         invalidateCard(utils, cardPublicId),
@@ -117,6 +133,7 @@ export function CardDatesSelector({
     setPendingHasTime(dueDateHasTime);
     setStartDateEnabled(!!startDate);
     setRangeAnchor(startDate && !dueDate ? startDate : null);
+    setPendingRecurrenceRule(recurrenceRule);
     setIsOpen(true);
   };
 
@@ -169,6 +186,7 @@ export function CardDatesSelector({
       setPendingHasTime(false);
       setStartDateEnabled(false);
       setRangeAnchor(null);
+      setPendingRecurrenceRule(null);
       return;
     }
 
@@ -192,6 +210,7 @@ export function CardDatesSelector({
     setPendingHasTime(false);
     setStartDateEnabled(false);
     setRangeAnchor(null);
+    setPendingRecurrenceRule(null);
   };
 
   const save = () => {
@@ -212,13 +231,20 @@ export function CardDatesSelector({
       startDate: nextStartDate,
       dueDate: nextDueDate,
       dueDateHasTime: nextDueDate ? pendingHasTime : false,
+      recurrenceRule: nextDueDate ? pendingRecurrenceRule : null,
+      recurrenceTimezone:
+        nextDueDate && pendingRecurrenceRule
+          ? (recurrenceTimezone ??
+            Intl.DateTimeFormat().resolvedOptions().timeZone)
+          : null,
     });
   };
 
   const hasChanges =
     !datesMatch(pendingStartDate, startDate) ||
     !datesMatch(pendingDueDate, dueDate) ||
-    (!!pendingDueDate && pendingHasTime !== dueDateHasTime);
+    (!!pendingDueDate && pendingHasTime !== dueDateHasTime) ||
+    pendingRecurrenceRule !== recurrenceRule;
   const draftIsValid =
     !startDateEnabled || (!!pendingStartDate && !!pendingDueDate);
 
@@ -234,6 +260,16 @@ export function CardDatesSelector({
   const deadlineState = dueDate
     ? getCardDeadlineState({ completed, dueDate, dueDateHasTime })
     : null;
+  const recurrenceLabel =
+    recurrenceRule === "daily"
+      ? t`Daily`
+      : recurrenceRule === "weekdays"
+        ? t`Weekdays`
+        : recurrenceRule === "weekly"
+          ? t`Weekly`
+          : recurrenceRule === "monthly"
+            ? t`Monthly`
+            : null;
 
   return (
     <div className="relative flex w-full items-center text-left">
@@ -255,6 +291,7 @@ export function CardDatesSelector({
             {formattedStartDate}
             {formattedStartDate && formattedDueDate && " – "}
             {formattedDueDate}
+            {recurrenceLabel && ` · ${recurrenceLabel}`}
           </span>
         ) : (
           <>
@@ -320,6 +357,28 @@ export function CardDatesSelector({
                   />
                 )}
               </div>
+              <label className="flex items-center justify-between gap-3">
+                <span>{t`Repeat`}</span>
+                <select
+                  aria-label={t`Repeat`}
+                  value={pendingRecurrenceRule ?? ""}
+                  disabled={!pendingDueDate}
+                  onChange={(event) =>
+                    setPendingRecurrenceRule(
+                      (event.target.value === ""
+                        ? null
+                        : event.target.value) as CardRecurrenceRule | null,
+                    )
+                  }
+                  className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
+                >
+                  <option value="">{t`Never`}</option>
+                  <option value="daily">{t`Daily`}</option>
+                  <option value="weekdays">{t`Weekdays`}</option>
+                  <option value="weekly">{t`Weekly`}</option>
+                  <option value="monthly">{t`Monthly`}</option>
+                </select>
+              </label>
             </div>
             <DateSelector
               selectedDate={pendingDueDate}

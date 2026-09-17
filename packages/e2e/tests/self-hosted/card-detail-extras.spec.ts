@@ -83,17 +83,37 @@ test(
     await assigned;
     await expect(itemRow.getByText(user.name)).toBeVisible();
 
-    await itemRow
-      .getByRole("button", { name: "Set checklist item due date" })
-      .click();
+    let checklistDateUpdateCount = 0;
+    page.on("request", (request) => {
+      if (
+        request.method() === "POST" &&
+        request.url().includes("/api/trpc/checklist.updateItem")
+      ) {
+        checklistDateUpdateCount += 1;
+      }
+    });
+    const checklistDateButton = itemRow.getByRole("button", {
+      name: "Set checklist item due date",
+    });
+    await checklistDateButton.click();
     const itemDueDate = new Date().toISOString().slice(0, 10);
     await page
       .locator(`time[datetime="${itemDueDate}"]`)
       .filter({ visible: true })
       .click();
+    await itemRow.getByRole("button", { name: "Cancel" }).click();
+    expect(checklistDateUpdateCount).toBe(0);
+    await expect(checklistDateButton).toBeVisible();
+
+    await checklistDateButton.click();
+    await page
+      .locator(`time[datetime="${itemDueDate}"]`)
+      .filter({ visible: true })
+      .click();
     const dated = waitForTrpcMutation(page, "checklist.updateItem");
-    await page.mouse.click(10, 10);
+    await itemRow.getByRole("button", { name: "Save" }).click();
     await dated;
+    expect(checklistDateUpdateCount).toBe(1);
     await expect(
       itemRow.getByRole("button", { name: "Edit checklist item due date" }),
     ).toBeVisible();

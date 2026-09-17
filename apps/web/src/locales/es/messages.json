@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        404
+        398
       ]
     ],
     "translation": "{0} | {1}"
@@ -146,7 +146,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        643
+        657
       ]
     ],
     "translation": "{0} etiquetas"
@@ -162,7 +162,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        682
+        725
       ]
     ],
     "translation": "{0} no encontrado"
@@ -471,7 +471,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        592
+        586
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -651,7 +651,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        303
+        345
       ]
     ],
     "translation": "Añadir detalles..."
@@ -742,7 +742,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        108
+        110
       ]
     ],
     "translation": "añadió {0} etiquetas: <0>{labelList}</0>"
@@ -754,7 +754,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        138
+        140
       ]
     ],
     "translation": "añadió una lista de verificación"
@@ -766,7 +766,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        141
+        143
       ]
     ],
     "translation": "añadió un elemento de lista de verificación"
@@ -778,7 +778,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        134
+        136
       ]
     ],
     "translation": "añadió una etiqueta a la tarjeta"
@@ -790,7 +790,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        136
+        138
       ]
     ],
     "translation": "añadió un miembro a la tarjeta"
@@ -802,7 +802,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        151
+        153
       ]
     ],
     "translation": "añadió un archivo adjunto"
@@ -818,7 +818,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        310
+        312
       ]
     ],
     "translation": "añadió un archivo adjunto <0>{0}</0>"
@@ -834,7 +834,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        222
+        224
       ]
     ],
     "translation": "añadió la lista de verificación <0>{0}</0>"
@@ -850,7 +850,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        246
+        248
       ]
     ],
     "translation": "añadió el elemento de lista de verificación <0>{0}</0>"
@@ -866,7 +866,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        206
+        208
       ]
     ],
     "translation": "añadió la etiqueta <0>{0}</0>"
@@ -1561,7 +1561,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        281
+        283
       ]
     ],
     "translation": "asignó a <0>{0}</0> al elemento <1>{1}</1> de la lista"
@@ -1577,7 +1577,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        186
+        188
       ]
     ],
     "translation": "asignó <0>{0}</0> a la tarjeta"
@@ -1589,7 +1589,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        148
+        150
       ]
     ],
     "translation": "asignó un elemento de la lista"
@@ -1613,11 +1613,11 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        744
+        782
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        745
+        783
       ]
     ],
     "translation": "Adjuntar archivos"
@@ -1876,11 +1876,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        649
+        692
       ],
       [
         "src/views/card/index.tsx",
-        404
+        398
       ],
       [
         "src/views/public/board/index.tsx",
@@ -1933,7 +1933,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        672
+        715
       ]
     ],
     "translation": "Nombre del tablero"
@@ -2672,6 +2672,14 @@
         138
       ],
       [
+        "src/views/card/components/CardDatesSelector.tsx",
+        412
+      ],
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        266
+      ],
+      [
         "src/views/card/components/Comment.tsx",
         217
       ],
@@ -2757,7 +2765,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        404
+        398
       ]
     ],
     "translation": "Tarjeta"
@@ -2833,11 +2841,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        467
+        461
       ],
       [
         "src/views/card/index.tsx",
-        517
+        511
       ]
     ],
     "translation": "Tarjeta no encontrada"
@@ -2873,7 +2881,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        471
+        485
       ]
     ],
     "translation": "Título de la tarjeta"
@@ -2885,7 +2893,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        391
+        434
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2993,7 +3001,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        156
+        158
       ]
     ],
     "translation": "cambió la portada de la tarjeta"
@@ -3009,11 +3017,11 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        336
+        355
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        351
+        369
       ]
     ],
     "translation": "cambió la fecha de vencimiento a <0>{formattedDate}</0>"
@@ -3022,14 +3030,14 @@
     "message": "changed the start date to <0>{0}</0>",
     "placeholders": {
       "0": [
-        "format(toStartDate, \"PP\", { locale: dateLocale })"
+        "formatCardDate(toStartDate, { locale: dateLocale })"
       ]
     },
     "comments": [],
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        367
+        385
       ]
     ],
     "translation": "cambió la fecha de inicio a <0>{0}</0>"
@@ -3302,6 +3310,30 @@
     ],
     "translation": "Eliminar permisos personalizados"
   },
+  "UAzNjT": {
+    "translation": "Borrar fecha",
+    "message": "Clear date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        257
+      ]
+    ]
+  },
+  "0Czky2": {
+    "translation": "Borrar fechas",
+    "message": "Clear dates",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        402
+      ]
+    ]
+  },
   "u8JHrO": {
     "message": "Clear filters",
     "placeholders": {},
@@ -3361,7 +3393,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        458
+        452
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
@@ -3529,7 +3561,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        143
+        145
       ]
     ],
     "translation": "completó un elemento de la lista de verificación"
@@ -3545,10 +3577,26 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        263
+        265
       ]
     ],
     "translation": "completó el elemento de la lista de verificación <0>{0}</0>"
+  },
+  "faXEMy": {
+    "translation": "completó esta ocurrencia y movió la fecha de vencimiento al <0>{formattedDate}</0>",
+    "message": "completed this occurrence and moved the due date to <0>{formattedDate}</0>",
+    "placeholders": {
+      "formattedDate": [
+        "formattedDate"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        336
+      ]
+    ]
   },
   "tOZp9v": {
     "message": "Configurable user roles and permissions",
@@ -3943,7 +3991,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        206
+        200
       ]
     ],
     "translation": "Portada"
@@ -3975,7 +4023,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        776
+        814
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -4003,7 +4051,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        786
+        824
       ]
     ],
     "translation": "Crear tarjeta"
@@ -4119,7 +4167,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        605
+        619
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -4135,11 +4183,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        121
+        122
       ],
       [
         "src/views/board/index.tsx",
-        809
+        852
       ]
     ],
     "translation": "Crear nueva lista"
@@ -4203,7 +4251,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        130
+        132
       ]
     ],
     "translation": "creó la tarjeta"
@@ -4324,7 +4372,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        509
+        523
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
@@ -4460,6 +4508,26 @@
     ],
     "translation": "Atención al cliente"
   },
+  "U0sC6H": {
+    "translation": "Diariamente",
+    "message": "Daily",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        756
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        265
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        376
+      ]
+    ]
+  },
   "pvnfJD": {
     "message": "Dark",
     "placeholders": {},
@@ -4491,6 +4559,18 @@
       ]
     ],
     "translation": "Fecha"
+  },
+  "UDI8Ls": {
+    "translation": "Fechas",
+    "message": "Dates",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        185
+      ]
+    ]
   },
   "cp1rsD": {
     "message": "Deactivate invite link",
@@ -4667,7 +4747,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        323
+        365
       ]
     ],
     "translation": "Eliminar el elemento “{0}” de la lista de comprobación"
@@ -4783,7 +4863,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        140
+        142
       ]
     ],
     "translation": "eliminó una lista de verificación"
@@ -4795,7 +4875,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        150
+        152
       ]
     ],
     "translation": "eliminó un elemento de la lista de verificación"
@@ -4811,7 +4891,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        238
+        240
       ]
     ],
     "translation": "eliminó la lista de verificación <0>{0}</0>"
@@ -4827,7 +4907,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        299
+        301
       ]
     ],
     "translation": "eliminó el elemento de la lista de verificación <0>{0}</0>"
@@ -5072,7 +5152,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDueDateModal.tsx",
-        37
+        41
       ],
       [
         "src/views/board/components/CardContextLabelsModal.tsx",
@@ -5132,11 +5212,15 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        694
+        707
       ],
       [
-        "src/views/card/index.tsx",
-        195
+        "src/views/card/components/CardDatesSelector.tsx",
+        313
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        315
       ]
     ],
     "translation": "Fecha de vencimiento"
@@ -5276,7 +5360,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        208
+        218
       ]
     ],
     "translation": "Editar la fecha de vencimiento del elemento"
@@ -6666,7 +6750,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        794
+        837
       ]
     ],
     "translation": "Comienza creando una nueva lista"
@@ -7688,7 +7772,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        609
+        623
       ],
       [
         "src/views/board/components/TimeTrackingReportModal.tsx",
@@ -7700,7 +7784,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        166
+        165
       ]
     ],
     "translation": "Etiquetas"
@@ -7958,7 +8042,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        389
+        432
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -7998,7 +8082,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        157
+        156
       ]
     ],
     "translation": "Lista"
@@ -8066,7 +8150,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        730
+        750
       ]
     ],
     "translation": "Cargar más actividades"
@@ -8090,7 +8174,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        730
+        750
       ]
     ],
     "translation": "Cargando..."
@@ -8250,7 +8334,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        280
+        322
       ]
     ],
     "translation": "Marcar “{0}” como completado"
@@ -8266,7 +8350,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        279
+        321
       ]
     ],
     "translation": "Marcar “{0}” como incompleto"
@@ -8277,8 +8361,16 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/Card.tsx",
+        260
+      ],
+      [
+        "src/views/board/components/Card.tsx",
+        263
+      ],
+      [
         "src/views/card/components/CardCompletionToggle.tsx",
-        53
+        54
       ]
     ],
     "translation": "Marcar la tarjeta como completada"
@@ -8289,8 +8381,16 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/Card.tsx",
+        260
+      ],
+      [
+        "src/views/board/components/Card.tsx",
+        263
+      ],
+      [
         "src/views/card/components/CardCompletionToggle.tsx",
-        52
+        53
       ]
     ],
     "translation": "Marcar la tarjeta como incompleta"
@@ -8302,7 +8402,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        144
+        146
       ]
     ],
     "translation": "marcó un elemento de la lista de verificación como incompleto"
@@ -8318,7 +8418,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        272
+        274
       ]
     ],
     "translation": "marcó el elemento de la lista de verificación <0>{0}</0> como incompleto"
@@ -8330,7 +8430,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        157
+        159
       ]
     ],
     "translation": "marcó la tarjeta como completada"
@@ -8342,7 +8442,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        158
+        160
       ]
     ],
     "translation": "marcó la tarjeta como incompleta"
@@ -8414,11 +8514,11 @@
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        57
+        59
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        94
+        96
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -8470,7 +8570,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        567
+        581
       ],
       [
         "src/views/board/components/TimeTrackingReportModal.tsx",
@@ -8482,7 +8582,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        176
+        175
       ],
       [
         "src/views/members/index.tsx",
@@ -8564,6 +8664,18 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        759
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        271
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        379
+      ],
       [
         "src/views/onboarding/select-plan/index.tsx",
         74
@@ -8713,7 +8825,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        174
+        176
       ]
     ],
     "translation": "movió la tarjeta de <0>{0}</0> a <1>{1}</1>"
@@ -8725,7 +8837,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        133
+        135
       ]
     ],
     "translation": "movió la tarjeta a otra lista"
@@ -8794,6 +8906,22 @@
     ],
     "translation": "¿Necesitas ayuda?"
   },
+  "qqeAJM": {
+    "translation": "Nunca",
+    "message": "Never",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        755
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        375
+      ]
+    ]
+  },
   "isRobC": {
     "message": "New",
     "placeholders": {},
@@ -8845,7 +8973,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        454
+        468
       ]
     ],
     "translation": "Nueva tarjeta"
@@ -8897,7 +9025,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        758
+        801
       ]
     ],
     "translation": "Nueva lista"
@@ -9189,7 +9317,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        790
+        833
       ]
     ],
     "translation": "Sin listas"
@@ -9201,7 +9329,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        795
+        838
       ]
     ],
     "translation": "Aún no se han creado listas"
@@ -9453,6 +9581,22 @@
       ]
     ],
     "translation": "Abre un campo para editar su configuración."
+  },
+  "dg1gDd": {
+    "translation": "Abrir tarjeta {0}",
+    "message": "Open card {0}",
+    "placeholders": {
+      "0": [
+        "card.title"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/index.tsx",
+        988
+      ]
+    ]
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -9745,7 +9889,7 @@
     "origin": [
       [
         "src/views/board/components/Card.tsx",
-        385
+        433
       ],
       [
         "src/views/board/components/CardContextMembersModal.tsx",
@@ -9777,7 +9921,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        124
+        123
       ],
       [
         "src/views/members/index.tsx",
@@ -10161,7 +10305,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        219
+        226
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -10185,11 +10329,15 @@
       ],
       [
         "src/views/board/index.tsx",
-        301
+        302
       ],
       [
         "src/views/board/index.tsx",
-        357
+        358
+      ],
+      [
+        "src/views/board/index.tsx",
+        397
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -10205,19 +10353,23 @@
       ],
       [
         "src/views/card/components/CardCompletionToggle.tsx",
-        39
+        40
       ],
       [
         "src/views/card/components/CardCoverSelector.tsx",
         86
       ],
       [
-        "src/views/card/components/ChecklistItemRow.tsx",
-        109
+        "src/views/card/components/CardDatesSelector.tsx",
+        111
       ],
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        137
+        110
+      ],
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        138
       ],
       [
         "src/views/card/components/ChecklistNameInput.tsx",
@@ -10252,10 +10404,6 @@
         46
       ],
       [
-        "src/views/card/components/DueDateSelector.tsx",
-        71
-      ],
-      [
         "src/views/card/components/LabelSelector.tsx",
         75
       ],
@@ -10280,16 +10428,12 @@
         43
       ],
       [
-        "src/views/card/components/StartDateSelector.tsx",
-        52
+        "src/views/card/index.tsx",
+        309
       ],
       [
         "src/views/card/index.tsx",
-        315
-      ],
-      [
-        "src/views/card/index.tsx",
-        328
+        322
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -10393,7 +10537,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        398
+        441
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -10683,6 +10827,18 @@
     ],
     "translation": "Reclutamiento"
   },
+  "icIr5O": {
+    "translation": "Fecha límite recurrente",
+    "message": "Recurring deadline",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/Card.tsx",
+        375
+      ]
+    ]
+  },
   "ekCRTP": {
     "message": "Rejected",
     "placeholders": {},
@@ -10750,7 +10906,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        763
+        801
       ]
     ],
     "translation": "Eliminar archivo"
@@ -10829,7 +10985,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        122
+        124
       ]
     ],
     "translation": "eliminó {0} etiquetas: <0>{labelList}</0>"
@@ -10841,7 +10997,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        147
+        149
       ]
     ],
     "translation": "eliminó la fecha de vencimiento de un elemento de la lista"
@@ -10853,7 +11009,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        135
+        137
       ]
     ],
     "translation": "eliminó una etiqueta de la tarjeta"
@@ -10865,7 +11021,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        137
+        139
       ]
     ],
     "translation": "eliminó un miembro de la tarjeta"
@@ -10877,7 +11033,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        152
+        154
       ]
     ],
     "translation": "eliminó un adjunto"
@@ -10893,7 +11049,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        320
+        322
       ]
     ],
     "translation": "eliminó un adjunto <0>{0}</0>"
@@ -10921,7 +11077,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        214
+        216
       ]
     ],
     "translation": "eliminó la etiqueta <0>{0}</0>"
@@ -10933,11 +11089,11 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        155
+        157
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        358
+        376
       ]
     ],
     "translation": "eliminó la fecha de vencimiento"
@@ -10949,7 +11105,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        377
+        395
       ]
     ],
     "translation": "eliminó la fecha de inicio"
@@ -10961,7 +11117,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        139
+        141
       ]
     ],
     "translation": "renombró una lista de verificación"
@@ -10977,7 +11133,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        230
+        232
       ]
     ],
     "translation": "renombró la lista de verificación <0>{0}</0>"
@@ -10993,10 +11149,34 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        254
+        256
       ]
     ],
     "translation": "renombró el elemento de la lista de verificación a <0>{0}</0>"
+  },
+  "BwWIp2": {
+    "translation": "Repetir",
+    "message": "Repeat",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        739
+      ],
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        741
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        361
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        363
+      ]
+    ]
   },
   "Yx0Ud8": {
     "message": "Requested",
@@ -11154,7 +11334,7 @@
     "origin": [
       [
         "src/views/board/components/Card.tsx",
-        354
+        402
       ]
     ],
     "translation": "En curso"
@@ -11211,6 +11391,14 @@
       [
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         149
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        421
+      ],
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        274
       ],
       [
         "src/views/card/components/Comment.tsx",
@@ -11514,7 +11702,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        183
+        185
       ]
     ],
     "translation": "se autoasignó la tarjeta"
@@ -11562,7 +11750,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        145
+        147
       ]
     ],
     "translation": "estableció la fecha de vencimiento de un elemento de la lista"
@@ -11586,13 +11774,14 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        209
+        219
       ]
     ],
     "translation": "Establecer la fecha de vencimiento del elemento"
   },
-  "8AbRER": {
-    "message": "Set due date",
+  "LepgJE": {
+    "translation": "Establecer fechas",
+    "message": "Set dates",
     "placeholders": {},
     "comments": [],
     "origin": [
@@ -11601,12 +11790,19 @@
         20
       ],
       [
+        "src/views/card/components/CardDatesSelector.tsx",
+        299
+      ]
+    ]
+  },
+  "8AbRER": {
+    "message": "Set due date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
         "src/views/board/components/CardContextMenu.tsx",
         56
-      ],
-      [
-        "src/views/card/components/DueDateSelector.tsx",
-        140
       ]
     ],
     "translation": "Establecer fecha de vencimiento"
@@ -11657,7 +11853,8 @@
         84
       ]
     ],
-    "translation": "Establecer fecha de inicio"
+    "translation": "Establecer fecha de inicio",
+    "obsolete": true
   },
   "Eit43O": {
     "message": "set the due date",
@@ -11666,7 +11863,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        153
+        155
       ]
     ],
     "translation": "estableció la fecha de vencimiento"
@@ -12138,7 +12335,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        362
+        376
       ]
     ],
     "translation": "Error en algunos archivos adjuntos"
@@ -12211,11 +12408,15 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        661
+        675
       ],
       [
-        "src/views/card/index.tsx",
-        186
+        "src/views/card/components/CardDatesSelector.tsx",
+        342
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        346
       ]
     ],
     "translation": "Fecha de inicio"
@@ -12528,11 +12729,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        649
+        692
       ],
       [
         "src/views/board/index.tsx",
-        691
+        734
       ]
     ],
     "translation": "Plantilla"
@@ -12795,7 +12996,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        363
+        377
       ]
     ],
     "translation": "La tarjeta se creó, pero no se pudieron cargar {failedCount} de {0} archivos adjuntos."
@@ -13203,11 +13404,11 @@
     "origin": [
       [
         "src/components/DateSelector.tsx",
-        203
+        222
       ],
       [
         "src/components/DateSelector.tsx",
-        208
+        227
       ],
       [
         "src/views/board/components/TimeTrackingReportModal.tsx",
@@ -13215,7 +13416,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        719
+        762
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -13583,7 +13784,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        327
+        321
       ]
     ],
     "translation": "No se pudo agregar la etiqueta"
@@ -13643,7 +13844,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        396
+        439
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -13667,7 +13868,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        216
+        223
       ]
     ],
     "translation": "No se pudo crear la tarjeta"
@@ -13795,7 +13996,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        136
+        137
       ]
     ],
     "translation": "No se pudo eliminar el elemento de la lista de verificación"
@@ -14135,11 +14336,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        356
+        357
       ],
       [
         "src/views/card/index.tsx",
-        314
+        308
       ]
     ],
     "translation": "No se pudo actualizar la tarjeta"
@@ -14162,8 +14363,12 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/index.tsx",
+        396
+      ],
+      [
         "src/views/card/components/CardCompletionToggle.tsx",
-        38
+        39
       ]
     ],
     "translation": "No se pudo actualizar el estado de la tarjeta"
@@ -14187,7 +14392,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        108
+        109
       ]
     ],
     "translation": "No se pudo actualizar el elemento de la lista de verificación"
@@ -14236,6 +14441,18 @@
     ],
     "translation": "No se pudieron actualizar los campos personalizados"
   },
+  "/YgeAA": {
+    "translation": "No se pudieron actualizar las fechas",
+    "message": "Unable to update dates",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        110
+      ]
+    ]
+  },
   "C56tim": {
     "message": "Unable to update due date",
     "placeholders": {},
@@ -14246,10 +14463,10 @@
         70
       ]
     ],
-    "translation": "No se pudo actualizar la fecha de vencimiento"
+    "translation": "No se pudo actualizar la fecha de vencimiento",
+    "obsolete": true
   },
   "DQegn7": {
-    "translation": "No se pudieron actualizar los filtros",
     "message": "Unable to update filters",
     "placeholders": {},
     "comments": [],
@@ -14262,7 +14479,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         176
       ]
-    ]
+    ],
+    "translation": "No se pudieron actualizar los filtros"
   },
   "delOXn": {
     "message": "Unable to update labels",
@@ -14283,7 +14501,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        300
+        301
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -14342,7 +14560,8 @@
         51
       ]
     ],
-    "translation": "No se pudo actualizar la fecha de inicio"
+    "translation": "No se pudo actualizar la fecha de inicio",
+    "obsolete": true
   },
   "cdvzpG": {
     "message": "Unable to update time entry",
@@ -14430,7 +14649,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        290
+        292
       ]
     ],
     "translation": "quitó a <0>{0}</0> del elemento <1>{1}</1> de la lista"
@@ -14446,7 +14665,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        197
+        199
       ]
     ],
     "translation": "desasignó a <0>{0}</0> de la tarjeta"
@@ -14458,7 +14677,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        149
+        151
       ]
     ],
     "translation": "quitó la asignación de un elemento de la lista"
@@ -14470,7 +14689,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        194
+        196
       ]
     ],
     "translation": "se desasignó a sí mismo de la tarjeta"
@@ -14789,7 +15008,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        142
+        144
       ]
     ],
     "translation": "actualizó un elemento de la lista de verificación"
@@ -14801,7 +15020,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        146
+        148
       ]
     ],
     "translation": "actualizó la fecha de vencimiento de un elemento de la lista"
@@ -14813,7 +15032,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        132
+        134
       ]
     ],
     "translation": "actualizó la descripción"
@@ -14825,10 +15044,22 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        154
+        156
       ]
     ],
     "translation": "actualizó la fecha de vencimiento"
+  },
+  "+eysZF": {
+    "translation": "actualizó la programación de recurrencia",
+    "message": "updated the recurrence schedule",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        344
+      ]
+    ]
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -14837,7 +15068,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        131
+        133
       ]
     ],
     "translation": "actualizó el título"
@@ -14853,7 +15084,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        166
+        168
       ]
     ],
     "translation": "actualizó el título a <0>{0}</0>"
@@ -15445,6 +15676,46 @@
     ],
     "translation": "Día de inicio de semana"
   },
+  "bbWQS2": {
+    "translation": "Días laborables",
+    "message": "Weekdays",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        757
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        267
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        377
+      ]
+    ]
+  },
+  "4XSc4l": {
+    "translation": "Semanalmente",
+    "message": "Weekly",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        758
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        269
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        378
+      ]
+    ]
+  },
   "9eF5oV": {
     "message": "Welcome back",
     "placeholders": {},
@@ -15516,7 +15787,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        649
+        692
       ],
       [
         "src/views/boards/index.tsx",
@@ -15930,11 +16201,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        742
+        785
       ],
       [
         "src/views/board/index.tsx",
-        800
+        843
       ],
       [
         "src/views/boards/components/BoardsList.tsx",

@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        404
+        398
       ]
     ],
     "translation": "{0} | {1}"
@@ -146,7 +146,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        643
+        657
       ]
     ],
     "translation": "{0} etiketter"
@@ -162,7 +162,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        682
+        725
       ]
     ],
     "translation": "{0} blev ikke fundet"
@@ -471,7 +471,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        592
+        586
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -651,7 +651,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        303
+        345
       ]
     ],
     "translation": "Tilføj detaljer..."
@@ -742,7 +742,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        108
+        110
       ]
     ],
     "translation": "tilføjede {0} etiketter: <0>{labelList}</0>"
@@ -754,7 +754,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        138
+        140
       ]
     ],
     "translation": "tilføjede en tjekliste"
@@ -766,7 +766,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        141
+        143
       ]
     ],
     "translation": "tilføjede et punkt på tjeklisten"
@@ -778,7 +778,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        134
+        136
       ]
     ],
     "translation": "tilføjede en etiket til kortet"
@@ -790,7 +790,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        136
+        138
       ]
     ],
     "translation": "tilføjede et medlem til kortet"
@@ -802,7 +802,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        151
+        153
       ]
     ],
     "translation": "tilføjede en vedhæftet fil"
@@ -818,7 +818,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        310
+        312
       ]
     ],
     "translation": "tilføjede en vedhæftet fil <0>{0}</0>"
@@ -834,7 +834,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        222
+        224
       ]
     ],
     "translation": "tilføjede tjeklisten <0>{0}</0>"
@@ -850,7 +850,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        246
+        248
       ]
     ],
     "translation": "tilføjede tjeklistepunktet <0>{0}</0>"
@@ -866,7 +866,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        206
+        208
       ]
     ],
     "translation": "tilføjede etiketten <0>{0}</0>"
@@ -1561,7 +1561,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        281
+        283
       ]
     ],
     "translation": ""
@@ -1577,7 +1577,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        186
+        188
       ]
     ],
     "translation": "tildelte <0>{0}</0> til kortet"
@@ -1589,7 +1589,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        148
+        150
       ]
     ],
     "translation": ""
@@ -1613,11 +1613,11 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        744
+        782
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        745
+        783
       ]
     ],
     "translation": ""
@@ -1876,11 +1876,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        649
+        692
       ],
       [
         "src/views/card/index.tsx",
-        404
+        398
       ],
       [
         "src/views/public/board/index.tsx",
@@ -1933,7 +1933,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        672
+        715
       ]
     ],
     "translation": ""
@@ -2672,6 +2672,14 @@
         138
       ],
       [
+        "src/views/card/components/CardDatesSelector.tsx",
+        412
+      ],
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        266
+      ],
+      [
         "src/views/card/components/Comment.tsx",
         217
       ],
@@ -2757,7 +2765,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        404
+        398
       ]
     ],
     "translation": "Kort"
@@ -2833,11 +2841,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        467
+        461
       ],
       [
         "src/views/card/index.tsx",
-        517
+        511
       ]
     ],
     "translation": "Kortet blev ikke fundet"
@@ -2873,7 +2881,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        471
+        485
       ]
     ],
     "translation": "Korttitel"
@@ -2885,7 +2893,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        391
+        434
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -2993,7 +3001,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        156
+        158
       ]
     ],
     "translation": ""
@@ -3009,11 +3017,11 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        336
+        355
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        351
+        369
       ]
     ],
     "translation": "ændrede forfaldsdatoen til <0>{formattedDate}</0>"
@@ -3022,14 +3030,14 @@
     "message": "changed the start date to <0>{0}</0>",
     "placeholders": {
       "0": [
-        "format(toStartDate, \"PP\", { locale: dateLocale })"
+        "formatCardDate(toStartDate, { locale: dateLocale })"
       ]
     },
     "comments": [],
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        367
+        385
       ]
     ],
     "translation": ""
@@ -3302,6 +3310,30 @@
     ],
     "translation": "Ryd brugerdefinerede rettigheder"
   },
+  "UAzNjT": {
+    "translation": "Ryd dato",
+    "message": "Clear date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        257
+      ]
+    ]
+  },
+  "0Czky2": {
+    "translation": "Ryd datoer",
+    "message": "Clear dates",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        402
+      ]
+    ]
+  },
   "u8JHrO": {
     "message": "Clear filters",
     "placeholders": {},
@@ -3361,7 +3393,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        458
+        452
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
@@ -3529,7 +3561,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        143
+        145
       ]
     ],
     "translation": "fuldførte et punkt på tjeklisten"
@@ -3545,10 +3577,26 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        263
+        265
       ]
     ],
     "translation": "fuldførte tjeklistepunktet <0>{0}</0>"
+  },
+  "faXEMy": {
+    "translation": "fuldførte denne forekomst og flyttede forfaldsdatoen til <0>{formattedDate}</0>",
+    "message": "completed this occurrence and moved the due date to <0>{formattedDate}</0>",
+    "placeholders": {
+      "formattedDate": [
+        "formattedDate"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        336
+      ]
+    ]
   },
   "tOZp9v": {
     "message": "Configurable user roles and permissions",
@@ -3930,7 +3978,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        206
+        200
       ]
     ],
     "translation": ""
@@ -3962,7 +4010,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        776
+        814
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -3990,7 +4038,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        786
+        824
       ]
     ],
     "translation": "Opret kort"
@@ -4106,7 +4154,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        605
+        619
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -4122,11 +4170,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        121
+        122
       ],
       [
         "src/views/board/index.tsx",
-        809
+        852
       ]
     ],
     "translation": "Opret ny liste"
@@ -4190,7 +4238,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        130
+        132
       ]
     ],
     "translation": "oprettede kortet"
@@ -4311,7 +4359,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        509
+        523
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
@@ -4434,6 +4482,26 @@
     ],
     "translation": "Kundesupport"
   },
+  "U0sC6H": {
+    "translation": "Dagligt",
+    "message": "Daily",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        756
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        265
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        376
+      ]
+    ]
+  },
   "pvnfJD": {
     "message": "Dark",
     "placeholders": {},
@@ -4465,6 +4533,18 @@
       ]
     ],
     "translation": ""
+  },
+  "UDI8Ls": {
+    "translation": "Datoer",
+    "message": "Dates",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        185
+      ]
+    ]
   },
   "cp1rsD": {
     "message": "Deactivate invite link",
@@ -4641,7 +4721,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        323
+        365
       ]
     ],
     "translation": ""
@@ -4757,7 +4837,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        140
+        142
       ]
     ],
     "translation": "slettede en tjekliste"
@@ -4769,7 +4849,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        150
+        152
       ]
     ],
     "translation": "slettede et punkt på tjeklisten"
@@ -4785,7 +4865,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        238
+        240
       ]
     ],
     "translation": "slettede tjeklisten <0>{0}</0>"
@@ -4801,7 +4881,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        299
+        301
       ]
     ],
     "translation": "slettede tjeklistepunktet <0>{0}</0>"
@@ -5033,7 +5113,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextDueDateModal.tsx",
-        37
+        41
       ],
       [
         "src/views/board/components/CardContextLabelsModal.tsx",
@@ -5093,11 +5173,15 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        694
+        707
       ],
       [
-        "src/views/card/index.tsx",
-        195
+        "src/views/card/components/CardDatesSelector.tsx",
+        313
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        315
       ]
     ],
     "translation": "Forfaldsdato"
@@ -5237,7 +5321,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        208
+        218
       ]
     ],
     "translation": ""
@@ -6614,7 +6698,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        794
+        837
       ]
     ],
     "translation": "Kom i gang ved at oprette en ny liste"
@@ -7623,7 +7707,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        609
+        623
       ],
       [
         "src/views/board/components/TimeTrackingReportModal.tsx",
@@ -7635,7 +7719,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        166
+        165
       ]
     ],
     "translation": "Etiketter"
@@ -7880,7 +7964,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        389
+        432
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -7920,7 +8004,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        157
+        156
       ]
     ],
     "translation": "Liste"
@@ -7988,7 +8072,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        730
+        750
       ]
     ],
     "translation": "Indlæs flere aktiviteter"
@@ -8012,7 +8096,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        730
+        750
       ]
     ],
     "translation": "Indlæser..."
@@ -8172,7 +8256,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        280
+        322
       ]
     ],
     "translation": ""
@@ -8188,7 +8272,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        279
+        321
       ]
     ],
     "translation": ""
@@ -8199,8 +8283,16 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/Card.tsx",
+        260
+      ],
+      [
+        "src/views/board/components/Card.tsx",
+        263
+      ],
+      [
         "src/views/card/components/CardCompletionToggle.tsx",
-        53
+        54
       ]
     ],
     "translation": ""
@@ -8211,8 +8303,16 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/Card.tsx",
+        260
+      ],
+      [
+        "src/views/board/components/Card.tsx",
+        263
+      ],
+      [
         "src/views/card/components/CardCompletionToggle.tsx",
-        52
+        53
       ]
     ],
     "translation": ""
@@ -8224,7 +8324,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        144
+        146
       ]
     ],
     "translation": "markerede et punkt på tjeklisten som ikke fuldført"
@@ -8240,7 +8340,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        272
+        274
       ]
     ],
     "translation": "markerede tjeklistepunktet <0>{0}</0> som ikke fuldført"
@@ -8252,7 +8352,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        157
+        159
       ]
     ],
     "translation": ""
@@ -8264,7 +8364,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        158
+        160
       ]
     ],
     "translation": ""
@@ -8336,11 +8436,11 @@
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        57
+        59
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        94
+        96
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -8392,7 +8492,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        567
+        581
       ],
       [
         "src/views/board/components/TimeTrackingReportModal.tsx",
@@ -8404,7 +8504,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        176
+        175
       ],
       [
         "src/views/members/index.tsx",
@@ -8486,6 +8586,18 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        759
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        271
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        379
+      ],
       [
         "src/views/onboarding/select-plan/index.tsx",
         74
@@ -8635,7 +8747,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        174
+        176
       ]
     ],
     "translation": "flyttede kortet fra <0>{0}</0> til <1>{1}</1>"
@@ -8647,7 +8759,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        133
+        135
       ]
     ],
     "translation": "flyttede kortet til en anden liste"
@@ -8716,6 +8828,22 @@
     ],
     "translation": "Brug for hjælp?"
   },
+  "qqeAJM": {
+    "translation": "Aldrig",
+    "message": "Never",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        755
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        375
+      ]
+    ]
+  },
   "isRobC": {
     "message": "New",
     "placeholders": {},
@@ -8767,7 +8895,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        454
+        468
       ]
     ],
     "translation": "Nyt kort"
@@ -8819,7 +8947,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        758
+        801
       ]
     ],
     "translation": "Ny liste"
@@ -9111,7 +9239,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        790
+        833
       ]
     ],
     "translation": "Ingen lister"
@@ -9123,7 +9251,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        795
+        838
       ]
     ],
     "translation": "Der er endnu ikke oprettet nogen lister"
@@ -9375,6 +9503,22 @@
       ]
     ],
     "translation": ""
+  },
+  "dg1gDd": {
+    "translation": "Åbn kort {0}",
+    "message": "Open card {0}",
+    "placeholders": {
+      "0": [
+        "card.title"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/index.tsx",
+        988
+      ]
+    ]
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -9667,7 +9811,7 @@
     "origin": [
       [
         "src/views/board/components/Card.tsx",
-        385
+        433
       ],
       [
         "src/views/board/components/CardContextMembersModal.tsx",
@@ -9699,7 +9843,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        124
+        123
       ],
       [
         "src/views/members/index.tsx",
@@ -10083,7 +10227,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        219
+        226
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -10107,11 +10251,15 @@
       ],
       [
         "src/views/board/index.tsx",
-        301
+        302
       ],
       [
         "src/views/board/index.tsx",
-        357
+        358
+      ],
+      [
+        "src/views/board/index.tsx",
+        397
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -10127,19 +10275,23 @@
       ],
       [
         "src/views/card/components/CardCompletionToggle.tsx",
-        39
+        40
       ],
       [
         "src/views/card/components/CardCoverSelector.tsx",
         86
       ],
       [
-        "src/views/card/components/ChecklistItemRow.tsx",
-        109
+        "src/views/card/components/CardDatesSelector.tsx",
+        111
       ],
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        137
+        110
+      ],
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        138
       ],
       [
         "src/views/card/components/ChecklistNameInput.tsx",
@@ -10174,10 +10326,6 @@
         46
       ],
       [
-        "src/views/card/components/DueDateSelector.tsx",
-        71
-      ],
-      [
         "src/views/card/components/LabelSelector.tsx",
         75
       ],
@@ -10202,16 +10350,12 @@
         43
       ],
       [
-        "src/views/card/components/StartDateSelector.tsx",
-        52
+        "src/views/card/index.tsx",
+        309
       ],
       [
         "src/views/card/index.tsx",
-        315
-      ],
-      [
-        "src/views/card/index.tsx",
-        328
+        322
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -10315,7 +10459,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        398
+        441
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -10605,6 +10749,18 @@
     ],
     "translation": "Rekruttering"
   },
+  "icIr5O": {
+    "translation": "Tilbagevendende deadline",
+    "message": "Recurring deadline",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/Card.tsx",
+        375
+      ]
+    ]
+  },
   "ekCRTP": {
     "message": "Rejected",
     "placeholders": {},
@@ -10672,7 +10828,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        763
+        801
       ]
     ],
     "translation": ""
@@ -10751,7 +10907,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        122
+        124
       ]
     ],
     "translation": "fjernede {0} etiketter: <0>{labelList}</0>"
@@ -10763,7 +10919,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        147
+        149
       ]
     ],
     "translation": ""
@@ -10775,7 +10931,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        135
+        137
       ]
     ],
     "translation": "fjernede en etiket fra kortet"
@@ -10787,7 +10943,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        137
+        139
       ]
     ],
     "translation": "fjernede et medlem fra kortet"
@@ -10799,7 +10955,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        152
+        154
       ]
     ],
     "translation": "fjernede en vedhæftet fil"
@@ -10815,7 +10971,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        320
+        322
       ]
     ],
     "translation": "fjernede en vedhæftet fil <0>{0}</0>"
@@ -10843,7 +10999,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        214
+        216
       ]
     ],
     "translation": "fjernede etiketten <0>{0}</0>"
@@ -10855,11 +11011,11 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        155
+        157
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        358
+        376
       ]
     ],
     "translation": "fjernede forfaldsdatoen"
@@ -10871,7 +11027,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        377
+        395
       ]
     ],
     "translation": ""
@@ -10883,7 +11039,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        139
+        141
       ]
     ],
     "translation": "omdøbte en tjekliste"
@@ -10899,7 +11055,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        230
+        232
       ]
     ],
     "translation": "omdøbte tjeklisten <0>{0}</0>"
@@ -10915,10 +11071,34 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        254
+        256
       ]
     ],
     "translation": "omdøbte tjeklistepunktet til <0>{0}</0>"
+  },
+  "BwWIp2": {
+    "translation": "Gentag",
+    "message": "Repeat",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        739
+      ],
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        741
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        361
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        363
+      ]
+    ]
   },
   "Yx0Ud8": {
     "message": "Requested",
@@ -11076,7 +11256,7 @@
     "origin": [
       [
         "src/views/board/components/Card.tsx",
-        354
+        402
       ]
     ],
     "translation": ""
@@ -11133,6 +11313,14 @@
       [
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         149
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        421
+      ],
+      [
+        "src/views/card/components/ChecklistItemRow.tsx",
+        274
       ],
       [
         "src/views/card/components/Comment.tsx",
@@ -11436,7 +11624,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        183
+        185
       ]
     ],
     "translation": "tildelte sig selv til kortet"
@@ -11484,7 +11672,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        145
+        147
       ]
     ],
     "translation": ""
@@ -11508,13 +11696,14 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        209
+        219
       ]
     ],
     "translation": ""
   },
-  "8AbRER": {
-    "message": "Set due date",
+  "LepgJE": {
+    "translation": "Indstil datoer",
+    "message": "Set dates",
     "placeholders": {},
     "comments": [],
     "origin": [
@@ -11523,12 +11712,19 @@
         20
       ],
       [
+        "src/views/card/components/CardDatesSelector.tsx",
+        299
+      ]
+    ]
+  },
+  "8AbRER": {
+    "message": "Set due date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
         "src/views/board/components/CardContextMenu.tsx",
         56
-      ],
-      [
-        "src/views/card/components/DueDateSelector.tsx",
-        140
       ]
     ],
     "translation": "Angiv forfaldsdato"
@@ -11579,7 +11775,8 @@
         84
       ]
     ],
-    "translation": ""
+    "translation": "",
+    "obsolete": true
   },
   "Eit43O": {
     "message": "set the due date",
@@ -11588,7 +11785,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        153
+        155
       ]
     ],
     "translation": "angav forfaldsdatoen"
@@ -12060,7 +12257,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        362
+        376
       ]
     ],
     "translation": ""
@@ -12133,11 +12330,15 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        661
+        675
       ],
       [
-        "src/views/card/index.tsx",
-        186
+        "src/views/card/components/CardDatesSelector.tsx",
+        342
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        346
       ]
     ],
     "translation": ""
@@ -12450,11 +12651,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        649
+        692
       ],
       [
         "src/views/board/index.tsx",
-        691
+        734
       ]
     ],
     "translation": "Skabelon"
@@ -12717,7 +12918,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        363
+        377
       ]
     ],
     "translation": ""
@@ -13125,11 +13326,11 @@
     "origin": [
       [
         "src/components/DateSelector.tsx",
-        203
+        222
       ],
       [
         "src/components/DateSelector.tsx",
-        208
+        227
       ],
       [
         "src/views/board/components/TimeTrackingReportModal.tsx",
@@ -13137,7 +13338,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        719
+        762
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -13505,7 +13706,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        327
+        321
       ]
     ],
     "translation": "Kunne ikke tilføje etiket"
@@ -13565,7 +13766,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        396
+        439
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -13589,7 +13790,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        216
+        223
       ]
     ],
     "translation": "Kunne ikke oprette kort"
@@ -13717,7 +13918,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        136
+        137
       ]
     ],
     "translation": "Kunne ikke slette punkt på tjeklisten"
@@ -14057,11 +14258,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        356
+        357
       ],
       [
         "src/views/card/index.tsx",
-        314
+        308
       ]
     ],
     "translation": "Kunne ikke opdatere kort"
@@ -14084,8 +14285,12 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/index.tsx",
+        396
+      ],
+      [
         "src/views/card/components/CardCompletionToggle.tsx",
-        38
+        39
       ]
     ],
     "translation": ""
@@ -14109,7 +14314,7 @@
     "origin": [
       [
         "src/views/card/components/ChecklistItemRow.tsx",
-        108
+        109
       ]
     ],
     "translation": "Kunne ikke opdatere tjeklistepunkt"
@@ -14158,6 +14363,18 @@
     ],
     "translation": ""
   },
+  "/YgeAA": {
+    "translation": "Kunne ikke opdatere datoer",
+    "message": "Unable to update dates",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        110
+      ]
+    ]
+  },
   "C56tim": {
     "message": "Unable to update due date",
     "placeholders": {},
@@ -14168,10 +14385,10 @@
         70
       ]
     ],
-    "translation": "Kunne ikke opdatere forfaldsdato"
+    "translation": "Kunne ikke opdatere forfaldsdato",
+    "obsolete": true
   },
   "DQegn7": {
-    "translation": "",
     "message": "Unable to update filters",
     "placeholders": {},
     "comments": [],
@@ -14184,7 +14401,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         176
       ]
-    ]
+    ],
+    "translation": ""
   },
   "delOXn": {
     "message": "Unable to update labels",
@@ -14205,7 +14423,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        300
+        301
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -14264,7 +14482,8 @@
         51
       ]
     ],
-    "translation": ""
+    "translation": "",
+    "obsolete": true
   },
   "cdvzpG": {
     "message": "Unable to update time entry",
@@ -14352,7 +14571,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        290
+        292
       ]
     ],
     "translation": ""
@@ -14368,7 +14587,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        197
+        199
       ]
     ],
     "translation": "fjernede tildelingen af <0>{0}</0> fra kortet"
@@ -14380,7 +14599,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        149
+        151
       ]
     ],
     "translation": ""
@@ -14392,7 +14611,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        194
+        196
       ]
     ],
     "translation": "fjernede sin egen tildeling fra kortet"
@@ -14694,7 +14913,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        142
+        144
       ]
     ],
     "translation": "opdaterede et punkt på tjeklisten"
@@ -14706,7 +14925,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        146
+        148
       ]
     ],
     "translation": ""
@@ -14718,7 +14937,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        132
+        134
       ]
     ],
     "translation": "opdaterede beskrivelsen"
@@ -14730,10 +14949,22 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        154
+        156
       ]
     ],
     "translation": "opdaterede forfaldsdatoen"
+  },
+  "+eysZF": {
+    "translation": "opdaterede gentagelsesplanen",
+    "message": "updated the recurrence schedule",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        344
+      ]
+    ]
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -14742,7 +14973,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        131
+        133
       ]
     ],
     "translation": "opdaterede titlen"
@@ -14758,7 +14989,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        166
+        168
       ]
     ],
     "translation": "opdaterede titlen til <0>{0}</0>"
@@ -15337,6 +15568,46 @@
     ],
     "translation": "Ugens startdag"
   },
+  "bbWQS2": {
+    "translation": "Hverdage",
+    "message": "Weekdays",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        757
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        267
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        377
+      ]
+    ]
+  },
+  "4XSc4l": {
+    "translation": "Ugentligt",
+    "message": "Weekly",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/NewCardForm.tsx",
+        758
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        269
+      ],
+      [
+        "src/views/card/components/CardDatesSelector.tsx",
+        378
+      ]
+    ]
+  },
   "9eF5oV": {
     "message": "Welcome back",
     "placeholders": {},
@@ -15408,7 +15679,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        649
+        692
       ],
       [
         "src/views/boards/index.tsx",
@@ -15809,11 +16080,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        742
+        785
       ],
       [
         "src/views/board/index.tsx",
-        800
+        843
       ],
       [
         "src/views/boards/components/BoardsList.tsx",

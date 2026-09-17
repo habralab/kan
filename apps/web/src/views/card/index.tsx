@@ -189,6 +189,8 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
           dueDate={card?.dueDate}
           dueDateHasTime={card?.dueDateHasTime ?? false}
           completed={card?.completed ?? false}
+          recurrenceRule={card?.recurrenceRule ?? null}
+          recurrenceTimezone={card?.recurrenceTimezone ?? null}
           isLoading={!card}
           disabled={!canEdit}
         />

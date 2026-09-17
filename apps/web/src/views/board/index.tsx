@@ -473,7 +473,9 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
             ...list,
             cards: list.cards.map((card) =>
               card.publicId === args.cardPublicId
-                ? { ...card, completed: args.completed ?? card.completed }
+                ? args.completed && card.recurrenceRule
+                  ? card
+                  : { ...card, completed: args.completed ?? card.completed }
                 : card,
             ),
           })),

@@ -11,6 +11,7 @@ import {
 } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
+import type { CardRecurrenceRule } from "@kan/shared/utils";
 import {
   cardActivities,
   cardAttachments,
@@ -26,7 +27,7 @@ import {
   workspaceMembers,
   workspaces,
 } from "@kan/db/schema";
-import { generateUID } from "@kan/shared/utils";
+import { generateUID, getNextRecurringCardDates } from "@kan/shared/utils";
 
 import type { CustomFieldValueInput } from "./custom-field.repo";
 import {
@@ -71,6 +72,9 @@ export const create = async (
     coverColourCode?: string | null;
     coverSize?: "normal" | "full";
     dueDateHasTime?: boolean;
+    recurrenceRule?: CardRecurrenceRule | null;
+    recurrenceTimezone?: string | null;
+    recurrenceAnchorDate?: Date | null;
   },
 ) => {
   return db.transaction(async (tx) => {
@@ -138,6 +142,9 @@ export const create = async (
         dueDateHasTime: cardInput.dueDate
           ? (cardInput.dueDateHasTime ?? false)
           : false,
+        recurrenceRule: cardInput.recurrenceRule ?? null,
+        recurrenceTimezone: cardInput.recurrenceTimezone ?? null,
+        recurrenceAnchorDate: cardInput.recurrenceAnchorDate ?? null,
       })
       .returning({
         id: cards.id,
@@ -246,6 +253,9 @@ export const update = async (
     startDate?: Date | null;
     completed?: boolean;
     dueDateHasTime?: boolean;
+    recurrenceRule?: CardRecurrenceRule | null;
+    recurrenceTimezone?: string | null;
+    recurrenceAnchorDate?: Date | null;
   },
   args: {
     cardPublicId: string;
@@ -265,6 +275,9 @@ export const update = async (
           : cardInput.dueDate !== undefined
             ? (cardInput.dueDateHasTime ?? false)
             : undefined,
+      recurrenceRule: cardInput.recurrenceRule,
+      recurrenceTimezone: cardInput.recurrenceTimezone,
+      recurrenceAnchorDate: cardInput.recurrenceAnchorDate,
       updatedAt: new Date(),
     })
     .where(and(eq(cards.publicId, args.cardPublicId), isNull(cards.deletedAt)))
@@ -277,10 +290,107 @@ export const update = async (
       startDate: cards.startDate,
       completed: cards.completed,
       dueDateHasTime: cards.dueDateHasTime,
+      recurrenceRule: cards.recurrenceRule,
+      recurrenceTimezone: cards.recurrenceTimezone,
+      recurrenceAnchorDate: cards.recurrenceAnchorDate,
     });
 
   return result;
 };
+
+export const completeRecurringOccurrence = async (
+  db: dbClient,
+  input: {
+    cardPublicId: string;
+    expectedDueDate: Date;
+    createdBy: string;
+  },
+) =>
+  db.transaction(async (tx) => {
+    const [card] = await tx
+      .select({
+        id: cards.id,
+        publicId: cards.publicId,
+        title: cards.title,
+        description: cards.description,
+        dueDate: cards.dueDate,
+        startDate: cards.startDate,
+        completed: cards.completed,
+        dueDateHasTime: cards.dueDateHasTime,
+        recurrenceRule: cards.recurrenceRule,
+        recurrenceTimezone: cards.recurrenceTimezone,
+        recurrenceAnchorDate: cards.recurrenceAnchorDate,
+      })
+      .from(cards)
+      .where(
+        and(eq(cards.publicId, input.cardPublicId), isNull(cards.deletedAt)),
+      )
+      .for("update");
+
+    if (!card) return undefined;
+
+    if (
+      card.completed ||
+      !card.dueDate ||
+      card.dueDate.getTime() !== input.expectedDueDate.getTime() ||
+      !card.recurrenceRule ||
+      !card.recurrenceTimezone ||
+      !card.recurrenceAnchorDate
+    ) {
+      return { card, advanced: false as const };
+    }
+
+    const nextDates = getNextRecurringCardDates({
+      dueDate: card.dueDate,
+      startDate: card.startDate,
+      recurrenceAnchorDate: card.recurrenceAnchorDate,
+      recurrenceRule: card.recurrenceRule,
+      recurrenceTimezone: card.recurrenceTimezone,
+    });
+    const [updatedCard] = await tx
+      .update(cards)
+      .set({
+        dueDate: nextDates.dueDate,
+        startDate: nextDates.startDate,
+        completed: false,
+        updatedAt: new Date(),
+      })
+      .where(eq(cards.id, card.id))
+      .returning({
+        id: cards.id,
+        publicId: cards.publicId,
+        title: cards.title,
+        description: cards.description,
+        dueDate: cards.dueDate,
+        startDate: cards.startDate,
+        completed: cards.completed,
+        dueDateHasTime: cards.dueDateHasTime,
+        recurrenceRule: cards.recurrenceRule,
+        recurrenceTimezone: cards.recurrenceTimezone,
+        recurrenceAnchorDate: cards.recurrenceAnchorDate,
+      });
+
+    if (!updatedCard) throw new Error("Unable to advance recurring card");
+
+    await tx.insert(cardActivities).values({
+      publicId: generateUID(),
+      type: "card.updated.recurrence.advanced",
+      cardId: card.id,
+      createdBy: input.createdBy,
+      fromDueDate: card.dueDate,
+      toDueDate: updatedCard.dueDate,
+      toDueDateHasTime: updatedCard.dueDateHasTime,
+      fromStartDate: card.startDate,
+      toStartDate: updatedCard.startDate,
+    });
+
+    return {
+      card: updatedCard,
+      advanced: true as const,
+      previousDueDate: card.dueDate,
+      previousStartDate: card.startDate,
+    };
+  });
 
 export const updateCover = async (
   db: dbClient,
@@ -390,6 +500,9 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       coverSize: true,
       completed: true,
       dueDateHasTime: true,
+      recurrenceRule: true,
+      recurrenceTimezone: true,
+      recurrenceAnchorDate: true,
     },
     with: {
       coverAttachment: {
@@ -648,6 +761,9 @@ export const getWithListAndMembersByPublicId = async (
       coverSize: true,
       completed: true,
       dueDateHasTime: true,
+      recurrenceRule: true,
+      recurrenceTimezone: true,
+      recurrenceAnchorDate: true,
       createdBy: true,
       cardNumber: true,
       index: true,
@@ -1100,6 +1216,9 @@ export const reorder = async (
         startDate: true,
         completed: true,
         dueDateHasTime: true,
+        recurrenceRule: true,
+        recurrenceTimezone: true,
+        recurrenceAnchorDate: true,
       },
       where: eq(cards.id, card.id),
     });

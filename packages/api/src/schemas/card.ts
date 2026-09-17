@@ -12,6 +12,12 @@ import {
 } from "./custom-field";
 
 export const cardCoverSizeSchema = z.enum(["normal", "full"]);
+export const cardRecurrenceRuleSchema = z.enum([
+  "daily",
+  "weekdays",
+  "weekly",
+  "monthly",
+]);
 
 export const cardCoverSchema = z
   .discriminatedUnion("kind", [
@@ -42,6 +48,9 @@ export const cardUpdateResponseSchema = z.object({
   startDate: z.date().nullable(),
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
+  recurrenceRule: cardRecurrenceRuleSchema.nullable(),
+  recurrenceTimezone: z.string().nullable(),
+  recurrenceAnchorDate: z.date().nullable(),
 });
 
 export const cardUpdateCoverResponseSchema = z.object({
@@ -84,6 +93,9 @@ export const cardDetailSchema = z.object({
   cover: cardCoverSchema,
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
+  recurrenceRule: cardRecurrenceRuleSchema.nullable(),
+  recurrenceTimezone: z.string().nullable(),
+  recurrenceAnchorDate: z.date().nullable(),
   createdBy: z.string().nullable(),
   customFieldValues: z.array(customFieldValueSchema),
   labels: z.array(labelSchema),

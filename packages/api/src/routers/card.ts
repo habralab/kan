@@ -10,14 +10,19 @@ import * as customFieldRepo from "@kan/db/repository/custom-field.repo";
 import * as labelRepo from "@kan/db/repository/label.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
+import { isValidIanaTimezone } from "@kan/db/repository/timeTracking.utils";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
-import { generateAttachmentUrl, normalizeDescription } from "@kan/shared/utils";
+import {
+  generateAttachmentUrl,
+  normalizeDescription,
+} from "@kan/shared/utils";
 
 import {
   activityItemSchema,
   cardCoverSizeSchema,
   cardCreateResponseSchema,
   cardDetailSchema,
+  cardRecurrenceRuleSchema,
   cardUpdateCoverResponseSchema,
   cardUpdateResponseSchema,
   commentDeleteResponseSchema,
@@ -70,31 +75,55 @@ export const cardRouter = createTRPCRouter({
       },
     })
     .input(
-      z.object({
-        title: z.string().min(1).max(2000),
-        description: z.string().max(10000),
-        listPublicId: z.string().min(12),
-        labelPublicIds: z.array(z.string().min(12)),
-        memberPublicIds: z.array(z.string().min(12)),
-        position: z.enum(["start", "end"]),
-        dueDate: z.date().nullable().optional(),
-        startDate: z.date().nullable().optional(),
-        customFieldValues: z
-          .array(
-            z.object({
-              fieldPublicId: z.string().length(12),
-              value: customFieldValueInputSchema.nullable(),
-            }),
-          )
-          .max(customFieldRepo.MAX_CUSTOM_FIELDS_PER_BOARD)
-          .refine(
-            (values) =>
-              new Set(values.map((value) => value.fieldPublicId)).size ===
-              values.length,
-          )
-          .default([]),
-        dueDateHasTime: z.boolean().optional(),
-      }),
+      z
+        .object({
+          title: z.string().min(1).max(2000),
+          description: z.string().max(10000),
+          listPublicId: z.string().min(12),
+          labelPublicIds: z.array(z.string().min(12)),
+          memberPublicIds: z.array(z.string().min(12)),
+          position: z.enum(["start", "end"]),
+          dueDate: z.date().nullable().optional(),
+          startDate: z.date().nullable().optional(),
+          customFieldValues: z
+            .array(
+              z.object({
+                fieldPublicId: z.string().length(12),
+                value: customFieldValueInputSchema.nullable(),
+              }),
+            )
+            .max(customFieldRepo.MAX_CUSTOM_FIELDS_PER_BOARD)
+            .refine(
+              (values) =>
+                new Set(values.map((value) => value.fieldPublicId)).size ===
+                values.length,
+            )
+            .default([]),
+          dueDateHasTime: z.boolean().optional(),
+          recurrenceRule: cardRecurrenceRuleSchema.nullable().optional(),
+          recurrenceTimezone: z
+            .string()
+            .refine(isValidIanaTimezone, "Invalid IANA timezone")
+            .nullable()
+            .optional(),
+        })
+        .refine(
+          (input) =>
+            !input.recurrenceRule ||
+            (!!input.dueDate && !!input.recurrenceTimezone),
+          {
+            message: "Recurring cards require a due date and timezone",
+            path: ["recurrenceRule"],
+          },
+        )
+        .refine(
+          (input) =>
+            input.recurrenceTimezone == null || input.recurrenceRule != null,
+          {
+            message: "recurrenceRule is required with recurrenceTimezone",
+            path: ["recurrenceRule"],
+          },
+        ),
     )
     .output(cardCreateResponseSchema)
     .mutation(async ({ ctx, input }) => {
@@ -152,6 +181,13 @@ export const cardRouter = createTRPCRouter({
           dueDateHasTime: input.dueDate
             ? (input.dueDateHasTime ?? false)
             : false,
+          ...(input.dueDate && input.recurrenceRule
+            ? {
+                recurrenceRule: input.recurrenceRule,
+                recurrenceTimezone: input.recurrenceTimezone,
+                recurrenceAnchorDate: input.dueDate,
+              }
+            : {}),
           customFieldValues: input.customFieldValues,
         })
         .catch(throwCustomFieldRepositoryError);
@@ -256,6 +292,13 @@ export const cardRouter = createTRPCRouter({
             dueDateHasTime: input.dueDate
               ? (input.dueDateHasTime ?? false)
               : false,
+            ...(input.dueDate && input.recurrenceRule
+              ? {
+                  recurrenceRule: input.recurrenceRule,
+                  recurrenceTimezone: input.recurrenceTimezone,
+                  recurrenceAnchorDate: input.dueDate,
+                }
+              : {}),
             listId: list.publicId,
           },
           {
@@ -1158,6 +1201,12 @@ export const cardRouter = createTRPCRouter({
           startDate: z.date().nullable().optional(),
           dueDateHasTime: z.boolean().optional(),
           completed: z.boolean().optional(),
+          recurrenceRule: cardRecurrenceRuleSchema.nullable().optional(),
+          recurrenceTimezone: z
+            .string()
+            .refine(isValidIanaTimezone, "Invalid IANA timezone")
+            .nullable()
+            .optional(),
         })
         .refine(
           (input) =>
@@ -1167,6 +1216,27 @@ export const cardRouter = createTRPCRouter({
           {
             message: "dueDateHasTime requires dueDate (non-null when true)",
             path: ["dueDateHasTime"],
+          },
+        )
+        .refine(
+          (input) =>
+            input.recurrenceRule === undefined ||
+            input.recurrenceRule === null ||
+            input.recurrenceTimezone != null,
+          {
+            message: "recurrenceTimezone is required with recurrenceRule",
+            path: ["recurrenceTimezone"],
+          },
+        )
+        .refine(
+          (input) =>
+            input.recurrenceTimezone === undefined ||
+            input.recurrenceTimezone === null ||
+            (input.recurrenceRule !== undefined &&
+              input.recurrenceRule !== null),
+          {
+            message: "recurrenceRule is required with recurrenceTimezone",
+            path: ["recurrenceRule"],
           },
         ),
     )
@@ -1260,6 +1330,55 @@ export const cardRouter = createTRPCRouter({
             message: `Cards with time entries or active timers cannot be moved between boards`,
           });
       }
+
+      const effectiveDueDate =
+        input.dueDate !== undefined ? input.dueDate : existingCard.dueDate;
+      const recurrenceWasDisabled =
+        input.dueDate === null || input.recurrenceRule === null;
+      const recurrenceWasConfigured = input.recurrenceRule !== undefined;
+      const recurrenceConfiguration = recurrenceWasDisabled
+        ? {
+            recurrenceRule: null,
+            recurrenceTimezone: null,
+            recurrenceAnchorDate: null,
+          }
+        : recurrenceWasConfigured
+          ? {
+              recurrenceRule: input.recurrenceRule,
+              recurrenceTimezone: input.recurrenceTimezone ?? null,
+              recurrenceAnchorDate:
+                input.recurrenceRule === existingCard.recurrenceRule &&
+                input.recurrenceTimezone === existingCard.recurrenceTimezone &&
+                existingCard.recurrenceAnchorDate
+                  ? existingCard.recurrenceAnchorDate
+                  : effectiveDueDate,
+            }
+          : {};
+      const nextRecurrenceRule = recurrenceWasDisabled
+        ? null
+        : recurrenceWasConfigured
+          ? (input.recurrenceRule ?? null)
+          : existingCard.recurrenceRule;
+      const nextRecurrenceTimezone = recurrenceWasDisabled
+        ? null
+        : recurrenceWasConfigured
+          ? (input.recurrenceTimezone ?? null)
+          : existingCard.recurrenceTimezone;
+      const recurrenceChanged =
+        nextRecurrenceRule !== existingCard.recurrenceRule ||
+        nextRecurrenceTimezone !== existingCard.recurrenceTimezone;
+
+      if (
+        recurrenceWasConfigured &&
+        input.recurrenceRule !== null &&
+        !effectiveDueDate
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "A recurring card requires a due date",
+        });
+      }
+
       let result:
         | {
             id: number;
@@ -1270,6 +1389,15 @@ export const cardRouter = createTRPCRouter({
             startDate: Date | null;
             completed: boolean;
             dueDateHasTime: boolean;
+            recurrenceRule: "daily" | "weekdays" | "weekly" | "monthly" | null;
+            recurrenceTimezone: string | null;
+            recurrenceAnchorDate: Date | null;
+          }
+        | undefined;
+      let recurrenceAdvance:
+        | {
+            previousDueDate: Date;
+            previousStartDate: Date | null;
           }
         | undefined;
 
@@ -1292,12 +1420,64 @@ export const cardRouter = createTRPCRouter({
         normalizedDescription !== undefined &&
         existingCard.description !== normalizedDescription;
 
+      const isRecurringCompletion =
+        input.completed === true &&
+        !previousCompleted &&
+        existingCard.recurrenceRule !== null &&
+        existingCard.recurrenceTimezone !== null &&
+        existingCard.recurrenceAnchorDate !== null &&
+        previousDueDate !== null;
+
+      if (isRecurringCompletion) {
+        const includesOtherChanges =
+          input.title !== undefined ||
+          input.description !== undefined ||
+          input.dueDate !== undefined ||
+          input.startDate !== undefined ||
+          input.dueDateHasTime !== undefined ||
+          input.recurrenceRule !== undefined ||
+          input.recurrenceTimezone !== undefined ||
+          input.index !== undefined ||
+          input.listPublicId !== undefined;
+
+        if (includesOtherChanges) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Complete a recurring card separately from its other updates",
+          });
+        }
+
+        const completion = await cardRepo.completeRecurringOccurrence(ctx.db, {
+          cardPublicId: input.cardPublicId,
+          expectedDueDate: previousDueDate,
+          createdBy: userId,
+        });
+
+        if (!completion) {
+          throw new TRPCError({
+            message: `Failed to update card`,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+
+        result = completion.card;
+        if (completion.advanced) {
+          recurrenceAdvance = {
+            previousDueDate: completion.previousDueDate,
+            previousStartDate: completion.previousStartDate,
+          };
+        }
+      }
+
       if (
-        input.title ||
-        normalizedDescription !== undefined ||
-        input.dueDate !== undefined ||
-        input.startDate !== undefined ||
-        input.completed !== undefined
+        !isRecurringCompletion &&
+        (input.title ||
+          normalizedDescription !== undefined ||
+          input.dueDate !== undefined ||
+          input.startDate !== undefined ||
+          input.completed !== undefined ||
+          recurrenceWasConfigured)
       ) {
         result = await cardRepo.update(
           ctx.db,
@@ -1316,6 +1496,7 @@ export const cardRouter = createTRPCRouter({
             ...(input.dueDate !== undefined && {
               dueDateHasTime: input.dueDateHasTime ?? false,
             }),
+            ...recurrenceConfiguration,
           },
           { cardPublicId: input.cardPublicId },
         );
@@ -1376,6 +1557,8 @@ export const cardRouter = createTRPCRouter({
           message: `Failed to update card`,
           code: "INTERNAL_SERVER_ERROR",
         });
+
+      if (isRecurringCompletion && !recurrenceAdvance) return result;
 
       const activities = [];
 
@@ -1453,7 +1636,16 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
+      if (recurrenceChanged) {
+        activities.push({
+          type: "card.updated.recurrence.updated" as const,
+          cardId: result.id,
+          createdBy: userId,
+        });
+      }
+
       if (
+        !isRecurringCompletion &&
         input.completed !== undefined &&
         previousCompleted !== input.completed
       ) {
@@ -1491,7 +1683,21 @@ export const cardRouter = createTRPCRouter({
           to: normalizedDescription,
         };
       }
-      if (dueDateChanged) {
+      if (recurrenceAdvance) {
+        webhookChanges.dueDate = {
+          from: recurrenceAdvance.previousDueDate,
+          to: result.dueDate,
+        };
+        if (
+          recurrenceAdvance.previousStartDate?.getTime() !==
+          result.startDate?.getTime()
+        ) {
+          webhookChanges.startDate = {
+            from: recurrenceAdvance.previousStartDate,
+            to: result.startDate,
+          };
+        }
+      } else if (dueDateChanged) {
         webhookChanges.dueDate = { from: previousDueDate, to: input.dueDate };
         if (existingCard.dueDateHasTime !== (input.dueDateHasTime ?? false)) {
           webhookChanges.dueDateHasTime = {
@@ -1506,7 +1712,22 @@ export const cardRouter = createTRPCRouter({
           to: input.startDate,
         };
       }
+      if (recurrenceChanged) {
+        webhookChanges.recurrence = {
+          from: {
+            rule: existingCard.recurrenceRule,
+            timezone: existingCard.recurrenceTimezone,
+            anchorDate: existingCard.recurrenceAnchorDate,
+          },
+          to: {
+            rule: result.recurrenceRule,
+            timezone: result.recurrenceTimezone,
+            anchorDate: result.recurrenceAnchorDate,
+          },
+        };
+      }
       if (
+        !isRecurringCompletion &&
         input.completed !== undefined &&
         previousCompleted !== input.completed
       ) {
@@ -1547,6 +1768,9 @@ export const cardRouter = createTRPCRouter({
             startDate: result.startDate,
             completed: result.completed,
             dueDateHasTime: result.dueDateHasTime,
+            recurrenceRule: result.recurrenceRule,
+            recurrenceTimezone: result.recurrenceTimezone,
+            recurrenceAnchorDate: result.recurrenceAnchorDate,
             listId: currentWebhookListPublicId,
           },
           {
@@ -1769,6 +1993,9 @@ export const cardRouter = createTRPCRouter({
         coverColourCode: sourceCard.coverColourCode,
         coverSize: sourceCard.coverSize,
         dueDateHasTime: sourceCard.dueDateHasTime,
+        recurrenceRule: sourceCard.recurrenceRule,
+        recurrenceTimezone: sourceCard.recurrenceTimezone,
+        recurrenceAnchorDate: sourceCard.recurrenceAnchorDate,
       });
 
       if (input.index !== undefined && input.index >= 0) {

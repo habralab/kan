@@ -7,6 +7,7 @@ import { RiDraggable } from "react-icons/ri";
 import { twMerge } from "tailwind-merge";
 
 import type { ChecklistAssignee } from "./ChecklistItemAssignee";
+import Button from "~/components/Button";
 import DateSelector from "~/components/DateSelector";
 import PlainTextEditor from "~/components/PlainTextEditor";
 import { useLocalisation } from "~/hooks/useLocalisation";
@@ -165,13 +166,18 @@ export default function ChecklistItemRow({
     deleteItem.mutate({ checklistItemPublicId: item.publicId });
   };
 
-  const commitDueDate = () => {
+  const cancelDueDate = () => {
     setDateOpen(false);
-    if (
-      pendingDate?.getTime() === item.dueDate?.getTime() &&
-      (!pendingDate || pendingHasTime === item.dueDateHasTime)
-    )
-      return;
+  };
+
+  const dueDateHasChanges =
+    pendingDate?.getTime() !== item.dueDate?.getTime() ||
+    (!!pendingDate && pendingHasTime !== item.dueDateHasTime);
+
+  const saveDueDate = () => {
+    setDateOpen(false);
+    if (!dueDateHasChanges) return;
+
     updateItem.mutate({
       checklistItemPublicId: item.publicId,
       dueDate: pendingDate,
@@ -202,7 +208,11 @@ export default function ChecklistItemRow({
       ) : (
         <button
           type="button"
-          onClick={() => setDateOpen(true)}
+          onClick={() => {
+            setPendingDate(item.dueDate);
+            setPendingHasTime(item.dueDateHasTime);
+            setDateOpen(true);
+          }}
           aria-label={
             item.dueDate
               ? t`Edit checklist item due date`
@@ -219,7 +229,7 @@ export default function ChecklistItemRow({
       )}
       {dateOpen && !viewOnly && (
         <>
-          <div className="fixed inset-0 z-10" onClick={commitDueDate} />
+          <div className="fixed inset-0 z-10" onClick={cancelDueDate} />
           <div
             className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
             onClick={(event) => event.stopPropagation()}
@@ -233,6 +243,38 @@ export default function ChecklistItemRow({
               timeEnabled={pendingHasTime}
               onTimeEnabledChange={setPendingHasTime}
             />
+            <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
+              <Button
+                type="button"
+                variant="ghost"
+                size="xs"
+                onClick={() => {
+                  setPendingDate(null);
+                  setPendingHasTime(false);
+                }}
+                disabled={!pendingDate}
+              >
+                {t`Clear date`}
+              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="xs"
+                  onClick={cancelDueDate}
+                >
+                  {t`Cancel`}
+                </Button>
+                <Button
+                  type="button"
+                  size="xs"
+                  onClick={saveDueDate}
+                  disabled={!dueDateHasChanges}
+                >
+                  {t`Save`}
+                </Button>
+              </div>
+            </div>
           </div>
         </>
       )}

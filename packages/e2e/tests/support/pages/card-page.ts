@@ -262,7 +262,7 @@ export class CardPage {
 
   async setDueDateToday() {
     await this.page
-      .getByRole("button", { name: "Set due date", exact: true })
+      .getByRole("button", { name: "Set dates", exact: true })
       .filter({ visible: true })
       .click();
 
@@ -273,7 +273,35 @@ export class CardPage {
       .click();
 
     const updated = waitForTrpcMutation(this.page, "card.update");
-    await this.page.mouse.click(10, 10);
+    await this.page.getByRole("button", { name: "Save", exact: true }).click();
+    await updated;
+  }
+
+  async setDateRange(startDate: string, dueDate: string, time?: string) {
+    await this.page
+      .getByRole("button", { name: "Set dates", exact: true })
+      .filter({ visible: true })
+      .click();
+
+    await this.page.getByLabel("Due date", { exact: true }).fill(dueDate);
+    await this.page
+      .getByRole("checkbox", { name: "Start date", exact: true })
+      .check();
+    await this.page
+      .locator('input[type="date"][aria-label="Start date"]')
+      .fill(startDate);
+
+    if (time) {
+      await this.page
+        .getByRole("checkbox", { name: "Time", exact: true })
+        .check();
+      await this.page
+        .locator('input[type="time"][aria-label="Time"]')
+        .fill(time);
+    }
+
+    const updated = waitForTrpcMutation(this.page, "card.update");
+    await this.page.getByRole("button", { name: "Save", exact: true }).click();
     await updated;
   }
 }

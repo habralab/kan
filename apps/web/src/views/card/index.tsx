@@ -38,19 +38,18 @@ import { AttachmentUpload } from "./components/AttachmentUpload";
 import { CardCompletionToggle } from "./components/CardCompletionToggle";
 import { CardCoverBanner } from "./components/CardCoverBanner";
 import { CardCoverSelector } from "./components/CardCoverSelector";
+import { CardDatesSelector } from "./components/CardDatesSelector";
 import Checklists from "./components/Checklists";
 import { CustomFields } from "./components/custom-fields/custom-fields";
 import { DeleteCardConfirmation } from "./components/DeleteCardConfirmation";
 import { DeleteChecklistConfirmation } from "./components/DeleteChecklistConfirmation";
 import { DeleteCommentConfirmation } from "./components/DeleteCommentConfirmation";
 import Dropdown from "./components/Dropdown";
-import { DueDateSelector } from "./components/DueDateSelector";
 import LabelSelector from "./components/LabelSelector";
 import ListSelector from "./components/ListSelector";
 import MemberSelector from "./components/MemberSelector";
 import { NewChecklistForm } from "./components/NewChecklistForm";
 import NewCommentForm from "./components/NewCommentForm";
-import { StartDateSelector } from "./components/StartDateSelector";
 import { TimeTrackingCardSectionLoader } from "./components/TimeTracking/TimeTrackingCardSectionLoader";
 
 interface FormValues {
@@ -183,18 +182,10 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         </div>
       )}
       <div className="mb-4 flex w-full flex-row">
-        <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Start date`}</p>
-        <StartDateSelector
+        <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Dates`}</p>
+        <CardDatesSelector
           cardPublicId={cardId ?? ""}
           startDate={card?.startDate}
-          isLoading={!card}
-          disabled={!canEdit}
-        />
-      </div>
-      <div className="mb-4 flex w-full flex-row">
-        <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Due date`}</p>
-        <DueDateSelector
-          cardPublicId={cardId ?? ""}
           dueDate={card?.dueDate}
           dueDateHasTime={card?.dueDateHasTime ?? false}
           isLoading={!card}

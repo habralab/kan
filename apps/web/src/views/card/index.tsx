@@ -188,6 +188,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
           startDate={card?.startDate}
           dueDate={card?.dueDate}
           dueDateHasTime={card?.dueDateHasTime ?? false}
+          completed={card?.completed ?? false}
           isLoading={!card}
           disabled={!canEdit}
         />

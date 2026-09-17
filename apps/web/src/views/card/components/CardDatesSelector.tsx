@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 import { format, parseISO, startOfDay } from "date-fns";
 import { useEffect, useId, useState } from "react";
 import { HiMiniPlus } from "react-icons/hi2";
+import { twMerge } from "tailwind-merge";
 
 import Button from "~/components/Button";
 import DateSelector from "~/components/DateSelector";
@@ -9,14 +10,20 @@ import { useLocalisation } from "~/hooks/useLocalisation";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
+import {
+  datesMatch,
+  formatCardDate,
+  getCardDeadlineState,
+  orderCardDateRange,
+} from "~/utils/cardDates";
 import { invalidateCard } from "~/utils/cardInvalidation";
-import { datesMatch, orderCardDateRange } from "./card-dates";
 
 interface CardDatesSelectorProps {
   cardPublicId: string;
   startDate: Date | null | undefined;
   dueDate: Date | null | undefined;
   dueDateHasTime: boolean;
+  completed: boolean;
   isLoading?: boolean;
   disabled?: boolean;
 }
@@ -37,6 +44,7 @@ export function CardDatesSelector({
   startDate,
   dueDate,
   dueDateHasTime,
+  completed,
   isLoading = false,
   disabled = false,
 }: CardDatesSelectorProps) {
@@ -215,12 +223,16 @@ export function CardDatesSelector({
     !startDateEnabled || (!!pendingStartDate && !!pendingDueDate);
 
   const formattedStartDate = startDate
-    ? format(startDate, "MMM d, yyyy", { locale: dateLocale })
+    ? formatCardDate(startDate, { locale: dateLocale })
     : null;
   const formattedDueDate = dueDate
-    ? format(dueDate, dueDateHasTime ? "MMM d, yyyy, p" : "MMM d, yyyy", {
+    ? formatCardDate(dueDate, {
         locale: dateLocale,
+        includeTime: dueDateHasTime,
       })
+    : null;
+  const deadlineState = dueDate
+    ? getCardDeadlineState({ completed, dueDate, dueDateHasTime })
     : null;
 
   return (
@@ -229,7 +241,14 @@ export function CardDatesSelector({
         type="button"
         onClick={() => (isOpen ? cancel() : open())}
         disabled={isLoading || disabled}
-        className={`flex h-full w-full items-center rounded-[5px] border-[1px] border-light-50 py-1 pl-2 text-left text-xs text-neutral-900 dark:border-dark-50 dark:text-dark-1000 ${disabled ? "cursor-not-allowed opacity-60" : "hover:border-light-300 hover:bg-light-200 dark:hover:border-dark-200 dark:hover:bg-dark-100"}`}
+        className={twMerge(
+          "flex h-full w-full items-center rounded-[5px] border-[1px] border-light-50 py-1 pl-2 text-left text-xs text-neutral-900 dark:border-dark-50 dark:text-dark-1000",
+          disabled
+            ? "cursor-not-allowed opacity-60"
+            : "hover:border-light-300 hover:bg-light-200 dark:hover:border-dark-200 dark:hover:bg-dark-100",
+          deadlineState === "completed" && "text-green-600 dark:text-green-400",
+          deadlineState === "overdue" && "text-red-600 dark:text-red-400",
+        )}
       >
         {formattedStartDate || formattedDueDate ? (
           <span>

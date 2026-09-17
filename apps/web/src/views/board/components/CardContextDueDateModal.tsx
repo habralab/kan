@@ -2,13 +2,13 @@ import { t } from "@lingui/core/macro";
 
 import { useModal } from "~/providers/modal";
 import { api } from "~/utils/api";
-import { DueDateSelector } from "~/views/card/components/DueDateSelector";
+import { CardDatesSelector } from "~/views/card/components/CardDatesSelector";
 
 export function CardContextDueDateModal() {
   const { entityId: cardPublicId, closeModal } = useModal();
 
   const { data: card, isLoading } = api.card.byId.useQuery(
-    { cardPublicId: cardPublicId ?? "" },
+    { cardPublicId },
     { enabled: !!cardPublicId && cardPublicId.length >= 12 },
   );
 
@@ -17,15 +17,17 @@ export function CardContextDueDateModal() {
   return (
     <div className="p-4">
       <h2 className="mb-4 text-lg font-semibold text-light-1000 dark:text-dark-1000">
-        {t`Set due date`}
+        {t`Set dates`}
       </h2>
       {isLoading ? (
         <div className="h-10 w-full animate-pulse rounded bg-light-200 dark:bg-dark-300" />
       ) : (
-        <DueDateSelector
+        <CardDatesSelector
           cardPublicId={cardPublicId}
+          startDate={card?.startDate ?? null}
           dueDate={card?.dueDate ?? null}
           dueDateHasTime={card?.dueDateHasTime ?? false}
+          completed={card?.completed ?? false}
         />
       )}
       <div className="mt-4 flex justify-end">

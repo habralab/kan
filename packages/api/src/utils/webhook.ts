@@ -37,6 +37,9 @@ export interface WebhookPayload {
       cover?: WebhookCardCover;
       completed?: boolean;
       dueDateHasTime?: boolean;
+      recurrenceRule?: "daily" | "weekdays" | "weekly" | "monthly" | null;
+      recurrenceTimezone?: string | null;
+      recurrenceAnchorDate?: string | null;
       listId: string;
       boardId: string;
     };
@@ -265,6 +268,9 @@ export function createCardWebhookPayload(
     cover?: WebhookCardCover;
     completed?: boolean;
     dueDateHasTime?: boolean;
+    recurrenceRule?: "daily" | "weekdays" | "weekly" | "monthly" | null;
+    recurrenceTimezone?: string | null;
+    recurrenceAnchorDate?: Date | null;
     listId: string;
   },
   context: {
@@ -292,6 +298,12 @@ export function createCardWebhookPayload(
         ...(card.cover !== undefined && { cover: card.cover }),
         completed: card.completed,
         dueDateHasTime: card.dueDateHasTime ?? false,
+        ...(card.recurrenceRule !== undefined && {
+          recurrenceRule: card.recurrenceRule,
+          recurrenceTimezone: card.recurrenceTimezone ?? null,
+          recurrenceAnchorDate:
+            card.recurrenceAnchorDate?.toISOString() ?? null,
+        }),
         listId: card.listId,
         boardId: context.boardId,
       },

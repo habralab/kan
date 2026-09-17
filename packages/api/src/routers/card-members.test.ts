@@ -308,7 +308,7 @@ describe("card member workspace scoping", () => {
   });
 
   describe("duplicate", () => {
-    it("copies checklist dates and active assignees within the workspace", async () => {
+    it("copies scheduling, checklist dates, and active assignees within the workspace", async () => {
       const { cardRouter } = await import("./card");
       mockGetCard.mockResolvedValueOnce({ id: 17, workspaceId: 7 });
       mockGetList.mockResolvedValueOnce({
@@ -317,10 +317,18 @@ describe("card member workspace scoping", () => {
         boardPublicId: "board-1234567",
       });
       const dueDate = new Date("2026-09-15T18:00:00.000Z");
+      const cardDueDate = new Date("2026-09-19T18:00:00.000Z");
       mockGetCardWithMembers.mockResolvedValueOnce({
         title: "Source card",
         description: "",
-        dueDate: null,
+        dueDate: cardDueDate,
+        startDate: null,
+        dueDateHasTime: true,
+        recurrenceRule: "weekly",
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: cardDueDate,
+        coverColourCode: null,
+        coverSize: "normal",
         members: [],
         labels: [],
         customFieldValues: [],
@@ -363,6 +371,17 @@ describe("card member workspace scoping", () => {
         copyMembers: false,
         copyChecklists: true,
       });
+
+      expect(mockCardCreate).toHaveBeenCalledWith(
+        mockDb,
+        expect.objectContaining({
+          dueDate: cardDueDate,
+          dueDateHasTime: true,
+          recurrenceRule: "weekly",
+          recurrenceTimezone: "UTC",
+          recurrenceAnchorDate: cardDueDate,
+        }),
+      );
 
       expect(checklistRepo.createItem).toHaveBeenCalledWith(
         mockDb,
@@ -544,6 +563,9 @@ describe("card member workspace scoping", () => {
             startDate: null,
             dueDateHasTime: false,
             completed: false,
+            recurrenceRule: null,
+            recurrenceTimezone: null,
+            recurrenceAnchorDate: null,
           });
         },
       );

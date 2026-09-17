@@ -28,6 +28,8 @@ export function CardContextDueDateModal() {
           dueDate={card?.dueDate ?? null}
           dueDateHasTime={card?.dueDateHasTime ?? false}
           completed={card?.completed ?? false}
+          recurrenceRule={card?.recurrenceRule ?? null}
+          recurrenceTimezone={card?.recurrenceTimezone ?? null}
         />
       )}
       <div className="mt-4 flex justify-end">

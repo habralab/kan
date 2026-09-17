@@ -5,6 +5,8 @@ import {
   endOfMonth,
   endOfWeek,
   format,
+  isAfter,
+  isBefore,
   isSameDay,
   isToday,
   startOfMonth,
@@ -17,22 +19,28 @@ import { twMerge } from "tailwind-merge";
 
 interface DateSelectorProps {
   selectedDate?: Date | null;
-  onDateSelect?: (date: Date | undefined) => void;
+  rangeStartDate?: Date | null;
+  onDateSelect?: (date: Date | undefined, source?: "calendar" | "time") => void;
   weekStartsOn?: 0 | 1 | 6;
   showTime?: boolean;
   timeEnabled?: boolean;
   onTimeEnabledChange?: (enabled: boolean) => void;
   defaultTime?: string;
+  allowDateClear?: boolean;
+  className?: string;
 }
 
 const DateSelector = ({
   selectedDate,
+  rangeStartDate,
   onDateSelect,
   weekStartsOn = 1,
   showTime = false,
   timeEnabled = false,
   onTimeEnabledChange,
   defaultTime = "18:00",
+  allowDateClear = true,
+  className,
 }: DateSelectorProps) => {
   const timeInputId = useId();
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -63,12 +71,19 @@ const DateSelector = ({
           date: dateString,
           isToday: isToday(date),
           isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
+          isRangeStart: rangeStartDate
+            ? isSameDay(date, rangeStartDate)
+            : false,
+          isInRange:
+            selectedDate && rangeStartDate
+              ? isAfter(date, rangeStartDate) && isBefore(date, selectedDate)
+              : false,
           isCurrentMonth: date >= monthStart && date <= monthEnd,
           dateObj: date,
         };
       },
     );
-  }, [currentMonth, selectedDate, weekStartsOn]);
+  }, [currentMonth, rangeStartDate, selectedDate, weekStartsOn]);
 
   const handlePreviousMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
@@ -85,11 +100,12 @@ const DateSelector = ({
 
   const handleDateClick = (date: Date, e: React.MouseEvent) => {
     e.stopPropagation();
-    // If clicking the same date that's already selected, unselect it
-    if (selectedDate && isSameDay(date, selectedDate)) {
-      onDateSelect?.(undefined);
+    // Existing pickers clear a selected day on the second click. Range pickers
+    // can keep it so the caller can treat the click as a same-day range.
+    if (allowDateClear && selectedDate && isSameDay(date, selectedDate)) {
+      onDateSelect?.(undefined, "calendar");
     } else if (!showTime || !timeEnabled) {
-      onDateSelect?.(date);
+      onDateSelect?.(date, "calendar");
     } else {
       const selectedTime = selectedDate
         ? {
@@ -106,7 +122,7 @@ const DateSelector = ({
         selectedTime.seconds,
         selectedTime.milliseconds,
       );
-      onDateSelect?.(dateWithSelectedTime);
+      onDateSelect?.(dateWithSelectedTime, "calendar");
     }
   };
 
@@ -116,7 +132,7 @@ const DateSelector = ({
     const { hours, minutes } = parseTime(time);
     const dateWithUpdatedTime = new Date(selectedDate);
     dateWithUpdatedTime.setHours(hours, minutes, 0, 0);
-    onDateSelect?.(dateWithUpdatedTime);
+    onDateSelect?.(dateWithUpdatedTime, "time");
   };
 
   const handleTimeEnabledChange = (enabled: boolean) => {
@@ -130,11 +146,11 @@ const DateSelector = ({
     } else {
       updatedDate.setHours(0, 0, 0, 0);
     }
-    onDateSelect?.(updatedDate);
+    onDateSelect?.(updatedDate, "time");
   };
 
   return (
-    <div className="w-[250px] p-4">
+    <div className={twMerge("w-[250px] p-4", className)}>
       <div className="flex items-center text-light-1000 dark:text-dark-1000">
         <button
           type="button"
@@ -169,9 +185,11 @@ const DateSelector = ({
             onClick={(e) => handleDateClick(day.dateObj, e)}
             className={twMerge(
               "flex aspect-square items-center justify-center rounded-lg focus:z-10",
-              day.isSelected
+              day.isSelected || day.isRangeStart
                 ? "bg-light-1000 hover:bg-light-1000 dark:bg-dark-1000 dark:hover:bg-dark-1000"
-                : "bg-transparent hover:bg-light-200 dark:bg-transparent dark:hover:bg-dark-200",
+                : day.isInRange
+                  ? "rounded-none bg-light-200 hover:bg-light-300 dark:bg-dark-200 dark:hover:bg-dark-300"
+                  : "bg-transparent hover:bg-light-200 dark:bg-transparent dark:hover:bg-dark-200",
             )}
           >
             <time
@@ -181,7 +199,8 @@ const DateSelector = ({
                 day.isCurrentMonth
                   ? "text-light-900 dark:text-dark-900"
                   : "text-light-700 dark:text-dark-600",
-                day.isSelected && "text-light-50 dark:text-dark-50",
+                (day.isSelected || day.isRangeStart) &&
+                  "text-light-50 dark:text-dark-50",
               )}
             >
               {day.date.split("-").pop()?.replace(/^0/, "")}

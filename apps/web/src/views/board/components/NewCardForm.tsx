@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { format } from "date-fns";
 import { env } from "next-runtime-env";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,6 +28,7 @@ import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
+import { formatCardDate } from "~/utils/cardDates";
 import { formatMemberDisplayName, getAvatarUrl } from "~/utils/helpers";
 import { CustomFieldDraftInput } from "./custom-fields/custom-field-draft-input";
 
@@ -657,7 +657,7 @@ export function NewCardForm({
               className="flex h-full w-full items-center rounded-[5px] border-[1px] border-light-600 bg-light-200 px-2 py-1 text-left text-xs text-light-800 hover:bg-light-300 dark:border-dark-600 dark:bg-dark-400 dark:text-dark-1000 dark:hover:bg-dark-500"
             >
               {startDate
-                ? format(startDate, "MMM d, yyyy", { locale: dateLocale })
+                ? formatCardDate(startDate, { locale: dateLocale })
                 : t`Start date`}
             </button>
             {isStartDateSelectorOpen && (
@@ -684,11 +684,10 @@ export function NewCardForm({
             >
               {dueDate ? (
                 <span>
-                  {format(
-                    dueDate,
-                    dueDateHasTime ? "MMM d, yyyy, p" : "MMM d, yyyy",
-                    { locale: dateLocale },
-                  )}
+                  {formatCardDate(dueDate, {
+                    locale: dateLocale,
+                    includeTime: dueDateHasTime,
+                  })}
                 </span>
               ) : (
                 <>{t`Due date`}</>

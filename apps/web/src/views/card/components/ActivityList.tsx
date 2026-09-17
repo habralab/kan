@@ -5,6 +5,7 @@ import { formatDistanceToNow, isSameYear } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import {
   HiOutlineArrowLeft,
+  HiOutlineArrowPath,
   HiOutlineArrowRight,
   HiOutlineCheckCircle,
   HiOutlineClock,
@@ -325,6 +326,24 @@ const getActivityText = ({
     );
   }
 
+  if (type === "card.updated.recurrence.advanced" && toDueDate) {
+    const formattedDate = formatCardDate(toDueDate, {
+      locale: dateLocale,
+      includeYear: !isSameYear(toDueDate, new Date()),
+      includeTime: toDueDateHasTime,
+    });
+    return (
+      <Trans>
+        completed this occurrence and moved the due date to{" "}
+        <TextHighlight>{formattedDate}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.recurrence.updated") {
+    return <Trans>updated the recurrence schedule</Trans>;
+  }
+
   if (type === "card.updated.dueDate.added" && toDueDate) {
     const showYear = !isSameYear(toDueDate, new Date());
     const formattedDate = formatCardDate(toDueDate, {
@@ -411,6 +430,8 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.startDate.added": <HiOutlineClock />,
     "card.updated.startDate.updated": <HiOutlineClock />,
     "card.updated.startDate.removed": <HiOutlineClock />,
+    "card.updated.recurrence.updated": <HiOutlineArrowPath />,
+    "card.updated.recurrence.advanced": <HiOutlineArrowPath />,
     "card.updated.cover": <HiOutlineSwatch />,
   } as const;
 

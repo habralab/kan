@@ -82,6 +82,8 @@ export function NewCardForm({
       dueDate: null,
       startDate: null,
       dueDateHasTime: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
     },
     resetOnClose: true,
   });
@@ -101,6 +103,7 @@ export function NewCardForm({
   const dueDate = watch("dueDate");
   const startDate = watch("startDate");
   const dueDateHasTime = watch("dueDateHasTime");
+  const recurrenceRule = watch("recurrenceRule");
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [isStartDateSelectorOpen, setIsStartDateSelectorOpen] = useState(false);
 
@@ -166,6 +169,10 @@ export function NewCardForm({
               startDate: args.startDate ?? null,
               completed: false,
               dueDateHasTime: args.dueDateHasTime ?? false,
+              recurrenceRule: args.recurrenceRule ?? null,
+              recurrenceTimezone: args.recurrenceTimezone ?? null,
+              recurrenceAnchorDate:
+                args.dueDate && args.recurrenceRule ? args.dueDate : null,
               cardNumber: null,
               cover: null,
               comments: [],
@@ -239,6 +246,8 @@ export function NewCardForm({
           dueDate: null,
           startDate: null,
           dueDateHasTime: false,
+          recurrenceRule: null,
+          recurrenceTimezone: null,
         };
         reset(newFormState);
         saveFormState(newFormState);
@@ -345,6 +354,11 @@ export function NewCardForm({
         startDate: data.startDate ?? null,
         customFieldValues: data.customFieldValues,
         dueDateHasTime: data.dueDateHasTime,
+        recurrenceRule: data.dueDate ? data.recurrenceRule : null,
+        recurrenceTimezone:
+          data.dueDate && data.recurrenceRule
+            ? Intl.DateTimeFormat().resolvedOptions().timeZone
+            : null,
       });
     } catch {
       // onError already surfaced the failure; keep the files queued for retry.
@@ -712,6 +726,7 @@ export function NewCardForm({
                     selectedDate={dueDate ?? undefined}
                     onDateSelect={(date) => {
                       setValue("dueDate", date ?? null);
+                      if (!date) setValue("recurrenceRule", null);
                     }}
                     weekStartsOn={workspace.weekStartDay}
                     showTime
@@ -720,6 +735,30 @@ export function NewCardForm({
                       setValue("dueDateHasTime", enabled)
                     }
                   />
+                  <label className="flex items-center justify-between gap-3 border-t border-light-200 px-4 py-3 text-sm dark:border-dark-200">
+                    <span>{t`Repeat`}</span>
+                    <select
+                      aria-label={t`Repeat`}
+                      value={recurrenceRule ?? ""}
+                      onChange={(event) =>
+                        setValue(
+                          "recurrenceRule",
+                          event.target.value === ""
+                            ? null
+                            : (event.target.value as NonNullable<
+                                NewCardFormInput["recurrenceRule"]
+                              >),
+                        )
+                      }
+                      className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
+                    >
+                      <option value="">{t`Never`}</option>
+                      <option value="daily">{t`Daily`}</option>
+                      <option value="weekdays">{t`Weekdays`}</option>
+                      <option value="weekly">{t`Weekly`}</option>
+                      <option value="monthly">{t`Monthly`}</option>
+                    </select>
+                  </label>
                 </div>
               </>
             )}

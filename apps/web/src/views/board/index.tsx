@@ -40,6 +40,7 @@ import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
+import { invalidateCard } from "~/utils/cardInvalidation";
 import { formatToArray, isPlaceholderPublicId } from "~/utils/helpers";
 import { TIME_TRACKING_CHANNEL_NAME } from "~/utils/timeTracking";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
@@ -360,6 +361,46 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     },
     onSettled: async () => {
       await utils.board.byId.invalidate(queryParams);
+    },
+  });
+
+  const updateCardCompletionMutation = api.card.update.useMutation({
+    onMutate: async (args) => {
+      await utils.board.byId.cancel(queryParams);
+
+      const previousState = utils.board.byId.getData(queryParams);
+
+      utils.board.byId.setData(queryParams, (oldBoard) => {
+        if (!oldBoard || args.completed === undefined) return oldBoard;
+
+        return {
+          ...oldBoard,
+          lists: oldBoard.lists.map((list) => ({
+            ...list,
+            cards: list.cards.map((card) =>
+              card.publicId === args.cardPublicId
+                ? { ...card, completed: args.completed ?? card.completed }
+                : card,
+            ),
+          })),
+        };
+      });
+
+      return { previousState };
+    },
+    onError: (_error, _update, context) => {
+      utils.board.byId.setData(queryParams, context?.previousState);
+      showPopup({
+        header: t`Unable to update card status`,
+        message: t`Please try again later, or contact customer support.`,
+        icon: "error",
+      });
+    },
+    onSettled: async (_data, _error, update) => {
+      await Promise.all([
+        utils.board.byId.invalidate(queryParams),
+        invalidateCard(utils, update.cardPublicId),
+      ]);
     },
   });
 
@@ -855,19 +896,11 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                       isDragDisabled={!canEditCard}
                                     >
                                       {(provided) => (
-                                        <Link
-                                          onClick={(e) => {
-                                            if (
-                                              card.publicId.startsWith(
-                                                "PLACEHOLDER",
-                                              )
-                                            )
-                                              e.preventDefault();
-                                          }}
+                                        <div
                                           onContextMenu={(e) => {
                                             if (
-                                              card.publicId.startsWith(
-                                                "PLACEHOLDER",
+                                              isPlaceholderPublicId(
+                                                card.publicId,
                                               ) ||
                                               env("NEXT_PUBLIC_KAN_ENV") ===
                                                 "cloud"
@@ -881,21 +914,13 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                             });
                                           }}
                                           key={card.publicId}
-                                          href={
-                                            isTemplate
-                                              ? `/templates/${boardId}/cards/${card.publicId}${cardReturnQuery}`
-                                              : `/cards/${card.publicId}${cardReturnQuery}`
-                                          }
-                                          className={`mb-2 flex !cursor-pointer flex-col ${
-                                            card.publicId.startsWith(
-                                              "PLACEHOLDER",
-                                            )
+                                          className={`group relative mb-2 flex flex-col ${
+                                            isPlaceholderPublicId(card.publicId)
                                               ? "pointer-events-none"
                                               : ""
                                           }`}
                                           ref={provided.innerRef}
                                           {...provided.draggableProps}
-                                          {...provided.dragHandleProps}
                                         >
                                           <Card
                                             title={card.title}
@@ -929,8 +954,39 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                             cover={card.cover}
                                             completed={card.completed}
                                             dueDateHasTime={card.dueDateHasTime}
+                                            canToggleCompletion={
+                                              !!canEditCard &&
+                                              !isTemplate &&
+                                              !isPlaceholderPublicId(
+                                                card.publicId,
+                                              )
+                                            }
+                                            isCompletionPending={
+                                              updateCardCompletionMutation.isPending &&
+                                              updateCardCompletionMutation
+                                                .variables.cardPublicId ===
+                                                card.publicId
+                                            }
+                                            onToggleCompletion={() => {
+                                              updateCardCompletionMutation.mutate(
+                                                {
+                                                  cardPublicId: card.publicId,
+                                                  completed: !card.completed,
+                                                },
+                                              );
+                                            }}
                                           />
-                                        </Link>
+                                          <Link
+                                            href={
+                                              isTemplate
+                                                ? `/templates/${boardId}/cards/${card.publicId}${cardReturnQuery}`
+                                                : `/cards/${card.publicId}${cardReturnQuery}`
+                                            }
+                                            aria-label={t`Open card ${card.title}`}
+                                            className="absolute inset-0 z-10 !cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-700 dark:focus-visible:ring-dark-700"
+                                            {...provided.dragHandleProps}
+                                          />
+                                        </div>
                                       )}
                                     </Draggable>
                                   ))}

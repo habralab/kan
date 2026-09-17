@@ -5,6 +5,7 @@ import {
   HiBars3BottomLeft,
   HiChatBubbleLeft,
   HiCheckCircle,
+  HiOutlineCheckCircle,
   HiOutlineClock,
   HiOutlinePlayCircle,
 } from "react-icons/hi2";
@@ -44,6 +45,9 @@ const Card = ({
   cover,
   completed,
   dueDateHasTime,
+  canToggleCompletion = false,
+  isCompletionPending = false,
+  onToggleCompletion,
 }: {
   title: string;
   ticketNumber?: string | null;
@@ -98,6 +102,9 @@ const Card = ({
     | null;
   completed: boolean;
   dueDateHasTime?: boolean;
+  canToggleCompletion?: boolean;
+  isCompletionPending?: boolean;
+  onToggleCompletion?: () => void;
 }) => {
   const { dateLocale } = useLocalisation();
   const { display: coverDisplay, isReady: isCoverDisplayReady } =
@@ -238,9 +245,37 @@ const Card = ({
           {ticketNumber}
         </span>
       )}
-      <div className="relative z-[1] flex items-start gap-1.5">
-        {completed && (
-          <HiCheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+      <div className="pointer-events-none relative z-20 flex items-start gap-1.5">
+        {canToggleCompletion && onToggleCompletion ? (
+          <button
+            type="button"
+            aria-label={
+              completed ? t`Mark card as incomplete` : t`Mark card as complete`
+            }
+            title={
+              completed ? t`Mark card as incomplete` : t`Mark card as complete`
+            }
+            disabled={isCompletionPending}
+            onClick={onToggleCompletion}
+            className={twMerge(
+              "pointer-events-auto relative mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-light-700 transition-colors hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-700 disabled:cursor-wait dark:text-dark-700 dark:hover:text-green-400 dark:focus-visible:ring-dark-700 sm:opacity-0 sm:transition-opacity sm:group-focus-within:opacity-100 sm:group-hover:opacity-100",
+              completed &&
+                "text-green-600 opacity-100 dark:text-green-400 sm:opacity-100",
+              isFullImageCover &&
+                !completed &&
+                "text-white drop-shadow-sm hover:text-green-300",
+            )}
+          >
+            {completed ? (
+              <HiCheckCircle className="h-4 w-4" />
+            ) : (
+              <HiOutlineCheckCircle className="h-4 w-4" />
+            )}
+          </button>
+        ) : (
+          completed && (
+            <HiCheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+          )
         )}
         <span
           className={twMerge(
@@ -327,6 +362,9 @@ const Card = ({
                       format(dueDate, showYear ? "do MMM yyyy" : "do MMM", {
                         locale: dateLocale,
                       })}
+                    {dueDate &&
+                      dueDateHasTime &&
+                      `, ${format(dueDate, "p", { locale: dateLocale })}`}
                   </span>
                 </div>
               )}

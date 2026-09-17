@@ -85,7 +85,7 @@ test(
     await board.createCard("Matching card");
     await board.createCard("Nonmatching card");
 
-    await page.getByText("Matching card", { exact: true }).click();
+    await board.openCard("Matching card");
     await page.waitForURL((url) => url.pathname.startsWith("/cards/"));
     const labelPublicId = await card.createAndAssignLabel("Urgent");
     await page.getByRole("link", { name: "Close" }).click();
@@ -105,7 +105,7 @@ test(
       page.getByText("Nonmatching card", { exact: true }),
     ).toHaveCount(0);
 
-    await page.getByText("Matching card", { exact: true }).click();
+    await board.openCard("Matching card");
     await page.waitForURL((url) => url.pathname.startsWith("/cards/"));
     expect(new URL(page.url()).searchParams.get("returnUrl")).toBe(
       `${expectedBoardUrl.pathname}${expectedBoardUrl.search}`,
@@ -119,7 +119,7 @@ test(
       page.getByText("Nonmatching card", { exact: true }),
     ).toHaveCount(0);
 
-    await page.getByText("Matching card", { exact: true }).click();
+    await board.openCard("Matching card");
     await page.waitForURL((url) => url.pathname.startsWith("/cards/"));
     await page.getByRole("link", { name: "Close" }).click();
     await page.waitForURL(expectedBoardUrl.toString());

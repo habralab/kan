@@ -56,14 +56,17 @@ test(
 
     await expect(page.getByText("Fix login bug")).toBeVisible();
     await expect(page.getByText("Add dark mode")).toBeVisible();
-    const importedCard = page.locator("a", {
-      has: page.getByText("Fix login bug", { exact: true }),
-    });
+    const importedCard = page
+      .getByRole("link", { name: "Open card Fix login bug", exact: true })
+      .locator("..");
     await expect(
       importedCard.getByText("Route:", { exact: true }),
     ).toBeVisible();
     await expect(
       importedCard.getByText("North", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      importedCard.getByText("12:00", { exact: false }),
     ).toBeVisible();
     await expect(page.getByText("Add dark mode")).toHaveCSS(
       "color",

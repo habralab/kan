@@ -157,5 +157,54 @@ describe("card activity repository", () => {
         ({ publicId }) => publicId,
       ),
     ).toEqual(["activity0004", "activity0003", "activity0002", "activity0001"]);
+
+    const [activeComment] = await db
+      .insert(comments)
+      .values({
+        publicId: "comment00002",
+        comment: "Visible comment",
+        cardId: card!.id,
+        createdBy: user.id,
+      })
+      .returning();
+    await db.insert(cardActivities).values({
+      publicId: "activity0006",
+      type: "card.updated.comment.added",
+      cardId: card!.id,
+      commentId: activeComment!.id,
+      createdBy: user.id,
+      createdAt: new Date("2026-09-06T09:00:00.000Z"),
+    });
+
+    const commentsOnly = await cardActivityRepo.getPaginatedActivities(
+      db,
+      card!.id,
+      { limit: 2, order: "newest", filter: "comments" },
+    );
+    expect(commentsOnly.activities.map(({ publicId }) => publicId)).toEqual([
+      "activity0006",
+    ]);
+    expect(commentsOnly.hasMore).toBe(false);
+
+    const activityFirstPage = await cardActivityRepo.getPaginatedActivities(
+      db,
+      card!.id,
+      { limit: 2, order: "oldest", filter: "activity" },
+    );
+    const activitySecondPage = await cardActivityRepo.getPaginatedActivities(
+      db,
+      card!.id,
+      {
+        limit: 2,
+        order: "oldest",
+        filter: "activity",
+        cursor: activityFirstPage.nextCursor,
+      },
+    );
+    expect(
+      [...activityFirstPage.activities, ...activitySecondPage.activities].map(
+        ({ publicId }) => publicId,
+      ),
+    ).toEqual(["activity0001", "activity0002", "activity0003", "activity0004"]);
   });
 });

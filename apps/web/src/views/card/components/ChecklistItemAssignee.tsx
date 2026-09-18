@@ -70,16 +70,29 @@ export function ChecklistItemAssignee({
   }
 
   return (
-    <div className="inline-flex items-center gap-1 text-xs text-light-700 dark:text-dark-700">
+    <div className="inline-flex min-w-0 max-w-full items-center gap-1 text-xs text-light-700 dark:text-dark-700">
       <Popover className="relative">
         {({ close }) => (
           <>
             <PopoverButton
               aria-label={t`Checklist item assignee`}
               onClick={() => setQuery("")}
-              className="rounded-sm p-0.5 text-light-700 hover:bg-light-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-light-700 dark:text-dark-700 dark:hover:bg-dark-200 dark:focus-visible:ring-dark-700"
+              className={twMerge(
+                "inline-flex min-w-0 max-w-full items-center gap-1 rounded-sm p-0.5 text-light-700 hover:bg-light-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-light-700 dark:text-dark-700 dark:hover:bg-dark-200 dark:focus-visible:ring-dark-700",
+                inactiveLabel && "opacity-50",
+              )}
             >
-              <HiOutlineUserCircle size={16} aria-hidden="true" />
+              <HiOutlineUserCircle
+                size={16}
+                aria-hidden="true"
+                className="shrink-0"
+              />
+              {assignee && (
+                <span className="min-w-0 truncate">
+                  {displayName}
+                  {inactiveLabel && ` (${inactiveLabel})`}
+                </span>
+              )}
             </PopoverButton>
             <PopoverPanel
               className={twMerge(
@@ -154,17 +167,6 @@ export function ChecklistItemAssignee({
           </>
         )}
       </Popover>
-      {assignee && (
-        <span
-          className={twMerge(
-            "min-w-0 max-w-full truncate",
-            inactiveLabel && "opacity-50",
-          )}
-        >
-          {displayName}
-          {inactiveLabel && ` (${inactiveLabel})`}
-        </span>
-      )}
     </div>
   );
 }

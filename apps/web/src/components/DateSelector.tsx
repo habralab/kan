@@ -17,32 +17,46 @@ import { useId, useMemo, useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
-interface DateSelectorProps {
+interface DateSelectorCalendarProps {
   selectedDate?: Date | null;
   rangeStartDate?: Date | null;
   onDateSelect?: (date: Date | undefined, source?: "calendar" | "time") => void;
   weekStartsOn?: 0 | 1 | 6;
-  showTime?: boolean;
   timeEnabled?: boolean;
-  onTimeEnabledChange?: (enabled: boolean) => void;
   defaultTime?: string;
   allowDateClear?: boolean;
   className?: string;
 }
 
-const DateSelector = ({
+interface DateSelectorTimeControlProps {
+  selectedDate?: Date | null;
+  onDateSelect?: (date: Date | undefined, source?: "calendar" | "time") => void;
+  timeEnabled?: boolean;
+  onTimeEnabledChange?: (enabled: boolean) => void;
+  defaultTime?: string;
+  className?: string;
+}
+
+interface DateSelectorProps extends DateSelectorCalendarProps {
+  showTime?: boolean;
+  onTimeEnabledChange?: (enabled: boolean) => void;
+}
+
+const parseTime = (time: string) => {
+  const [hours = 0, minutes = 0] = time.split(":").map(Number);
+  return { hours, minutes };
+};
+
+export const DateSelectorCalendar = ({
   selectedDate,
   rangeStartDate,
   onDateSelect,
   weekStartsOn = 1,
-  showTime = false,
   timeEnabled = false,
-  onTimeEnabledChange,
   defaultTime = "18:00",
   allowDateClear = true,
   className,
-}: DateSelectorProps) => {
-  const timeInputId = useId();
+}: DateSelectorCalendarProps) => {
   const [currentMonth, setCurrentMonth] = useState(() => {
     return selectedDate ? startOfMonth(selectedDate) : startOfMonth(new Date());
   });
@@ -93,18 +107,13 @@ const DateSelector = ({
     setCurrentMonth(addMonths(currentMonth, 1));
   };
 
-  const parseTime = (time: string) => {
-    const [hours = 0, minutes = 0] = time.split(":").map(Number);
-    return { hours, minutes };
-  };
-
   const handleDateClick = (date: Date, e: React.MouseEvent) => {
     e.stopPropagation();
     // Existing pickers clear a selected day on the second click. Range pickers
     // can keep it so the caller can treat the click as a same-day range.
     if (allowDateClear && selectedDate && isSameDay(date, selectedDate)) {
       onDateSelect?.(undefined, "calendar");
-    } else if (!showTime || !timeEnabled) {
+    } else if (!timeEnabled) {
       onDateSelect?.(date, "calendar");
     } else {
       const selectedTime = selectedDate
@@ -124,29 +133,6 @@ const DateSelector = ({
       );
       onDateSelect?.(dateWithSelectedTime, "calendar");
     }
-  };
-
-  const handleTimeChange = (time: string) => {
-    if (!selectedDate) return;
-
-    const { hours, minutes } = parseTime(time);
-    const dateWithUpdatedTime = new Date(selectedDate);
-    dateWithUpdatedTime.setHours(hours, minutes, 0, 0);
-    onDateSelect?.(dateWithUpdatedTime, "time");
-  };
-
-  const handleTimeEnabledChange = (enabled: boolean) => {
-    onTimeEnabledChange?.(enabled);
-    if (!selectedDate) return;
-
-    const updatedDate = new Date(selectedDate);
-    if (enabled) {
-      const { hours, minutes } = parseTime(defaultTime);
-      updatedDate.setHours(hours, minutes, 0, 0);
-    } else {
-      updatedDate.setHours(0, 0, 0, 0);
-    }
-    onDateSelect?.(updatedDate, "time");
   };
 
   return (
@@ -208,34 +194,92 @@ const DateSelector = ({
           </button>
         ))}
       </div>
-      {showTime && (
-        <div className="mt-4 flex items-center justify-between gap-3 text-sm text-light-900 dark:text-dark-900">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              className="h-[14px] w-[14px] rounded bg-transparent"
-              checked={timeEnabled}
-              onChange={(event) =>
-                handleTimeEnabledChange(event.target.checked)
-              }
-            />
-            {t`Time`}
-          </label>
-          {timeEnabled && (
-            <input
-              id={timeInputId}
-              aria-label={t`Time`}
-              type="time"
-              value={selectedDate ? format(selectedDate, "HH:mm") : defaultTime}
-              disabled={!selectedDate}
-              onChange={(event) => handleTimeChange(event.target.value)}
-              className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
-            />
-          )}
-        </div>
+    </div>
+  );
+};
+
+export const DateSelectorTimeControl = ({
+  selectedDate,
+  onDateSelect,
+  timeEnabled = false,
+  onTimeEnabledChange,
+  defaultTime = "18:00",
+  className,
+}: DateSelectorTimeControlProps) => {
+  const timeInputId = useId();
+
+  const handleTimeChange = (time: string) => {
+    if (!selectedDate) return;
+
+    const { hours, minutes } = parseTime(time);
+    const dateWithUpdatedTime = new Date(selectedDate);
+    dateWithUpdatedTime.setHours(hours, minutes, 0, 0);
+    onDateSelect?.(dateWithUpdatedTime, "time");
+  };
+
+  const handleTimeEnabledChange = (enabled: boolean) => {
+    onTimeEnabledChange?.(enabled);
+    if (!selectedDate) return;
+
+    const updatedDate = new Date(selectedDate);
+    if (enabled) {
+      const { hours, minutes } = parseTime(defaultTime);
+      updatedDate.setHours(hours, minutes, 0, 0);
+    } else {
+      updatedDate.setHours(0, 0, 0, 0);
+    }
+    onDateSelect?.(updatedDate, "time");
+  };
+
+  return (
+    <div
+      className={twMerge(
+        "flex items-center justify-between gap-3 text-sm text-light-900 dark:text-dark-900",
+        className,
+      )}
+    >
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          className="h-[14px] w-[14px] rounded bg-transparent"
+          checked={timeEnabled}
+          onChange={(event) => handleTimeEnabledChange(event.target.checked)}
+        />
+        {t`Time`}
+      </label>
+      {timeEnabled && (
+        <input
+          id={timeInputId}
+          aria-label={t`Time`}
+          type="time"
+          value={selectedDate ? format(selectedDate, "HH:mm") : defaultTime}
+          disabled={!selectedDate}
+          onChange={(event) => handleTimeChange(event.target.value)}
+          className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
+        />
       )}
     </div>
   );
 };
+
+const DateSelector = ({
+  showTime = false,
+  onTimeEnabledChange,
+  ...calendarProps
+}: DateSelectorProps) => (
+  <div className={twMerge("w-[250px]", calendarProps.className)}>
+    <DateSelectorCalendar {...calendarProps} className="w-full pb-0" />
+    {showTime && (
+      <DateSelectorTimeControl
+        selectedDate={calendarProps.selectedDate}
+        onDateSelect={calendarProps.onDateSelect}
+        timeEnabled={calendarProps.timeEnabled}
+        onTimeEnabledChange={onTimeEnabledChange}
+        defaultTime={calendarProps.defaultTime}
+        className="mt-4 px-4 pb-4"
+      />
+    )}
+  </div>
+);
 
 export default DateSelector;

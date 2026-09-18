@@ -394,17 +394,26 @@ const ActivityList = ({
   >([]);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [nextCursorPublicId, setNextCursorPublicId] = useState<string | null>(
+    null,
+  );
 
   const isFullyExpandedRef = useRef(false);
   const lastDataUpdatedAtRef = useRef<number | null>(null);
+  const requestGenerationRef = useRef(0);
 
   // Reset accumulated activities when filter or sortOrder changes
   useEffect(() => {
     setAllActivities([]);
     setHasMore(true);
+    setIsLoadingMore(false);
+    setNextCursor(null);
+    setNextCursorPublicId(null);
     isFullyExpandedRef.current = false;
     lastDataUpdatedAtRef.current = null;
-  }, [filter, sortOrder]);
+    requestGenerationRef.current += 1;
+  }, [cardPublicId, filter, sortOrder]);
 
   const {
     data: firstPageData,
@@ -423,6 +432,8 @@ const ActivityList = ({
   );
 
   useEffect(() => {
+    let cancelled = false;
+
     if (firstPageData && dataUpdatedAt !== lastDataUpdatedAtRef.current) {
       lastDataUpdatedAtRef.current = dataUpdatedAt;
 
@@ -433,20 +444,19 @@ const ActivityList = ({
         const fetchAllRemaining = async () => {
           let currentActivities = [...firstPageData.activities];
           let currentHasMore = firstPageData.hasMore;
+          let currentCursor = firstPageData.nextCursor;
+          let currentCursorPublicId = firstPageData.nextCursorPublicId;
 
-          while (currentHasMore) {
-            const lastActivity =
-              currentActivities[currentActivities.length - 1];
-            if (!lastActivity) break;
-
-            const nextCursor = new Date(lastActivity.createdAt).toISOString();
+          while (currentHasMore && currentCursor && currentCursorPublicId) {
             const nextPage = await utils.card.getActivities.fetch({
               cardPublicId,
               limit: ACTIVITIES_PAGE_SIZE,
-              cursor: nextCursor,
+              cursor: currentCursor,
+              cursorPublicId: currentCursorPublicId,
               filter,
               sortOrder,
             });
+            if (cancelled) return;
 
             const existingIds = new Set(
               currentActivities.map((a) => a.publicId),
@@ -456,40 +466,57 @@ const ActivityList = ({
             );
             currentActivities = [...currentActivities, ...newActivities];
             currentHasMore = nextPage.hasMore;
+            currentCursor = nextPage.nextCursor;
+            currentCursorPublicId = nextPage.nextCursorPublicId;
           }
 
+          if (cancelled) return;
           setAllActivities(currentActivities);
-          setHasMore(false);
+          setHasMore(currentHasMore);
+          setNextCursor(currentCursor);
+          setNextCursorPublicId(currentCursorPublicId);
         };
 
         void fetchAllRemaining();
       } else {
         setAllActivities(firstPageData.activities);
         setHasMore(firstPageData.hasMore);
+        setNextCursor(firstPageData.nextCursor);
+        setNextCursorPublicId(firstPageData.nextCursorPublicId);
 
         if (!firstPageData.hasMore) {
           isFullyExpandedRef.current = true;
         }
       }
     }
-  }, [firstPageData, dataUpdatedAt, cardPublicId, filter, sortOrder, utils.card.getActivities]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    firstPageData,
+    dataUpdatedAt,
+    cardPublicId,
+    filter,
+    sortOrder,
+    utils.card.getActivities,
+  ]);
 
   const handleLoadMore = async () => {
-    if (isLoadingMore || !hasMore || allActivities.length === 0) return;
+    if (isLoadingMore || !hasMore || !nextCursor || !nextCursorPublicId) return;
 
-    const lastActivity = allActivities[allActivities.length - 1];
-    if (!lastActivity) return;
-
+    const requestGeneration = requestGenerationRef.current;
     setIsLoadingMore(true);
     try {
-      const nextCursor = new Date(lastActivity.createdAt).toISOString();
       const nextPage = await utils.card.getActivities.fetch({
         cardPublicId,
         limit: ACTIVITIES_PAGE_SIZE,
         cursor: nextCursor,
+        cursorPublicId: nextCursorPublicId,
         filter,
         sortOrder,
       });
+      if (requestGeneration !== requestGenerationRef.current) return;
 
       const existingIds = new Set(allActivities.map((a) => a.publicId));
       const newActivities = nextPage.activities.filter(
@@ -497,12 +524,16 @@ const ActivityList = ({
       );
       setAllActivities((prev) => [...prev, ...newActivities]);
       setHasMore(nextPage.hasMore);
+      setNextCursor(nextPage.nextCursor);
+      setNextCursorPublicId(nextPage.nextCursorPublicId);
 
       if (!nextPage.hasMore) {
         isFullyExpandedRef.current = true;
       }
     } finally {
-      setIsLoadingMore(false);
+      if (requestGeneration === requestGenerationRef.current) {
+        setIsLoadingMore(false);
+      }
     }
   };
 

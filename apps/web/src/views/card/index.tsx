@@ -487,6 +487,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                     <div className="mb-4 flex items-center justify-between">
                       <nav
                         aria-label={t`Activity tabs`}
+                        role="tablist"
                         className="-mb-px flex items-center gap-5"
                       >
                         {(
@@ -502,6 +503,8 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                               key={tab.key}
                               type="button"
                               role="tab"
+                              id={`activity-tab-${tab.key}`}
+                              aria-controls="activity-feed-panel"
                               aria-selected={isActive}
                               onClick={() => setActivityFeedFilter(tab.key)}
                               className={`whitespace-nowrap border-b-2 pb-2 text-sm font-semibold transition-colors focus:outline-none ${
@@ -557,7 +560,21 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         </div>
                       </div>
                     </div>
-                    <div>
+                    {!isTemplate &&
+                      activityFeedFilter !== "activity" &&
+                      activityFeedSortOrder === "desc" && (
+                        <div className="mb-6">
+                          <NewCommentForm
+                            cardPublicId={cardId}
+                            workspaceMembers={editorWorkspaceMembers}
+                          />
+                        </div>
+                      )}
+                    <div
+                      id="activity-feed-panel"
+                      role="tabpanel"
+                      aria-labelledby={`activity-tab-${activityFeedFilter}`}
+                    >
                       <ActivityList
                         cardPublicId={cardId}
                         isLoading={!card}
@@ -566,14 +583,16 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         sortOrder={activityFeedSortOrder}
                       />
                     </div>
-                    {!isTemplate && activityFeedFilter !== "activity" && (
-                      <div className="mt-6">
-                        <NewCommentForm
-                          cardPublicId={cardId}
-                          workspaceMembers={editorWorkspaceMembers}
-                        />
-                      </div>
-                    )}
+                    {!isTemplate &&
+                      activityFeedFilter !== "activity" &&
+                      activityFeedSortOrder === "asc" && (
+                        <div className="mt-6">
+                          <NewCommentForm
+                            cardPublicId={cardId}
+                            workspaceMembers={editorWorkspaceMembers}
+                          />
+                        </div>
+                      )}
                   </div>
                 </>
               )}

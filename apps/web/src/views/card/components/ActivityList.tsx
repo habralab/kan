@@ -25,6 +25,7 @@ import type {
 } from "@kan/api/types";
 import { authClient } from "@kan/auth/client";
 
+import type { ActivityFeedFilter } from "~/hooks/useActivityFeedFilter";
 import type { ActivitySortOrder } from "~/hooks/useActivitySortOrder";
 import Avatar from "~/components/Avatar";
 import { useLocalisation } from "~/hooks/useLocalisation";
@@ -451,8 +452,6 @@ const getActivityIcon = (
 };
 
 const ACTIVITIES_PAGE_SIZE = 20;
-
-export type ActivityFeedFilter = "all" | "activity" | "comments";
 
 const ActivityItems = ({
   activities,

@@ -452,6 +452,8 @@ const getActivityIcon = (
 
 const ACTIVITIES_PAGE_SIZE = 20;
 
+export type ActivityFeedFilter = "all" | "activity" | "comments";
+
 const ActivityItems = ({
   activities,
   cardPublicId,
@@ -553,12 +555,14 @@ const ActivityList = ({
   cardPublicId,
   isLoading: cardIsLoading,
   order,
+  filter = "all",
   recentCommentPublicIds = [],
   isViewOnly,
 }: {
   cardPublicId: string;
   isLoading: boolean;
   order: ActivitySortOrder;
+  filter?: ActivityFeedFilter;
   recentCommentPublicIds?: string[];
   isViewOnly?: boolean;
 }) => {
@@ -575,6 +579,7 @@ const ActivityList = ({
 
   const isFullyExpandedRef = useRef(false);
   const lastDataUpdatedAtRef = useRef<number | null>(null);
+  const requestGenerationRef = useRef(0);
 
   const {
     data: firstPageData,
@@ -585,6 +590,7 @@ const ActivityList = ({
       cardPublicId,
       limit: ACTIVITIES_PAGE_SIZE,
       order,
+      filter,
     },
     {
       enabled: !!cardPublicId && cardPublicId.length >= 12,
@@ -595,10 +601,12 @@ const ActivityList = ({
       cardPublicId,
       limit: 100,
       order: "newest",
+      filter,
     },
     {
       enabled:
         order === "oldest" &&
+        filter !== "activity" &&
         recentCommentPublicIds.length > 0 &&
         !!cardPublicId &&
         cardPublicId.length >= 12,
@@ -608,11 +616,13 @@ const ActivityList = ({
   useEffect(() => {
     setAllActivities([]);
     setHasMore(true);
+    setIsLoadingMore(false);
     setNextCursor(null);
     setNextCursorPublicId(null);
     isFullyExpandedRef.current = false;
     lastDataUpdatedAtRef.current = null;
-  }, [cardPublicId, order]);
+    requestGenerationRef.current += 1;
+  }, [cardPublicId, filter, order]);
 
   useEffect(() => {
     let cancelled = false;
@@ -637,6 +647,7 @@ const ActivityList = ({
               cursor: currentCursor,
               cursorPublicId: currentCursorPublicId,
               order,
+              filter,
             });
             if (cancelled) return;
 
@@ -679,6 +690,7 @@ const ActivityList = ({
     firstPageData,
     dataUpdatedAt,
     cardPublicId,
+    filter,
     order,
     utils.card.getActivities,
   ]);
@@ -686,6 +698,7 @@ const ActivityList = ({
   const handleLoadMore = async () => {
     if (isLoadingMore || !hasMore || !nextCursor || !nextCursorPublicId) return;
 
+    const requestGeneration = requestGenerationRef.current;
     setIsLoadingMore(true);
     try {
       const nextPage = await utils.card.getActivities.fetch({
@@ -694,7 +707,9 @@ const ActivityList = ({
         cursor: nextCursor,
         cursorPublicId: nextCursorPublicId,
         order,
+        filter,
       });
+      if (requestGeneration !== requestGenerationRef.current) return;
 
       const existingIds = new Set(allActivities.map((a) => a.publicId));
       const newActivities = nextPage.activities.filter(
@@ -709,7 +724,9 @@ const ActivityList = ({
         isFullyExpandedRef.current = true;
       }
     } finally {
-      setIsLoadingMore(false);
+      if (requestGeneration === requestGenerationRef.current) {
+        setIsLoadingMore(false);
+      }
     }
   };
 

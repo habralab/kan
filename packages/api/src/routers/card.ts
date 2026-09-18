@@ -766,6 +766,7 @@ export const cardRouter = createTRPCRouter({
         cardPublicId: z.string().min(12),
         limit: z.number().min(1).max(100).optional().default(10),
         cursor: z.string().datetime().optional(), // ISO datetime string
+        cursorPublicId: z.string().length(12).optional(),
         filter: z.enum(["all", "activity", "comments"]).optional().default("all"),
         sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
       }),
@@ -775,6 +776,7 @@ export const cardRouter = createTRPCRouter({
         activities: z.array(activityItemSchema),
         hasMore: z.boolean(),
         nextCursor: z.string().datetime().nullable(),
+        nextCursorPublicId: z.string().length(12).nullable(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -801,7 +803,12 @@ export const cardRouter = createTRPCRouter({
         await assertPermission(ctx.db, userId, card.workspaceId, "card:view");
       }
 
-      const cursor = input.cursor ? new Date(input.cursor) : undefined;
+      const cursor = input.cursor
+        ? {
+            createdAt: new Date(input.cursor),
+            publicId: input.cursorPublicId,
+          }
+        : undefined;
       const result = await cardActivityRepo.getPaginatedActivities(
         ctx.db,
         card.id,
@@ -809,6 +816,7 @@ export const cardRouter = createTRPCRouter({
           limit: input.limit,
           cursor,
           filter: input.filter,
+          order: input.sortOrder === "desc" ? "newest" : "oldest",
         },
       );
 
@@ -845,17 +853,21 @@ export const cardRouter = createTRPCRouter({
         }),
       );
 
-      const mergedActivities = mergeActivities(activitiesWithAvatarUrls);
-
+      const chronologicalActivities =
+        input.sortOrder === "desc"
+          ? [...activitiesWithAvatarUrls].reverse()
+          : activitiesWithAvatarUrls;
+      const mergedActivities = mergeActivities(chronologicalActivities);
       const sortedActivities =
-        input.sortOrder === "asc"
-          ? mergedActivities
-          : [...mergedActivities].reverse();
+        input.sortOrder === "desc"
+          ? [...mergedActivities].reverse()
+          : mergedActivities;
 
       return {
         activities: sortedActivities,
         hasMore: result.hasMore,
-        nextCursor: result.nextCursor?.toISOString() ?? null,
+        nextCursor: result.nextCursor?.createdAt.toISOString() ?? null,
+        nextCursorPublicId: result.nextCursor?.publicId ?? null,
       };
     }),
   update: protectedProcedure

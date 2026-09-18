@@ -104,12 +104,7 @@ export class CardPage {
   }
 
   private activitySection() {
-    return this.page
-      .locator("div")
-      .filter({
-        has: this.page.getByRole("heading", { name: "Activity", exact: true }),
-      })
-      .last();
+    return this.page.locator("#activity-feed-panel").locator("..");
   }
 
   private editableCommentEditor() {

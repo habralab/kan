@@ -52,6 +52,14 @@ test(
     await expect(systemActivity).toHaveCount(0);
     await expect(commentForm).toBeVisible();
 
+    await page.getByRole("link", { name: "Close" }).click();
+    await board.openCard("Activity filter test card");
+    await expect(
+      page.getByRole("tab", { name: "Comments", exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
+    await expect(comment).toBeVisible();
+    await expect(systemActivity).toHaveCount(0);
+
     await page.getByRole("tab", { name: "Activity", exact: true }).click();
     await expect(systemActivity).toBeVisible();
     await expect(comment).toHaveCount(0);

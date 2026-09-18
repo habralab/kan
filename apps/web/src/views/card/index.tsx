@@ -8,7 +8,6 @@ import { IoChevronForwardSharp } from "react-icons/io5";
 
 import { authClient } from "@kan/auth/client";
 
-import type { ActivityFeedFilter } from "./components/ActivityList";
 import Avatar from "~/components/Avatar";
 import Editor from "~/components/Editor";
 import FeedbackModal from "~/components/FeedbackModal";
@@ -18,6 +17,10 @@ import Modal from "~/components/modal";
 import { NewWorkspaceForm } from "~/components/NewWorkspaceForm";
 import { PageHead } from "~/components/PageHead";
 import { EditYouTubeModal } from "~/components/YouTubeEmbed/EditYouTubeModal";
+import {
+  setActivityFeedFilter,
+  useActivityFeedFilter,
+} from "~/hooks/useActivityFeedFilter";
 import {
   setActivitySortOrder,
   useActivitySortOrder,
@@ -226,8 +229,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
 export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
   const router = useRouter();
   const activitySortOrder = useActivitySortOrder();
-  const [activityFeedFilter, setActivityFeedFilter] =
-    useState<ActivityFeedFilter>("all");
+  const activityFeedFilter = useActivityFeedFilter();
   const utils = api.useUtils();
   const {
     modalContentType,

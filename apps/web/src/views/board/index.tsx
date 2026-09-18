@@ -1088,6 +1088,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                                               aria-label={t`Open card ${card.title}`}
                                               className="absolute inset-0 z-10 !cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-700 dark:focus-visible:ring-dark-700"
                                               {...provided.dragHandleProps}
+                                              role="link"
                                             />
                                           </div>
                                         )}

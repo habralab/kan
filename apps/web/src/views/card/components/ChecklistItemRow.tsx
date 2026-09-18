@@ -185,12 +185,11 @@ export default function ChecklistItemRow({
     });
   };
 
-  const hasMetadata =
-    item.dueDate !== null || item.assignee !== null || dateOpen;
+  const hasMetadata = item.dueDate !== null || item.assignee !== null;
   const metadataControls = (!viewOnly || hasMetadata) && (
     <div
       className={twMerge(
-        "relative flex items-center gap-1",
+        "flex items-center gap-1",
         hasMetadata
           ? "mt-1 flex-wrap"
           : "flex-shrink-0 sm:opacity-0 sm:transition-opacity sm:group-focus-within:opacity-100 sm:group-hover:opacity-100",
@@ -206,77 +205,83 @@ export default function ChecklistItemRow({
           </span>
         )
       ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setPendingDate(item.dueDate);
-            setPendingHasTime(item.dueDateHasTime);
-            setDateOpen(true);
-          }}
-          aria-label={
-            item.dueDate
-              ? t`Edit checklist item due date`
-              : t`Set checklist item due date`
-          }
-          className="inline-flex h-7 items-center gap-1 rounded px-1 text-xs text-light-700 hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200 sm:h-5"
-        >
-          <HiOutlineCalendarDays size={14} />
-          {item.dueDate &&
-            format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
-              locale: dateLocale,
-            })}
-        </button>
-      )}
-      {dateOpen && !viewOnly && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={cancelDueDate} />
-          <div
-            className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
-            onClick={(event) => event.stopPropagation()}
-            onMouseDown={(event) => event.stopPropagation()}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setPendingDate(item.dueDate);
+              setPendingHasTime(item.dueDateHasTime);
+              setDateOpen(true);
+            }}
+            aria-label={
+              item.dueDate
+                ? t`Edit checklist item due date`
+                : t`Set checklist item due date`
+            }
+            className="inline-flex h-7 items-center gap-1 rounded px-1 text-xs text-light-700 hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200 sm:h-5"
           >
-            <DateSelector
-              selectedDate={pendingDate ?? undefined}
-              onDateSelect={(date) => setPendingDate(date ?? null)}
-              weekStartsOn={workspace.weekStartDay}
-              showTime
-              timeEnabled={pendingHasTime}
-              onTimeEnabledChange={setPendingHasTime}
-            />
-            <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
-              <Button
-                type="button"
-                variant="ghost"
-                size="xs"
-                onClick={() => {
-                  setPendingDate(null);
-                  setPendingHasTime(false);
-                }}
-                disabled={!pendingDate}
+            <HiOutlineCalendarDays size={14} />
+            {item.dueDate &&
+              format(item.dueDate, item.dueDateHasTime ? "PPp" : "PP", {
+                locale: dateLocale,
+              })}
+          </button>
+          {dateOpen && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={cancelDueDate} />
+              <div
+                className={twMerge(
+                  "absolute top-full z-20 mt-2 w-[282px] max-w-[calc(100vw-2rem)] rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100",
+                  hasMetadata ? "left-0" : "right-0",
+                )}
+                onClick={(event) => event.stopPropagation()}
+                onMouseDown={(event) => event.stopPropagation()}
               >
-                {t`Clear date`}
-              </Button>
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="xs"
-                  onClick={cancelDueDate}
-                >
-                  {t`Cancel`}
-                </Button>
-                <Button
-                  type="button"
-                  size="xs"
-                  onClick={saveDueDate}
-                  disabled={!dueDateHasChanges}
-                >
-                  {t`Save`}
-                </Button>
+                <DateSelector
+                  selectedDate={pendingDate ?? undefined}
+                  onDateSelect={(date) => setPendingDate(date ?? null)}
+                  weekStartsOn={workspace.weekStartDay}
+                  showTime
+                  timeEnabled={pendingHasTime}
+                  onTimeEnabledChange={setPendingHasTime}
+                  className="w-full"
+                />
+                <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => {
+                      setPendingDate(null);
+                      setPendingHasTime(false);
+                    }}
+                    disabled={!pendingDate}
+                  >
+                    {t`Clear date`}
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="xs"
+                      onClick={cancelDueDate}
+                    >
+                      {t`Cancel`}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="xs"
+                      onClick={saveDueDate}
+                      disabled={!dueDateHasChanges}
+                    >
+                      {t`Save`}
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </>
+            </>
+          )}
+        </div>
       )}
       <ChecklistItemAssignee
         assignee={item.assignee}

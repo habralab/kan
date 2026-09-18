@@ -82,6 +82,9 @@ test(
     await memberOption.click();
     await assigned;
     await expect(itemRow.getByText(user.name)).toBeVisible();
+    await itemRow.getByText(user.name).click();
+    await expect(memberSearch).toBeVisible();
+    await page.keyboard.press("Escape");
 
     let checklistDateUpdateCount = 0;
     page.on("request", (request) => {
@@ -95,7 +98,19 @@ test(
     const checklistDateButton = itemRow.getByRole("button", {
       name: "Set checklist item due date",
     });
+    const checklistDateButtonBefore = await checklistDateButton.boundingBox();
     await checklistDateButton.click();
+    const checklistDateButtonAfter = await checklistDateButton.boundingBox();
+    expect(checklistDateButtonBefore).not.toBeNull();
+    expect(checklistDateButtonAfter).not.toBeNull();
+    expect(checklistDateButtonAfter?.x).toBeCloseTo(
+      checklistDateButtonBefore?.x ?? 0,
+      0,
+    );
+    expect(checklistDateButtonAfter?.y).toBeCloseTo(
+      checklistDateButtonBefore?.y ?? 0,
+      0,
+    );
     const itemDueDate = new Date().toISOString().slice(0, 10);
     await page
       .locator(`time[datetime="${itemDueDate}"]`)
@@ -133,6 +148,29 @@ test(
     await expect(removableItem).toHaveCount(0);
 
     await card.assignMember(user.name);
+    await page
+      .getByRole("button", { name: "Set dates", exact: true })
+      .filter({ visible: true })
+      .click();
+    const calendarDay = page.locator("time").filter({ visible: true }).first();
+    const dueDateInput = page.getByLabel("Due date", { exact: true });
+    const startDateCheckbox = page.getByRole("checkbox", {
+      name: "Start date",
+      exact: true,
+    });
+    const calendarBox = await calendarDay.boundingBox();
+    const dueDateBox = await dueDateInput.boundingBox();
+    const startDateLabelBox = await startDateCheckbox
+      .locator("..")
+      .boundingBox();
+    expect(calendarBox).not.toBeNull();
+    expect(dueDateBox).not.toBeNull();
+    expect(calendarBox?.y ?? 0).toBeLessThan(dueDateBox?.y ?? 0);
+    expect(startDateLabelBox?.width ?? Number.POSITIVE_INFINITY).toBeLessThan(
+      180,
+    );
+    await page.getByRole("button", { name: "Cancel", exact: true }).click();
+
     let cardDateUpdateCount = 0;
     page.on("request", (request) => {
       if (

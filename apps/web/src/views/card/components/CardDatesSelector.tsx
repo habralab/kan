@@ -7,7 +7,10 @@ import { twMerge } from "tailwind-merge";
 import type { CardRecurrenceRule } from "@kan/shared/utils";
 
 import Button from "~/components/Button";
-import DateSelector from "~/components/DateSelector";
+import {
+  DateSelectorCalendar,
+  DateSelectorTimeControl,
+} from "~/components/DateSelector";
 import { useLocalisation } from "~/hooks/useLocalisation";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
@@ -308,7 +311,16 @@ export function CardDatesSelector({
             onClick={(event) => event.stopPropagation()}
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <div className="space-y-3 px-4 pt-4 text-sm text-light-900 dark:text-dark-900">
+            <DateSelectorCalendar
+              selectedDate={pendingDueDate}
+              rangeStartDate={startDateEnabled ? pendingStartDate : undefined}
+              onDateSelect={handleCalendarSelect}
+              weekStartsOn={workspace.weekStartDay}
+              timeEnabled={pendingHasTime}
+              allowDateClear={false}
+              className="w-full"
+            />
+            <div className="space-y-3 px-4 pb-4 text-sm text-light-900 dark:text-dark-900">
               <label className="flex items-center justify-between gap-3">
                 <span>{t`Due date`}</span>
                 <input
@@ -321,10 +333,18 @@ export function CardDatesSelector({
                   className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
                 />
               </label>
+              {!!pendingDueDate && (
+                <DateSelectorTimeControl
+                  selectedDate={pendingDueDate}
+                  onDateSelect={handleCalendarSelect}
+                  timeEnabled={pendingHasTime}
+                  onTimeEnabledChange={setPendingHasTime}
+                />
+              )}
               <div className="space-y-2">
                 <label
                   htmlFor={startDateCheckboxId}
-                  className="flex items-center gap-2"
+                  className="inline-flex items-center gap-2"
                 >
                   <input
                     id={startDateCheckboxId}
@@ -380,17 +400,6 @@ export function CardDatesSelector({
                 </select>
               </label>
             </div>
-            <DateSelector
-              selectedDate={pendingDueDate}
-              rangeStartDate={startDateEnabled ? pendingStartDate : undefined}
-              onDateSelect={handleCalendarSelect}
-              weekStartsOn={workspace.weekStartDay}
-              showTime={!!pendingDueDate}
-              timeEnabled={pendingHasTime}
-              onTimeEnabledChange={setPendingHasTime}
-              allowDateClear={false}
-              className="w-full"
-            />
             <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
               <Button
                 type="button"

@@ -631,17 +631,6 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         onChange={setActivitySortOrder}
                       />
                     </div>
-                    {!isTemplate &&
-                      activityFeedFilter !== "activity" &&
-                      activitySortOrder === "newest" && (
-                        <div className="mb-2">
-                          <NewCommentForm
-                            cardPublicId={cardId}
-                            workspaceMembers={editorWorkspaceMembers}
-                            onCommentCreated={handleCommentCreated}
-                          />
-                        </div>
-                      )}
                     <div
                       id="activity-feed-panel"
                       role="tabpanel"
@@ -653,19 +642,17 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                         order={activitySortOrder}
                         filter={activityFeedFilter}
                         recentCommentPublicIds={recentCommentPublicIds}
+                        commentComposer={
+                          !isTemplate && activityFeedFilter !== "activity" ? (
+                            <NewCommentForm
+                              cardPublicId={cardId}
+                              workspaceMembers={editorWorkspaceMembers}
+                              onCommentCreated={handleCommentCreated}
+                            />
+                          ) : undefined
+                        }
                       />
                     </div>
-                    {!isTemplate &&
-                      activityFeedFilter !== "activity" &&
-                      activitySortOrder === "oldest" && (
-                        <div className="mt-6">
-                          <NewCommentForm
-                            cardPublicId={cardId}
-                            workspaceMembers={editorWorkspaceMembers}
-                            onCommentCreated={handleCommentCreated}
-                          />
-                        </div>
-                      )}
                   </div>
                 </>
               )}

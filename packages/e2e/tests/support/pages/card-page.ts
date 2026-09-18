@@ -145,10 +145,7 @@ export class CardPage {
   }
 
   private activitySection() {
-    return this.page
-      .getByRole("heading", { name: "Activity", exact: true })
-      .locator("..")
-      .locator("..");
+    return this.page.locator("#activity-feed-panel").locator("..");
   }
 
   private editableCommentEditor() {

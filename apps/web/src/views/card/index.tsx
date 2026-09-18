@@ -8,6 +8,7 @@ import { IoChevronForwardSharp } from "react-icons/io5";
 
 import { authClient } from "@kan/auth/client";
 
+import type { ActivityFeedFilter } from "./components/ActivityList";
 import Avatar from "~/components/Avatar";
 import Editor from "~/components/Editor";
 import FeedbackModal from "~/components/FeedbackModal";
@@ -225,6 +226,8 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
 export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
   const router = useRouter();
   const activitySortOrder = useActivitySortOrder();
+  const [activityFeedFilter, setActivityFeedFilter] =
+    useState<ActivityFeedFilter>("all");
   const utils = api.useUtils();
   const {
     modalContentType,
@@ -582,40 +585,80 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                   )}
                   <div className="border-t-[1px] border-light-300 pt-12 dark:border-dark-300">
                     <div className="flex items-center justify-between pb-4">
-                      <h2 className="text-md font-medium text-light-1000 dark:text-dark-1000">
-                        {t`Activity`}
-                      </h2>
+                      <nav
+                        aria-label={t`Activity tabs`}
+                        role="tablist"
+                        className="flex items-center gap-5"
+                      >
+                        {(
+                          [
+                            { key: "all", label: t`All` },
+                            { key: "comments", label: t`Comments` },
+                            { key: "activity", label: t`Activity` },
+                          ] as const
+                        ).map((tab) => {
+                          const isActive = activityFeedFilter === tab.key;
+
+                          return (
+                            <button
+                              key={tab.key}
+                              type="button"
+                              role="tab"
+                              id={`activity-tab-${tab.key}`}
+                              aria-controls="activity-feed-panel"
+                              aria-selected={isActive}
+                              onClick={() => setActivityFeedFilter(tab.key)}
+                              className={`whitespace-nowrap border-b-2 pb-2 text-sm font-semibold transition-colors focus:outline-none ${
+                                isActive
+                                  ? "border-light-1000 text-light-1000 dark:border-dark-1000 dark:text-dark-1000"
+                                  : "border-transparent text-light-900 hover:border-light-950 hover:text-light-950 dark:text-dark-900 dark:hover:border-white/20 dark:hover:text-dark-950"
+                              }`}
+                            >
+                              {tab.label}
+                            </button>
+                          );
+                        })}
+                      </nav>
                       <ActivitySortOrderToggle
                         order={activitySortOrder}
                         onChange={setActivitySortOrder}
                       />
                     </div>
-                    {!isTemplate && activitySortOrder === "newest" && (
-                      <div className="mb-2">
-                        <NewCommentForm
-                          cardPublicId={cardId}
-                          workspaceMembers={editorWorkspaceMembers}
-                          onCommentCreated={handleCommentCreated}
-                        />
-                      </div>
-                    )}
-                    <div>
+                    {!isTemplate &&
+                      activityFeedFilter !== "activity" &&
+                      activitySortOrder === "newest" && (
+                        <div className="mb-2">
+                          <NewCommentForm
+                            cardPublicId={cardId}
+                            workspaceMembers={editorWorkspaceMembers}
+                            onCommentCreated={handleCommentCreated}
+                          />
+                        </div>
+                      )}
+                    <div
+                      id="activity-feed-panel"
+                      role="tabpanel"
+                      aria-labelledby={`activity-tab-${activityFeedFilter}`}
+                    >
                       <ActivityList
                         cardPublicId={cardId}
                         isLoading={!card}
                         order={activitySortOrder}
+                        filter={activityFeedFilter}
                         recentCommentPublicIds={recentCommentPublicIds}
                       />
                     </div>
-                    {!isTemplate && activitySortOrder === "oldest" && (
-                      <div className="mt-6">
-                        <NewCommentForm
-                          cardPublicId={cardId}
-                          workspaceMembers={editorWorkspaceMembers}
-                          onCommentCreated={handleCommentCreated}
-                        />
-                      </div>
-                    )}
+                    {!isTemplate &&
+                      activityFeedFilter !== "activity" &&
+                      activitySortOrder === "oldest" && (
+                        <div className="mt-6">
+                          <NewCommentForm
+                            cardPublicId={cardId}
+                            workspaceMembers={editorWorkspaceMembers}
+                            onCommentCreated={handleCommentCreated}
+                          />
+                        </div>
+                      )}
                   </div>
                 </>
               )}

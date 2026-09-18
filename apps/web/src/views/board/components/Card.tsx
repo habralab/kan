@@ -155,7 +155,7 @@ const Card = ({
             100,
         )
       : 0;
-  const hasDueDate = !!dueDate;
+  const hasCardDate = !!(startDate ?? dueDate);
   const isFullColourCover =
     showCover && cover?.kind === "colour" && cover.size === "full";
   const isFullImageCover =
@@ -265,7 +265,8 @@ const Card = ({
             disabled={isCompletionPending}
             onClick={onToggleCompletion}
             className={twMerge(
-              "pointer-events-auto relative mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-light-700 transition-colors hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-700 disabled:cursor-wait dark:text-dark-700 dark:hover:text-green-400 dark:focus-visible:ring-dark-700 sm:opacity-0 sm:transition-opacity sm:group-focus-within:opacity-100 sm:group-hover:opacity-100",
+              "pointer-events-auto relative flex w-4 flex-shrink-0 cursor-pointer items-center justify-center rounded-full text-light-700 transition-colors hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-700 disabled:cursor-not-allowed dark:text-dark-700 dark:hover:text-green-400 dark:focus-visible:ring-dark-700 sm:opacity-0 sm:transition-opacity sm:group-focus-within:opacity-100 sm:group-hover:opacity-100",
+              isFullCover ? "h-6" : "h-5",
               completed &&
                 "text-green-600 opacity-100 dark:text-green-400 sm:opacity-100",
               isFullImageCover &&
@@ -281,7 +282,14 @@ const Card = ({
           </button>
         ) : (
           completed && (
-            <HiCheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+            <span
+              className={twMerge(
+                "flex w-4 flex-shrink-0 items-center justify-center",
+                isFullCover ? "h-6" : "h-5",
+              )}
+            >
+              <HiCheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+            </span>
           )
         )}
         <span
@@ -313,7 +321,7 @@ const Card = ({
         cardSummary.checklistItemCount > 0 ||
         cardSummary.hasDescription ||
         cardSummary.hasComments ||
-        hasDueDate ||
+        hasCardDate ||
         cardSummary.attachmentCount > 0 ||
         timeTrackingTotalSeconds ||
         isTimerRunning) ? (
@@ -326,56 +334,55 @@ const Card = ({
               />
             ))}
           </div>
+          {hasCardDate && (
+            <div
+              title={[
+                startDate && formatCardDate(startDate, { locale: dateLocale }),
+                dueDate &&
+                  formatCardDate(dueDate, {
+                    locale: dateLocale,
+                    includeTime: dueDateHasTime,
+                  }),
+              ]
+                .filter(Boolean)
+                .join(" – ")}
+              className={twMerge(
+                "mt-2 flex min-w-0 items-start gap-1",
+                deadlineState === "completed"
+                  ? "text-green-600 dark:text-green-400"
+                  : deadlineState === "overdue"
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-light-800 dark:text-dark-800",
+              )}
+            >
+              <HiOutlineClock className="mt-px h-4 w-4 shrink-0" />
+              <span className="min-w-0 break-words text-[11px] leading-4">
+                {startDate &&
+                  formatCardDate(startDate, {
+                    locale: dateLocale,
+                    includeYear: !isSameYear(startDate, new Date()),
+                  })}
+                {startDate && dueDate && " – "}
+                {dueDate &&
+                  formatCardDate(dueDate, {
+                    locale: dateLocale,
+                    includeYear: showYear,
+                    includeTime: dueDateHasTime,
+                  })}
+                {recurrenceRule && (
+                  <HiArrowPath
+                    className="ml-1 inline h-3 w-3"
+                    title={t`Recurring deadline`}
+                  />
+                )}
+              </span>
+            </div>
+          )}
           <div className="mt-2 flex items-center justify-between gap-1">
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
               {cardSummary.hasDescription && (
                 <div className="flex items-center gap-1 text-light-700 dark:text-dark-800">
                   <HiBars3BottomLeft className="h-4 w-4" />
-                </div>
-              )}
-              {(startDate ?? dueDate) && (
-                <div
-                  title={[
-                    startDate &&
-                      formatCardDate(startDate, { locale: dateLocale }),
-                    dueDate &&
-                      formatCardDate(dueDate, {
-                        locale: dateLocale,
-                        includeTime: dueDateHasTime,
-                      }),
-                  ]
-                    .filter(Boolean)
-                    .join(" – ")}
-                  className={twMerge(
-                    "flex items-center gap-1",
-                    deadlineState === "completed"
-                      ? "text-green-600 dark:text-green-400"
-                      : deadlineState === "overdue"
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-light-800 dark:text-dark-800",
-                  )}
-                >
-                  <HiOutlineClock className="h-4 w-4" />
-                  <span className="text-[11px]">
-                    {startDate &&
-                      formatCardDate(startDate, {
-                        locale: dateLocale,
-                        includeYear: !isSameYear(startDate, new Date()),
-                      })}
-                    {startDate && dueDate && " – "}
-                    {dueDate &&
-                      formatCardDate(dueDate, {
-                        locale: dateLocale,
-                        includeYear: showYear,
-                        includeTime: dueDateHasTime,
-                      })}
-                    {recurrenceRule && (
-                      <HiArrowPath
-                        className="ml-1 inline h-3 w-3"
-                        title={t`Recurring deadline`}
-                      />
-                    )}
-                  </span>
                 </div>
               )}
               {cardSummary.hasComments && (
@@ -403,7 +410,7 @@ const Card = ({
                 </div>
               )}
             </div>
-            <div className="flex items-center justify-end gap-1">
+            <div className="flex shrink-0 items-center justify-end gap-1">
               {cardSummary.checklistItemCount > 0 && (
                 <div className="flex items-center gap-1 rounded-full border-[1px] border-light-300 px-2 py-1 dark:border-dark-600">
                   <CircularProgress

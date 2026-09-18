@@ -38,6 +38,19 @@ test(
       exact: true,
     });
     await expect(markComplete).toHaveCSS("opacity", "1");
+    await expect(markComplete).toHaveCSS("cursor", "pointer");
+
+    const completionBox = await markComplete.boundingBox();
+    const titleBox = await card.getByText("Complete from board").boundingBox();
+    expect(completionBox).not.toBeNull();
+    expect(titleBox).not.toBeNull();
+    expect(
+      Math.abs(
+        (completionBox?.y ?? 0) +
+          (completionBox?.height ?? 0) / 2 -
+          ((titleBox?.y ?? 0) + 10),
+      ),
+    ).toBeLessThanOrEqual(2);
 
     const completed = waitForTrpcMutation(page, "card.update");
     await markComplete.click();

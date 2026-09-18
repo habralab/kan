@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ]
     ],
     "translation": "{0} | {1}"
@@ -471,7 +471,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        586
+        597
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -515,6 +515,18 @@
       ]
     ],
     "translation": "Reihenfolge der Aktivitäten"
+  },
+  "q93YxQ": {
+    "translation": "Aktivitäts-Tabs",
+    "message": "Activity tabs",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        589
+      ]
+    ]
   },
   "m16xKo": {
     "message": "Add",
@@ -1013,6 +1025,18 @@
       ]
     ],
     "translation": "Nach"
+  },
+  "N40H+G": {
+    "translation": "Alle",
+    "message": "All",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        595
+      ]
+    ]
   },
   "4upC5z": {
     "message": "All cards",
@@ -1880,7 +1904,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ],
       [
         "src/views/public/board/index.tsx",
@@ -2765,7 +2789,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ]
     ],
     "translation": "Karte"
@@ -2841,11 +2865,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        461
+        464
       ],
       [
         "src/views/card/index.tsx",
-        511
+        514
       ]
     ],
     "translation": "Karte nicht gefunden"
@@ -3311,7 +3335,6 @@
     "translation": "Benutzerdefinierte Berechtigungen löschen"
   },
   "UAzNjT": {
-    "translation": "Datum löschen",
     "message": "Clear date",
     "placeholders": {},
     "comments": [],
@@ -3320,10 +3343,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         257
       ]
-    ]
+    ],
+    "translation": "Datum löschen"
   },
   "0Czky2": {
-    "translation": "Datumsangaben löschen",
     "message": "Clear dates",
     "placeholders": {},
     "comments": [],
@@ -3332,7 +3355,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         402
       ]
-    ]
+    ],
+    "translation": "Datumsangaben löschen"
   },
   "u8JHrO": {
     "message": "Clear filters",
@@ -3393,7 +3417,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        452
+        455
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
@@ -3500,6 +3524,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/card/index.tsx",
+        596
+      ],
+      [
         "src/views/home/components/Features.tsx",
         105
       ],
@@ -3583,7 +3611,6 @@
     "translation": "hat Checklistenpunkt <0>{0}</0> abgeschlossen"
   },
   "faXEMy": {
-    "translation": "hat diesen Termin abgeschlossen und das Fälligkeitsdatum auf <0>{formattedDate}</0> verschoben",
     "message": "completed this occurrence and moved the due date to <0>{formattedDate}</0>",
     "placeholders": {
       "formattedDate": [
@@ -3596,7 +3623,8 @@
         "src/views/card/components/ActivityList.tsx",
         336
       ]
-    ]
+    ],
+    "translation": "hat diesen Termin abgeschlossen und das Fälligkeitsdatum auf <0>{formattedDate}</0> verschoben"
   },
   "tOZp9v": {
     "message": "Configurable user roles and permissions",
@@ -3991,7 +4019,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        200
+        201
       ]
     ],
     "translation": "Cover"
@@ -4509,7 +4537,6 @@
     "translation": "Kundensupport"
   },
   "U0sC6H": {
-    "translation": "Täglich",
     "message": "Daily",
     "placeholders": {},
     "comments": [],
@@ -4526,7 +4553,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         376
       ]
-    ]
+    ],
+    "translation": "Täglich"
   },
   "pvnfJD": {
     "message": "Dark",
@@ -4561,16 +4589,16 @@
     "translation": "Datum"
   },
   "UDI8Ls": {
-    "translation": "Datumsangaben",
     "message": "Dates",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "src/views/card/index.tsx",
-        185
+        186
       ]
-    ]
+    ],
+    "translation": "Datumsangaben"
   },
   "cp1rsD": {
     "message": "Deactivate invite link",
@@ -7784,7 +7812,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        165
+        166
       ]
     ],
     "translation": "Labels"
@@ -8082,7 +8110,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        156
+        157
       ]
     ],
     "translation": "Liste"
@@ -8150,7 +8178,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        750
+        767
       ]
     ],
     "translation": "Weitere Aktivitäten laden"
@@ -8174,7 +8202,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        750
+        767
       ]
     ],
     "translation": "Wird geladen ..."
@@ -8582,7 +8610,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        175
+        176
       ],
       [
         "src/views/members/index.tsx",
@@ -8907,7 +8935,6 @@
     "translation": "Benötigen Sie Hilfe?"
   },
   "qqeAJM": {
-    "translation": "Nie",
     "message": "Never",
     "placeholders": {},
     "comments": [],
@@ -8920,7 +8947,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Nie"
   },
   "isRobC": {
     "message": "New",
@@ -9583,7 +9611,6 @@
     "translation": "Öffne ein Feld, um seine Einstellungen zu bearbeiten."
   },
   "dg1gDd": {
-    "translation": "Karte {0} öffnen",
     "message": "Open card {0}",
     "placeholders": {
       "0": [
@@ -9596,7 +9623,8 @@
         "src/views/board/index.tsx",
         988
       ]
-    ]
+    ],
+    "translation": "Karte {0} öffnen"
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -9921,7 +9949,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        123
+        124
       ],
       [
         "src/views/members/index.tsx",
@@ -10429,11 +10457,11 @@
       ],
       [
         "src/views/card/index.tsx",
-        309
+        312
       ],
       [
         "src/views/card/index.tsx",
-        322
+        325
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -10828,7 +10856,6 @@
     "translation": "Recruiting"
   },
   "icIr5O": {
-    "translation": "Wiederkehrende Frist",
     "message": "Recurring deadline",
     "placeholders": {},
     "comments": [],
@@ -10837,7 +10864,8 @@
         "src/views/board/components/Card.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Wiederkehrende Frist"
   },
   "ekCRTP": {
     "message": "Rejected",
@@ -11155,7 +11183,6 @@
     "translation": "hat Checklistenelement umbenannt in <0>{0}</0>"
   },
   "BwWIp2": {
-    "translation": "Wiederholen",
     "message": "Repeat",
     "placeholders": {},
     "comments": [],
@@ -11176,7 +11203,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         363
       ]
-    ]
+    ],
+    "translation": "Wiederholen"
   },
   "Yx0Ud8": {
     "message": "Requested",
@@ -11780,7 +11808,6 @@
     "translation": "Fälligkeitsdatum für Checklisteneintrag festlegen"
   },
   "LepgJE": {
-    "translation": "Datumsangaben festlegen",
     "message": "Set dates",
     "placeholders": {},
     "comments": [],
@@ -11793,7 +11820,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         299
       ]
-    ]
+    ],
+    "translation": "Datumsangaben festlegen"
   },
   "8AbRER": {
     "message": "Set due date",
@@ -13784,7 +13812,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        321
+        324
       ]
     ],
     "translation": "Label konnte nicht hinzugefügt werden"
@@ -14340,7 +14368,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        308
+        311
       ]
     ],
     "translation": "Karte konnte nicht aktualisiert werden"
@@ -14442,7 +14470,6 @@
     "translation": "Benutzerdefinierte Felder konnten nicht aktualisiert werden"
   },
   "/YgeAA": {
-    "translation": "Datumsangaben konnten nicht aktualisiert werden",
     "message": "Unable to update dates",
     "placeholders": {},
     "comments": [],
@@ -14451,7 +14478,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         110
       ]
-    ]
+    ],
+    "translation": "Datumsangaben konnten nicht aktualisiert werden"
   },
   "C56tim": {
     "message": "Unable to update due date",
@@ -15050,7 +15078,6 @@
     "translation": "hat das Fälligkeitsdatum aktualisiert"
   },
   "+eysZF": {
-    "translation": "hat den Wiederholungsplan aktualisiert",
     "message": "updated the recurrence schedule",
     "placeholders": {},
     "comments": [],
@@ -15059,7 +15086,8 @@
         "src/views/card/components/ActivityList.tsx",
         344
       ]
-    ]
+    ],
+    "translation": "hat den Wiederholungsplan aktualisiert"
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -15677,7 +15705,6 @@
     "translation": "Wochenbeginn"
   },
   "bbWQS2": {
-    "translation": "Werktags",
     "message": "Weekdays",
     "placeholders": {},
     "comments": [],
@@ -15694,10 +15721,10 @@
         "src/views/card/components/CardDatesSelector.tsx",
         377
       ]
-    ]
+    ],
+    "translation": "Werktags"
   },
   "4XSc4l": {
-    "translation": "Wöchentlich",
     "message": "Weekly",
     "placeholders": {},
     "comments": [],
@@ -15714,7 +15741,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         378
       ]
-    ]
+    ],
+    "translation": "Wöchentlich"
   },
   "9eF5oV": {
     "message": "Welcome back",

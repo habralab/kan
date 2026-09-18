@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ]
     ],
     "translation": "{0} | {1}"
@@ -471,7 +471,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        586
+        597
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -515,6 +515,18 @@
       ]
     ],
     "translation": ""
+  },
+  "q93YxQ": {
+    "translation": "",
+    "message": "Activity tabs",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        589
+      ]
+    ]
   },
   "m16xKo": {
     "message": "Add",
@@ -1013,6 +1025,18 @@
       ]
     ],
     "translation": ""
+  },
+  "N40H+G": {
+    "translation": "",
+    "message": "All",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        595
+      ]
+    ]
   },
   "4upC5z": {
     "message": "All cards",
@@ -1880,7 +1904,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ],
       [
         "src/views/public/board/index.tsx",
@@ -2765,7 +2789,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ]
     ],
     "translation": "Kort"
@@ -2841,11 +2865,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        461
+        464
       ],
       [
         "src/views/card/index.tsx",
-        511
+        514
       ]
     ],
     "translation": "Kortet blev ikke fundet"
@@ -3311,7 +3335,6 @@
     "translation": "Ryd brugerdefinerede rettigheder"
   },
   "UAzNjT": {
-    "translation": "Ryd dato",
     "message": "Clear date",
     "placeholders": {},
     "comments": [],
@@ -3320,10 +3343,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         257
       ]
-    ]
+    ],
+    "translation": "Ryd dato"
   },
   "0Czky2": {
-    "translation": "Ryd datoer",
     "message": "Clear dates",
     "placeholders": {},
     "comments": [],
@@ -3332,7 +3355,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         402
       ]
-    ]
+    ],
+    "translation": "Ryd datoer"
   },
   "u8JHrO": {
     "message": "Clear filters",
@@ -3393,7 +3417,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        452
+        455
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
@@ -3500,6 +3524,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/card/index.tsx",
+        596
+      ],
+      [
         "src/views/home/components/Features.tsx",
         105
       ],
@@ -3583,7 +3611,6 @@
     "translation": "fuldførte tjeklistepunktet <0>{0}</0>"
   },
   "faXEMy": {
-    "translation": "fuldførte denne forekomst og flyttede forfaldsdatoen til <0>{formattedDate}</0>",
     "message": "completed this occurrence and moved the due date to <0>{formattedDate}</0>",
     "placeholders": {
       "formattedDate": [
@@ -3596,7 +3623,8 @@
         "src/views/card/components/ActivityList.tsx",
         336
       ]
-    ]
+    ],
+    "translation": "fuldførte denne forekomst og flyttede forfaldsdatoen til <0>{formattedDate}</0>"
   },
   "tOZp9v": {
     "message": "Configurable user roles and permissions",
@@ -3978,7 +4006,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        200
+        201
       ]
     ],
     "translation": ""
@@ -4483,7 +4511,6 @@
     "translation": "Kundesupport"
   },
   "U0sC6H": {
-    "translation": "Dagligt",
     "message": "Daily",
     "placeholders": {},
     "comments": [],
@@ -4500,7 +4527,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         376
       ]
-    ]
+    ],
+    "translation": "Dagligt"
   },
   "pvnfJD": {
     "message": "Dark",
@@ -4535,16 +4563,16 @@
     "translation": ""
   },
   "UDI8Ls": {
-    "translation": "Datoer",
     "message": "Dates",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "src/views/card/index.tsx",
-        185
+        186
       ]
-    ]
+    ],
+    "translation": "Datoer"
   },
   "cp1rsD": {
     "message": "Deactivate invite link",
@@ -7719,7 +7747,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        165
+        166
       ]
     ],
     "translation": "Etiketter"
@@ -8004,7 +8032,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        156
+        157
       ]
     ],
     "translation": "Liste"
@@ -8072,7 +8100,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        750
+        767
       ]
     ],
     "translation": "Indlæs flere aktiviteter"
@@ -8096,7 +8124,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        750
+        767
       ]
     ],
     "translation": "Indlæser..."
@@ -8504,7 +8532,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        175
+        176
       ],
       [
         "src/views/members/index.tsx",
@@ -8829,7 +8857,6 @@
     "translation": "Brug for hjælp?"
   },
   "qqeAJM": {
-    "translation": "Aldrig",
     "message": "Never",
     "placeholders": {},
     "comments": [],
@@ -8842,7 +8869,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Aldrig"
   },
   "isRobC": {
     "message": "New",
@@ -9505,7 +9533,6 @@
     "translation": ""
   },
   "dg1gDd": {
-    "translation": "Åbn kort {0}",
     "message": "Open card {0}",
     "placeholders": {
       "0": [
@@ -9518,7 +9545,8 @@
         "src/views/board/index.tsx",
         988
       ]
-    ]
+    ],
+    "translation": "Åbn kort {0}"
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -9843,7 +9871,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        123
+        124
       ],
       [
         "src/views/members/index.tsx",
@@ -10351,11 +10379,11 @@
       ],
       [
         "src/views/card/index.tsx",
-        309
+        312
       ],
       [
         "src/views/card/index.tsx",
-        322
+        325
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -10750,7 +10778,6 @@
     "translation": "Rekruttering"
   },
   "icIr5O": {
-    "translation": "Tilbagevendende deadline",
     "message": "Recurring deadline",
     "placeholders": {},
     "comments": [],
@@ -10759,7 +10786,8 @@
         "src/views/board/components/Card.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Tilbagevendende deadline"
   },
   "ekCRTP": {
     "message": "Rejected",
@@ -11077,7 +11105,6 @@
     "translation": "omdøbte tjeklistepunktet til <0>{0}</0>"
   },
   "BwWIp2": {
-    "translation": "Gentag",
     "message": "Repeat",
     "placeholders": {},
     "comments": [],
@@ -11098,7 +11125,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         363
       ]
-    ]
+    ],
+    "translation": "Gentag"
   },
   "Yx0Ud8": {
     "message": "Requested",
@@ -11702,7 +11730,6 @@
     "translation": ""
   },
   "LepgJE": {
-    "translation": "Indstil datoer",
     "message": "Set dates",
     "placeholders": {},
     "comments": [],
@@ -11715,7 +11742,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         299
       ]
-    ]
+    ],
+    "translation": "Indstil datoer"
   },
   "8AbRER": {
     "message": "Set due date",
@@ -13706,7 +13734,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        321
+        324
       ]
     ],
     "translation": "Kunne ikke tilføje etiket"
@@ -14262,7 +14290,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        308
+        311
       ]
     ],
     "translation": "Kunne ikke opdatere kort"
@@ -14364,7 +14392,6 @@
     "translation": ""
   },
   "/YgeAA": {
-    "translation": "Kunne ikke opdatere datoer",
     "message": "Unable to update dates",
     "placeholders": {},
     "comments": [],
@@ -14373,7 +14400,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         110
       ]
-    ]
+    ],
+    "translation": "Kunne ikke opdatere datoer"
   },
   "C56tim": {
     "message": "Unable to update due date",
@@ -14955,7 +14983,6 @@
     "translation": "opdaterede forfaldsdatoen"
   },
   "+eysZF": {
-    "translation": "opdaterede gentagelsesplanen",
     "message": "updated the recurrence schedule",
     "placeholders": {},
     "comments": [],
@@ -14964,7 +14991,8 @@
         "src/views/card/components/ActivityList.tsx",
         344
       ]
-    ]
+    ],
+    "translation": "opdaterede gentagelsesplanen"
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -15569,7 +15597,6 @@
     "translation": "Ugens startdag"
   },
   "bbWQS2": {
-    "translation": "Hverdage",
     "message": "Weekdays",
     "placeholders": {},
     "comments": [],
@@ -15586,10 +15613,10 @@
         "src/views/card/components/CardDatesSelector.tsx",
         377
       ]
-    ]
+    ],
+    "translation": "Hverdage"
   },
   "4XSc4l": {
-    "translation": "Ugentligt",
     "message": "Weekly",
     "placeholders": {},
     "comments": [],
@@ -15606,7 +15633,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         378
       ]
-    ]
+    ],
+    "translation": "Ugentligt"
   },
   "9eF5oV": {
     "message": "Welcome back",

@@ -98,7 +98,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ]
     ],
     "translation": "{0} | {1}"
@@ -471,7 +471,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        586
+        597
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -515,6 +515,18 @@
       ]
     ],
     "translation": "Ordem das atividades"
+  },
+  "q93YxQ": {
+    "translation": "Abas de atividade",
+    "message": "Activity tabs",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        589
+      ]
+    ]
   },
   "m16xKo": {
     "message": "Add",
@@ -1013,6 +1025,18 @@
       ]
     ],
     "translation": "Depois"
+  },
+  "N40H+G": {
+    "translation": "Tudo",
+    "message": "All",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        595
+      ]
+    ]
   },
   "4upC5z": {
     "message": "All cards",
@@ -1880,7 +1904,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ],
       [
         "src/views/public/board/index.tsx",
@@ -2765,7 +2789,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        398
+        401
       ]
     ],
     "translation": "Cartão"
@@ -2841,11 +2865,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        461
+        464
       ],
       [
         "src/views/card/index.tsx",
-        511
+        514
       ]
     ],
     "translation": "Cartão não encontrado"
@@ -3311,7 +3335,6 @@
     "translation": "Limpar permissões personalizadas"
   },
   "UAzNjT": {
-    "translation": "Limpar data",
     "message": "Clear date",
     "placeholders": {},
     "comments": [],
@@ -3320,10 +3343,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         257
       ]
-    ]
+    ],
+    "translation": "Limpar data"
   },
   "0Czky2": {
-    "translation": "Limpar datas",
     "message": "Clear dates",
     "placeholders": {},
     "comments": [],
@@ -3332,7 +3355,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         402
       ]
-    ]
+    ],
+    "translation": "Limpar datas"
   },
   "u8JHrO": {
     "message": "Clear filters",
@@ -3393,7 +3417,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        452
+        455
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
@@ -3500,6 +3524,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/card/index.tsx",
+        596
+      ],
+      [
         "src/views/home/components/Features.tsx",
         105
       ],
@@ -3583,7 +3611,6 @@
     "translation": "concluiu o item da checklist <0>{0}</0>"
   },
   "faXEMy": {
-    "translation": "concluiu esta ocorrência e moveu a data de vencimento para <0>{formattedDate}</0>",
     "message": "completed this occurrence and moved the due date to <0>{formattedDate}</0>",
     "placeholders": {
       "formattedDate": [
@@ -3596,7 +3623,8 @@
         "src/views/card/components/ActivityList.tsx",
         336
       ]
-    ]
+    ],
+    "translation": "concluiu esta ocorrência e moveu a data de vencimento para <0>{formattedDate}</0>"
   },
   "tOZp9v": {
     "message": "Configurable user roles and permissions",
@@ -3991,7 +4019,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        200
+        201
       ]
     ],
     "translation": "Capa"
@@ -4509,7 +4537,6 @@
     "translation": "Suporte ao cliente"
   },
   "U0sC6H": {
-    "translation": "Diariamente",
     "message": "Daily",
     "placeholders": {},
     "comments": [],
@@ -4526,7 +4553,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         376
       ]
-    ]
+    ],
+    "translation": "Diariamente"
   },
   "pvnfJD": {
     "message": "Dark",
@@ -4561,16 +4589,16 @@
     "translation": "Data"
   },
   "UDI8Ls": {
-    "translation": "Datas",
     "message": "Dates",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "src/views/card/index.tsx",
-        185
+        186
       ]
-    ]
+    ],
+    "translation": "Datas"
   },
   "cp1rsD": {
     "message": "Deactivate invite link",
@@ -7784,7 +7812,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        165
+        166
       ]
     ],
     "translation": "Etiquetas"
@@ -8082,7 +8110,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        156
+        157
       ]
     ],
     "translation": "Lista"
@@ -8150,7 +8178,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        750
+        767
       ]
     ],
     "translation": "Carregar mais atividades"
@@ -8174,7 +8202,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        750
+        767
       ]
     ],
     "translation": "Carregando..."
@@ -8582,7 +8610,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        175
+        176
       ],
       [
         "src/views/members/index.tsx",
@@ -8907,7 +8935,6 @@
     "translation": "Precisa de ajuda?"
   },
   "qqeAJM": {
-    "translation": "Nunca",
     "message": "Never",
     "placeholders": {},
     "comments": [],
@@ -8920,7 +8947,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Nunca"
   },
   "isRobC": {
     "message": "New",
@@ -9583,7 +9611,6 @@
     "translation": "Abra um campo para editar suas configurações."
   },
   "dg1gDd": {
-    "translation": "Abrir cartão {0}",
     "message": "Open card {0}",
     "placeholders": {
       "0": [
@@ -9596,7 +9623,8 @@
         "src/views/board/index.tsx",
         988
       ]
-    ]
+    ],
+    "translation": "Abrir cartão {0}"
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -9921,7 +9949,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        123
+        124
       ],
       [
         "src/views/members/index.tsx",
@@ -10429,11 +10457,11 @@
       ],
       [
         "src/views/card/index.tsx",
-        309
+        312
       ],
       [
         "src/views/card/index.tsx",
-        322
+        325
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -10828,7 +10856,6 @@
     "translation": "Recrutamento"
   },
   "icIr5O": {
-    "translation": "Prazo recorrente",
     "message": "Recurring deadline",
     "placeholders": {},
     "comments": [],
@@ -10837,7 +10864,8 @@
         "src/views/board/components/Card.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Prazo recorrente"
   },
   "ekCRTP": {
     "message": "Rejected",
@@ -11155,7 +11183,6 @@
     "translation": "renomeou o item da lista de verificação para <0>{0}</0>"
   },
   "BwWIp2": {
-    "translation": "Repetir",
     "message": "Repeat",
     "placeholders": {},
     "comments": [],
@@ -11176,7 +11203,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         363
       ]
-    ]
+    ],
+    "translation": "Repetir"
   },
   "Yx0Ud8": {
     "message": "Requested",
@@ -11780,7 +11808,6 @@
     "translation": "Definir prazo do item da lista"
   },
   "LepgJE": {
-    "translation": "Definir datas",
     "message": "Set dates",
     "placeholders": {},
     "comments": [],
@@ -11793,7 +11820,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         299
       ]
-    ]
+    ],
+    "translation": "Definir datas"
   },
   "8AbRER": {
     "message": "Set due date",
@@ -13784,7 +13812,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        321
+        324
       ]
     ],
     "translation": "Não foi possível adicionar etiqueta"
@@ -14340,7 +14368,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        308
+        311
       ]
     ],
     "translation": "Não foi possível atualizar o cartão"
@@ -14442,7 +14470,6 @@
     "translation": "Não foi possível atualizar os campos personalizados"
   },
   "/YgeAA": {
-    "translation": "Não foi possível atualizar as datas",
     "message": "Unable to update dates",
     "placeholders": {},
     "comments": [],
@@ -14451,7 +14478,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         110
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar as datas"
   },
   "C56tim": {
     "message": "Unable to update due date",
@@ -15050,7 +15078,6 @@
     "translation": "atualizou a data de vencimento"
   },
   "+eysZF": {
-    "translation": "atualizou a programação de recorrência",
     "message": "updated the recurrence schedule",
     "placeholders": {},
     "comments": [],
@@ -15059,7 +15086,8 @@
         "src/views/card/components/ActivityList.tsx",
         344
       ]
-    ]
+    ],
+    "translation": "atualizou a programação de recorrência"
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -15677,7 +15705,6 @@
     "translation": "Dia de início da semana"
   },
   "bbWQS2": {
-    "translation": "Dias úteis",
     "message": "Weekdays",
     "placeholders": {},
     "comments": [],
@@ -15694,10 +15721,10 @@
         "src/views/card/components/CardDatesSelector.tsx",
         377
       ]
-    ]
+    ],
+    "translation": "Dias úteis"
   },
   "4XSc4l": {
-    "translation": "Semanalmente",
     "message": "Weekly",
     "placeholders": {},
     "comments": [],
@@ -15714,7 +15741,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         378
       ]
-    ]
+    ],
+    "translation": "Semanalmente"
   },
   "9eF5oV": {
     "message": "Welcome back",

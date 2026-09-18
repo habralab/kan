@@ -7,12 +7,23 @@ import { CardPage } from "../support/pages/card-page";
 import { DashboardPage } from "../support/pages/dashboard-page";
 import { SelfHostedOnboardingPage } from "../support/pages/self-hosted-onboarding-page";
 import { createTestUser } from "../support/test-user";
+import { waitForTrpcQuery } from "../support/wait-for-trpc";
 
 async function verticalPosition(locator: Locator) {
   const box = await locator.boundingBox();
   if (!box) throw new Error("Expected the element to have a bounding box");
 
   return box.y;
+}
+
+async function verticalGap(upper: Locator, lower: Locator) {
+  const upperBox = await upper.boundingBox();
+  const lowerBox = await lower.boundingBox();
+  if (!upperBox || !lowerBox) {
+    throw new Error("Expected both elements to have a bounding box");
+  }
+
+  return lowerBox.y - (upperBox.y + upperBox.height);
 }
 
 test(
@@ -34,15 +45,40 @@ test(
     await board.createList("To do");
     await board.createCard("Activity filter test card");
     await board.openCard("Activity filter test card");
-    await card.addComment("Visible discussion comment");
 
     const comment = page.getByText("Visible discussion comment", {
       exact: true,
     });
-    const systemActivity = page.getByText("created this card", { exact: true });
+    const systemActivity = page.getByText(/created the card/);
     const commentForm = page
       .getByRole("button", { name: "Submit comment" })
       .locator("xpath=ancestor::form");
+    const activityTabs = page.getByRole("tablist", { name: "Activity tabs" });
+
+    const emptyCommentsLoaded = waitForTrpcQuery(page, "card.getActivities");
+    await page.getByRole("tab", { name: "Comments", exact: true }).click();
+    await emptyCommentsLoaded;
+    await expect(commentForm).toBeVisible();
+    const oldestEmptyGap = await verticalGap(activityTabs, commentForm);
+
+    const newestEmptyLoaded = waitForTrpcQuery(page, "card.getActivities");
+    await page
+      .getByRole("button", { name: "Show newest activity first" })
+      .click();
+    await newestEmptyLoaded;
+    await expect(commentForm).toBeVisible();
+    expect(
+      Math.abs((await verticalGap(activityTabs, commentForm)) - oldestEmptyGap),
+    ).toBeLessThanOrEqual(1);
+
+    await page
+      .getByRole("button", { name: "Show oldest activity first" })
+      .click();
+    await page.getByRole("tab", { name: "All", exact: true }).click();
+    await expect(
+      page.getByRole("tab", { name: "All", exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
+    await card.addComment("Visible discussion comment");
 
     await expect(comment).toBeVisible();
     await expect(systemActivity).toBeVisible();

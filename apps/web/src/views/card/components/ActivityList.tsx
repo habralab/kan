@@ -557,6 +557,7 @@ const ActivityList = ({
   filter = "all",
   recentCommentPublicIds = [],
   isViewOnly,
+  commentComposer,
 }: {
   cardPublicId: string;
   isLoading: boolean;
@@ -564,6 +565,7 @@ const ActivityList = ({
   filter?: ActivityFeedFilter;
   recentCommentPublicIds?: string[];
   isViewOnly?: boolean;
+  commentComposer?: React.ReactNode;
 }) => {
   const utils = api.useUtils();
   const [allActivities, setAllActivities] = useState<
@@ -575,6 +577,9 @@ const ActivityList = ({
   const [nextCursorPublicId, setNextCursorPublicId] = useState<string | null>(
     null,
   );
+  const [hasSettledActivities, setHasSettledActivities] = useState<
+    boolean | null
+  >(null);
 
   const isFullyExpandedRef = useRef(false);
   const lastDataUpdatedAtRef = useRef<number | null>(null);
@@ -624,10 +629,17 @@ const ActivityList = ({
   }, [cardPublicId, filter, order]);
 
   useEffect(() => {
+    setHasSettledActivities(null);
+  }, [cardPublicId, filter]);
+
+  useEffect(() => {
     let cancelled = false;
 
     if (firstPageData && dataUpdatedAt !== lastDataUpdatedAtRef.current) {
       lastDataUpdatedAtRef.current = dataUpdatedAt;
+      setHasSettledActivities(
+        firstPageData.activities.length > 0 || firstPageData.hasMore,
+      );
 
       if (isFullyExpandedRef.current && firstPageData.hasMore) {
         setAllActivities(firstPageData.activities);
@@ -747,33 +759,43 @@ const ActivityList = ({
           )
           .reverse()
       : [];
+  const showCommentComposerFirst =
+    order === "newest" || hasSettledActivities !== true;
 
   return (
-    <div className="flex flex-col space-y-4 pt-4">
-      <ActivityItems
-        activities={allActivities}
-        cardPublicId={cardPublicId}
-        isLoading={isLoading}
-        isViewOnly={isViewOnly}
-      />
-      {hasMore && (
-        <div className="flex justify-center pt-4">
-          <button
-            onClick={handleLoadMore}
-            disabled={isFetching}
-            className="text-sm font-medium text-light-900 hover:text-light-1000 disabled:opacity-50 dark:text-dark-800 dark:hover:text-dark-1000"
-          >
-            {isFetching ? t`Loading...` : t`Load more activities`}
-          </button>
-        </div>
+    <>
+      {commentComposer && showCommentComposerFirst && (
+        <div className="mb-2">{commentComposer}</div>
       )}
-      <ActivityItems
-        activities={recentActivities}
-        cardPublicId={cardPublicId}
-        isLoading={isLoading}
-        isViewOnly={isViewOnly}
-      />
-    </div>
+      <div className="flex flex-col space-y-4 pt-4">
+        <ActivityItems
+          activities={allActivities}
+          cardPublicId={cardPublicId}
+          isLoading={isLoading}
+          isViewOnly={isViewOnly}
+        />
+        {hasMore && (
+          <div className="flex justify-center pt-4">
+            <button
+              onClick={handleLoadMore}
+              disabled={isFetching}
+              className="text-sm font-medium text-light-900 hover:text-light-1000 disabled:opacity-50 dark:text-dark-800 dark:hover:text-dark-1000"
+            >
+              {isFetching ? t`Loading...` : t`Load more activities`}
+            </button>
+          </div>
+        )}
+        <ActivityItems
+          activities={recentActivities}
+          cardPublicId={cardPublicId}
+          isLoading={isLoading}
+          isViewOnly={isViewOnly}
+        />
+      </div>
+      {commentComposer && !showCommentComposerFirst && (
+        <div className="mt-6">{commentComposer}</div>
+      )}
+    </>
   );
 };
 

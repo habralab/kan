@@ -111,7 +111,25 @@ test(
       checklistDateButtonBefore?.y ?? 0,
       0,
     );
+    await itemRow.getByRole("button", { name: "Cancel" }).click();
+    await page.setViewportSize({ width: 768, height: 720 });
+    await checklistDateButton.click();
+    const checklistDatePanel = page
+      .locator("time")
+      .filter({ visible: true })
+      .first()
+      .locator("xpath=ancestor::div[contains(@class, 'absolute')][1]");
+    const checklistDatePanelBox = await checklistDatePanel.boundingBox();
+    expect(checklistDatePanelBox).not.toBeNull();
+    expect(checklistDatePanelBox?.x ?? -1).toBeGreaterThanOrEqual(0);
+    expect(
+      (checklistDatePanelBox?.x ?? 0) + (checklistDatePanelBox?.width ?? 0),
+    ).toBeLessThanOrEqual(768);
+    await itemRow.getByRole("button", { name: "Cancel" }).click();
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.reload();
     const itemDueDate = new Date().toISOString().slice(0, 10);
+    await checklistDateButton.click();
     await page
       .locator(`time[datetime="${itemDueDate}"]`)
       .filter({ visible: true })

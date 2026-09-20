@@ -137,7 +137,8 @@ test(
       planningSection.getByRole("textbox", { name: "Estimate" }),
     ).toBeVisible();
     const coverBox = await page
-      .getByText("Cover", { exact: true })
+      .getByRole("button", { name: "Card cover" })
+      .locator("xpath=../..")
       .boundingBox();
     const planningBox = await page
       .getByRole("heading", { name: "Planning" })
@@ -235,12 +236,13 @@ test(
     const cardPath = new URL(page.url()).pathname;
     await page.goto(boardPath);
     const cardLink = page.locator(`a[href="${cardPath}"]`);
-    await expect(cardLink.getByText("Effort notes:")).toHaveCount(0);
-    await expect(cardLink.getByText("Preserve these spaces")).toHaveCount(0);
-    await expect(cardLink.getByText("Estimate:")).toBeVisible();
-    await expect(cardLink.getByText("Milestone:")).toBeVisible();
-    await expect(cardLink.getByText("Priority:")).toBeVisible();
-    const approvedBadge = cardLink
+    const boardCard = cardLink.locator("xpath=preceding-sibling::div[1]");
+    await expect(boardCard.getByText("Effort notes:")).toHaveCount(0);
+    await expect(boardCard.getByText("Preserve these spaces")).toHaveCount(0);
+    await expect(boardCard.getByText("Estimate:")).toBeVisible();
+    await expect(boardCard.getByText("Milestone:")).toBeVisible();
+    await expect(boardCard.getByText("Priority:")).toBeVisible();
+    const approvedBadge = boardCard
       .getByText("Approved", { exact: true })
       .locator("..");
     await expect(approvedBadge).toBeVisible();
@@ -316,7 +318,10 @@ test(
     const { guestContext, guestPage } = await inviteGuest(page, browser);
     await guestPage.goto(copiedBoardPath);
     await guestPage
-      .getByText("Custom fields test card", { exact: true })
+      .getByRole("link", {
+        name: "Open card Custom fields test card",
+        exact: true,
+      })
       .first()
       .click();
     await guestPage.waitForURL(/\/cards\/[^/]+$/);
@@ -528,6 +533,8 @@ test(
     await auth.signUp(user);
     await onboarding.createFirstWorkspace("E2E Lifecycle Workspace");
     await dashboard.expectSignedInAs(user);
+    await page.reload();
+    await dashboard.expectSignedInAs(user);
 
     await board.createBoard("E2E Custom Fields Lifecycle");
     await board.createList("To do");
@@ -657,8 +664,8 @@ test(
     ).toBeLessThanOrEqual(390);
     await page.keyboard.press("Escape");
     await expect(filterDialog).toHaveCount(0);
-
     const boardPath = new URL(page.url()).pathname;
+    await page.goto(boardPath);
     await board.openCard("Lifecycle card");
     await page.getByRole("button", { name: "Settings" }).click();
     const valueStored = waitForTrpcMutation(page, "customField.setValue");

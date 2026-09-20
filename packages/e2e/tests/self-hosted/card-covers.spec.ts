@@ -47,11 +47,11 @@ test(
     await page.waitForURL(boardUrl);
 
     const boardCard = page
-      .locator('a[href^="/cards/"]')
-      .filter({ has: page.getByText(cardTitle, { exact: true }) });
+      .getByRole("link", { name: `Open card ${cardTitle}`, exact: true })
+      .locator("xpath=preceding-sibling::div[1]");
     await boardCard.scrollIntoViewIfNeeded();
     await expect(boardCard.locator("img")).toBeVisible();
-    await expect(boardCard.locator(":scope > div")).toHaveClass(/min-h-40/);
+    await expect(boardCard).toHaveClass(/min-h-40/);
 
     await settings.open();
     await settings.setCardCoverDisplay("hidden");

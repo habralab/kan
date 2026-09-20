@@ -48,11 +48,15 @@ export class CalendarPage {
     return this.page.locator("header h2 time").innerText();
   }
 
-  private dayCell(date: Date) {
+  private dayLabel(date: Date) {
     return this.page
       .locator(`time[datetime="${toDateKey(date)}"]`)
       .filter({ visible: true })
-      .locator("..");
+      .filter({ hasText: new RegExp(`^${date.getDate()}$`) });
+  }
+
+  private dayCell(date: Date) {
+    return this.dayLabel(date).locator("..");
   }
 
   async expectCardOnDate(cardTitle: string, date: Date) {
@@ -68,7 +72,7 @@ export class CalendarPage {
   }
 
   async createCardOnDate(date: Date, title: string) {
-    await this.dayCell(date).click();
+    await this.dayLabel(date).click();
     await this.page.getByRole("heading", { name: "New card" }).waitFor();
     await this.page.getByPlaceholder("Card title").fill(title);
     const created = waitForTrpcMutation(this.page, "card.create");

@@ -521,15 +521,22 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
   };
 
   const handleCalendarCardDrop = (
-    cardPublicId: string,
-    dueDate: Date,
-    onSettled: () => void,
+    card: {
+      publicId: string;
+      startDate: Date | null;
+      dueDate: Date | null;
+      dueDateHasTime: boolean;
+    },
+    sourceDate: Date,
+    targetDate: Date,
   ) => {
-    if (!canEditCard || isFreeCloudPlan) {
-      onSettled();
-      return;
-    }
-    updateCardDueDateMutation.mutate({ cardPublicId, dueDate }, { onSettled });
+    if (!canEditCard || isFreeCloudPlan) return;
+    if (differenceInCalendarDays(targetDate, sourceDate) === 0) return;
+
+    updateCardScheduleMutation.mutate({
+      cardPublicId: card.publicId,
+      ...shiftCalendarDates(card, sourceDate, targetDate),
+    });
   };
 
   const handleCardContextMenuAction = (action: CardContextMenuAction) => {

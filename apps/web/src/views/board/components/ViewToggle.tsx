@@ -10,6 +10,8 @@ interface ViewToggleProps {
 }
 
 const ViewToggle = ({ view, onChange }: ViewToggleProps) => {
+  const listsLabel = t`Lists`;
+  const calendarLabel = t`Calendar`;
   const baseButtonClasses =
     "flex items-center gap-1.5 rounded-[5px] px-2.5 py-1.5 text-sm font-semibold transition-colors sm:px-3";
   const activeClasses =
@@ -21,25 +23,29 @@ const ViewToggle = ({ view, onChange }: ViewToggleProps) => {
     <div className="flex items-center gap-0.5 rounded-md border-[1px] border-light-600 bg-light-50 p-0.5 dark:border-dark-600 dark:bg-dark-50">
       <button
         type="button"
+        aria-label={listsLabel}
+        aria-pressed={view === "board"}
         onClick={() => onChange("board")}
         className={twMerge(
           baseButtonClasses,
           view === "board" ? activeClasses : inactiveClasses,
         )}
       >
-        <HiOutlineViewColumns className="h-4 w-4" />
-        <span className="hidden sm:inline">{t`Lists`}</span>
+        <HiOutlineViewColumns className="h-4 w-4" aria-hidden="true" />
+        <span className="hidden sm:inline">{listsLabel}</span>
       </button>
       <button
         type="button"
+        aria-label={calendarLabel}
+        aria-pressed={view === "calendar"}
         onClick={() => onChange("calendar")}
         className={twMerge(
           baseButtonClasses,
           view === "calendar" ? activeClasses : inactiveClasses,
         )}
       >
-        <HiCalendarDays className="h-4 w-4" />
-        <span className="hidden sm:inline">{t`Calendar`}</span>
+        <HiCalendarDays className="h-4 w-4" aria-hidden="true" />
+        <span className="hidden sm:inline">{calendarLabel}</span>
       </button>
     </div>
   );

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { t } from "@lingui/core/macro";
 import { keepPreviousData } from "@tanstack/react-query";
+import { differenceInCalendarDays, format, isValid, parseISO } from "date-fns";
 import { env } from "next-runtime-env";
 import { useEffect, useMemo, useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
@@ -45,6 +46,7 @@ import { invalidateCard } from "~/utils/cardInvalidation";
 import { formatToArray, isPlaceholderPublicId } from "~/utils/helpers";
 import { TIME_TRACKING_CHANNEL_NAME } from "~/utils/timeTracking";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
+import { shiftCalendarDates } from "./calendar-dates";
 import { BoardBackgroundForm } from "./components/BoardBackgroundForm";
 import BoardDropdown from "./components/BoardDropdown";
 import CalendarView from "./components/CalendarView";
@@ -183,6 +185,33 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
 
   const view: BoardView = isTemplate ? "board" : requestedView;
 
+  const calendarScope =
+    router.query.calendarScope === "week" ? "week" : "month";
+  const calendarDate = useMemo(() => {
+    const value = router.query.calendarDate;
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return new Date();
+    }
+
+    const date = parseISO(value);
+    return isValid(date) ? date : new Date();
+  }, [router.query.calendarDate]);
+
+  const handleCalendarPeriodChange = (
+    nextScope: "month" | "week",
+    date: Date,
+  ) => {
+    const nextQuery = { ...router.query };
+    if (nextScope === "week") {
+      nextQuery.calendarScope = "week";
+    } else {
+      delete nextQuery.calendarScope;
+    }
+    nextQuery.calendarDate = format(date, "yyyy-MM-dd");
+
+    void router.push({ pathname: router.pathname, query: nextQuery });
+  };
+
   const handleViewChange = (nextView: BoardView) => {
     const nextQuery = { ...router.query };
     if (nextView === "calendar") {
@@ -220,6 +249,12 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     enabled: !!boardId,
     placeholderData: keepPreviousData,
   });
+
+  const { data: calendarChecklistItems = [] } =
+    api.checklist.calendarByBoard.useQuery(
+      { boardPublicId: boardId ?? "" },
+      { enabled: !!boardId && view === "calendar" },
+    );
 
   const timeTrackingSettings = api.timeTracking.getSettings.useQuery(
     { boardPublicId: boardId ?? "" },
@@ -394,7 +429,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     },
   });
 
-  const updateCardDueDateMutation = api.card.update.useMutation({
+  const updateCardScheduleMutation = api.card.update.useMutation({
     onMutate: async (args) => {
       await utils.board.byId.cancel();
 
@@ -409,7 +444,18 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
             ...list,
             cards: list.cards.map((card) =>
               card.publicId === args.cardPublicId
-                ? { ...card, dueDate: args.dueDate ?? null }
+                ? {
+                    ...card,
+                    ...(args.dueDate !== undefined && {
+                      dueDate: args.dueDate,
+                    }),
+                    ...(args.startDate !== undefined && {
+                      startDate: args.startDate,
+                    }),
+                    ...(args.dueDateHasTime !== undefined && {
+                      dueDateHasTime: args.dueDateHasTime,
+                    }),
+                  }
                 : card,
             ),
           })),
@@ -421,7 +467,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     onError: (_error, _args, context) => {
       utils.board.byId.setData(queryParams, context?.previousState);
       showPopup({
-        header: t`Unable to update due date`,
+        header: t`Unable to update card`,
         message: t`Please try again later, or contact customer support.`,
         icon: "error",
       });
@@ -493,9 +539,23 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     openModal("NEW_CARD");
   };
 
-  const handleCalendarCardDrop = (cardPublicId: string, dueDate: Date) => {
+  const handleCalendarCardDrop = (
+    card: {
+      publicId: string;
+      startDate: Date | null;
+      dueDate: Date | null;
+      dueDateHasTime: boolean;
+    },
+    sourceDate: Date,
+    targetDate: Date,
+  ) => {
     if (!canEditCard || isFreeCloudPlan) return;
-    updateCardDueDateMutation.mutate({ cardPublicId, dueDate });
+    if (differenceInCalendarDays(targetDate, sourceDate) === 0) return;
+
+    updateCardScheduleMutation.mutate({
+      cardPublicId: card.publicId,
+      ...shiftCalendarDates(card, sourceDate, targetDate),
+    });
   };
 
   const handleCardContextMenuAction = (action: CardContextMenuAction) => {
@@ -888,6 +948,10 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
           boardData && (
             <CalendarView
               lists={boardData.lists}
+              checklistItems={calendarChecklistItems}
+              scope={calendarScope}
+              currentDate={calendarDate}
+              onPeriodChange={handleCalendarPeriodChange}
               cardPrefix={boardData.workspace.cardPrefix}
               weekStartsOn={workspace.weekStartDay}
               isTemplate={!!isTemplate}

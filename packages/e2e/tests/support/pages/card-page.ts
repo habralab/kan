@@ -263,7 +263,12 @@ export class CardPage {
       .filter({ visible: true })
       .click();
 
-    const today = new Date().toISOString().slice(0, 10);
+    const todayDate = new Date();
+    const today = [
+      todayDate.getFullYear(),
+      String(todayDate.getMonth() + 1).padStart(2, "0"),
+      String(todayDate.getDate()).padStart(2, "0"),
+    ].join("-");
     await this.page
       .locator(`time[datetime="${today}"]`)
       .filter({ visible: true })
@@ -272,6 +277,8 @@ export class CardPage {
     const updated = waitForTrpcMutation(this.page, "card.update");
     await this.page.getByRole("button", { name: "Save", exact: true }).click();
     await updated;
+
+    return todayDate;
   }
 
   async setDateRange(startDate: string, dueDate: string, time?: string) {

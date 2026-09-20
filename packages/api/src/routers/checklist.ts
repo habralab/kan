@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import * as boardRepo from "@kan/db/repository/board.repo";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
 import * as checklistRepo from "@kan/db/repository/checklist.repo";
@@ -24,6 +25,57 @@ const checklistItemSchema = z.object({
 });
 
 export const checklistRouter = createTRPCRouter({
+  calendarByBoard: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Get dated checklist items for a board calendar",
+        method: "GET",
+        path: "/boards/{boardPublicId}/calendar-checklist-items",
+        description: "Retrieves dated checklist items for a board calendar",
+        tags: ["Boards"],
+        protect: true,
+      },
+    })
+    .input(z.object({ boardPublicId: z.string().length(12) }))
+    .output(
+      z.array(
+        z.object({
+          publicId: z.string().length(12),
+          title: z.string(),
+          completed: z.boolean(),
+          dueDate: z.date(),
+          dueDateHasTime: z.boolean(),
+          cardPublicId: z.string().length(12),
+        }),
+      ),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+      if (!userId) {
+        throw new TRPCError({
+          message: "User not authenticated",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const board = await boardRepo.getWorkspaceAndBoardIdByBoardPublicId(
+        ctx.db,
+        input.boardPublicId,
+      );
+      if (!board) {
+        throw new TRPCError({
+          message: `Board with public ID ${input.boardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+      }
+
+      await assertPermission(ctx.db, userId, board.workspaceId, "board:view");
+
+      return checklistRepo.getCalendarItemsByBoardPublicId(
+        ctx.db,
+        input.boardPublicId,
+      );
+    }),
   create: protectedProcedure
     .meta({
       openapi: {

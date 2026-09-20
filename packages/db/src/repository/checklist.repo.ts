@@ -1,8 +1,50 @@
-import { and, count, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
-import { checklistItems, checklists } from "@kan/db/schema";
+import {
+  boards,
+  cards,
+  checklistItems,
+  checklists,
+  lists,
+} from "@kan/db/schema";
 import { generateUID } from "@kan/shared/utils";
+
+export const getCalendarItemsByBoardPublicId = async (
+  db: dbClient,
+  boardPublicId: string,
+) => {
+  const rows = await db
+    .select({
+      publicId: checklistItems.publicId,
+      title: checklistItems.title,
+      completed: checklistItems.completed,
+      dueDate: checklistItems.dueDate,
+      dueDateHasTime: checklistItems.dueDateHasTime,
+      cardPublicId: cards.publicId,
+    })
+    .from(checklistItems)
+    .innerJoin(checklists, eq(checklistItems.checklistId, checklists.id))
+    .innerJoin(cards, eq(checklists.cardId, cards.id))
+    .innerJoin(lists, eq(cards.listId, lists.id))
+    .innerJoin(boards, eq(lists.boardId, boards.id))
+    .where(
+      and(
+        eq(boards.publicId, boardPublicId),
+        isNull(boards.deletedAt),
+        isNull(lists.deletedAt),
+        isNull(cards.deletedAt),
+        isNull(checklists.deletedAt),
+        isNull(checklistItems.deletedAt),
+        isNotNull(checklistItems.dueDate),
+      ),
+    )
+    .orderBy(asc(checklistItems.dueDate), asc(checklistItems.index));
+
+  return rows.filter(
+    (item): item is typeof item & { dueDate: Date } => item.dueDate !== null,
+  );
+};
 
 export const getCount = async (db: dbClient) => {
   const result = await db

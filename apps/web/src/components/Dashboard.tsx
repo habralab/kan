@@ -13,6 +13,7 @@ import {
 import { authClient } from "@kan/auth/client";
 
 import { useClickOutside } from "~/hooks/useClickOutside";
+import { BoardSearchScopeProvider } from "~/providers/board-search-scope";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace, WorkspaceProvider } from "~/providers/workspace";
@@ -35,9 +36,11 @@ export function getDashboardLayout(
 ) {
   return (
     <WorkspaceProvider>
-      <Dashboard rightPanel={rightPanel} hasRightPanel={hasRightPanel}>
-        {page}
-      </Dashboard>
+      <BoardSearchScopeProvider>
+        <Dashboard rightPanel={rightPanel} hasRightPanel={hasRightPanel}>
+          {page}
+        </Dashboard>
+      </BoardSearchScopeProvider>
     </WorkspaceProvider>
   );
 }

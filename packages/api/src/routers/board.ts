@@ -49,6 +49,69 @@ import {
 const logger = createLogger("board");
 
 export const boardRouter = createTRPCRouter({
+  searchCards: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/boards/{boardPublicId}/cards/search",
+        summary: "Search cards on a board",
+        description: "Searches card titles within a board",
+        tags: ["Boards"],
+        protect: true,
+      },
+    })
+    .input(
+      z.object({
+        boardPublicId: z.string().min(12),
+        query: z.string().trim().min(1).max(100),
+        cursor: z.number().int().nonnegative().optional().default(0),
+        limit: z.number().int().min(1).max(50).optional().default(30),
+      }),
+    )
+    .output(
+      z.object({
+        items: z.array(
+          z.object({
+            publicId: z.string(),
+            title: z.string(),
+            cardNumber: z.number().nullable(),
+            listName: z.string(),
+            boardPublicId: z.string(),
+            boardName: z.string(),
+          }),
+        ),
+        nextCursor: z.number().int().nonnegative().nullable(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: "User not authenticated",
+          code: "UNAUTHORIZED",
+        });
+
+      const board = await boardRepo.getWorkspaceAndBoardIdByBoardPublicId(
+        ctx.db,
+        input.boardPublicId,
+      );
+
+      if (!board)
+        throw new TRPCError({
+          message: `Board with public ID ${input.boardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertPermission(ctx.db, userId, board.workspaceId, "board:view");
+
+      const result = await boardRepo.searchCardsByBoardPublicId(ctx.db, input);
+
+      return {
+        items: result.items,
+        nextCursor: result.hasMore ? input.cursor + input.limit : null,
+      };
+    }),
   coverUrls: publicProcedure
     .input(
       z.object({

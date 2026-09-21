@@ -37,6 +37,7 @@ import { EditYouTubeModal } from "~/components/YouTubeEmbed/EditYouTubeModal";
 import { useDragToScroll } from "~/hooks/useDragToScroll";
 import { usePermissions } from "~/hooks/usePermissions";
 import { useScrollRestore } from "~/hooks/useScrollRestore";
+import { useBoardSearchScope } from "~/providers/board-search-scope";
 import { useKeyboardShortcut } from "~/providers/keyboard-shortcuts";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
@@ -89,6 +90,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
   const router = useRouter();
   const utils = api.useUtils();
   const { showPopup } = usePopup();
+  const { setBoardScope } = useBoardSearchScope();
   const { workspace } = useWorkspace();
   const { openModal, modalContentType, entityId, isOpen } = useModal();
   const [selectedPublicListId, setSelectedPublicListId] =
@@ -249,6 +251,22 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     enabled: !!boardId,
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    setBoardScope(
+      !isTemplate && boardData && boardData.publicId === boardId
+        ? { publicId: boardData.publicId, name: boardData.name }
+        : null,
+    );
+
+    return () => setBoardScope(null);
+  }, [
+    boardData?.publicId,
+    boardData?.name,
+    boardId,
+    isTemplate,
+    setBoardScope,
+  ]);
 
   const { data: calendarChecklistItems = [] } =
     api.checklist.calendarByBoard.useQuery(

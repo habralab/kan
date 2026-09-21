@@ -179,7 +179,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        867
+        885
       ]
     ],
     "translation": "{0} niet gevonden"
@@ -1966,7 +1966,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        834
+        852
       ],
       [
         "src/views/card/index.tsx",
@@ -2023,7 +2023,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        857
+        875
       ]
     ],
     "translation": "Bordnaam"
@@ -2991,7 +2991,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        575
+        593
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -3471,7 +3471,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        283
+        286
       ],
       [
         "src/views/board/components/BoardBackgroundForm.tsx",
@@ -4286,11 +4286,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        133
+        135
       ],
       [
         "src/views/board/index.tsx",
-        1009
+        1027
       ]
     ],
     "translation": "Maak nieuwe lijst"
@@ -4330,7 +4330,7 @@
       ],
       [
         "src/components/WorkspaceMenu.tsx",
-        177
+        183
       ]
     ],
     "translation": "Maak werkruimte"
@@ -6857,7 +6857,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        991
+        1009
       ]
     ],
     "translation": "Ga aan de slag door een nieuwe lijst te maken"
@@ -7477,10 +7477,26 @@
     "origin": [
       [
         "src/components/CommandPallette.tsx",
-        177
+        249
       ]
     ],
     "translation": "in"
+  },
+  "15Qqe2": {
+    "translation": "In {0}",
+    "message": "In {0}",
+    "placeholders": {
+      "0": [
+        "boardScope.name"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        181
+      ]
+    ]
   },
   "WbTDwg": {
     "message": "In Progress",
@@ -8097,7 +8113,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        115
+        118
       ]
     ],
     "translation": "Licentie geactiveerd"
@@ -8109,7 +8125,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        129
+        132
       ]
     ],
     "translation": "Licentieactivering mislukt"
@@ -8145,7 +8161,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        573
+        591
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -8279,6 +8295,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        271
+      ],
       [
         "src/views/card/components/ActivityList.tsx",
         784
@@ -9156,7 +9176,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        932
+        950
       ]
     ],
     "translation": "Nieuwe lijst"
@@ -9485,7 +9505,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        126
+        129
       ]
     ],
     "translation": "Er is geen licentiecode opgegeven. Probeer het opnieuw te activeren."
@@ -9497,7 +9517,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        987
+        1005
       ]
     ],
     "translation": "Geen lijsten"
@@ -9509,7 +9529,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        992
+        1010
       ]
     ],
     "translation": "Er zijn nog geen lijsten aangemaakt"
@@ -9561,7 +9581,7 @@
     "origin": [
       [
         "src/components/CommandPallette.tsx",
-        193
+        283
       ]
     ],
     "translation": "Geen resultaten gevonden voor \"{debouncedQuery}\"."
@@ -9773,7 +9793,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        1152
+        1170
       ]
     ],
     "translation": "Kaart {0} openen"
@@ -9785,7 +9805,7 @@
     "origin": [
       [
         "src/components/WorkspaceMenu.tsx",
-        37
+        39
       ]
     ],
     "translation": "Commandomenu openen"
@@ -9985,7 +10005,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        273
+        276
       ]
     ],
     "translation": "Wachtwoord is al ingesteld"
@@ -10509,19 +10529,19 @@
       ],
       [
         "src/views/board/index.tsx",
-        367
+        385
       ],
       [
         "src/views/board/index.tsx",
-        423
+        441
       ],
       [
         "src/views/board/index.tsx",
-        471
+        489
       ],
       [
         "src/views/board/index.tsx",
-        510
+        528
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -10721,7 +10741,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        582
+        600
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -11648,7 +11668,6 @@
     "translation": "Bespaar tijd met herbruikbare bordsjablonen."
   },
   "SnYrvp": {
-    "translation": "Geplande items: {0}",
     "message": "Scheduled items: {0}",
     "placeholders": {
       "0": [
@@ -11661,7 +11680,8 @@
         "src/views/board/components/CalendarView.tsx",
         548
       ]
-    ]
+    ],
+    "translation": "Geplande items: {0}"
   },
   "cOh+MI": {
     "message": "Screening",
@@ -11682,10 +11702,34 @@
     "origin": [
       [
         "src/components/WorkspaceMenu.tsx",
-        102
+        108
       ]
     ],
     "translation": "Zoeken"
+  },
+  "SiekAu": {
+    "translation": "Alle borden in deze werkruimte doorzoeken",
+    "message": "Search all boards in this workspace",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        179
+      ]
+    ]
+  },
+  "cQCXo5": {
+    "translation": "Borden en kaarten doorzoeken",
+    "message": "Search boards and cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        146
+      ]
+    ]
   },
   "SkCNhl": {
     "message": "Search boards and cards...",
@@ -11694,10 +11738,50 @@
     "origin": [
       [
         "src/components/CommandPallette.tsx",
-        105
+        141
       ]
     ],
     "translation": "Zoek borden en kaarten..."
+  },
+  "AjPHW5": {
+    "translation": "Kaarten op dit bord doorzoeken",
+    "message": "Search cards on this board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        145
+      ]
+    ]
+  },
+  "aW4ks1": {
+    "translation": "Kaarten op dit bord doorzoeken...",
+    "message": "Search cards on this board...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        140
+      ]
+    ]
+  },
+  "+UfRfW": {
+    "translation": "Zoeken in {0}",
+    "message": "Search in {0}",
+    "placeholders": {
+      "0": [
+        "boardScope.name"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        193
+      ]
+    ]
   },
   "AaDUlx": {
     "message": "Search members",
@@ -12110,7 +12194,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        207
+        210
       ],
       [
         "src/components/SettingsLayout.tsx",
@@ -12242,6 +12326,18 @@
       ]
     ],
     "translation": "Minder tonen"
+  },
+  "fMPkxb": {
+    "translation": "Meer tonen",
+    "message": "Show more",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        272
+      ]
+    ]
   },
   "0XmVWH": {
     "message": "Show newest activity first",
@@ -12594,7 +12690,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        132
+        135
       ]
     ],
     "translation": "Er is iets misgegaan tijdens de licentieactivering."
@@ -12964,11 +13060,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        834
+        852
       ],
       [
         "src/views/board/index.tsx",
-        876
+        894
       ]
     ],
     "translation": "Sjabloon"
@@ -13160,7 +13256,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        124
+        127
       ]
     ],
     "translation": "Die licentiecode kon niet worden gevonden. Neem contact op met de ondersteuning."
@@ -13651,7 +13747,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        895
+        913
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -14083,7 +14179,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        580
+        598
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -14575,11 +14671,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        422
+        440
       ],
       [
         "src/views/board/index.tsx",
-        470
+        488
       ],
       [
         "src/views/card/index.tsx",
@@ -14607,7 +14703,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        509
+        527
       ],
       [
         "src/views/card/components/CardCompletionToggle.tsx",
@@ -14744,7 +14840,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        366
+        384
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -16033,7 +16129,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        834
+        852
       ],
       [
         "src/views/boards/index.tsx",
@@ -16443,11 +16539,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        920
+        938
       ],
       [
         "src/views/board/index.tsx",
-        998
+        1016
       ],
       [
         "src/views/boards/components/BoardsList.tsx",
@@ -16597,7 +16693,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        275
+        278
       ]
     ],
     "translation": "Uw account heeft al een wachtwoord. U kunt dit wijzigen via uw accountinstellingen."
@@ -16705,7 +16801,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        116
+        119
       ]
     ],
     "translation": "Uw licentie is succesvol geactiveerd."
@@ -16717,7 +16813,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        125
+        128
       ]
     ],
     "translation": "Uw licentie is niet actief. Controleer uw account."

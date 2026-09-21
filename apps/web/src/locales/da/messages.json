@@ -179,7 +179,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        867
+        885
       ]
     ],
     "translation": "{0} blev ikke fundet"
@@ -1966,7 +1966,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        834
+        852
       ],
       [
         "src/views/card/index.tsx",
@@ -2023,7 +2023,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        857
+        875
       ]
     ],
     "translation": ""
@@ -2991,7 +2991,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        575
+        593
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -3471,7 +3471,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        283
+        286
       ],
       [
         "src/views/board/components/BoardBackgroundForm.tsx",
@@ -4273,11 +4273,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        133
+        135
       ],
       [
         "src/views/board/index.tsx",
-        1009
+        1027
       ]
     ],
     "translation": "Opret ny liste"
@@ -4317,7 +4317,7 @@
       ],
       [
         "src/components/WorkspaceMenu.tsx",
-        177
+        183
       ]
     ],
     "translation": "Opret arbejdsområde"
@@ -6805,7 +6805,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        991
+        1009
       ]
     ],
     "translation": "Kom i gang ved at oprette en ny liste"
@@ -7425,10 +7425,26 @@
     "origin": [
       [
         "src/components/CommandPallette.tsx",
-        177
+        249
       ]
     ],
     "translation": "i"
+  },
+  "15Qqe2": {
+    "translation": "",
+    "message": "In {0}",
+    "placeholders": {
+      "0": [
+        "boardScope.name"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        181
+      ]
+    ]
   },
   "WbTDwg": {
     "message": "In Progress",
@@ -8019,7 +8035,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        115
+        118
       ]
     ],
     "translation": "Licens aktiveret"
@@ -8031,7 +8047,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        129
+        132
       ]
     ],
     "translation": "Aktivering af licens mislykkedes"
@@ -8067,7 +8083,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        573
+        591
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -8201,6 +8217,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        271
+      ],
       [
         "src/views/card/components/ActivityList.tsx",
         784
@@ -9078,7 +9098,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        932
+        950
       ]
     ],
     "translation": "Ny liste"
@@ -9407,7 +9427,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        126
+        129
       ]
     ],
     "translation": "Der blev ikke angivet nogen licensnøgle. Prøv at aktivere igen."
@@ -9419,7 +9439,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        987
+        1005
       ]
     ],
     "translation": "Ingen lister"
@@ -9431,7 +9451,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        992
+        1010
       ]
     ],
     "translation": "Der er endnu ikke oprettet nogen lister"
@@ -9483,7 +9503,7 @@
     "origin": [
       [
         "src/components/CommandPallette.tsx",
-        193
+        283
       ]
     ],
     "translation": "Ingen resultater fundet for \"{debouncedQuery}\"."
@@ -9695,7 +9715,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        1152
+        1170
       ]
     ],
     "translation": ""
@@ -9707,7 +9727,7 @@
     "origin": [
       [
         "src/components/WorkspaceMenu.tsx",
-        37
+        39
       ]
     ],
     "translation": "Åbn kommandomenu"
@@ -9907,7 +9927,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        273
+        276
       ]
     ],
     "translation": "Adgangskode allerede indstillet"
@@ -10431,19 +10451,19 @@
       ],
       [
         "src/views/board/index.tsx",
-        367
+        385
       ],
       [
         "src/views/board/index.tsx",
-        423
+        441
       ],
       [
         "src/views/board/index.tsx",
-        471
+        489
       ],
       [
         "src/views/board/index.tsx",
-        510
+        528
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -10643,7 +10663,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        582
+        600
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -11570,7 +11590,6 @@
     "translation": "Spar tid med genanvendelige tavleskabeloner."
   },
   "SnYrvp": {
-    "translation": "",
     "message": "Scheduled items: {0}",
     "placeholders": {
       "0": [
@@ -11583,7 +11602,8 @@
         "src/views/board/components/CalendarView.tsx",
         548
       ]
-    ]
+    ],
+    "translation": ""
   },
   "cOh+MI": {
     "message": "Screening",
@@ -11604,10 +11624,34 @@
     "origin": [
       [
         "src/components/WorkspaceMenu.tsx",
-        102
+        108
       ]
     ],
     "translation": ""
+  },
+  "SiekAu": {
+    "translation": "",
+    "message": "Search all boards in this workspace",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        179
+      ]
+    ]
+  },
+  "cQCXo5": {
+    "translation": "",
+    "message": "Search boards and cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        146
+      ]
+    ]
   },
   "SkCNhl": {
     "message": "Search boards and cards...",
@@ -11616,10 +11660,50 @@
     "origin": [
       [
         "src/components/CommandPallette.tsx",
-        105
+        141
       ]
     ],
     "translation": "Søg i tavler og kort..."
+  },
+  "AjPHW5": {
+    "translation": "",
+    "message": "Search cards on this board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        145
+      ]
+    ]
+  },
+  "aW4ks1": {
+    "translation": "",
+    "message": "Search cards on this board...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        140
+      ]
+    ]
+  },
+  "+UfRfW": {
+    "translation": "",
+    "message": "Search in {0}",
+    "placeholders": {
+      "0": [
+        "boardScope.name"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        193
+      ]
+    ]
   },
   "AaDUlx": {
     "message": "Search members",
@@ -12032,7 +12116,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        207
+        210
       ],
       [
         "src/components/SettingsLayout.tsx",
@@ -12164,6 +12248,18 @@
       ]
     ],
     "translation": ""
+  },
+  "fMPkxb": {
+    "translation": "",
+    "message": "Show more",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/CommandPallette.tsx",
+        272
+      ]
+    ]
   },
   "0XmVWH": {
     "message": "Show newest activity first",
@@ -12516,7 +12612,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        132
+        135
       ]
     ],
     "translation": "Noget gik galt under aktiveringen af licensen."
@@ -12886,11 +12982,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        834
+        852
       ],
       [
         "src/views/board/index.tsx",
-        876
+        894
       ]
     ],
     "translation": "Skabelon"
@@ -13082,7 +13178,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        124
+        127
       ]
     ],
     "translation": "Licensnøglen blev ikke fundet. Kontakt support."
@@ -13573,7 +13669,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        895
+        913
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -14005,7 +14101,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        580
+        598
       ],
       [
         "src/views/card/components/Dropdown.tsx",
@@ -14497,11 +14593,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        422
+        440
       ],
       [
         "src/views/board/index.tsx",
-        470
+        488
       ],
       [
         "src/views/card/index.tsx",
@@ -14529,7 +14625,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        509
+        527
       ],
       [
         "src/views/card/components/CardCompletionToggle.tsx",
@@ -14666,7 +14762,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        366
+        384
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -15925,7 +16021,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        834
+        852
       ],
       [
         "src/views/boards/index.tsx",
@@ -16322,11 +16418,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        920
+        938
       ],
       [
         "src/views/board/index.tsx",
-        998
+        1016
       ],
       [
         "src/views/boards/components/BoardsList.tsx",
@@ -16450,7 +16546,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        275
+        278
       ]
     ],
     "translation": "Din konto har allerede en adgangskode. Du kan ændre den under dine kontoindstillinger."
@@ -16558,7 +16654,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        116
+        119
       ]
     ],
     "translation": "Din licens er blevet aktiveret."
@@ -16570,7 +16666,7 @@
     "origin": [
       [
         "src/components/Dashboard.tsx",
-        125
+        128
       ]
     ],
     "translation": "Din licens er ikke aktiv. Kontrollér din konto."

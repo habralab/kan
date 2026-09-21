@@ -5,6 +5,7 @@ import {
   desc,
   eq,
   gte,
+  ilike,
   inArray,
   isNotNull,
   isNull,
@@ -962,6 +963,51 @@ export const getWorkspaceAndBoardIdByBoardPublicId = async (
   });
 
   return result;
+};
+
+const escapeLikePattern = (value: string) => value.replace(/[\\%_]/g, "\\$&");
+
+export const searchCardsByBoardPublicId = async (
+  db: dbClient,
+  options: {
+    boardPublicId: string;
+    query: string;
+    cursor: number;
+    limit: number;
+  },
+) => {
+  const searchPattern = `%${escapeLikePattern(options.query)}%`;
+  const results = await db
+    .select({
+      publicId: cards.publicId,
+      title: cards.title,
+      cardNumber: cards.cardNumber,
+      listName: lists.name,
+      boardPublicId: boards.publicId,
+      boardName: boards.name,
+    })
+    .from(cards)
+    .innerJoin(lists, eq(cards.listId, lists.id))
+    .innerJoin(boards, eq(lists.boardId, boards.id))
+    .where(
+      and(
+        eq(boards.publicId, options.boardPublicId),
+        isNull(boards.deletedAt),
+        isNull(lists.deletedAt),
+        isNull(cards.deletedAt),
+        ilike(cards.title, searchPattern),
+      ),
+    )
+    .orderBy(asc(cards.title), asc(cards.publicId))
+    .limit(options.limit + 1)
+    .offset(options.cursor);
+
+  const hasMore = results.length > options.limit;
+
+  return {
+    items: hasMore ? results.slice(0, options.limit) : results,
+    hasMore,
+  };
 };
 
 export const getCoverAccessByPublicId = async (

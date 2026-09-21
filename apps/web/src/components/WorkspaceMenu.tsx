@@ -6,6 +6,7 @@ import { Fragment, useMemo, useState } from "react";
 import { HiCheck, HiMagnifyingGlass } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
+import { useBoardSearchScope } from "~/providers/board-search-scope";
 import { useKeyboardShortcut } from "~/providers/keyboard-shortcuts";
 import { useModal } from "~/providers/modal";
 import { useWorkspace } from "~/providers/workspace";
@@ -25,6 +26,7 @@ export default function WorkspaceMenu({
     api.workspace.hasAvailablePartnerSlot.useQuery();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const { boardScope } = useBoardSearchScope();
 
   const commandPaletteShortcut = useMemo(
     () => ({
@@ -45,7 +47,11 @@ export default function WorkspaceMenu({
 
   return (
     <>
-      <CommandPallette isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <CommandPallette
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        boardScope={boardScope ?? undefined}
+      />
       <Menu as="div" className="relative inline-block w-full pb-3 text-left">
         <div>
           {isLoading ? (

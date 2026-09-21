@@ -217,7 +217,7 @@ export const getByPublicId = async (
   },
 ) => {
   const includeCardDetails = filters.cardView !== "summary";
-  let cardIds: string[] = [];
+  let cardIds: string[] | undefined;
 
   const assignedMembers = await db
     .selectDistinct({ publicId: workspaceMembers.publicId })
@@ -241,7 +241,7 @@ export const getByPublicId = async (
 
   if (filters.labels.length > 0 || filters.members.length > 0) {
     const filteredCards = await db
-      .select({
+      .selectDistinct({
         publicId: cards.publicId,
       })
       .from(cards)
@@ -258,7 +258,7 @@ export const getByPublicId = async (
       .where(
         and(
           isNull(cards.deletedAt),
-          or(
+          and(
             filters.labels.length > 0
               ? inArray(labels.publicId, filters.labels)
               : undefined,
@@ -451,7 +451,7 @@ export const getByPublicId = async (
               }),
             },
             where: and(
-              cardIds.length > 0 ? inArray(cards.publicId, cardIds) : undefined,
+              cardIds ? inArray(cards.publicId, cardIds) : undefined,
               isNull(cards.deletedAt),
               customFieldCardIds
                 ? inArray(cards.publicId, customFieldCardIds)
@@ -648,11 +648,11 @@ export const getBySlug = async (
     completed?: boolean;
   },
 ) => {
-  let cardIds: string[] = [];
+  let cardIds: string[] | undefined;
 
   if (filters.labels.length) {
     const filteredCards = await db
-      .select({
+      .selectDistinct({
         publicId: cards.publicId,
       })
       .from(cards)
@@ -792,7 +792,7 @@ export const getBySlug = async (
               },
             },
             where: and(
-              cardIds.length > 0 ? inArray(cards.publicId, cardIds) : undefined,
+              cardIds ? inArray(cards.publicId, cardIds) : undefined,
               isNull(cards.deletedAt),
               customFieldCardIds
                 ? inArray(cards.publicId, customFieldCardIds)

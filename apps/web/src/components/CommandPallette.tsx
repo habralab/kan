@@ -9,8 +9,13 @@ import {
   DialogPanel,
 } from "@headlessui/react";
 import { t } from "@lingui/macro";
-import { useState } from "react";
-import { HiDocumentText, HiFolder, HiMagnifyingGlass } from "react-icons/hi2";
+import { useEffect, useState } from "react";
+import {
+  HiDocumentText,
+  HiFolder,
+  HiMagnifyingGlass,
+  HiXMark,
+} from "react-icons/hi2";
 
 import { useDebounce } from "~/hooks/useDebounce";
 import { useWorkspace } from "~/providers/workspace";
@@ -20,72 +25,100 @@ type SearchResult =
   | {
       publicId: string;
       title: string;
-      description: string | null;
-      slug: string;
-      updatedAt: Date | null;
-      createdAt: Date;
       type: "board";
     }
   | {
       publicId: string;
       title: string;
-      description: string | null;
       boardPublicId: string;
       boardName: string;
       listName: string;
       cardNumber: number | null;
-      updatedAt: Date | null;
-      createdAt: Date;
       type: "card";
     };
 
 export default function CommandPallette({
   isOpen,
   onClose,
+  boardScope,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  boardScope?: { publicId: string; name: string };
 }) {
   const [query, setQuery] = useState("");
+  const [scopedBoardId, setScopedBoardId] = useState(boardScope?.publicId);
   const { workspace } = useWorkspace();
   const router = useRouter();
+  const isBoardScoped = scopedBoardId === boardScope?.publicId && !!boardScope;
+
+  useEffect(() => {
+    if (isOpen) setScopedBoardId(boardScope?.publicId);
+  }, [isOpen, boardScope?.publicId]);
+
+  const close = () => {
+    onClose();
+    setQuery("");
+    setScopedBoardId(boardScope?.publicId);
+  };
 
   // Debounce to avoid too many reqs
   const [debouncedQuery] = useDebounce(query, 300);
 
   const {
-    data: searchResults,
-    isLoading,
-    isFetched,
-    isPlaceholderData,
+    data: workspaceResults,
+    isLoading: isWorkspaceLoading,
+    isPlaceholderData: isWorkspacePlaceholderData,
   } = api.workspace.search.useQuery(
     {
       workspacePublicId: workspace.publicId,
       query: debouncedQuery,
     },
     {
-      enabled: Boolean(workspace.publicId && debouncedQuery.trim().length > 0),
+      enabled: Boolean(
+        isOpen &&
+          !isBoardScoped &&
+          workspace.publicId &&
+          debouncedQuery.trim().length > 0,
+      ),
       placeholderData: (previousData) => previousData,
     },
   );
 
+  const boardSearch = api.board.searchCards.useInfiniteQuery(
+    {
+      boardPublicId: scopedBoardId ?? "",
+      query: debouncedQuery,
+      limit: 30,
+    },
+    {
+      enabled: Boolean(
+        isOpen && isBoardScoped && debouncedQuery.trim().length > 0,
+      ),
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+
+  const searchResults: SearchResult[] = isBoardScoped
+    ? (boardSearch.data?.pages.flatMap((page) =>
+        page.items.map((item) => ({ ...item, type: "card" as const })),
+      ) ?? [])
+    : ((workspaceResults ?? []) as SearchResult[]);
+  const isLoading = isBoardScoped ? boardSearch.isLoading : isWorkspaceLoading;
+  const isPlaceholderData = !isBoardScoped && isWorkspacePlaceholderData;
+  const hasResultData = isBoardScoped
+    ? boardSearch.data !== undefined
+    : workspaceResults !== undefined;
+  const isTyping = query !== debouncedQuery;
+
   // Clear results when query is empty, otherwise show search results
   const results =
-    debouncedQuery.trim().length === 0
-      ? []
-      : ((searchResults ?? []) as SearchResult[]);
+    debouncedQuery.trim().length === 0 || isTyping ? [] : searchResults;
 
   const hasSearched = Boolean(debouncedQuery.trim().length > 0);
 
   return (
-    <Dialog
-      className="relative z-50"
-      open={isOpen}
-      onClose={() => {
-        onClose();
-        setQuery("");
-      }}
-    >
+    <Dialog className="relative z-50" open={isOpen} onClose={close}>
       <DialogBackdrop
         transition
         className="data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in fixed inset-0 bg-light-50 bg-opacity-40 transition-opacity dark:bg-dark-50 dark:bg-opacity-40"
@@ -102,7 +135,16 @@ export default function CommandPallette({
                 <ComboboxInput
                   autoFocus
                   className="col-start-1 row-start-1 h-12 w-full border-0 bg-transparent pl-11 pr-4 text-sm text-light-900 placeholder:text-light-700 focus:outline-none focus:ring-0 dark:text-dark-900 dark:placeholder:text-dark-700"
-                  placeholder={t`Search boards and cards...`}
+                  placeholder={
+                    isBoardScoped
+                      ? t`Search cards on this board...`
+                      : t`Search boards and cards...`
+                  }
+                  aria-label={
+                    isBoardScoped
+                      ? t`Search cards on this board`
+                      : t`Search boards and cards`
+                  }
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   onKeyDown={(event) => {
@@ -127,9 +169,38 @@ export default function CommandPallette({
                 />
               </div>
 
+              {boardScope && (
+                <div className="border-t border-light-300 px-4 py-2 text-left dark:border-dark-300">
+                  {isBoardScoped ? (
+                    <button
+                      type="button"
+                      onClick={() => setScopedBoardId(undefined)}
+                      className="inline-flex max-w-full items-center gap-1.5 rounded-md bg-light-200 px-2 py-1 text-xs text-light-950 hover:bg-light-300 dark:bg-dark-200 dark:text-dark-950 dark:hover:bg-dark-300"
+                      aria-label={t`Search all boards in this workspace`}
+                    >
+                      <span className="truncate">{t`In ${boardScope.name}`}</span>
+                      <HiXMark
+                        className="h-3.5 w-3.5 flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setScopedBoardId(boardScope.publicId)}
+                      className="text-xs text-light-700 hover:text-light-1000 dark:text-dark-700 dark:hover:text-dark-1000"
+                    >
+                      {t`Search in ${boardScope.name}`}
+                    </button>
+                  )}
+                </div>
+              )}
+
               {results.length > 0 && (
+                // Keep the scope chip interactive while results are open.
                 <ComboboxOptions
                   static
+                  modal={!boardScope}
                   className={`max-h-72 scroll-py-2 overflow-y-auto py-2 ${
                     isPlaceholderData ? "opacity-75" : ""
                   }`}
@@ -138,7 +209,9 @@ export default function CommandPallette({
                     const url =
                       result.type === "board"
                         ? `/boards/${result.publicId}`
-                        : `/cards/${result.publicId}`;
+                        : isBoardScoped
+                          ? `/cards/${result.publicId}?returnUrl=${encodeURIComponent(router.asPath)}`
+                          : `/cards/${result.publicId}`;
 
                     return (
                       <ComboboxOption
@@ -147,8 +220,7 @@ export default function CommandPallette({
                         className="cursor-pointer select-none px-4 py-3 data-[focus]:bg-light-200 hover:bg-light-200 focus:outline-none dark:data-[focus]:bg-dark-200 dark:hover:bg-dark-200"
                         onClick={() => {
                           void router.push(url);
-                          onClose();
-                          setQuery("");
+                          close();
                         }}
                       >
                         <div className="flex items-start gap-3">
@@ -185,9 +257,27 @@ export default function CommandPallette({
                 </ComboboxOptions>
               )}
 
+              {isBoardScoped &&
+                boardSearch.hasNextPage &&
+                results.length > 0 && (
+                  <div className="border-t border-light-300 p-2 dark:border-dark-300">
+                    <button
+                      type="button"
+                      onClick={() => void boardSearch.fetchNextPage()}
+                      disabled={boardSearch.isFetchingNextPage}
+                      className="w-full rounded-md px-3 py-2 text-sm text-light-900 hover:bg-light-200 disabled:opacity-60 dark:text-dark-900 dark:hover:bg-dark-200"
+                    >
+                      {boardSearch.isFetchingNextPage
+                        ? t`Loading...`
+                        : t`Show more`}
+                    </button>
+                  </div>
+                )}
+
               {hasSearched &&
+                !isTyping &&
                 !isLoading &&
-                searchResults !== undefined &&
+                hasResultData &&
                 results.length === 0 && (
                   <div className="p-4 text-sm text-light-950 dark:text-dark-950">
                     {t`No results found for "${debouncedQuery}".`}

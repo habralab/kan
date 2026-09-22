@@ -7,6 +7,7 @@ export const TIME_TRACKING_SUMMARY_CSV_HEADERS = [
   "Duration seconds",
   "Entry count",
   "Board",
+  "Board ID",
 ] as const;
 
 export const TIME_TRACKING_ENTRIES_CSV_HEADERS = [
@@ -16,6 +17,7 @@ export const TIME_TRACKING_ENTRIES_CSV_HEADERS = [
   "Member",
   "Member email",
   "Board",
+  "Board ID",
   "Card",
   "Card number",
   "List",
@@ -112,6 +114,7 @@ export const encodeTimeTrackingSummaryCsvRow = (input: {
   durationSeconds: number;
   entryCount: number;
   boardName: string;
+  boardPublicId: string;
 }) =>
   encodeCsvRow([
     input.groupBy,
@@ -120,6 +123,7 @@ export const encodeTimeTrackingSummaryCsvRow = (input: {
     input.durationSeconds,
     input.entryCount,
     input.boardName,
+    input.boardPublicId,
   ]);
 
 export const encodeTimeTrackingEntriesCsvRow = (input: {
@@ -128,6 +132,7 @@ export const encodeTimeTrackingEntriesCsvRow = (input: {
   memberName: string;
   memberEmail: string | null;
   boardName: string;
+  boardPublicId: string;
   cardName: string;
   cardNumber: number | null;
   listName: string | null;
@@ -141,6 +146,7 @@ export const encodeTimeTrackingEntriesCsvRow = (input: {
     input.memberName,
     input.memberEmail,
     input.boardName,
+    input.boardPublicId,
     input.cardName,
     input.cardNumber,
     input.listName,

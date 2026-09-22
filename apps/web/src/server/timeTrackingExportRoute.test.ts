@@ -224,6 +224,7 @@ describe("time tracking export route", () => {
     expect(csv).toContain('"Date","Duration"');
     expect(csv).toContain("anonymous_member123456");
     expect(csv).not.toContain("member@example.com");
+    expect(csv).toContain('"Reporting","board1234567","Tracked card"');
     expect(csv).toContain(`"'=HYPERLINK(""https://example.com"")"`);
   });
 

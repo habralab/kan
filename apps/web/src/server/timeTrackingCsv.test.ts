@@ -76,9 +76,10 @@ describe("time tracking CSV", () => {
         durationSeconds: 3661,
         entryCount: 3,
         boardName: "Operations",
+        boardPublicId: "board1234567",
       }),
     ).toBe(
-      '"card","Migration, phase 2","01:01:01",3661,3,"Operations"\r\n',
+      '"card","Migration, phase 2","01:01:01",3661,3,"Operations","board1234567"\r\n',
     );
   });
 
@@ -90,6 +91,7 @@ describe("time tracking CSV", () => {
         memberName: "Gandalf the White",
         memberEmail: "mithrandir@istari.valinor",
         boardName: "Analytics",
+        boardPublicId: "board1234567",
         cardName: "Author export",
         cardNumber: 9,
         listName: "Done",
@@ -97,7 +99,7 @@ describe("time tracking CSV", () => {
         comment: null,
       }),
     ).toBe(
-      '"2026-08-27","04:00:00",14400,"Gandalf the White","mithrandir@istari.valinor","Analytics","Author export",9,"Done","Research; Export",\r\n',
+      '"2026-08-27","04:00:00",14400,"Gandalf the White","mithrandir@istari.valinor","Analytics","board1234567","Author export",9,"Done","Research; Export",\r\n',
     );
   });
 
@@ -124,6 +126,7 @@ describe("time tracking CSV", () => {
       "Duration seconds",
       "Entry count",
       "Board",
+      "Board ID",
     ]);
   });
 
@@ -135,6 +138,7 @@ describe("time tracking CSV", () => {
       "Member",
       "Member email",
       "Board",
+      "Board ID",
       "Card",
       "Card number",
       "List",

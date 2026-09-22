@@ -45,8 +45,12 @@ The report offers three CSV profiles:
 - **Summary** contains grouped totals and entry counts.
 - **Entries** contains analysis-friendly business fields such as date,
   duration, member, card, list, labels, and comment.
-- **Full** also contains stable identifiers, timer metadata, and audit
-  timestamps for integrations and troubleshooting.
+- **Full** also contains stable worklog, member, card, list, and label
+  identifiers, timer metadata, and audit timestamps for integrations and
+  troubleshooting.
+
+Every profile includes the stable board identifier so exports from several
+boards can be combined without relying on board names or filenames.
 
 CSV exports neutralize values that spreadsheet applications could otherwise
 interpret as formulas. Member email addresses follow the workspace's email

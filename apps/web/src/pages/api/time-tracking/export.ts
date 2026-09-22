@@ -211,6 +211,7 @@ export default withRateLimit(
               durationSeconds: group.durationSeconds,
               entryCount: group.entryCount,
               boardName: board.boardName,
+              boardPublicId: board.boardPublicId,
             }),
           );
         }
@@ -261,6 +262,7 @@ export default withRateLimit(
                 memberName,
                 memberEmail,
                 boardName: board.boardName,
+                boardPublicId: board.boardPublicId,
                 cardName: row.card?.title ?? "Unavailable card",
                 cardNumber: row.card?.cardNumber ?? null,
                 listName: row.card?.list.name ?? null,

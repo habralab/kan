@@ -24,7 +24,6 @@
     "translation": ", ou veja nosso"
   },
   "VEnTjc": {
-    "translation": "{0, plural, one {1 cronômetro ativo ainda pode ser parado ou descartado se o controle de tempo estiver desativado.} other {{1} cronômetros ativos ainda podem ser parados ou descartados se o controle de tempo estiver desativado.}}",
     "message": "{0, plural, one {1 active timer can still be stopped or discarded if time tracking is disabled.} other {{1} active timers can still be stopped or discarded if time tracking is disabled.}}",
     "placeholders": {
       "0": [
@@ -40,10 +39,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         114
       ]
-    ]
+    ],
+    "translation": "{0, plural, one {1 cronômetro ativo ainda pode ser parado ou descartado se o controle de tempo estiver desativado.} other {{1} cronômetros ativos ainda podem ser parados ou descartados se o controle de tempo estiver desativado.}}"
   },
   "INSeGm": {
-    "translation": "{0, plural, one {1 registro} other {{1} registros}}",
     "message": "{0, plural, one {1 entry} other {{1} entries}}",
     "placeholders": {
       "0": [
@@ -59,7 +58,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         393
       ]
-    ]
+    ],
+    "translation": "{0, plural, one {1 registro} other {{1} registros}}"
   },
   "J/hVSQ": {
     "message": "{0}",
@@ -350,7 +350,6 @@
     "translation": "14 dias de teste grátis · cancele quando quiser"
   },
   "PqP8GL": {
-    "translation": "1 h 30 min",
     "message": "1h 30m",
     "placeholders": {},
     "comments": [],
@@ -359,7 +358,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         134
       ]
-    ]
+    ],
+    "translation": "1 h 30 min"
   },
   "4obmDr": {
     "message": "404 - Page Not Found | kan.bn",
@@ -374,7 +374,6 @@
     "translation": "404 - Página Não Encontrada | kan.bn"
   },
   "UtNgHP": {
-    "translation": "Uma data e um horário opcional.",
     "message": "A date and optional time.",
     "placeholders": {},
     "comments": [],
@@ -383,7 +382,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         63
       ]
-    ]
+    ],
+    "translation": "Uma data e um horário opcional."
   },
   "/rn4RE": {
     "message": "A powerful, flexible kanban app that helps you organise work, track progress, and deliver results—all in one place.",
@@ -398,7 +398,6 @@
     "translation": "Um aplicativo kanban poderoso e flexível que ajuda você a organizar o trabalho, acompanhar o progresso e entregar resultados — tudo em um só lugar."
   },
   "BGS7EI": {
-    "translation": "Um sinalizador simples marcado ou desmarcado.",
     "message": "A simple checked or unchecked flag.",
     "placeholders": {},
     "comments": [],
@@ -407,7 +406,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         65
       ]
-    ]
+    ],
+    "translation": "Um sinalizador simples marcado ou desmarcado."
   },
   "AeXO77": {
     "message": "Account",
@@ -550,7 +550,6 @@
     "translation": "Registros de atividades"
   },
   "0Mb5Vr": {
-    "translation": "Ordem das atividades",
     "message": "Activity order",
     "placeholders": {},
     "comments": [],
@@ -559,10 +558,10 @@
         "src/views/settings/AccountSettings.tsx",
         72
       ]
-    ]
+    ],
+    "translation": "Ordem das atividades"
   },
   "q93YxQ": {
-    "translation": "Abas de atividade",
     "message": "Activity tabs",
     "placeholders": {},
     "comments": [],
@@ -571,10 +570,10 @@
         "src/views/card/index.tsx",
         591
       ]
-    ]
+    ],
+    "translation": "Abas de atividade"
   },
   "m16xKo": {
-    "translation": "Adicionar",
     "message": "Add",
     "placeholders": {},
     "comments": [],
@@ -583,7 +582,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         269
       ]
-    ]
+    ],
+    "translation": "Adicionar"
   },
   "UGCIzB": {
     "message": "Add / edit label",
@@ -682,7 +682,6 @@
     "translation": "Adicionar comentário... (digite '/' para abrir comandos ou '@' para mencionar)"
   },
   "3kS8Hp": {
-    "translation": "Adicionar capa",
     "message": "Add cover",
     "placeholders": {},
     "comments": [],
@@ -691,7 +690,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         212
       ]
-    ]
+    ],
+    "translation": "Adicionar capa"
   },
   "gL/7jw": {
     "message": "Add description... (type '/' to open commands or '@' to mention)",
@@ -740,7 +740,7 @@
     "origin": [
       [
         "src/views/card/components/MemberSelector.tsx",
-        148
+        147
       ],
       [
         "src/views/members/components/InviteMemberForm.tsx",
@@ -750,7 +750,6 @@
     "translation": "Adicionar membro"
   },
   "MdyqML": {
-    "translation": "Adicionar tempo",
     "message": "Add time",
     "placeholders": {},
     "comments": [],
@@ -763,7 +762,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         494
       ]
-    ]
+    ],
+    "translation": "Adicionar tempo"
   },
   "pBsoKL": {
     "message": "Add to favorites",
@@ -1048,7 +1048,6 @@
     "translation": "Segurança avançada, conformidade e suporte dedicado para grandes organizações."
   },
   "VNgKZz": {
-    "translation": "Configurações avançadas",
     "message": "Advanced settings",
     "placeholders": {},
     "comments": [],
@@ -1057,10 +1056,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         96
       ]
-    ]
+    ],
+    "translation": "Configurações avançadas"
   },
   "NawEr2": {
-    "translation": "Depois",
     "message": "After",
     "placeholders": {},
     "comments": [],
@@ -1073,10 +1072,10 @@
         "src/views/board/components/Filters.tsx",
         211
       ]
-    ]
+    ],
+    "translation": "Depois"
   },
   "N40H+G": {
-    "translation": "Tudo",
     "message": "All",
     "placeholders": {},
     "comments": [],
@@ -1085,10 +1084,10 @@
         "src/views/card/index.tsx",
         597
       ]
-    ]
+    ],
+    "translation": "Tudo"
   },
   "4upC5z": {
-    "translation": "Todos os cartões",
     "message": "All cards",
     "placeholders": {},
     "comments": [],
@@ -1097,7 +1096,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         298
       ]
-    ]
+    ],
+    "translation": "Todos os cartões"
   },
   "h2ztFt": {
     "message": "All Free features +",
@@ -1112,7 +1112,6 @@
     "translation": "Todos os recursos gratuitos +"
   },
   "zDDU1o": {
-    "translation": "Todas as etiquetas",
     "message": "All labels",
     "placeholders": {},
     "comments": [],
@@ -1121,10 +1120,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         318
       ]
-    ]
+    ],
+    "translation": "Todas as etiquetas"
   },
   "qe9rVr": {
-    "translation": "Todas as listas",
     "message": "All lists",
     "placeholders": {},
     "comments": [],
@@ -1133,7 +1132,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         283
       ]
-    ]
+    ],
+    "translation": "Todas as listas"
   },
   "nryrgW": {
     "message": "All member permission overrides have been reset to their role defaults.",
@@ -1148,7 +1148,6 @@
     "translation": "Todas as substituições de permissões de membros foram redefinidas para os padrões de suas funções."
   },
   "RevbX8": {
-    "translation": "Todos os membros",
     "message": "All members",
     "placeholders": {},
     "comments": [],
@@ -1157,7 +1156,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         262
       ]
-    ]
+    ],
+    "translation": "Todos os membros"
   },
   "ZAs2NN": {
     "message": "All Pro features +",
@@ -1197,7 +1197,6 @@
     "translation": "Todos os recursos Teams +"
   },
   "XOJDc9": {
-    "translation": "Todo o período",
     "message": "All time",
     "placeholders": {},
     "comments": [],
@@ -1206,7 +1205,8 @@
         "src/utils/timeTrackingLabels.ts",
         7
       ]
-    ]
+    ],
+    "translation": "Todo o período"
   },
   "Z3krJD": {
     "message": "Allow workspace members to see each other's email addresses",
@@ -1297,7 +1297,6 @@
     "translation": "Anual"
   },
   "Nf0qFI": {
-    "translation": "Qualquer texto, incluindo números.",
     "message": "Any text, including numbers.",
     "placeholders": {},
     "comments": [],
@@ -1306,7 +1305,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         59
       ]
-    ]
+    ],
+    "translation": "Qualquer texto, incluindo números."
   },
   "3bqt9U": {
     "message": "Anyone with this link can join your workspace",
@@ -1421,7 +1421,6 @@
     "translation": "Candidatos"
   },
   "DB8zMK": {
-    "translation": "Aplicar",
     "message": "Apply",
     "placeholders": {},
     "comments": [],
@@ -1430,7 +1429,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         316
       ]
-    ]
+    ],
+    "translation": "Aplicar"
   },
   "yb/fjw": {
     "message": "Approval",
@@ -1485,7 +1485,6 @@
     "translation": "Arquivado"
   },
   "yF2aJL": {
-    "translation": "Opções arquivadas",
     "message": "Archived options",
     "placeholders": {},
     "comments": [],
@@ -1494,7 +1493,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         665
       ]
-    ]
+    ],
+    "translation": "Opções arquivadas"
   },
   "lo8xBK": {
     "message": "Are you sure want to remove {entityLabel}?",
@@ -1621,7 +1621,6 @@
     "translation": "Tem certeza de que deseja excluir sua conta?"
   },
   "cPbW2f": {
-    "translation": "atribuiu <0>{0}</0> ao item <1>{1}</1> da lista",
     "message": "assigned <0>{0}</0> to checklist item <1>{1}</1>",
     "placeholders": {
       "0": [
@@ -1637,7 +1636,8 @@
         "src/views/card/components/ActivityList.tsx",
         284
       ]
-    ]
+    ],
+    "translation": "atribuiu <0>{0}</0> ao item <1>{1}</1> da lista"
   },
   "PyYD/v": {
     "message": "assigned <0>{0}</0> to the card",
@@ -1656,7 +1656,6 @@
     "translation": "atribuiu <0>{0}</0> ao cartão"
   },
   "B8YQwA": {
-    "translation": "atribuiu um item da lista",
     "message": "assigned a checklist item",
     "placeholders": {},
     "comments": [],
@@ -1665,7 +1664,8 @@
         "src/views/card/components/ActivityList.tsx",
         151
       ]
-    ]
+    ],
+    "translation": "atribuiu um item da lista"
   },
   "JUce1S": {
     "message": "Assignees",
@@ -1772,7 +1772,6 @@
     "translation": "Roadmap básico"
   },
   "EmSrGB": {
-    "translation": "Antes",
     "message": "Before",
     "placeholders": {},
     "comments": [],
@@ -1785,7 +1784,8 @@
         "src/views/board/components/Filters.tsx",
         211
       ]
-    ]
+    ],
+    "translation": "Antes"
   },
   "/XCg57": {
     "message": "Best for growing teams that need collaboration",
@@ -2260,7 +2260,6 @@
     "translation": "Pode adicionar comentários"
   },
   "VPUvtP": {
-    "translation": "Pode adicionar registros de tempo",
     "message": "Can add time entries",
     "placeholders": {},
     "comments": [],
@@ -2273,7 +2272,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         40
       ]
-    ]
+    ],
+    "translation": "Pode adicionar registros de tempo"
   },
   "N3380t": {
     "message": "Can create boards",
@@ -2388,7 +2388,6 @@
     "translation": "Pode excluir listas"
   },
   "2BD2mA": {
-    "translation": "Pode excluir os próprios registros de tempo",
     "message": "Can delete own time entries",
     "placeholders": {},
     "comments": [],
@@ -2401,7 +2400,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         42
       ]
-    ]
+    ],
+    "translation": "Pode excluir os próprios registros de tempo"
   },
   "Cmudpi": {
     "message": "Can delete workspace",
@@ -2500,7 +2500,6 @@
     "translation": "Pode editar funções e permissões de membros"
   },
   "kImq1u": {
-    "translation": "Pode editar os próprios registros de tempo",
     "message": "Can edit own time entries",
     "placeholders": {},
     "comments": [],
@@ -2513,7 +2512,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         41
       ]
-    ]
+    ],
+    "translation": "Pode editar os próprios registros de tempo"
   },
   "iLbjv+": {
     "message": "Can edit workspace",
@@ -2548,7 +2548,6 @@
     "translation": "Pode convidar membros"
   },
   "xLuBnq": {
-    "translation": "Pode gerenciar todos os registros de tempo",
     "message": "Can manage all time entries",
     "placeholders": {},
     "comments": [],
@@ -2561,7 +2560,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         43
       ]
-    ]
+    ],
+    "translation": "Pode gerenciar todos os registros de tempo"
   },
   "qQXocp": {
     "message": "Can manage workspace settings",
@@ -2676,7 +2676,6 @@
     "translation": "Pode visualizar membros"
   },
   "DgC8eZ": {
-    "translation": "Pode visualizar registros de tempo",
     "message": "Can view time entries",
     "placeholders": {},
     "comments": [],
@@ -2689,7 +2688,8 @@
         "src/views/settings/components/RolePermissions.tsx",
         39
       ]
-    ]
+    ],
+    "translation": "Pode visualizar registros de tempo"
   },
   "SNfg0e": {
     "message": "Can view workspace",
@@ -2852,7 +2852,6 @@
     "translation": "Cartão"
   },
   "zw1cIi": {
-    "translation": "Capa do cartão",
     "message": "Card cover",
     "placeholders": {},
     "comments": [],
@@ -2861,10 +2860,10 @@
         "src/views/card/components/CardCoverSelector.tsx",
         194
       ]
-    ]
+    ],
+    "translation": "Capa do cartão"
   },
   "32ptHT": {
-    "translation": "Capas dos cartões",
     "message": "Card covers",
     "placeholders": {},
     "comments": [],
@@ -2873,7 +2872,8 @@
         "src/views/settings/AccountSettings.tsx",
         82
       ]
-    ]
+    ],
+    "translation": "Capas dos cartões"
   },
   "sU2uWc": {
     "message": "Card duplicated",
@@ -2944,7 +2944,6 @@
     "translation": "Opções do cartão"
   },
   "trre7j": {
-    "translation": "Status do cartão",
     "message": "Card status",
     "placeholders": {},
     "comments": [],
@@ -2953,7 +2952,8 @@
         "src/views/board/components/Filters.tsx",
         325
       ]
-    ]
+    ],
+    "translation": "Status do cartão"
   },
   "ZH7TVS": {
     "message": "Card title",
@@ -2962,7 +2962,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        487
+        488
       ]
     ],
     "translation": "Título do cartão"
@@ -2988,7 +2988,6 @@
     "translation": "URL do cartão copiada para a área de transferência"
   },
   "Ccpbzh": {
-    "translation": "Cartões",
     "message": "Cards",
     "placeholders": {},
     "comments": [],
@@ -2997,10 +2996,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         342
       ]
-    ]
+    ],
+    "translation": "Cartões"
   },
   "sIpTuZ": {
-    "translation": "Alterar plano de fundo",
     "message": "Change background",
     "placeholders": {},
     "comments": [],
@@ -3013,10 +3012,10 @@
         "src/views/board/components/BoardDropdown.tsx",
         112
       ]
-    ]
+    ],
+    "translation": "Alterar plano de fundo"
   },
   "isn2eh": {
-    "translation": "Alterar capa",
     "message": "Change cover",
     "placeholders": {},
     "comments": [],
@@ -3025,7 +3024,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         207
       ]
-    ]
+    ],
+    "translation": "Alterar capa"
   },
   "VhMDMg": {
     "message": "Change Password",
@@ -3076,7 +3076,6 @@
     "translation": "Altere suas preferências de idioma."
   },
   "WfLyB5": {
-    "translation": "alterou a capa do cartão",
     "message": "changed the card cover",
     "placeholders": {},
     "comments": [],
@@ -3085,7 +3084,8 @@
         "src/views/card/components/ActivityList.tsx",
         159
       ]
-    ]
+    ],
+    "translation": "alterou a capa do cartão"
   },
   "gZxH/p": {
     "message": "changed the due date to <0>{formattedDate}</0>",
@@ -3108,7 +3108,6 @@
     "translation": "alterou a data de vencimento para <0>{formattedDate}</0>"
   },
   "GJZBKx": {
-    "translation": "alterou a data de início para <0>{0}</0>",
     "message": "changed the start date to <0>{0}</0>",
     "placeholders": {
       "0": [
@@ -3121,7 +3120,8 @@
         "src/views/card/components/ActivityList.tsx",
         386
       ]
-    ]
+    ],
+    "translation": "alterou a data de início para <0>{0}</0>"
   },
   "pFGfsR": {
     "message": "Check out some of our favorite open source projects.",
@@ -3156,7 +3156,6 @@
     "translation": "Verifique sua caixa de entrada"
   },
   "G1XxbZ": {
-    "translation": "Caixa de seleção",
     "message": "Checkbox",
     "placeholders": {},
     "comments": [],
@@ -3165,10 +3164,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         50
       ]
-    ]
+    ],
+    "translation": "Caixa de seleção"
   },
   "VSGGki": {
-    "translation": "Marcado",
     "message": "Checked",
     "placeholders": {},
     "comments": [],
@@ -3185,10 +3184,10 @@
         "src/views/board/components/Filters.tsx",
         251
       ]
-    ]
+    ],
+    "translation": "Marcado"
   },
   "fnUE2i": {
-    "translation": "Responsável pelo item da lista",
     "message": "Checklist item assignee",
     "placeholders": {},
     "comments": [],
@@ -3197,7 +3196,8 @@
         "src/views/card/components/ChecklistItemAssignee.tsx",
         78
       ]
-    ]
+    ],
+    "translation": "Responsável pelo item da lista"
   },
   "GnRmu4": {
     "message": "Checklist name",
@@ -3228,7 +3228,6 @@
     "translation": "Checklists"
   },
   "fb0Jyp": {
-    "translation": "Escolha",
     "message": "Choice",
     "placeholders": {},
     "comments": [],
@@ -3237,10 +3236,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         52
       ]
-    ]
+    ],
+    "translation": "Escolha"
   },
   "WQ5uca": {
-    "translation": "Escolha um agrupamento para exportar um resumo",
     "message": "Choose a grouping to export a summary",
     "placeholders": {},
     "comments": [],
@@ -3249,10 +3248,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         436
       ]
-    ]
+    ],
+    "translation": "Escolha um agrupamento para exportar um resumo"
   },
   "jM7ASy": {
-    "translation": "Escolha uma imagem JPEG, PNG, WebP, GIF ou AVIF.",
     "message": "Choose a JPEG, PNG, WebP, GIF, or AVIF image.",
     "placeholders": {},
     "comments": [],
@@ -3261,7 +3260,8 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         87
       ]
-    ]
+    ],
+    "translation": "Escolha uma imagem JPEG, PNG, WebP, GIF ou AVIF."
   },
   "zMquA7": {
     "message": "Choose a plan",
@@ -3276,7 +3276,6 @@
     "translation": "Escolha um plano"
   },
   "SYb0Ub": {
-    "translation": "Escolha uma imagem menor que 50 MB.",
     "message": "Choose an image smaller than 50 MB.",
     "placeholders": {},
     "comments": [],
@@ -3285,10 +3284,10 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         96
       ]
-    ]
+    ],
+    "translation": "Escolha uma imagem menor que 50 MB."
   },
   "R6XtNF": {
-    "translation": "Escolha como as capas dos cartões serão exibidas neste dispositivo.",
     "message": "Choose how card covers appear on this device.",
     "placeholders": {},
     "comments": [],
@@ -3297,10 +3296,10 @@
         "src/views/settings/AccountSettings.tsx",
         85
       ]
-    ]
+    ],
+    "translation": "Escolha como as capas dos cartões serão exibidas neste dispositivo."
   },
   "AE6obc": {
-    "translation": "Escolha uma opção da lista.",
     "message": "Choose one option from a list.",
     "placeholders": {},
     "comments": [],
@@ -3309,7 +3308,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         67
       ]
-    ]
+    ],
+    "translation": "Escolha uma opção da lista."
   },
   "5EMoSo": {
     "message": "Choose plan",
@@ -3328,7 +3328,6 @@
     "translation": "Escolher plano"
   },
   "niRekC": {
-    "translation": "Escolha se as atividades mais recentes ou mais antigas aparecem primeiro.",
     "message": "Choose whether newer or older activity appears first.",
     "placeholders": {},
     "comments": [],
@@ -3337,10 +3336,10 @@
         "src/views/settings/AccountSettings.tsx",
         75
       ]
-    ]
+    ],
+    "translation": "Escolha se as atividades mais recentes ou mais antigas aparecem primeiro."
   },
   "xCJdfg": {
-    "translation": "Limpar",
     "message": "Clear",
     "placeholders": {},
     "comments": [],
@@ -3349,7 +3348,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         298
       ]
-    ]
+    ],
+    "translation": "Limpar"
   },
   "VHS0aJ": {
     "message": "Clear all custom permissions?",
@@ -3392,7 +3392,6 @@
     "translation": "Limpar permissões personalizadas"
   },
   "UAzNjT": {
-    "translation": "Limpar data",
     "message": "Clear date",
     "placeholders": {},
     "comments": [],
@@ -3401,10 +3400,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         265
       ]
-    ]
+    ],
+    "translation": "Limpar data"
   },
   "0Czky2": {
-    "translation": "Limpar datas",
     "message": "Clear dates",
     "placeholders": {},
     "comments": [],
@@ -3413,7 +3412,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         411
       ]
-    ]
+    ],
+    "translation": "Limpar datas"
   },
   "u8JHrO": {
     "message": "Clear filters",
@@ -3524,7 +3524,6 @@
     "translation": "Colaboração"
   },
   "xHwgs0": {
-    "translation": "Cores",
     "message": "Colours",
     "placeholders": {},
     "comments": [],
@@ -3533,7 +3532,8 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         172
       ]
-    ]
+    ],
+    "translation": "Cores"
   },
   "AUYALh": {
     "message": "Coming soon",
@@ -3548,7 +3548,6 @@
     "translation": "Em breve"
   },
   "NBdIgR": {
-    "translation": "Comentário",
     "message": "Comment",
     "placeholders": {},
     "comments": [],
@@ -3561,7 +3560,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         163
       ]
-    ]
+    ],
+    "translation": "Comentário"
   },
   "dYbQ1T": {
     "message": "Comment options",
@@ -3668,7 +3668,6 @@
     "translation": "concluiu o item da checklist <0>{0}</0>"
   },
   "faXEMy": {
-    "translation": "concluiu esta ocorrência e moveu a data de vencimento para <0>{formattedDate}</0>",
     "message": "completed this occurrence and moved the due date to <0>{formattedDate}</0>",
     "placeholders": {
       "formattedDate": [
@@ -3681,7 +3680,8 @@
         "src/views/card/components/ActivityList.tsx",
         337
       ]
-    ]
+    ],
+    "translation": "concluiu esta ocorrência e moveu a data de vencimento para <0>{formattedDate}</0>"
   },
   "tOZp9v": {
     "message": "Configurable user roles and permissions",
@@ -3866,7 +3866,6 @@
     "translation": "Entre em contato"
   },
   "/5mghO": {
-    "translation": "Contém",
     "message": "Contains",
     "placeholders": {},
     "comments": [],
@@ -3879,7 +3878,8 @@
         "src/views/board/components/Filters.tsx",
         201
       ]
-    ]
+    ],
+    "translation": "Contém"
   },
   "AX4ktp": {
     "message": "Content Creation",
@@ -3999,7 +3999,6 @@
     "translation": "Copiar checklists"
   },
   "IJ9AUi": {
-    "translation": "Copiar campos personalizados",
     "message": "Copy custom fields",
     "placeholders": {},
     "comments": [],
@@ -4008,7 +4007,8 @@
         "src/views/board/components/CardContextDuplicateModal.tsx",
         267
       ]
-    ]
+    ],
+    "translation": "Copiar campos personalizados"
   },
   "fDQ7hA": {
     "message": "Copy labels",
@@ -4071,7 +4071,6 @@
     "translation": "Recursos principais"
   },
   "IF7RiR": {
-    "translation": "Capa",
     "message": "Cover",
     "placeholders": {},
     "comments": [],
@@ -4080,7 +4079,8 @@
         "src/views/card/index.tsx",
         204
       ]
-    ]
+    ],
+    "translation": "Capa"
   },
   "b9XOHo": {
     "message": "Create {0}",
@@ -4155,7 +4155,6 @@
     "translation": "Criar checklist"
   },
   "A3eIjV": {
-    "translation": "Criar campo",
     "message": "Create field",
     "placeholders": {},
     "comments": [],
@@ -4164,7 +4163,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         949
       ]
-    ]
+    ],
+    "translation": "Criar campo"
   },
   "zKY5xi": {
     "message": "Create invite link",
@@ -4223,7 +4223,6 @@
     "translation": "Criar novo {0}"
   },
   "mlqmxU": {
-    "translation": "Criar novo campo",
     "message": "Create new field",
     "placeholders": {},
     "comments": [],
@@ -4232,7 +4231,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         795
       ]
-    ]
+    ],
+    "translation": "Criar novo campo"
   },
   "okpxfB": {
     "message": "Create new key",
@@ -4440,7 +4440,6 @@
     "translation": "Domínio personalizado"
   },
   "oPwQt4": {
-    "translation": "Campos personalizados",
     "message": "Custom fields",
     "placeholders": {},
     "comments": [],
@@ -4459,13 +4458,14 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        525
+        526
       ],
       [
         "src/views/card/components/custom-fields/custom-fields.tsx",
         401
       ]
-    ]
+    ],
+    "translation": "Campos personalizados"
   },
   "2M84k3": {
     "message": "Custom permissions",
@@ -4480,7 +4480,6 @@
     "translation": "Permissões personalizadas"
   },
   "ioxL7D": {
-    "translation": "Período personalizado",
     "message": "Custom range",
     "placeholders": {},
     "comments": [],
@@ -4489,7 +4488,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         219
       ]
-    ]
+    ],
+    "translation": "Período personalizado"
   },
   "UirJfL": {
     "message": "Custom SLA",
@@ -4595,7 +4595,6 @@
     "translation": "Suporte ao cliente"
   },
   "U0sC6H": {
-    "translation": "Diariamente",
     "message": "Daily",
     "placeholders": {},
     "comments": [],
@@ -4612,7 +4611,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         396
       ]
-    ]
+    ],
+    "translation": "Diariamente"
   },
   "pvnfJD": {
     "message": "Dark",
@@ -4627,7 +4627,6 @@
     "translation": "Escuro"
   },
   "mYGY3B": {
-    "translation": "Data",
     "message": "Date",
     "placeholders": {},
     "comments": [],
@@ -4644,10 +4643,10 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         150
       ]
-    ]
+    ],
+    "translation": "Data"
   },
   "UDI8Ls": {
-    "translation": "Datas",
     "message": "Dates",
     "placeholders": {},
     "comments": [],
@@ -4656,7 +4655,8 @@
         "src/views/card/index.tsx",
         189
       ]
-    ]
+    ],
+    "translation": "Datas"
   },
   "cp1rsD": {
     "message": "Deactivate invite link",
@@ -4695,7 +4695,6 @@
     "translation": "Nome de usuário padrão"
   },
   "TlEEts": {
-    "translation": "Valor padrão",
     "message": "Default value",
     "placeholders": {},
     "comments": [],
@@ -4704,7 +4703,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         561
       ]
-    ]
+    ],
+    "translation": "Valor padrão"
   },
   "cnGeoo": {
     "message": "Delete",
@@ -4823,7 +4823,6 @@
     "translation": "Excluir lista de verificação"
   },
   "G6Dacx": {
-    "translation": "Excluir o item “{0}” da lista de verificação",
     "message": "Delete checklist item “{0}”",
     "placeholders": {
       "0": [
@@ -4836,7 +4835,8 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         376
       ]
-    ]
+    ],
+    "translation": "Excluir o item “{0}” da lista de verificação"
   },
   "njJFtc": {
     "message": "Delete comment",
@@ -4851,7 +4851,6 @@
     "translation": "Excluir comentário"
   },
   "x2p4/4": {
-    "translation": "Excluir campo",
     "message": "Delete field",
     "placeholders": {},
     "comments": [],
@@ -4860,7 +4859,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         703
       ]
-    ]
+    ],
+    "translation": "Excluir campo"
   },
   "lYT7pQ": {
     "message": "Delete list",
@@ -4887,7 +4887,6 @@
     "translation": "Excluir modelo"
   },
   "2Xn0EE": {
-    "translation": "Excluir este campo? Ele será removido do quadro e de todos os cartões.",
     "message": "Delete this field? It will be removed from the board and all cards.",
     "placeholders": {},
     "comments": [],
@@ -4896,10 +4895,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         671
       ]
-    ]
+    ],
+    "translation": "Excluir este campo? Ele será removido do quadro e de todos os cartões."
   },
   "AmfkGS": {
-    "translation": "Excluir este registro de tempo?",
     "message": "Delete this time entry?",
     "placeholders": {},
     "comments": [],
@@ -4908,7 +4907,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         736
       ]
-    ]
+    ],
+    "translation": "Excluir este registro de tempo?"
   },
   "snMaH4": {
     "message": "Delete webhook",
@@ -4999,7 +4999,6 @@
     "translation": "excluiu o item da checklist <0>{0}</0>"
   },
   "Nu4oKW": {
-    "translation": "Descrição",
     "message": "Description",
     "placeholders": {},
     "comments": [],
@@ -5012,7 +5011,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         882
       ]
-    ]
+    ],
+    "translation": "Descrição"
   },
   "f8fH8W": {
     "message": "Design",
@@ -5039,7 +5039,6 @@
     "translation": "Workspace de destino"
   },
   "bzSI52": {
-    "translation": "Descartar",
     "message": "Discard",
     "placeholders": {},
     "comments": [],
@@ -5048,7 +5047,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         370
       ]
-    ]
+    ],
+    "translation": "Descartar"
   },
   "Odv3J6": {
     "message": "Disconnect GitHub",
@@ -5440,7 +5440,6 @@
     "translation": "Editar URL do quadro"
   },
   "PGd4fd": {
-    "translation": "Editar prazo do item da lista",
     "message": "Edit checklist item due date",
     "placeholders": {},
     "comments": [],
@@ -5449,7 +5448,8 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         223
       ]
-    ]
+    ],
+    "translation": "Editar prazo do item da lista"
   },
   "rF8SEQ": {
     "message": "Edit comment",
@@ -5492,7 +5492,6 @@
     "translation": "Editar permissões"
   },
   "CtkaqE": {
-    "translation": "Editar registro de tempo",
     "message": "Edit time entry",
     "placeholders": {},
     "comments": [],
@@ -5501,7 +5500,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         97
       ]
-    ]
+    ],
+    "translation": "Editar registro de tempo"
   },
   "fW5sSv": {
     "message": "Edit webhook",
@@ -5616,7 +5616,6 @@
     "translation": "Visibilidade do email"
   },
   "WY7Cmx": {
-    "translation": "Ativar o controle de tempo",
     "message": "Enable time tracking",
     "placeholders": {},
     "comments": [],
@@ -5629,7 +5628,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         102
       ]
-    ]
+    ],
+    "translation": "Ativar o controle de tempo"
   },
   "bFREhu": {
     "message": "End of list",
@@ -5688,7 +5688,6 @@
     "translation": "Insira um título personalizado"
   },
   "vJiLfv": {
-    "translation": "Insira uma duração, por exemplo, 2h, 90m ou 1:30.",
     "message": "Enter a duration such as 2h, 90m, or 1:30.",
     "placeholders": {},
     "comments": [],
@@ -5697,10 +5696,10 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         145
       ]
-    ]
+    ],
+    "translation": "Insira uma duração, por exemplo, 2h, 90m ou 1:30."
   },
   "GkEcAu": {
-    "translation": "Insira um único número.",
     "message": "Enter a single number.",
     "placeholders": {},
     "comments": [],
@@ -5709,10 +5708,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         61
       ]
-    ]
+    ],
+    "translation": "Insira um único número."
   },
   "gXN54C": {
-    "translation": "Digite um número válido.",
     "message": "Enter a valid number.",
     "placeholders": {},
     "comments": [],
@@ -5725,7 +5724,8 @@
         "src/views/card/components/custom-fields/custom-fields.tsx",
         235
       ]
-    ]
+    ],
+    "translation": "Digite um número válido."
   },
   "rQRXo8": {
     "message": "Enter new secret to update",
@@ -5828,7 +5828,6 @@
     "translation": "Enterprise"
   },
   "ef6vAZ": {
-    "translation": "Registros",
     "message": "Entries",
     "placeholders": {},
     "comments": [],
@@ -5837,10 +5836,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         340
       ]
-    ]
+    ],
+    "translation": "Registros"
   },
   "f9yJNM": {
-    "translation": "Igual a",
     "message": "Equals",
     "placeholders": {},
     "comments": [],
@@ -5853,7 +5852,8 @@
         "src/views/board/components/Filters.tsx",
         205
       ]
-    ]
+    ],
+    "translation": "Igual a"
   },
   "SlfejT": {
     "message": "Error",
@@ -6142,7 +6142,6 @@
     "translation": "Tudo que você precisa, grátis para sempre. Quadros ilimitados, listas ilimitadas, cartões ilimitados. Faça upgrade a qualquer momento."
   },
   "pjqgie": {
-    "translation": "Exemplo ou formato esperado",
     "message": "Example or expected format",
     "placeholders": {},
     "comments": [],
@@ -6155,7 +6154,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         915
       ]
-    ]
+    ],
+    "translation": "Exemplo ou formato esperado"
   },
   "t+R8+P": {
     "message": "Execution",
@@ -6170,7 +6170,6 @@
     "translation": "Execução"
   },
   "AoQvBa": {
-    "translation": "Explique como este campo deve ser usado",
     "message": "Explain how this field should be used",
     "placeholders": {},
     "comments": [],
@@ -6179,10 +6178,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         554
       ]
-    ]
+    ],
+    "translation": "Explique como este campo deve ser usado"
   },
   "WoSfea": {
-    "translation": "Exportar registros em CSV",
     "message": "Export entries CSV",
     "placeholders": {},
     "comments": [],
@@ -6191,10 +6190,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         423
       ]
-    ]
+    ],
+    "translation": "Exportar registros em CSV"
   },
   "85rIwg": {
-    "translation": "Exportar CSV completo",
     "message": "Export full CSV",
     "placeholders": {},
     "comments": [],
@@ -6203,10 +6202,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         448
       ]
-    ]
+    ],
+    "translation": "Exportar CSV completo"
   },
   "o7dpgY": {
-    "translation": "Exportar CSV de resumo",
     "message": "Export summary CSV",
     "placeholders": {},
     "comments": [],
@@ -6215,7 +6214,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         439
       ]
-    ]
+    ],
+    "translation": "Exportar CSV de resumo"
   },
   "GwNIE2": {
     "message": "Extended Roadmap",
@@ -6366,7 +6366,6 @@
     "translation": "Falha ao fazer upload do anexo. Por favor, tente novamente."
   },
   "MnzgwU": {
-    "translation": "Não foi possível enviar o plano de fundo do quadro. Tente novamente.",
     "message": "Failed to upload the board background. Please try again.",
     "placeholders": {},
     "comments": [],
@@ -6375,7 +6374,8 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         132
       ]
-    ]
+    ],
+    "translation": "Não foi possível enviar o plano de fundo do quadro. Tente novamente."
   },
   "/lDBHm": {
     "message": "FAQ",
@@ -6490,7 +6490,6 @@
     "translation": "Feedback enviado"
   },
   "YZsaTf": {
-    "translation": "Descrição do campo (opcional)",
     "message": "Field description (optional)",
     "placeholders": {},
     "comments": [],
@@ -6499,10 +6498,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         887
       ]
-    ]
+    ],
+    "translation": "Descrição do campo (opcional)"
   },
   "nrXDdR": {
-    "translation": "Nome do campo",
     "message": "Field name",
     "placeholders": {},
     "comments": [],
@@ -6515,10 +6514,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         829
       ]
-    ]
+    ],
+    "translation": "Nome do campo"
   },
   "zXgopL": {
-    "translation": "Tipo de campo",
     "message": "Field type",
     "placeholders": {},
     "comments": [],
@@ -6527,7 +6526,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         839
       ]
-    ]
+    ],
+    "translation": "Tipo de campo"
   },
   "F6m23G": {
     "message": "File uploads",
@@ -6558,7 +6558,6 @@
     "translation": "Filtrar"
   },
   "wP7Cju": {
-    "translation": "Filtrar por valor",
     "message": "Filter by value",
     "placeholders": {},
     "comments": [],
@@ -6567,7 +6566,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         222
       ]
-    ]
+    ],
+    "translation": "Filtrar por valor"
   },
   "l31EoQ": {
     "message": "Find answers to common questions about Kan. Can't find what you're looking for? Feel free to <0>contact us</0>.",
@@ -6690,7 +6690,6 @@
     "translation": "Grátis, para sempre"
   },
   "ejVYRQ": {
-    "translation": "De",
     "message": "From",
     "placeholders": {},
     "comments": [],
@@ -6707,10 +6706,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         230
       ]
-    ]
+    ],
+    "translation": "De"
   },
   "g2Tj8R": {
-    "translation": "Completa",
     "message": "Full",
     "placeholders": {},
     "comments": [],
@@ -6719,7 +6718,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         243
       ]
-    ]
+    ],
+    "translation": "Completa"
   },
   "6uBU1F": {
     "message": "Full API access",
@@ -7066,7 +7066,6 @@
     "translation": "Google SSO + SAML"
   },
   "ALoP4W": {
-    "translation": "Agrupar por",
     "message": "Group by",
     "placeholders": {},
     "comments": [],
@@ -7075,7 +7074,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         360
       ]
-    ]
+    ],
+    "translation": "Agrupar por"
   },
   "O1wAlQ": {
     "message": "Guest",
@@ -7090,7 +7090,6 @@
     "translation": "Convidado"
   },
   "D+zLDD": {
-    "translation": "Ocultas",
     "message": "Hidden",
     "placeholders": {},
     "comments": [],
@@ -7099,10 +7098,10 @@
         "src/components/CardCoverDisplaySelector.tsx",
         14
       ]
-    ]
+    ],
+    "translation": "Ocultas"
   },
   "jl+31q": {
-    "translation": "Ocultar itens concluídos",
     "message": "Hide completed items",
     "placeholders": {},
     "comments": [],
@@ -7111,7 +7110,8 @@
         "src/views/card/components/Checklists.tsx",
         252
       ]
-    ]
+    ],
+    "translation": "Ocultar itens concluídos"
   },
   "CB/NpV": {
     "message": "High Priority",
@@ -7294,7 +7294,6 @@
     "translation": "Ideias para melhorar esta página..."
   },
   "kH+aRv": {
-    "translation": "Anexo de imagem",
     "message": "Image attachment",
     "placeholders": {},
     "comments": [],
@@ -7303,10 +7302,10 @@
         "src/views/card/components/CardCoverSelector.tsx",
         286
       ]
-    ]
+    ],
+    "translation": "Anexo de imagem"
   },
   "4HhvKN": {
-    "translation": "A imagem é muito grande",
     "message": "Image is too large",
     "placeholders": {},
     "comments": [],
@@ -7315,10 +7314,10 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         95
       ]
-    ]
+    ],
+    "translation": "A imagem é muito grande"
   },
   "an5hVd": {
-    "translation": "Imagens",
     "message": "Images",
     "placeholders": {},
     "comments": [],
@@ -7327,7 +7326,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         273
       ]
-    ]
+    ],
+    "translation": "Imagens"
   },
   "l3s5ri": {
     "message": "Import",
@@ -7402,7 +7402,6 @@
     "translation": "Importante"
   },
   "zawWn4": {
-    "translation": "Cor importada",
     "message": "Imported colour",
     "placeholders": {},
     "comments": [],
@@ -7415,7 +7414,8 @@
         "src/views/board/components/custom-fields/custom-field-colour-picker.tsx",
         33
       ]
-    ]
+    ],
+    "translation": "Cor importada"
   },
   "xMn+V9": {
     "message": "Importing from Trello",
@@ -7466,7 +7466,6 @@
     "translation": "em"
   },
   "15Qqe2": {
-    "translation": "Em {0}",
     "message": "In {0}",
     "placeholders": {
       "0": [
@@ -7479,7 +7478,8 @@
         "src/components/CommandPallette.tsx",
         181
       ]
-    ]
+    ],
+    "translation": "Em {0}"
   },
   "WbTDwg": {
     "message": "In Progress",
@@ -7522,7 +7522,6 @@
     "translation": "Inativo"
   },
   "mtGDyy": {
-    "translation": "Incompleto",
     "message": "Incomplete",
     "placeholders": {},
     "comments": [],
@@ -7531,7 +7530,8 @@
         "src/views/board/components/Filters.tsx",
         180
       ]
-    ]
+    ],
+    "translation": "Incompleto"
   },
   "6mbe4b": {
     "message": "Individuals",
@@ -7546,7 +7546,6 @@
     "translation": "Indivíduos"
   },
   "5xOefm": {
-    "translation": "Dica de preenchimento",
     "message": "Input hint",
     "placeholders": {},
     "comments": [],
@@ -7559,7 +7558,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         910
       ]
-    ]
+    ],
+    "translation": "Dica de preenchimento"
   },
   "nbfdhU": {
     "message": "Integrations",
@@ -7706,7 +7706,6 @@
     "translation": "Convidar membro"
   },
   "Dn4OyV": {
-    "translation": "Convidado",
     "message": "Invited",
     "placeholders": {},
     "comments": [],
@@ -7719,7 +7718,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         43
       ]
-    ]
+    ],
+    "translation": "Convidado"
   },
   "M2zwdn": {
     "message": "Inviting members requires a Team or Pro plan. You'll be redirected to upgrade your workspace.",
@@ -7852,7 +7852,6 @@
     "translation": "Atalhos de teclado"
   },
   "87a/t/": {
-    "translation": "Etiqueta",
     "message": "Label",
     "placeholders": {},
     "comments": [],
@@ -7861,7 +7860,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         312
       ]
-    ]
+    ],
+    "translation": "Etiqueta"
   },
   "h8DugX": {
     "message": "Labels",
@@ -7944,7 +7944,6 @@
     "translation": "Grande"
   },
   "vfe90m": {
-    "translation": "Últimos 14 dias",
     "message": "Last 14 days",
     "placeholders": {},
     "comments": [],
@@ -7953,10 +7952,10 @@
         "src/utils/timeTrackingLabels.ts",
         12
       ]
-    ]
+    ],
+    "translation": "Últimos 14 dias"
   },
   "rTwgPH": {
-    "translation": "Mês passado",
     "message": "Last month",
     "placeholders": {},
     "comments": [],
@@ -7965,10 +7964,10 @@
         "src/utils/timeTrackingLabels.ts",
         14
       ]
-    ]
+    ],
+    "translation": "Mês passado"
   },
   "xSn9Fa": {
-    "translation": "Trimestre passado",
     "message": "Last quarter",
     "placeholders": {},
     "comments": [],
@@ -7977,10 +7976,10 @@
         "src/utils/timeTrackingLabels.ts",
         16
       ]
-    ]
+    ],
+    "translation": "Trimestre passado"
   },
   "j9tmna": {
-    "translation": "Semana passada",
     "message": "Last week",
     "placeholders": {},
     "comments": [],
@@ -7989,10 +7988,10 @@
         "src/utils/timeTrackingLabels.ts",
         11
       ]
-    ]
+    ],
+    "translation": "Semana passada"
   },
   "ayy6IJ": {
-    "translation": "Ano passado",
     "message": "Last year",
     "placeholders": {},
     "comments": [],
@@ -8001,7 +8000,8 @@
         "src/utils/timeTrackingLabels.ts",
         18
       ]
-    ]
+    ],
+    "translation": "Ano passado"
   },
   "8Is1ih": {
     "message": "Launch offer",
@@ -8234,7 +8234,6 @@
     "translation": "Listas"
   },
   "yQ2kGp": {
-    "translation": "Carregar mais",
     "message": "Load more",
     "placeholders": {},
     "comments": [],
@@ -8247,7 +8246,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         771
       ]
-    ]
+    ],
+    "translation": "Carregar mais"
   },
   "1rVAfU": {
     "message": "Load more activities",
@@ -8362,7 +8362,6 @@
     "translation": "magic link"
   },
   "Ch2KQj": {
-    "translation": "Painel principal",
     "message": "Main panel",
     "placeholders": {},
     "comments": [],
@@ -8379,7 +8378,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         870
       ]
-    ]
+    ],
+    "translation": "Painel principal"
   },
   "DbZgsJ": {
     "message": "Make template",
@@ -8394,7 +8394,6 @@
     "translation": "Criar modelo"
   },
   "BQuR+c": {
-    "translation": "Gerenciar campos personalizados",
     "message": "Manage custom fields",
     "placeholders": {},
     "comments": [],
@@ -8403,7 +8402,8 @@
         "src/views/card/components/custom-fields/custom-fields.tsx",
         409
       ]
-    ]
+    ],
+    "translation": "Gerenciar campos personalizados"
   },
   "hB02vO": {
     "message": "Manage members",
@@ -8422,7 +8422,6 @@
     "translation": "Gerenciar membros"
   },
   "BWTzAb": {
-    "translation": "Manual",
     "message": "Manual",
     "placeholders": {},
     "comments": [],
@@ -8431,10 +8430,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         542
       ]
-    ]
+    ],
+    "translation": "Manual"
   },
   "xl0pkC": {
-    "translation": "Marcar “{0}” como concluído",
     "message": "Mark “{0}” complete",
     "placeholders": {
       "0": [
@@ -8447,10 +8446,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         333
       ]
-    ]
+    ],
+    "translation": "Marcar “{0}” como concluído"
   },
   "tpGPKX": {
-    "translation": "Marcar “{0}” como incompleto",
     "message": "Mark “{0}” incomplete",
     "placeholders": {
       "0": [
@@ -8463,10 +8462,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         332
       ]
-    ]
+    ],
+    "translation": "Marcar “{0}” como incompleto"
   },
   "p2sp9h": {
-    "translation": "Marcar cartão como concluído",
     "message": "Mark card as complete",
     "placeholders": {},
     "comments": [],
@@ -8483,10 +8482,10 @@
         "src/views/card/components/CardCompletionToggle.tsx",
         54
       ]
-    ]
+    ],
+    "translation": "Marcar cartão como concluído"
   },
   "Y87wQu": {
-    "translation": "Marcar cartão como incompleto",
     "message": "Mark card as incomplete",
     "placeholders": {},
     "comments": [],
@@ -8503,7 +8502,8 @@
         "src/views/card/components/CardCompletionToggle.tsx",
         53
       ]
-    ]
+    ],
+    "translation": "Marcar cartão como incompleto"
   },
   "IDvohQ": {
     "message": "marked a checklist item as incomplete",
@@ -8534,7 +8534,6 @@
     "translation": "marcou o item da checklist <0>{0}</0> como incompleto"
   },
   "sQKPzt": {
-    "translation": "marcou o cartão como concluído",
     "message": "marked the card as complete",
     "placeholders": {},
     "comments": [],
@@ -8543,10 +8542,10 @@
         "src/views/card/components/ActivityList.tsx",
         160
       ]
-    ]
+    ],
+    "translation": "marcou o cartão como concluído"
   },
   "383Sst": {
-    "translation": "marcou o cartão como incompleto",
     "message": "marked the card as incomplete",
     "placeholders": {},
     "comments": [],
@@ -8555,7 +8554,8 @@
         "src/views/card/components/ActivityList.tsx",
         161
       ]
-    ]
+    ],
+    "translation": "marcou o cartão como incompleto"
   },
   "vo2a+a": {
     "message": "Marketing",
@@ -8680,6 +8680,10 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
+        579
+      ],
+      [
+        "src/views/board/components/NewCardForm.tsx",
         583
       ],
       [
@@ -8722,7 +8726,6 @@
     "translation": "Membros | {0}"
   },
   "bNv3ig": {
-    "translation": "Os membros podem adicionar registros de tempo e iniciar cronômetros nos cartões. A desativação deste recurso mantém o histórico existente.",
     "message": "Members can add time entries and run timers on cards. Disabling this feature keeps existing history.",
     "placeholders": {},
     "comments": [],
@@ -8731,7 +8734,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         96
       ]
-    ]
+    ],
+    "translation": "Os membros podem adicionar registros de tempo e iniciar cronômetros nos cartões. A desativação deste recurso mantém o histórico existente."
   },
   "/bZzdR": {
     "message": "Mentions",
@@ -8746,7 +8750,6 @@
     "translation": "Menções"
   },
   "fiPesM": {
-    "translation": "Método",
     "message": "Method",
     "placeholders": {},
     "comments": [],
@@ -8755,7 +8758,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         491
       ]
-    ]
+    ],
+    "translation": "Método"
   },
   "hty0d5": {
     "message": "Monday",
@@ -8770,7 +8774,6 @@
     "translation": "Segunda-feira"
   },
   "HajiZl": {
-    "translation": "Mês",
     "message": "Month",
     "placeholders": {},
     "comments": [],
@@ -8779,7 +8782,8 @@
         "src/views/board/components/CalendarView.tsx",
         379
       ]
-    ]
+    ],
+    "translation": "Mês"
   },
   "+8Nek/": {
     "message": "Monthly",
@@ -8850,7 +8854,6 @@
     "translation": "Mover quadro para outro workspace"
   },
   "rOdFNG": {
-    "translation": "Mover campo para baixo",
     "message": "Move field down",
     "placeholders": {},
     "comments": [],
@@ -8859,10 +8862,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         467
       ]
-    ]
+    ],
+    "translation": "Mover campo para baixo"
   },
   "Yls4DD": {
-    "translation": "Mover campo para cima",
     "message": "Move field up",
     "placeholders": {},
     "comments": [],
@@ -8871,10 +8874,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         450
       ]
-    ]
+    ],
+    "translation": "Mover campo para cima"
   },
   "EyDEs6": {
-    "translation": "Mover opção para baixo",
     "message": "Move option down",
     "placeholders": {},
     "comments": [],
@@ -8883,10 +8886,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         177
       ]
-    ]
+    ],
+    "translation": "Mover opção para baixo"
   },
   "vL4DgO": {
-    "translation": "Mover opção para cima",
     "message": "Move option up",
     "placeholders": {},
     "comments": [],
@@ -8895,7 +8898,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         167
       ]
-    ]
+    ],
+    "translation": "Mover opção para cima"
   },
   "51UCsN": {
     "message": "Move to another list",
@@ -9029,7 +9033,6 @@
     "translation": "Precisa de ajuda?"
   },
   "qqeAJM": {
-    "translation": "Nunca",
     "message": "Never",
     "placeholders": {},
     "comments": [],
@@ -9042,7 +9045,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         395
       ]
-    ]
+    ],
+    "translation": "Nunca"
   },
   "PSXKxs": {
     "message": "Never lose track of what's due",
@@ -9107,7 +9111,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        470
+        471
       ]
     ],
     "translation": "Novo cartão"
@@ -9165,7 +9169,6 @@
     "translation": "Nova lista"
   },
   "CwwBeU": {
-    "translation": "Nova opção",
     "message": "New option",
     "placeholders": {},
     "comments": [],
@@ -9174,7 +9177,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         251
       ]
-    ]
+    ],
+    "translation": "Nova opção"
   },
   "+MdEsf": {
     "message": "New password is required",
@@ -9249,7 +9253,6 @@
     "translation": "Novo workspace"
   },
   "cTUByn": {
-    "translation": "Mais recentes primeiro",
     "message": "Newest first",
     "placeholders": {},
     "comments": [],
@@ -9258,7 +9261,8 @@
         "src/components/ActivitySortOrderSelector.tsx",
         15
       ]
-    ]
+    ],
+    "translation": "Mais recentes primeiro"
   },
   "5ACX4z": {
     "message": "Newsletter",
@@ -9297,7 +9301,6 @@
     "translation": "Próximos passos"
   },
   "IT903p": {
-    "translation": "Próxima semana",
     "message": "Next week",
     "placeholders": {},
     "comments": [],
@@ -9306,7 +9309,8 @@
         "src/views/board/components/CalendarView.tsx",
         405
       ]
-    ]
+    ],
+    "translation": "Próxima semana"
   },
   "/glL9Q": {
     "message": "No {0}",
@@ -9374,7 +9378,6 @@
     "obsolete": true
   },
   "pjukd6": {
-    "translation": "Nenhum cartão programado",
     "message": "No cards scheduled",
     "placeholders": {},
     "comments": [],
@@ -9383,10 +9386,10 @@
         "src/views/board/components/CalendarView.tsx",
         691
       ]
-    ]
+    ],
+    "translation": "Nenhum cartão programado"
   },
   "07xRBp": {
-    "translation": "Sem cor",
     "message": "No colour",
     "placeholders": {},
     "comments": [],
@@ -9399,7 +9402,8 @@
         "src/views/board/components/custom-fields/custom-field-colour-picker.tsx",
         38
       ]
-    ]
+    ],
+    "translation": "Sem cor"
   },
   "OpNhRn": {
     "message": "No credit card required",
@@ -9426,7 +9430,6 @@
     "translation": "Nenhuma data"
   },
   "xJne3c": {
-    "translation": "Sem valor padrão",
     "message": "No default",
     "placeholders": {},
     "comments": [],
@@ -9443,7 +9446,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         615
       ]
-    ]
+    ],
+    "translation": "Sem valor padrão"
   },
   "sY2lzr": {
     "message": "No download URL available for this attachment.",
@@ -9458,7 +9462,6 @@
     "translation": "Nenhuma URL de download disponível para este anexo."
   },
   "dNhH8G": {
-    "translation": "Sem agrupamento",
     "message": "No grouping",
     "placeholders": {},
     "comments": [],
@@ -9467,7 +9470,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         370
       ]
-    ]
+    ],
+    "translation": "Sem agrupamento"
   },
   "TXO5TM": {
     "message": "No keyboard shortcuts registered.",
@@ -9517,8 +9521,19 @@
     ],
     "translation": "Nenhuma lista foi criada ainda"
   },
+  "UwvrGq": {
+    "translation": "Nenhum membro",
+    "message": "No members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/MemberPicker.tsx",
+        94
+      ]
+    ]
+  },
   "S4cMBI": {
-    "translation": "Nenhum membro disponível.",
     "message": "No members available.",
     "placeholders": {},
     "comments": [],
@@ -9527,10 +9542,22 @@
         "src/views/card/components/ChecklistItemAssignee.tsx",
         162
       ]
+    ],
+    "translation": "Nenhum membro disponível."
+  },
+  "FK5/sf": {
+    "translation": "Nenhum membro encontrado",
+    "message": "No members found",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/MemberPicker.tsx",
+        94
+      ]
     ]
   },
   "12wKrZ": {
-    "translation": "Nenhum membro encontrado.",
     "message": "No members found.",
     "placeholders": {},
     "comments": [],
@@ -9539,7 +9566,8 @@
         "src/views/card/components/ChecklistItemAssignee.tsx",
         161
       ]
-    ]
+    ],
+    "translation": "Nenhum membro encontrado."
   },
   "i30J2U": {
     "message": "No projects found",
@@ -9582,7 +9610,6 @@
     "translation": "Nenhuma função encontrada para este workspace ainda."
   },
   "q9gKtl": {
-    "translation": "Sem seção",
     "message": "No section",
     "placeholders": {},
     "comments": [],
@@ -9591,10 +9618,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         631
       ]
-    ]
+    ],
+    "translation": "Sem seção"
   },
   "3M/nm+": {
-    "translation": "Nenhum registro de tempo corresponde a estes filtros.",
     "message": "No time entries match these filters.",
     "placeholders": {},
     "comments": [],
@@ -9603,10 +9630,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         479
       ]
-    ]
+    ],
+    "translation": "Nenhum registro de tempo corresponde a estes filtros."
   },
   "L2Mlhd": {
-    "translation": "Ainda não há tempo registrado neste cartão.",
     "message": "No time has been logged on this card yet.",
     "placeholders": {},
     "comments": [],
@@ -9615,7 +9642,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         684
       ]
-    ]
+    ],
+    "translation": "Ainda não há tempo registrado neste cartão."
   },
   "TX0bT7": {
     "message": "No webhooks configured. Add a webhook to receive notifications.",
@@ -9630,7 +9658,6 @@
     "translation": "Nenhum webhook configurado. Adicione um webhook para receber notificações."
   },
   "CsekCi": {
-    "translation": "Normal",
     "message": "Normal",
     "placeholders": {},
     "comments": [],
@@ -9639,10 +9666,10 @@
         "src/views/card/components/CardCoverSelector.tsx",
         243
       ]
-    ]
+    ],
+    "translation": "Normal"
   },
   "MTqQMG": {
-    "translation": "Não definido",
     "message": "Not set",
     "placeholders": {},
     "comments": [],
@@ -9655,10 +9682,10 @@
         "src/views/card/components/custom-fields/custom-fields.tsx",
         271
       ]
-    ]
+    ],
+    "translation": "Não definido"
   },
   "HptUxX": {
-    "translation": "Número",
     "message": "Number",
     "placeholders": {},
     "comments": [],
@@ -9667,7 +9694,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         46
       ]
-    ]
+    ],
+    "translation": "Número"
   },
   "9h7RDh": {
     "message": "Offer",
@@ -9682,7 +9710,6 @@
     "translation": "Oferta"
   },
   "n6QD94": {
-    "translation": "Mais antigas primeiro",
     "message": "Oldest first",
     "placeholders": {},
     "comments": [],
@@ -9691,7 +9718,8 @@
         "src/components/ActivitySortOrderSelector.tsx",
         14
       ]
-    ]
+    ],
+    "translation": "Mais antigas primeiro"
   },
   "QnzD50": {
     "message": "On-premise",
@@ -9754,7 +9782,6 @@
     "translation": "Depois de excluir seu workspace, não há como voltar atrás. Esta ação não pode ser desfeita."
   },
   "qUP8x5": {
-    "translation": "Abra um campo para editar suas configurações.",
     "message": "Open a field to edit its settings.",
     "placeholders": {},
     "comments": [],
@@ -9763,10 +9790,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         978
       ]
-    ]
+    ],
+    "translation": "Abra um campo para editar suas configurações."
   },
   "dg1gDd": {
-    "translation": "Abrir cartão {0}",
     "message": "Open card {0}",
     "placeholders": {
       "0": [
@@ -9779,7 +9806,8 @@
         "src/views/board/components/SortableCard.tsx",
         89
       ]
-    ]
+    ],
+    "translation": "Abrir cartão {0}"
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -9830,7 +9858,6 @@
     "translation": "Amigos open source"
   },
   "tgPwON": {
-    "translation": "Operador",
     "message": "Operator",
     "placeholders": {},
     "comments": [],
@@ -9843,10 +9870,10 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         235
       ]
-    ]
+    ],
+    "translation": "Operador"
   },
   "7KcJ0c": {
-    "translation": "Cor da opção",
     "message": "Option colour",
     "placeholders": {},
     "comments": [],
@@ -9855,10 +9882,10 @@
         "src/views/board/components/custom-fields/custom-field-colour-picker.tsx",
         47
       ]
-    ]
+    ],
+    "translation": "Cor da opção"
   },
   "I7idB7": {
-    "translation": "Nome da opção",
     "message": "Option name",
     "placeholders": {},
     "comments": [],
@@ -9867,10 +9894,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         154
       ]
-    ]
+    ],
+    "translation": "Nome da opção"
   },
   "0zpgxV": {
-    "translation": "Opções",
     "message": "Options",
     "placeholders": {},
     "comments": [],
@@ -9879,7 +9906,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         221
       ]
-    ]
+    ],
+    "translation": "Opções"
   },
   "BzEFor": {
     "message": "or",
@@ -10096,7 +10124,7 @@
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
-        134
+        133
       ],
       [
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
@@ -10190,7 +10218,6 @@
     "translation": "Perfeito para equipes pequenas e em crescimento que buscam colaborar."
   },
   "NtQvjo": {
-    "translation": "Período",
     "message": "Period",
     "placeholders": {},
     "comments": [],
@@ -10203,7 +10230,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         439
       ]
-    ]
+    ],
+    "translation": "Período"
   },
   "TH3Irz": {
     "message": "Permission",
@@ -10282,7 +10310,6 @@
     "translation": "Escolha um plano para começar. Todos os planos pagos incluem 14 dias de teste grátis."
   },
   "MFTZK8": {
-    "translation": "Posicionamento",
     "message": "Placement",
     "placeholders": {},
     "comments": [],
@@ -10295,7 +10322,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         860
       ]
-    ]
+    ],
+    "translation": "Posicionamento"
   },
   "GdgCoi": {
     "message": "Plan",
@@ -10488,7 +10516,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        228
+        229
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -10778,7 +10806,6 @@
     "translation": "Mês anterior"
   },
   "mmShHA": {
-    "translation": "Semana anterior",
     "message": "Previous week",
     "placeholders": {},
     "comments": [],
@@ -10787,7 +10814,8 @@
         "src/views/board/components/CalendarView.tsx",
         387
       ]
-    ]
+    ],
+    "translation": "Semana anterior"
   },
   "aHCEmh": {
     "message": "Pricing",
@@ -10939,7 +10967,6 @@
     "translation": "Foto de perfil"
   },
   "OQlTMJ": {
-    "translation": "Proeminentes",
     "message": "Prominent",
     "placeholders": {},
     "comments": [],
@@ -10948,7 +10975,8 @@
         "src/components/CardCoverDisplaySelector.tsx",
         12
       ]
-    ]
+    ],
+    "translation": "Proeminentes"
   },
   "7d1a0d": {
     "message": "Public",
@@ -11011,7 +11039,6 @@
     "translation": "Vitória rápida"
   },
   "6jAi8c": {
-    "translation": "Intervalo",
     "message": "Range",
     "placeholders": {},
     "comments": [],
@@ -11024,7 +11051,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         196
       ]
-    ]
+    ],
+    "translation": "Intervalo"
   },
   "6EWT6T": {
     "message": "Recruitment",
@@ -11039,7 +11067,6 @@
     "translation": "Recrutamento"
   },
   "icIr5O": {
-    "translation": "Prazo recorrente",
     "message": "Recurring deadline",
     "placeholders": {},
     "comments": [],
@@ -11048,7 +11075,8 @@
         "src/views/board/components/Card.tsx",
         375
       ]
-    ]
+    ],
+    "translation": "Prazo recorrente"
   },
   "ekCRTP": {
     "message": "Rejected",
@@ -11087,7 +11115,6 @@
     "translation": "Remover"
   },
   "ylbfBl": {
-    "translation": "Remover plano de fundo",
     "message": "Remove background",
     "placeholders": {},
     "comments": [],
@@ -11096,10 +11123,10 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         225
       ]
-    ]
+    ],
+    "translation": "Remover plano de fundo"
   },
   "xhcj8E": {
-    "translation": "Remover capa",
     "message": "Remove cover",
     "placeholders": {},
     "comments": [],
@@ -11108,7 +11135,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         341
       ]
-    ]
+    ],
+    "translation": "Remover capa"
   },
   "cILfnJ": {
     "message": "Remove file",
@@ -11147,7 +11175,6 @@
     "translation": "Remover membro"
   },
   "00Lxnh": {
-    "translation": "Remover opção",
     "message": "Remove option",
     "placeholders": {},
     "comments": [],
@@ -11156,10 +11183,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         187
       ]
-    ]
+    ],
+    "translation": "Remover opção"
   },
   "eps54V": {
-    "translation": "Removido",
     "message": "Removed",
     "placeholders": {},
     "comments": [],
@@ -11180,7 +11207,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         42
       ]
-    ]
+    ],
+    "translation": "Removido"
   },
   "BZkYSt": {
     "message": "removed {0} labels: <0>{labelList}</0>",
@@ -11202,7 +11230,6 @@
     "translation": "removeu {0} etiquetas: <0>{labelList}</0>"
   },
   "TQm/4p": {
-    "translation": "removeu o vencimento de um item da lista",
     "message": "removed a checklist item due date",
     "placeholders": {},
     "comments": [],
@@ -11211,7 +11238,8 @@
         "src/views/card/components/ActivityList.tsx",
         150
       ]
-    ]
+    ],
+    "translation": "removeu o vencimento de um item da lista"
   },
   "kQwvU8": {
     "message": "removed a label from the card",
@@ -11310,7 +11338,6 @@
     "translation": "removeu a data de vencimento"
   },
   "4kgcyZ": {
-    "translation": "removeu a data de início",
     "message": "removed the start date",
     "placeholders": {},
     "comments": [],
@@ -11319,7 +11346,8 @@
         "src/views/card/components/ActivityList.tsx",
         396
       ]
-    ]
+    ],
+    "translation": "removeu a data de início"
   },
   "NypLoL": {
     "message": "renamed a checklist",
@@ -11366,7 +11394,6 @@
     "translation": "renomeou o item da lista de verificação para <0>{0}</0>"
   },
   "BwWIp2": {
-    "translation": "Repetir",
     "message": "Repeat",
     "placeholders": {},
     "comments": [],
@@ -11387,7 +11414,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         383
       ]
-    ]
+    ],
+    "translation": "Repetir"
   },
   "Yx0Ud8": {
     "message": "Requested",
@@ -11539,7 +11567,6 @@
     "translation": "Execute em sua própria infraestrutura"
   },
   "RiQMUh": {
-    "translation": "Em andamento",
     "message": "Running",
     "placeholders": {},
     "comments": [],
@@ -11548,10 +11575,10 @@
         "src/views/board/components/Card.tsx",
         409
       ]
-    ]
+    ],
+    "translation": "Em andamento"
   },
   "ZQyeYU": {
-    "translation": "Em andamento neste cartão",
     "message": "Running on this card",
     "placeholders": {},
     "comments": [],
@@ -11560,7 +11587,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         342
       ]
-    ]
+    ],
+    "translation": "Em andamento neste cartão"
   },
   "YEOVrT": {
     "message": "SAML SSO",
@@ -11651,7 +11679,6 @@
     "translation": "Economize tempo com modelos de quadro reutilizáveis."
   },
   "SnYrvp": {
-    "translation": "Itens programados: {0}",
     "message": "Scheduled items: {0}",
     "placeholders": {
       "0": [
@@ -11664,7 +11691,8 @@
         "src/views/board/components/CalendarView.tsx",
         648
       ]
-    ]
+    ],
+    "translation": "Itens programados: {0}"
   },
   "cOh+MI": {
     "message": "Screening",
@@ -11691,7 +11719,6 @@
     "translation": "Pesquisar"
   },
   "SiekAu": {
-    "translation": "Pesquisar todos os quadros neste espaço de trabalho",
     "message": "Search all boards in this workspace",
     "placeholders": {},
     "comments": [],
@@ -11700,10 +11727,10 @@
         "src/components/CommandPallette.tsx",
         179
       ]
-    ]
+    ],
+    "translation": "Pesquisar todos os quadros neste espaço de trabalho"
   },
   "cQCXo5": {
-    "translation": "Pesquisar quadros e cartões",
     "message": "Search boards and cards",
     "placeholders": {},
     "comments": [],
@@ -11712,7 +11739,8 @@
         "src/components/CommandPallette.tsx",
         146
       ]
-    ]
+    ],
+    "translation": "Pesquisar quadros e cartões"
   },
   "SkCNhl": {
     "message": "Search boards and cards...",
@@ -11727,7 +11755,6 @@
     "translation": "Pesquisar quadros e cartões..."
   },
   "AjPHW5": {
-    "translation": "Pesquisar cartões neste quadro",
     "message": "Search cards on this board",
     "placeholders": {},
     "comments": [],
@@ -11736,10 +11763,10 @@
         "src/components/CommandPallette.tsx",
         145
       ]
-    ]
+    ],
+    "translation": "Pesquisar cartões neste quadro"
   },
   "aW4ks1": {
-    "translation": "Pesquisar cartões neste quadro...",
     "message": "Search cards on this board...",
     "placeholders": {},
     "comments": [],
@@ -11748,10 +11775,10 @@
         "src/components/CommandPallette.tsx",
         140
       ]
-    ]
+    ],
+    "translation": "Pesquisar cartões neste quadro..."
   },
   "+UfRfW": {
-    "translation": "Pesquisar em {0}",
     "message": "Search in {0}",
     "placeholders": {
       "0": [
@@ -11764,14 +11791,22 @@
         "src/components/CommandPallette.tsx",
         193
       ]
-    ]
+    ],
+    "translation": "Pesquisar em {0}"
   },
   "AaDUlx": {
-    "translation": "Buscar membros",
     "message": "Search members",
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/components/MemberPicker.tsx",
+        55
+      ],
+      [
+        "src/components/MemberPicker.tsx",
+        56
+      ],
       [
         "src/views/card/components/ChecklistItemAssignee.tsx",
         106
@@ -11780,7 +11815,8 @@
         "src/views/card/components/ChecklistItemAssignee.tsx",
         109
       ]
-    ]
+    ],
+    "translation": "Buscar membros"
   },
   "66Jmqh": {
     "message": "Seat limit reached",
@@ -11835,7 +11871,6 @@
     "translation": "O segredo não pode exceder 512 caracteres"
   },
   "BhZ5PL": {
-    "translation": "Seção",
     "message": "Section",
     "placeholders": {},
     "comments": [],
@@ -11848,10 +11883,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         898
       ]
-    ]
+    ],
+    "translation": "Seção"
   },
   "1IoHLw": {
-    "translation": "Nome da seção (opcional)",
     "message": "Section name (optional)",
     "placeholders": {},
     "comments": [],
@@ -11860,7 +11895,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         903
       ]
-    ]
+    ],
+    "translation": "Nome da seção (opcional)"
   },
   "a3LDKx": {
     "message": "Security",
@@ -11911,7 +11947,6 @@
     "translation": "Selecione uma lista"
   },
   "E5eC82": {
-    "translation": "Selecionar um membro",
     "message": "Select a member",
     "placeholders": {},
     "comments": [],
@@ -11920,7 +11955,8 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         110
       ]
-    ]
+    ],
+    "translation": "Selecionar um membro"
   },
   "NM2hyD": {
     "message": "Select a workspace",
@@ -12047,7 +12083,6 @@
     "translation": "Sênior"
   },
   "UfyEy0": {
-    "translation": "definiu o vencimento de um item da lista",
     "message": "set a checklist item due date",
     "placeholders": {},
     "comments": [],
@@ -12056,7 +12091,8 @@
         "src/views/card/components/ActivityList.tsx",
         148
       ]
-    ]
+    ],
+    "translation": "definiu o vencimento de um item da lista"
   },
   "GXGbXi": {
     "message": "Set a password to enable password-based login.",
@@ -12071,7 +12107,6 @@
     "translation": "Defina uma senha para habilitar o login por senha."
   },
   "Cz2k5m": {
-    "translation": "Definir prazo do item da lista",
     "message": "Set checklist item due date",
     "placeholders": {},
     "comments": [],
@@ -12080,10 +12115,10 @@
         "src/views/card/components/ChecklistItemRow.tsx",
         224
       ]
-    ]
+    ],
+    "translation": "Definir prazo do item da lista"
   },
   "LepgJE": {
-    "translation": "Definir datas",
     "message": "Set dates",
     "placeholders": {},
     "comments": [],
@@ -12096,7 +12131,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         302
       ]
-    ]
+    ],
+    "translation": "Definir datas"
   },
   "8AbRER": {
     "message": "Set due date",
@@ -12111,7 +12147,6 @@
     "translation": "Definir data de vencimento"
   },
   "+9/nz4": {
-    "translation": "Definir filtro",
     "message": "Set filter",
     "placeholders": {},
     "comments": [],
@@ -12120,7 +12155,8 @@
         "src/views/board/components/Filters.tsx",
         195
       ]
-    ]
+    ],
+    "translation": "Definir filtro"
   },
   "2gHjVM": {
     "message": "Set Password",
@@ -12287,7 +12323,6 @@
     "translation": "Atalhos"
   },
   "X9snTB": {
-    "translation": "Mostrar itens concluídos",
     "message": "Show completed items",
     "placeholders": {},
     "comments": [],
@@ -12296,10 +12331,10 @@
         "src/views/card/components/Checklists.tsx",
         251
       ]
-    ]
+    ],
+    "translation": "Mostrar itens concluídos"
   },
   "6lGV3K": {
-    "translation": "Mostrar menos",
     "message": "Show less",
     "placeholders": {},
     "comments": [],
@@ -12308,10 +12343,10 @@
         "src/views/board/components/CalendarView.tsx",
         572
       ]
-    ]
+    ],
+    "translation": "Mostrar menos"
   },
   "fMPkxb": {
-    "translation": "Mostrar mais",
     "message": "Show more",
     "placeholders": {},
     "comments": [],
@@ -12320,10 +12355,10 @@
         "src/components/CommandPallette.tsx",
         272
       ]
-    ]
+    ],
+    "translation": "Mostrar mais"
   },
   "0XmVWH": {
-    "translation": "Mostrar atividades mais recentes primeiro",
     "message": "Show newest activity first",
     "placeholders": {},
     "comments": [],
@@ -12332,10 +12367,10 @@
         "src/views/card/components/ActivitySortOrderToggle.tsx",
         17
       ]
-    ]
+    ],
+    "translation": "Mostrar atividades mais recentes primeiro"
   },
   "EL+7I2": {
-    "translation": "Mostrar atividades mais antigas primeiro",
     "message": "Show oldest activity first",
     "placeholders": {},
     "comments": [],
@@ -12344,10 +12379,10 @@
         "src/views/card/components/ActivitySortOrderToggle.tsx",
         16
       ]
-    ]
+    ],
+    "translation": "Mostrar atividades mais antigas primeiro"
   },
   "dhRDON": {
-    "translation": "Mostrar na frente do cartão",
     "message": "Show on card front",
     "placeholders": {},
     "comments": [],
@@ -12360,10 +12395,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         874
       ]
-    ]
+    ],
+    "translation": "Mostrar na frente do cartão"
   },
   "1jnGvW": {
-    "translation": "Exibido na frente do cartão",
     "message": "Shown on card front",
     "placeholders": {},
     "comments": [],
@@ -12372,10 +12407,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         441
       ]
-    ]
+    ],
+    "translation": "Exibido na frente do cartão"
   },
   "TK5k+d": {
-    "translation": "Exibida apenas enquanto o campo do cartão estiver vazio. Isto não é um valor do cartão.",
     "message": "Shown only while the card field is empty. This is not a card value.",
     "placeholders": {},
     "comments": [],
@@ -12388,10 +12423,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         920
       ]
-    ]
+    ],
+    "translation": "Exibida apenas enquanto o campo do cartão estiver vazio. Isto não é um valor do cartão."
   },
   "uWi2Q+": {
-    "translation": "Barra lateral",
     "message": "Sidebar",
     "placeholders": {},
     "comments": [],
@@ -12408,7 +12443,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         869
       ]
-    ]
+    ],
+    "translation": "Barra lateral"
   },
   "5lWFkC": {
     "message": "Sign in",
@@ -12571,7 +12607,6 @@
     "translation": "Gerenciamento de tarefas visual e simples que funciona. Arraste e solte cartões, colabore com sua equipe e faça mais."
   },
   "Cj2Gtd": {
-    "translation": "Tamanho",
     "message": "Size",
     "placeholders": {},
     "comments": [],
@@ -12580,7 +12615,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         231
       ]
-    ]
+    ],
+    "translation": "Tamanho"
   },
   "zEcnBA": {
     "message": "SLA",
@@ -12649,7 +12685,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        378
+        379
       ]
     ],
     "translation": "Alguns anexos falharam"
@@ -12716,7 +12752,6 @@
     "obsolete": true
   },
   "WAjFYI": {
-    "translation": "Data de início",
     "message": "Start date",
     "placeholders": {},
     "comments": [],
@@ -12733,7 +12768,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         366
       ]
-    ]
+    ],
+    "translation": "Data de início"
   },
   "4+JaWo": {
     "message": "Start free trial",
@@ -12768,7 +12804,6 @@
     "translation": "Comece grátis. Faça upgrade conforme sua equipe cresce. Sem taxas ocultas, sem contratos."
   },
   "UBj8RW": {
-    "translation": "Iniciar cronômetro",
     "message": "Start timer",
     "placeholders": {},
     "comments": [],
@@ -12777,7 +12812,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         502
       ]
-    ]
+    ],
+    "translation": "Iniciar cronômetro"
   },
   "lUlbS2": {
     "message": "Start your 14-day free trial, cancel anytime.",
@@ -12792,7 +12828,6 @@
     "translation": "Inicie seu teste gratuito de 14 dias, cancele quando quiser."
   },
   "IzcP+r": {
-    "translation": "Ao iniciar este cronômetro, o cronômetro em “{0}” será parado e o tempo decorrido será salvo.",
     "message": "Starting this timer will stop the timer on “{0}” and save its elapsed time.",
     "placeholders": {
       "0": [
@@ -12805,10 +12840,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         517
       ]
-    ]
+    ],
+    "translation": "Ao iniciar este cronômetro, o cronômetro em “{0}” será parado e o tempo decorrido será salvo."
   },
   "Gwsani": {
-    "translation": "Ao iniciar este cronômetro, o cronômetro no cartão inacessível será parado e o tempo decorrido será salvo.",
     "message": "Starting this timer will stop the timer on the inaccessible card and save its elapsed time.",
     "placeholders": {},
     "comments": [],
@@ -12817,7 +12852,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         516
       ]
-    ]
+    ],
+    "translation": "Ao iniciar este cronômetro, o cronômetro no cartão inacessível será parado e o tempo decorrido será salvo."
   },
   "uAQUqI": {
     "message": "Status",
@@ -12832,7 +12868,6 @@
     "translation": "Status"
   },
   "ygCKqB": {
-    "translation": "Parar",
     "message": "Stop",
     "placeholders": {},
     "comments": [],
@@ -12841,10 +12876,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         361
       ]
-    ]
+    ],
+    "translation": "Parar"
   },
   "hQk1gv": {
-    "translation": "Parar e iniciar",
     "message": "Stop and start",
     "placeholders": {},
     "comments": [],
@@ -12853,10 +12888,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         534
       ]
-    ]
+    ],
+    "translation": "Parar e iniciar"
   },
   "A/Wt3l": {
-    "translation": "Suaves",
     "message": "Subdued",
     "placeholders": {},
     "comments": [],
@@ -12865,7 +12900,8 @@
         "src/components/CardCoverDisplaySelector.tsx",
         13
       ]
-    ]
+    ],
+    "translation": "Suaves"
   },
   "hQRttt": {
     "message": "Submit",
@@ -13209,7 +13245,6 @@
     "translation": "Depoimentos"
   },
   "xeiujy": {
-    "translation": "Texto",
     "message": "Text",
     "placeholders": {},
     "comments": [],
@@ -13218,7 +13253,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         44
       ]
-    ]
+    ],
+    "translation": "Texto"
   },
   "nhMhRr": {
     "message": "Thank you for your feedback!",
@@ -13310,7 +13346,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        379
+        380
       ]
     ],
     "translation": "O card foi criado, mas {failedCount} de {0} anexos não puderam ser enviados."
@@ -13392,7 +13428,6 @@
     "translation": "A página que você está procurando não existe ou foi movida."
   },
   "t24lpS": {
-    "translation": "A data de início não pode ser posterior à data de término.",
     "message": "The start date must not be after the end date.",
     "placeholders": {},
     "comments": [],
@@ -13401,7 +13436,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         330
       ]
-    ]
+    ],
+    "translation": "A data de início não pode ser posterior à data de término."
   },
   "fQCrjt": {
     "message": "The visibility of your board has been set to {0}.",
@@ -13484,7 +13520,6 @@
     "translation": "Esta chave de API será mostrada apenas uma vez. Por favor, salve-a em um local seguro."
   },
   "GShyvJ": {
-    "translation": "Este quadro ainda não tem campos personalizados.",
     "message": "This board has no custom fields yet.",
     "placeholders": {},
     "comments": [],
@@ -13493,7 +13528,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         1010
       ]
-    ]
+    ],
+    "translation": "Este quadro ainda não tem campos personalizados."
   },
   "l4asa1": {
     "message": "This board is private or does not exist",
@@ -13544,7 +13580,6 @@
     "translation": "As permissões deste membro foram redefinidas para os padrões de sua função."
   },
   "oW3yYY": {
-    "translation": "Este mês",
     "message": "This month",
     "placeholders": {},
     "comments": [],
@@ -13553,10 +13588,10 @@
         "src/utils/timeTrackingLabels.ts",
         13
       ]
-    ]
+    ],
+    "translation": "Este mês"
   },
   "jkA2we": {
-    "translation": "Este trimestre",
     "message": "This quarter",
     "placeholders": {},
     "comments": [],
@@ -13565,7 +13600,8 @@
         "src/utils/timeTrackingLabels.ts",
         15
       ]
-    ]
+    ],
+    "translation": "Este trimestre"
   },
   "HQVm6e": {
     "message": "This URL has already been taken",
@@ -13592,7 +13628,6 @@
     "translation": "Esta URL é reservada"
   },
   "yByRxz": {
-    "translation": "Esta semana",
     "message": "This week",
     "placeholders": {},
     "comments": [],
@@ -13601,7 +13636,8 @@
         "src/utils/timeTrackingLabels.ts",
         10
       ]
-    ]
+    ],
+    "translation": "Esta semana"
   },
   "OAYToL": {
     "message": "This will remove all custom member permissions in this workspace. Members will inherit permissions only from their roles.",
@@ -13688,7 +13724,6 @@
     "translation": "Este nome de usuário de workspace já está em uso"
   },
   "xYHlfW": {
-    "translation": "Este ano",
     "message": "This year",
     "placeholders": {},
     "comments": [],
@@ -13697,7 +13732,8 @@
         "src/utils/timeTrackingLabels.ts",
         17
       ]
-    ]
+    ],
+    "translation": "Este ano"
   },
   "pEb95p": {
     "message": "Ticket ID copied to clipboard",
@@ -13712,7 +13748,6 @@
     "translation": "ID do ticket copiado para a área de transferência"
   },
   "LhMjLm": {
-    "translation": "Tempo",
     "message": "Time",
     "placeholders": {},
     "comments": [],
@@ -13737,10 +13772,10 @@
         "src/views/card/components/TimeTracking/TimeEntryForm.tsx",
         125
       ]
-    ]
+    ],
+    "translation": "Tempo"
   },
   "Ebh8y/": {
-    "translation": "Registros de tempo",
     "message": "Time entries",
     "placeholders": {},
     "comments": [],
@@ -13753,10 +13788,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         660
       ]
-    ]
+    ],
+    "translation": "Registros de tempo"
   },
   "5YFXV7": {
-    "translation": "Relatório de tempo",
     "message": "Time report",
     "placeholders": {},
     "comments": [],
@@ -13765,10 +13800,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         194
       ]
-    ]
+    ],
+    "translation": "Relatório de tempo"
   },
   "SMjp8F": {
-    "translation": "Controle de tempo",
     "message": "Time tracking",
     "placeholders": {},
     "comments": [],
@@ -13785,10 +13820,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         427
       ]
-    ]
+    ],
+    "translation": "Controle de tempo"
   },
   "EMqDFj": {
-    "translation": "O controle de tempo foi desativado. O histórico existente foi mantido.",
     "message": "Time tracking has been disabled. Existing history is preserved.",
     "placeholders": {},
     "comments": [],
@@ -13797,10 +13832,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         42
       ]
-    ]
+    ],
+    "translation": "O controle de tempo foi desativado. O histórico existente foi mantido."
   },
   "Vvl2CI": {
-    "translation": "O controle de tempo agora está disponível neste quadro.",
     "message": "Time tracking is now available on this board.",
     "placeholders": {},
     "comments": [],
@@ -13809,10 +13844,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         41
       ]
-    ]
+    ],
+    "translation": "O controle de tempo agora está disponível neste quadro."
   },
   "zHHNK3": {
-    "translation": "Controle de tempo atualizado",
     "message": "Time tracking updated",
     "placeholders": {},
     "comments": [],
@@ -13821,10 +13856,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         39
       ]
-    ]
+    ],
+    "translation": "Controle de tempo atualizado"
   },
   "obwKN+": {
-    "translation": "Cronômetro",
     "message": "Timer",
     "placeholders": {},
     "comments": [],
@@ -13833,10 +13868,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         539
       ]
-    ]
+    ],
+    "translation": "Cronômetro"
   },
   "dMbLQM": {
-    "translation": "Cronômetro em um cartão inacessível",
     "message": "Timer on an inaccessible card",
     "placeholders": {},
     "comments": [],
@@ -13845,7 +13880,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         340
       ]
-    ]
+    ],
+    "translation": "Cronômetro em um cartão inacessível"
   },
   "MHrjPM": {
     "message": "Title",
@@ -13872,7 +13908,6 @@
     "translation": "Título (opcional)"
   },
   "/jQctM": {
-    "translation": "Até",
     "message": "To",
     "placeholders": {},
     "comments": [],
@@ -13889,7 +13924,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         242
       ]
-    ]
+    ],
+    "translation": "Até"
   },
   "Se/UIp": {
     "message": "To Do",
@@ -13948,7 +13984,6 @@
     "translation": "Token é obrigatório"
   },
   "/kXBrK": {
-    "translation": "Tempo total",
     "message": "Total time",
     "placeholders": {},
     "comments": [],
@@ -13957,7 +13992,8 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         337
       ]
-    ]
+    ],
+    "translation": "Tempo total"
   },
   "eEQyz+": {
     "message": "Track all card changes with detailed activity history.",
@@ -14036,7 +14072,6 @@
     "translation": "Confiado por equipes ágeis<0/>ao redor do mundo"
   },
   "KDw4GX": {
-    "translation": "Tentar novamente",
     "message": "Try again",
     "placeholders": {},
     "comments": [],
@@ -14069,7 +14104,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         677
       ]
-    ]
+    ],
+    "translation": "Tentar novamente"
   },
   "bZSICm": {
     "message": "Unable to add checklist item",
@@ -14108,7 +14144,6 @@
     "translation": "Não foi possível adicionar etiqueta"
   },
   "zvcXZs": {
-    "translation": "Não foi possível adicionar o tempo",
     "message": "Unable to add time",
     "placeholders": {},
     "comments": [],
@@ -14117,10 +14152,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         159
       ]
-    ]
+    ],
+    "translation": "Não foi possível adicionar o tempo"
   },
   "887Wwx": {
-    "translation": "Não foi possível limpar o campo personalizado",
     "message": "Unable to clear custom field",
     "placeholders": {},
     "comments": [],
@@ -14129,7 +14164,8 @@
         "src/views/card/components/custom-fields/custom-fields.tsx",
         128
       ]
-    ]
+    ],
+    "translation": "Não foi possível limpar o campo personalizado"
   },
   "LeM5RY": {
     "message": "Unable to clear overrides",
@@ -14186,7 +14222,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        225
+        226
       ]
     ],
     "translation": "Não foi possível criar card"
@@ -14204,7 +14240,6 @@
     "translation": "Não foi possível criar checklist"
   },
   "tMIe7G": {
-    "translation": "Não foi possível criar o campo personalizado",
     "message": "Unable to create custom field",
     "placeholders": {},
     "comments": [],
@@ -14213,7 +14248,8 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         774
       ]
-    ]
+    ],
+    "translation": "Não foi possível criar o campo personalizado"
   },
   "TztLaN": {
     "message": "Unable to create list",
@@ -14332,7 +14368,6 @@
     "translation": "Não foi possível excluir o comentário"
   },
   "Q9E45Q": {
-    "translation": "Não foi possível excluir o registro de tempo",
     "message": "Unable to delete time entry",
     "placeholders": {},
     "comments": [],
@@ -14341,7 +14376,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         173
       ]
-    ]
+    ],
+    "translation": "Não foi possível excluir o registro de tempo"
   },
   "23nvb2": {
     "message": "Unable to delete webhook",
@@ -14356,7 +14392,6 @@
     "translation": "Não foi possível excluir o webhook"
   },
   "4IUsF2": {
-    "translation": "Não foi possível descartar o cronômetro",
     "message": "Unable to discard timer",
     "placeholders": {},
     "comments": [],
@@ -14365,7 +14400,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         188
       ]
-    ]
+    ],
+    "translation": "Não foi possível descartar o cronômetro"
   },
   "Oo4E6p": {
     "message": "Unable to duplicate card",
@@ -14384,7 +14420,6 @@
     "translation": "Não foi possível duplicar o cartão"
   },
   "IIaGLD": {
-    "translation": "Não foi possível carregar os membros.",
     "message": "Unable to load members.",
     "placeholders": {},
     "comments": [],
@@ -14393,10 +14428,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         565
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar os membros."
   },
   "ZvZ7/B": {
-    "translation": "Não foi possível carregar mais registros de tempo",
     "message": "Unable to load more time entries",
     "placeholders": {},
     "comments": [],
@@ -14409,10 +14444,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         320
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar mais registros de tempo"
   },
   "vsYAKj": {
-    "translation": "Não foi possível carregar o cronômetro ativo.",
     "message": "Unable to load the active timer.",
     "placeholders": {},
     "comments": [],
@@ -14421,10 +14456,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         389
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar o cronômetro ativo."
   },
   "ka1erB": {
-    "translation": "Não foi possível carregar o relatório de tempo.",
     "message": "Unable to load the time report.",
     "placeholders": {},
     "comments": [],
@@ -14433,10 +14468,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         459
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar o relatório de tempo."
   },
   "EK8TGG": {
-    "translation": "Não foi possível carregar os registros de tempo.",
     "message": "Unable to load time entries.",
     "placeholders": {},
     "comments": [],
@@ -14449,10 +14484,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         668
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar os registros de tempo."
   },
   "ZfaaiP": {
-    "translation": "Não foi possível carregar as configurações do controle de tempo.",
     "message": "Unable to load time tracking settings.",
     "placeholders": {},
     "comments": [],
@@ -14461,10 +14496,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         82
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar as configurações do controle de tempo."
   },
   "563CZw": {
-    "translation": "Não foi possível carregar o controle de tempo.",
     "message": "Unable to load time tracking.",
     "placeholders": {},
     "comments": [],
@@ -14473,7 +14508,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         407
       ]
-    ]
+    ],
+    "translation": "Não foi possível carregar o controle de tempo."
   },
   "d196/6": {
     "message": "Unable to move board",
@@ -14560,7 +14596,6 @@
     "translation": "Não foi possível iniciar o checkout"
   },
   "VyfeA+": {
-    "translation": "Não foi possível iniciar o cronômetro",
     "message": "Unable to start timer",
     "placeholders": {},
     "comments": [],
@@ -14569,10 +14604,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         180
       ]
-    ]
+    ],
+    "translation": "Não foi possível iniciar o cronômetro"
   },
   "Je4xFx": {
-    "translation": "Não foi possível parar o cronômetro",
     "message": "Unable to stop timer",
     "placeholders": {},
     "comments": [],
@@ -14581,7 +14616,8 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         184
       ]
-    ]
+    ],
+    "translation": "Não foi possível parar o cronômetro"
   },
   "KNK33q": {
     "message": "Unable to test webhook",
@@ -14612,7 +14648,6 @@
     "translation": "Não foi possível atualizar o quadro"
   },
   "wBhT2m": {
-    "translation": "Não foi possível atualizar o plano de fundo do quadro",
     "message": "Unable to update board background",
     "placeholders": {},
     "comments": [],
@@ -14621,7 +14656,8 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         59
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar o plano de fundo do quadro"
   },
   "XpcjLO": {
     "message": "Unable to update board URL",
@@ -14668,7 +14704,6 @@
     "translation": "Não foi possível atualizar o cartão"
   },
   "PNvbHM": {
-    "translation": "Não foi possível atualizar a capa do cartão",
     "message": "Unable to update card cover",
     "placeholders": {},
     "comments": [],
@@ -14677,10 +14712,10 @@
         "src/views/card/components/CardCoverSelector.tsx",
         85
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar a capa do cartão"
   },
   "pM/Lb/": {
-    "translation": "Não foi possível atualizar o status do cartão",
     "message": "Unable to update card status",
     "placeholders": {},
     "comments": [],
@@ -14693,7 +14728,8 @@
         "src/views/card/components/CardCompletionToggle.tsx",
         39
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar o status do cartão"
   },
   "DtXlZq": {
     "message": "Unable to update checklist",
@@ -14732,7 +14768,6 @@
     "translation": "Não foi possível atualizar o comentário"
   },
   "d76KIX": {
-    "translation": "Não foi possível atualizar o campo personalizado",
     "message": "Unable to update custom field",
     "placeholders": {},
     "comments": [],
@@ -14741,10 +14776,10 @@
         "src/views/card/components/custom-fields/custom-fields.tsx",
         105
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar o campo personalizado"
   },
   "ecMXs+": {
-    "translation": "Não foi possível atualizar os campos personalizados",
     "message": "Unable to update custom fields",
     "placeholders": {},
     "comments": [],
@@ -14761,10 +14796,10 @@
         "src/views/board/components/custom-fields/custom-field-manager.tsx",
         382
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar os campos personalizados"
   },
   "/YgeAA": {
-    "translation": "Não foi possível atualizar as datas",
     "message": "Unable to update dates",
     "placeholders": {},
     "comments": [],
@@ -14773,7 +14808,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         113
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar as datas"
   },
   "C56tim": {
     "message": "Unable to update due date",
@@ -14793,7 +14829,6 @@
     "obsolete": true
   },
   "DQegn7": {
-    "translation": "Não foi possível atualizar os filtros",
     "message": "Unable to update filters",
     "placeholders": {},
     "comments": [],
@@ -14806,7 +14841,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         176
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar os filtros"
   },
   "delOXn": {
     "message": "Unable to update labels",
@@ -14877,7 +14913,6 @@
     "translation": "Não foi possível atualizar a função"
   },
   "cdvzpG": {
-    "translation": "Não foi possível atualizar o registro de tempo",
     "message": "Unable to update time entry",
     "placeholders": {},
     "comments": [],
@@ -14886,10 +14921,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         166
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar o registro de tempo"
   },
   "MKM8bX": {
-    "translation": "Não foi possível atualizar o controle de tempo",
     "message": "Unable to update time tracking",
     "placeholders": {},
     "comments": [],
@@ -14898,7 +14933,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         48
       ]
-    ]
+    ],
+    "translation": "Não foi possível atualizar o controle de tempo"
   },
   "V1o9Jo": {
     "message": "Unable to update webhook",
@@ -14925,7 +14961,6 @@
     "translation": "Desarquivar quadro"
   },
   "x0vUTB": {
-    "translation": "Desarquive este quadro antes de ativar o controle de tempo.",
     "message": "Unarchive this board before enabling time tracking.",
     "placeholders": {},
     "comments": [],
@@ -14934,10 +14969,10 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         126
       ]
-    ]
+    ],
+    "translation": "Desarquive este quadro antes de ativar o controle de tempo."
   },
   "KfagfW": {
-    "translation": "Remover atribuição",
     "message": "Unassign",
     "placeholders": {},
     "comments": [],
@@ -14946,10 +14981,10 @@
         "src/views/card/components/ChecklistItemAssignee.tsx",
         128
       ]
-    ]
+    ],
+    "translation": "Remover atribuição"
   },
   "Vjc4qC": {
-    "translation": "removeu <0>{0}</0> do item <1>{1}</1> da lista",
     "message": "unassigned <0>{0}</0> from checklist item <1>{1}</1>",
     "placeholders": {
       "0": [
@@ -14965,7 +15000,8 @@
         "src/views/card/components/ActivityList.tsx",
         293
       ]
-    ]
+    ],
+    "translation": "removeu <0>{0}</0> do item <1>{1}</1> da lista"
   },
   "E8zYtd": {
     "message": "unassigned <0>{0}</0> from the card",
@@ -14984,7 +15020,6 @@
     "translation": "removeu a atribuição de <0>{0}</0> do cartão"
   },
   "1THFKO": {
-    "translation": "removeu a atribuição de um item da lista",
     "message": "unassigned a checklist item",
     "placeholders": {},
     "comments": [],
@@ -14993,7 +15028,8 @@
         "src/views/card/components/ActivityList.tsx",
         152
       ]
-    ]
+    ],
+    "translation": "removeu a atribuição de um item da lista"
   },
   "hAMddS": {
     "message": "unassigned themselves from the card",
@@ -15008,7 +15044,6 @@
     "translation": "removeu a própria atribuição do cartão"
   },
   "SBMyw7": {
-    "translation": "Cartão indisponível",
     "message": "Unavailable card",
     "placeholders": {},
     "comments": [],
@@ -15021,10 +15056,10 @@
         "src/views/board/components/TimeTrackingReportModal.tsx",
         509
       ]
-    ]
+    ],
+    "translation": "Cartão indisponível"
   },
   "aGbZ2d": {
-    "translation": "Membro indisponível",
     "message": "Unavailable member",
     "placeholders": {},
     "comments": [],
@@ -15045,10 +15080,10 @@
         "src/views/card/components/TimeTracking/TimeTrackingCardSection.tsx",
         697
       ]
-    ]
+    ],
+    "translation": "Membro indisponível"
   },
   "BA+tL2": {
-    "translation": "Desmarcado ou não definido",
     "message": "Unchecked or not set",
     "placeholders": {},
     "comments": [],
@@ -15057,7 +15092,8 @@
         "src/views/board/components/Filters.tsx",
         252
       ]
-    ]
+    ],
+    "translation": "Desmarcado ou não definido"
   },
   "9Xigls": {
     "message": "Under Review",
@@ -15263,7 +15299,6 @@
     "obsolete": true
   },
   "8a8jKE": {
-    "translation": "Imagem não compatível",
     "message": "Unsupported image",
     "placeholders": {},
     "comments": [],
@@ -15272,7 +15307,8 @@
         "src/views/board/components/BoardBackgroundForm.tsx",
         86
       ]
-    ]
+    ],
+    "translation": "Imagem não compatível"
   },
   "EkH9pt": {
     "message": "Update",
@@ -15327,7 +15363,6 @@
     "translation": "atualizou um item da checklist"
   },
   "FoRIo4": {
-    "translation": "alterou o vencimento de um item da lista",
     "message": "updated a checklist item due date",
     "placeholders": {},
     "comments": [],
@@ -15336,7 +15371,8 @@
         "src/views/card/components/ActivityList.tsx",
         149
       ]
-    ]
+    ],
+    "translation": "alterou o vencimento de um item da lista"
   },
   "tGwwnq": {
     "message": "updated the description",
@@ -15363,7 +15399,6 @@
     "translation": "atualizou a data de vencimento"
   },
   "+eysZF": {
-    "translation": "atualizou a programação de recorrência",
     "message": "updated the recurrence schedule",
     "placeholders": {},
     "comments": [],
@@ -15372,7 +15407,8 @@
         "src/views/card/components/ActivityList.tsx",
         345
       ]
-    ]
+    ],
+    "translation": "atualizou a programação de recorrência"
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -15461,7 +15497,6 @@
     "translation": "Faça upgrade do seu plano"
   },
   "Qa4Uz+": {
-    "translation": "Faça upload de uma imagem ou anexe uma a este cartão.",
     "message": "Upload an image or attach one to this card.",
     "placeholders": {},
     "comments": [],
@@ -15470,7 +15505,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         314
       ]
-    ]
+    ],
+    "translation": "Faça upload de uma imagem ou anexe uma a este cartão."
   },
   "b3Thhd": {
     "message": "Upload failed",
@@ -15493,7 +15529,6 @@
     "translation": "Falha no upload"
   },
   "6MxxvO": {
-    "translation": "Fazer upload de imagem",
     "message": "Upload image",
     "placeholders": {},
     "comments": [],
@@ -15506,10 +15541,10 @@
         "src/views/card/components/CardCoverSelector.tsx",
         332
       ]
-    ]
+    ],
+    "translation": "Fazer upload de imagem"
   },
   "gANddk": {
-    "translation": "Fazendo upload…",
     "message": "Uploading…",
     "placeholders": {},
     "comments": [],
@@ -15522,7 +15557,8 @@
         "src/views/card/components/CardCoverSelector.tsx",
         332
       ]
-    ]
+    ],
+    "translation": "Fazendo upload…"
   },
   "BBUDfW": {
     "message": "Urgent",
@@ -15665,7 +15701,6 @@
     "translation": "O usuário já é membro deste workspace"
   },
   "wMHvYH": {
-    "translation": "Valor",
     "message": "Value",
     "placeholders": {},
     "comments": [],
@@ -15678,7 +15713,8 @@
         "src/views/board/components/custom-fields/custom-field-filter-panel.tsx",
         256
       ]
-    ]
+    ],
+    "translation": "Valor"
   },
   "vSJd18": {
     "message": "Video",
@@ -15982,7 +16018,6 @@
     "translation": "Webhooks"
   },
   "zx4BuL": {
-    "translation": "Semana",
     "message": "Week",
     "placeholders": {},
     "comments": [],
@@ -15991,7 +16026,8 @@
         "src/views/board/components/CalendarView.tsx",
         379
       ]
-    ]
+    ],
+    "translation": "Semana"
   },
   "xLTZVf": {
     "message": "Week start day",
@@ -16006,7 +16042,6 @@
     "translation": "Dia de início da semana"
   },
   "bbWQS2": {
-    "translation": "Dias úteis",
     "message": "Weekdays",
     "placeholders": {},
     "comments": [],
@@ -16023,10 +16058,10 @@
         "src/views/card/components/CardDatesSelector.tsx",
         397
       ]
-    ]
+    ],
+    "translation": "Dias úteis"
   },
   "4XSc4l": {
-    "translation": "Semanalmente",
     "message": "Weekly",
     "placeholders": {},
     "comments": [],
@@ -16043,7 +16078,8 @@
         "src/views/card/components/CardDatesSelector.tsx",
         398
       ]
-    ]
+    ],
+    "translation": "Semanalmente"
   },
   "9eF5oV": {
     "message": "Welcome back",
@@ -16415,7 +16451,6 @@
     "translation": "Sim, oferecemos um plano gratuito para sempre para uso individual. Sem restrições, sem paywalls, sem limites."
   },
   "y/0uwd": {
-    "translation": "Ontem",
     "message": "Yesterday",
     "placeholders": {},
     "comments": [],
@@ -16424,7 +16459,8 @@
         "src/utils/timeTrackingLabels.ts",
         9
       ]
-    ]
+    ],
+    "translation": "Ontem"
   },
   "RtlIYB": {
     "message": "You are about to change your password.",
@@ -16548,7 +16584,6 @@
     "translation": "Você não tem permissão"
   },
   "rfdrJY": {
-    "translation": "Você não tem permissão para alterar esta configuração.",
     "message": "You don't have permission to change this setting.",
     "placeholders": {},
     "comments": [],
@@ -16557,7 +16592,8 @@
         "src/views/board/components/TimeTrackingSettingsForm.tsx",
         132
       ]
-    ]
+    ],
+    "translation": "Você não tem permissão para alterar esta configuração."
   },
   "p/hk9N": {
     "message": "You have been logged in successfully.",

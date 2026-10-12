@@ -277,7 +277,7 @@ test(
     await board.createCard("Direct card");
 
     const cardHref = await page
-      .getByRole("link", { name: "Open card Direct card" })
+      .getByRole("link", { name: "Open card Direct card", exact: true })
       .getAttribute("href");
     expect(cardHref).toMatch(/^\/cards\/[^?]+$/);
     if (!cardHref) throw new Error("Could not find direct card link");

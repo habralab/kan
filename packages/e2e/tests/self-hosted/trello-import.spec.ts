@@ -83,7 +83,7 @@ test(
     ).toBeVisible();
     await expect(
       page.getByRole("button", {
-        name: "Jan 12, 2026 – Jan 15, 2026, 12:00",
+        name: "12 Jan 2026 – 15 Jan 2026, 12:00",
       }),
     ).toBeVisible();
     const cardPublicId = page.url().split("/cards/")[1];

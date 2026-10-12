@@ -127,10 +127,7 @@ export default function Checklists({
     if (!checklist) return;
 
     const hideCompleted = hiddenCompleted.includes(checklist.publicId);
-    const visibleItems = visibleChecklistItems(
-      checklist.items,
-      hideCompleted,
-    );
+    const visibleItems = visibleChecklistItems(checklist.items, hideCompleted);
     const overIndex = visibleItems.findIndex(
       (item) => item.publicId === over.id,
     );

@@ -495,86 +495,85 @@ const CalendarView = ({
                           {format(day.date, "d")}
                         </time>
                         <DroppableDayCell dayKey={day.key}>
-                              {visibleCards.map(({ card, position }) => (
-                                <DraggableCalendarCard
-                                  key={`${card.publicId}:${day.key}`}
-                                  card={card}
-                                  position={position}
-                                  dayKey={day.key}
-                                  href={cardHref(card.publicId)}
-                                  ticketNumber={ticketNumber(card)}
-                                  disabled={
-                                    !canEditCard ||
-                                    isPlaceholderPublicId(card.publicId)
+                          {visibleCards.map(({ card, position }) => (
+                            <DraggableCalendarCard
+                              key={`${card.publicId}:${day.key}`}
+                              card={card}
+                              position={position}
+                              dayKey={day.key}
+                              href={cardHref(card.publicId)}
+                              ticketNumber={ticketNumber(card)}
+                              disabled={
+                                !canEditCard ||
+                                isPlaceholderPublicId(card.publicId)
+                              }
+                            />
+                          ))}
+                          {visibleChecklistItems.map((item) => (
+                            <li key={item.publicId}>
+                              <Link
+                                href={cardHref(item.cardPublicId)}
+                                onClick={(event) => event.stopPropagation()}
+                                className="flex items-center gap-1.5 rounded-[4px] px-1 py-0.5 text-xs text-light-900 hover:bg-light-200 dark:text-dark-900 dark:hover:bg-dark-200"
+                              >
+                                {item.completed ? (
+                                  <HiCheckCircle
+                                    className="size-3 flex-none text-green-600 dark:text-green-400"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <HiOutlineCheckCircle
+                                    className="size-3 flex-none"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                                <span
+                                  className={twMerge(
+                                    "flex-auto truncate",
+                                    item.completed && "line-through opacity-60",
+                                  )}
+                                >
+                                  {item.title}
+                                </span>
+                                <span className="hidden max-w-20 flex-none truncate text-light-700 dark:text-dark-700 xl:block">
+                                  ·{" "}
+                                  {
+                                    visibleCardsByPublicId.get(
+                                      item.cardPublicId,
+                                    )?.title
                                   }
-                                />
-                              ))}
-                              {visibleChecklistItems.map((item) => (
-                                <li key={item.publicId}>
-                                  <Link
-                                    href={cardHref(item.cardPublicId)}
-                                    onClick={(event) => event.stopPropagation()}
-                                    className="flex items-center gap-1.5 rounded-[4px] px-1 py-0.5 text-xs text-light-900 hover:bg-light-200 dark:text-dark-900 dark:hover:bg-dark-200"
+                                </span>
+                                {item.dueDateHasTime && (
+                                  <time
+                                    dateTime={item.dueDate.toISOString()}
+                                    className="flex-none"
                                   >
-                                    {item.completed ? (
-                                      <HiCheckCircle
-                                        className="size-3 flex-none text-green-600 dark:text-green-400"
-                                        aria-hidden="true"
-                                      />
-                                    ) : (
-                                      <HiOutlineCheckCircle
-                                        className="size-3 flex-none"
-                                        aria-hidden="true"
-                                      />
-                                    )}
-                                    <span
-                                      className={twMerge(
-                                        "flex-auto truncate",
-                                        item.completed &&
-                                          "line-through opacity-60",
-                                      )}
-                                    >
-                                      {item.title}
-                                    </span>
-                                    <span className="hidden max-w-20 flex-none truncate text-light-700 dark:text-dark-700 xl:block">
-                                      ·{" "}
-                                      {
-                                        visibleCardsByPublicId.get(
-                                          item.cardPublicId,
-                                        )?.title
-                                      }
-                                    </span>
-                                    {item.dueDateHasTime && (
-                                      <time
-                                        dateTime={item.dueDate.toISOString()}
-                                        className="flex-none"
-                                      >
-                                        {format(item.dueDate, "p", {
-                                          locale: dateLocale,
-                                        })}
-                                      </time>
-                                    )}
-                                  </Link>
-                                </li>
-                              ))}
-                              {overflowCount > 0 && (
-                                <li>
-                                  <button
-                                    type="button"
-                                    onClick={(event) => {
-                                      event.stopPropagation();
-                                      setExpandedDayKey(
-                                        isExpanded ? null : day.key,
-                                      );
-                                    }}
-                                    className="px-1 text-xs text-light-800 hover:text-light-1000 dark:text-dark-800 dark:hover:text-dark-1000"
-                                  >
-                                    {isExpanded
-                                      ? t`Show less`
-                                      : t`+ ${overflowCount} more`}
-                                  </button>
-                                </li>
-                              )}
+                                    {format(item.dueDate, "p", {
+                                      locale: dateLocale,
+                                    })}
+                                  </time>
+                                )}
+                              </Link>
+                            </li>
+                          ))}
+                          {overflowCount > 0 && (
+                            <li>
+                              <button
+                                type="button"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  setExpandedDayKey(
+                                    isExpanded ? null : day.key,
+                                  );
+                                }}
+                                className="px-1 text-xs text-light-800 hover:text-light-1000 dark:text-dark-800 dark:hover:text-dark-1000"
+                              >
+                                {isExpanded
+                                  ? t`Show less`
+                                  : t`+ ${overflowCount} more`}
+                              </button>
+                            </li>
+                          )}
                         </DroppableDayCell>
                       </div>
                     );

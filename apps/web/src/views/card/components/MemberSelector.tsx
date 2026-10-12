@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import { HiMiniPlus } from "react-icons/hi2";
 
 import Avatar from "~/components/Avatar";
-import CheckboxDropdown from "~/components/CheckboxDropdown";
+import MemberPicker from "~/components/MemberPicker";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
@@ -108,25 +108,24 @@ export default function MemberSelector({
           <div className="h-full w-[125px] animate-pulse rounded-[5px] bg-light-300 dark:bg-dark-300" />
         </div>
       ) : (
-        <CheckboxDropdown
+        <MemberPicker
           items={members}
-          handleSelect={(_, member) => {
+          onSelect={(memberPublicId) => {
             addOrRemoveMember.mutate({
               cardPublicId,
-              workspaceMemberPublicId: member.key,
+              workspaceMemberPublicId: memberPublicId,
             });
           }}
-          handleCreate={disabled ? undefined : handleInviteMember}
+          onCreate={disabled ? undefined : handleInviteMember}
           createNewItemLabel={t`Invite member`}
           ariaLabel={t`Members`}
           disabled={disabled}
-          asChild
         >
-          <div
+          <span
             className={`flex h-full w-full items-center rounded-[5px] border-[1px] border-light-50 py-1 pl-2 text-left text-xs text-neutral-900 dark:border-dark-50 dark:text-dark-1000 ${disabled ? "cursor-not-allowed opacity-60" : "hover:border-light-300 hover:bg-light-200 dark:hover:border-dark-200 dark:hover:bg-dark-100"}`}
           >
             {selectedMembers.length ? (
-              <div className="isolate flex justify-end -space-x-1 overflow-hidden">
+              <span className="isolate flex justify-end -space-x-1 overflow-hidden">
                 {selectedMembers.map(({ value, imageUrl, status }) => (
                   <span
                     key={value}
@@ -141,15 +140,15 @@ export default function MemberSelector({
                     />
                   </span>
                 ))}
-              </div>
+              </span>
             ) : (
               <>
                 <HiMiniPlus size={22} className="pr-2" />
                 {t`Add member`}
               </>
             )}
-          </div>
-        </CheckboxDropdown>
+          </span>
+        </MemberPicker>
       )}
     </>
   );

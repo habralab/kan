@@ -272,6 +272,7 @@ describe("avatar URL resolution in routers", () => {
         createdAt: new Date("2026-09-04T11:00:00.000Z"),
         publicId: "activity0001",
       },
+      filter: "all",
       order: "newest",
     });
     expect(result.nextCursor).toBe(now.toISOString());

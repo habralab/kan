@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 import { useState } from "react";
 import {
   HiMiniXMark,
@@ -76,6 +77,7 @@ const Filters = ({
   isLoading: boolean;
 }) => {
   const router = useRouter();
+  const { i18n } = useLingui();
   const [activeScalarFieldPublicId, setActiveScalarFieldPublicId] = useState<
     string | null
   >(null);
@@ -102,6 +104,7 @@ const Filters = ({
   const formattedMembers = getBoardFilterMembers(
     members,
     assignedMemberPublicIds,
+    i18n.locale,
   ).map((member) => ({
     key: member.publicId,
     value: `${formatMemberDisplayName(

@@ -112,7 +112,7 @@ test(
     await page.keyboard.press("Escape");
     await page.keyboard.press("Escape");
     await expect(
-      page.getByRole("link", { name: "Open card Unrelated card" }),
+      page.getByRole("link", { name: "Open card Unrelated card", exact: true }),
     ).toBeVisible();
   },
 );

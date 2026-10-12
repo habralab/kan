@@ -92,8 +92,9 @@ export default function SortableCard({
             ? "cursor-grabbing"
             : "cursor-pointer"
         }`}
-        {...attributes}
-        {...listeners}
+        {...(canEditCard && !isPlaceholder ? attributes : {})}
+        {...(canEditCard && !isPlaceholder ? listeners : {})}
+        role="link"
       />
     </div>
   );

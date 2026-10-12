@@ -21,6 +21,7 @@ import DateSelector from "~/components/DateSelector";
 import Editor from "~/components/Editor";
 import Input from "~/components/Input";
 import LabelIcon from "~/components/LabelIcon";
+import MemberPicker from "~/components/MemberPicker";
 import Toggle from "~/components/Toggle";
 import { useLocalisation } from "~/hooks/useLocalisation";
 import { useModalFormState } from "~/hooks/useModalFormState";
@@ -572,17 +573,16 @@ export function NewCardForm({
           </div>
           {!isTemplate && (
             <div className="w-fit">
-              <CheckboxDropdown
+              <MemberPicker
                 items={formattedMembers}
-                handleSelect={(_groupKey, item) =>
-                  handleSelectMembers(item.key)
-                }
+                onSelect={handleSelectMembers}
+                ariaLabel={t`Members`}
               >
-                <div className="flex h-full w-full items-center rounded-[5px] border-[1px] border-light-600 bg-light-200 px-2 py-1 text-left text-xs text-light-800 hover:bg-light-300 dark:border-dark-600 dark:bg-dark-400 dark:text-dark-1000 dark:hover:bg-dark-500">
+                <span className="flex h-full w-full items-center rounded-[5px] border-[1px] border-light-600 bg-light-200 px-2 py-1 text-left text-xs text-light-800 hover:bg-light-300 dark:border-dark-600 dark:bg-dark-400 dark:text-dark-1000 dark:hover:bg-dark-500">
                   {!memberPublicIds.length ? (
                     t`Members`
                   ) : (
-                    <div className="flex -space-x-1 overflow-hidden">
+                    <span className="flex -space-x-1 overflow-hidden">
                       {memberPublicIds.map((memberPublicId) => {
                         const member = formattedMembers.find(
                           (member) => member.key === memberPublicId,
@@ -604,10 +604,10 @@ export function NewCardForm({
                           </span>
                         );
                       })}
-                    </div>
+                    </span>
                   )}
-                </div>
-              </CheckboxDropdown>
+                </span>
+              </MemberPicker>
             </div>
           )}
           <div className="w-fit">

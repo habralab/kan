@@ -1,0 +1,40 @@
+{
+  "name": "@kan/jobs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json --noEmit false --declaration false --emitDeclarationOnly false --outDir dist",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "migrate": "node dist/migrate.js",
+    "verify": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@kan/logger": "workspace:^",
+    "drizzle-orm": "^0.42.0",
+    "pg": "^8.11.3",
+    "pg-boss": "12.38.0"
+  },
+  "devDependencies": {
+    "@kan/eslint-config": "workspace:*",
+    "@kan/prettier-config": "workspace:*",
+    "@kan/tsconfig": "workspace:*",
+    "@types/pg": "^8.10.9",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "^3.0.0"
+  },
+  "prettier": "@kan/prettier-config"
+}

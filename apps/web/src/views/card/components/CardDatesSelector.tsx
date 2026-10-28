@@ -35,6 +35,7 @@ interface CardDatesSelectorProps {
   dueReminderMinutes: number | null;
   isLoading?: boolean;
   disabled?: boolean;
+  inlinePopover?: boolean;
 }
 
 function copyTime(date: Date, timeSource: Date) {
@@ -59,6 +60,7 @@ export function CardDatesSelector({
   dueReminderMinutes,
   isLoading = false,
   disabled = false,
+  inlinePopover = false,
 }: CardDatesSelectorProps) {
   const startDateCheckboxId = useId();
   const { showPopup } = usePopup();
@@ -297,13 +299,19 @@ export function CardDatesSelector({
             : null;
 
   return (
-    <div className="relative flex w-full items-center text-left">
+    <div
+      className={twMerge(
+        "relative flex w-full items-center text-left",
+        inlinePopover && "flex-col items-end",
+      )}
+    >
       <button
         type="button"
         onClick={() => (isOpen ? cancel() : open())}
         disabled={isLoading || disabled}
         className={twMerge(
           "flex h-full w-full items-center rounded-[5px] border-[1px] border-light-50 py-1 pl-2 text-left text-xs text-neutral-900 dark:border-dark-50 dark:text-dark-1000",
+          inlinePopover && "h-auto",
           disabled
             ? "cursor-not-allowed opacity-60"
             : "hover:border-light-300 hover:bg-light-200 dark:hover:border-dark-200 dark:hover:bg-dark-100",
@@ -329,7 +337,10 @@ export function CardDatesSelector({
         <>
           <div className="fixed inset-0 z-10" onClick={cancel} />
           <div
-            className="absolute right-0 top-full z-20 mt-2 w-[282px] rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
+            className={twMerge(
+              "absolute right-0 top-full z-20 mt-2 w-[282px] rounded-md border border-light-200 bg-light-50 pb-6 shadow-lg dark:border-dark-200 dark:bg-dark-100",
+              inlinePopover && "relative right-auto top-auto shrink-0 self-end",
+            )}
             onClick={(event) => event.stopPropagation()}
             onMouseDown={(event) => event.stopPropagation()}
           >

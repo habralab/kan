@@ -189,6 +189,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Dates`}</p>
         <CardDatesSelector
           dueReminderMinutes={card?.dueReminderMinutes ?? null}
+          dueReminderCustom={card?.dueReminderCustom ?? null}
           cardPublicId={cardId ?? ""}
           startDate={card?.startDate}
           dueDate={card?.dueDate}

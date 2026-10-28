@@ -58,6 +58,7 @@ const mockExistingCard = (completed = false) => {
     startDate: null,
     dueDateHasTime: false,
     dueReminderMinutes: null,
+    dueReminderCustom: null,
     dueReminderAt: null,
     completed,
     recurrenceRule: null,
@@ -86,6 +87,7 @@ const mockUpdatedCard = (completed = false) => {
     startDate: null,
     dueDateHasTime: false,
     dueReminderMinutes: null,
+    dueReminderCustom: null,
     dueReminderAt: null,
     completed,
     recurrenceRule: null,
@@ -138,6 +140,7 @@ describe("card updates", () => {
       startDate: null,
       dueDateHasTime: true,
       dueReminderMinutes: 5,
+      dueReminderCustom: null,
       dueReminderAt: expectedAt,
       completed: false,
       recurrenceRule: null,
@@ -156,12 +159,14 @@ describe("card updates", () => {
         dueDate,
         dueDateHasTime: true,
         dueReminderMinutes: 5,
+        dueReminderCustom: null,
       });
 
     expect(cardRepo.update).toHaveBeenCalledWith(
       transaction,
       expect.objectContaining({
         dueReminderMinutes: 5,
+        dueReminderCustom: null,
         dueReminderAt: expectedAt,
       }),
       { cardPublicId },
@@ -173,6 +178,176 @@ describe("card updates", () => {
         transaction,
       }),
     );
+  });
+
+  it("schedules a custom date-only reminder and clears the minute mode", async () => {
+    const dueDate = new Date("2030-06-15T12:00:00Z");
+    const config = { daysBefore: 1, time: "09:00", timezone: "Europe/London" };
+    const reminderAt = new Date("2030-06-14T08:00:00Z");
+    const existing = mockExistingCard();
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValue({
+      ...existing,
+      dueDate,
+      dueDateHasTime: false,
+    });
+    vi.mocked(cardRepo.update).mockResolvedValue({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      dueDate,
+      startDate: null,
+      dueDateHasTime: false,
+      dueReminderMinutes: null,
+      dueReminderCustom: config,
+      dueReminderAt: reminderAt,
+      completed: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
+      recurrenceAnchorDate: null,
+    });
+    const transaction = {};
+    const db = {
+      transaction: vi.fn(
+        async (callback: (tx: typeof transaction) => Promise<unknown>) =>
+          callback(transaction),
+      ),
+    };
+    const enqueue = vi.fn().mockResolvedValue("job-1");
+    vi.mocked(getJobProducer).mockResolvedValue({ enqueue } as never);
+    const { cardRouter } = await import("./card");
+    await cardRouter
+      .createCaller({
+        user: { id: "user-123", name: "Test", email: "test@example.com" },
+        db,
+      } as never)
+      .update({ cardPublicId, dueReminderCustom: config });
+    expect(cardRepo.update).toHaveBeenCalledWith(
+      transaction,
+      expect.objectContaining({
+        dueReminderCustom: config,
+        dueReminderMinutes: null,
+        dueReminderAt: reminderAt,
+      }),
+      { cardPublicId },
+    );
+    expect(enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({ startAfter: reminderAt, transaction }),
+    );
+  });
+
+  it("resolves a DST gap on save and rejects a resolved time after a timed deadline", async () => {
+    const dueDate = new Date("2026-03-08T12:00:00Z");
+    const config = {
+      daysBefore: 0,
+      time: "02:30",
+      timezone: "America/New_York",
+    };
+    const existing = mockExistingCard();
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValue({
+      ...existing,
+      dueDate,
+      dueDateHasTime: true,
+    });
+    vi.mocked(cardRepo.update).mockResolvedValue({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      dueDate,
+      startDate: null,
+      dueDateHasTime: true,
+      dueReminderMinutes: null,
+      dueReminderCustom: config,
+      dueReminderAt: new Date("2026-03-08T07:00:00Z"),
+      completed: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
+      recurrenceAnchorDate: null,
+    });
+    const { cardRouter } = await import("./card");
+    await cardRouter
+      .createCaller(ctx)
+      .update({ cardPublicId, dueReminderCustom: config });
+    expect(cardRepo.update).toHaveBeenCalledWith(
+      mockDb,
+      expect.objectContaining({
+        dueReminderAt: new Date("2026-03-08T07:00:00Z"),
+      }),
+      { cardPublicId },
+    );
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValue({
+      ...existing,
+      dueDate: new Date("2026-03-08T06:45:00Z"),
+      dueDateHasTime: true,
+    });
+    await expect(
+      cardRouter
+        .createCaller(ctx)
+        .update({ cardPublicId, dueReminderCustom: config }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  it("preserves a skipped custom reminder through unchanged and edited dates", async () => {
+    const dueDate = new Date("2026-03-08T06:45:00Z");
+    const config = {
+      daysBefore: 0,
+      time: "02:30",
+      timezone: "America/New_York",
+    };
+    const existing = {
+      ...mockExistingCard(),
+      dueDate,
+      dueDateHasTime: true,
+      dueReminderCustom: config,
+      dueReminderAt: null,
+    };
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValue(existing);
+    mockUpdatedCard();
+    const { cardRouter } = await import("./card");
+    const caller = cardRouter.createCaller(ctx);
+    await caller.update({
+      cardPublicId,
+      dueDate,
+      dueDateHasTime: true,
+      dueReminderCustom: { ...config },
+    });
+    expect(cardRepo.update).toHaveBeenLastCalledWith(
+      mockDb,
+      expect.objectContaining({
+        dueReminderCustom: config,
+        dueReminderAt: null,
+        dueReminderMinutes: null,
+      }),
+      { cardPublicId },
+    );
+    const nextDate = new Date("2026-03-09T06:45:00Z");
+    await caller.update({
+      cardPublicId,
+      dueDate: nextDate,
+      dueDateHasTime: true,
+      dueReminderCustom: config,
+    });
+    expect(cardRepo.update).toHaveBeenLastCalledWith(
+      mockDb,
+      expect.objectContaining({
+        dueReminderCustom: config,
+        dueReminderAt: new Date("2026-03-09T06:30:00Z"),
+      }),
+      { cardPublicId },
+    );
+    await caller.update({ cardPublicId, title: "Renamed" });
+    expect(cardRepo.update).toHaveBeenLastCalledWith(
+      mockDb,
+      { title: "Renamed" },
+      { cardPublicId },
+    );
+    await expect(
+      caller.update({
+        cardPublicId,
+        dueReminderCustom: { ...config, time: "03:30" },
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
   it("records a start date change without changing the due date", async () => {
@@ -188,6 +363,7 @@ describe("card updates", () => {
       startDate,
       dueDateHasTime: false,
       dueReminderMinutes: null,
+      dueReminderCustom: null,
       dueReminderAt: null,
       completed: false,
       recurrenceRule: null,
@@ -345,6 +521,7 @@ describe("card updates", () => {
         completed: false,
         dueDateHasTime: true,
         dueReminderMinutes: null,
+        dueReminderCustom: null,
         dueReminderAt: null,
         recurrenceRule: "weekly",
         recurrenceTimezone: "UTC",
@@ -397,6 +574,7 @@ describe("card updates", () => {
         completed: false,
         dueDateHasTime: true,
         dueReminderMinutes: null,
+        dueReminderCustom: null,
         dueReminderAt: null,
         recurrenceRule: "weekly",
         recurrenceTimezone: "UTC",
@@ -430,6 +608,7 @@ describe("card updates", () => {
       completed: false,
       dueDateHasTime: true,
       dueReminderMinutes: null,
+      dueReminderCustom: null,
       dueReminderAt: null,
       recurrenceRule: "weekly",
       recurrenceTimezone: "UTC",
@@ -451,6 +630,7 @@ describe("card updates", () => {
         dueDate,
         dueDateHasTime: true,
         dueReminderMinutes: null,
+        dueReminderCustom: null,
         dueReminderAt: null,
         recurrenceRule: "weekly",
         recurrenceTimezone: "UTC",
@@ -534,6 +714,7 @@ describe("card updates", () => {
       startDate: null,
       dueDateHasTime: false,
       dueReminderMinutes: null,
+      dueReminderCustom: null,
       dueReminderAt: null,
       completed: false,
       recurrenceRule: null,
@@ -557,6 +738,7 @@ describe("card updates", () => {
       startDate: null,
       dueDateHasTime: true,
       dueReminderMinutes: null,
+      dueReminderCustom: null,
       dueReminderAt: null,
       completed: false,
       recurrenceRule: null,
@@ -579,6 +761,7 @@ describe("card updates", () => {
         dueDate,
         dueDateHasTime: true,
         dueReminderMinutes: null,
+        dueReminderCustom: null,
         dueReminderAt: null,
       },
       { cardPublicId },

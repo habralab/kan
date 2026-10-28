@@ -386,6 +386,13 @@
       "when": 1793193061384,
       "tag": "20261028131101_AddCardDueReminders",
       "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1793206402933,
+      "tag": "20261028165322_AddCustomDueReminder",
+      "breakpoints": true
     }
   ]
 }

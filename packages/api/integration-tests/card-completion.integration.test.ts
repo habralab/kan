@@ -179,4 +179,38 @@ describe("card completion repository", () => {
     });
     expect(recurrenceActivities).toHaveLength(1);
   });
+
+  it("persists a custom reminder and advances it across daylight saving time", async () => {
+    const { db, user, card } = await createCard();
+    const dueDate = new Date("2026-03-07T12:00:00.000Z");
+    const custom = {
+      daysBefore: 0,
+      time: "09:00",
+      timezone: "America/New_York",
+    };
+    await db
+      .update(cards)
+      .set({
+        dueDate,
+        dueDateHasTime: false,
+        dueReminderCustom: custom,
+        dueReminderAt: new Date("2026-03-07T14:00:00.000Z"),
+        recurrenceRule: "daily",
+        recurrenceTimezone: "America/New_York",
+        recurrenceAnchorDate: dueDate,
+      })
+      .where(eq(cards.id, card.id));
+
+    const first = await cardRepo.completeRecurringOccurrence(db, {
+      cardPublicId: card.publicId,
+      expectedDueDate: dueDate,
+      createdBy: user.id,
+    });
+    expect(first?.advanced).toBe(true);
+    expect(first?.card).toMatchObject({
+      dueDate: new Date("2026-03-08T11:00:00.000Z"),
+      dueReminderAt: new Date("2026-03-08T13:00:00.000Z"),
+      dueReminderCustom: custom,
+    });
+  });
 });

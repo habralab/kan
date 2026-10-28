@@ -31,6 +31,7 @@ import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import { formatCardDate } from "~/utils/cardDates";
 import { formatMemberDisplayName, getAvatarUrl } from "~/utils/helpers";
+import { validCustomReminder } from "../../card/components/reminder-custom";
 import { ReminderSelect } from "../../card/components/ReminderSelect";
 import { CustomFieldDraftInput } from "./custom-fields/custom-field-draft-input";
 
@@ -87,6 +88,7 @@ export function NewCardForm({
       startDate: null,
       dueDateHasTime: false,
       dueReminderMinutes: null,
+      dueReminderCustom: null,
       recurrenceRule: null,
       recurrenceTimezone: null,
     },
@@ -110,6 +112,7 @@ export function NewCardForm({
   const dueDateHasTime = watch("dueDateHasTime");
   const recurrenceRule = watch("recurrenceRule");
   const dueReminderMinutes = watch("dueReminderMinutes") ?? null;
+  const dueReminderCustom = watch("dueReminderCustom") ?? null;
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [isStartDateSelectorOpen, setIsStartDateSelectorOpen] = useState(false);
 
@@ -176,6 +179,7 @@ export function NewCardForm({
               completed: false,
               dueDateHasTime: args.dueDateHasTime ?? false,
               dueReminderMinutes: args.dueReminderMinutes ?? null,
+              dueReminderCustom: args.dueReminderCustom ?? null,
               recurrenceRule: args.recurrenceRule ?? null,
               recurrenceTimezone: args.recurrenceTimezone ?? null,
               recurrenceAnchorDate:
@@ -254,6 +258,7 @@ export function NewCardForm({
           startDate: null,
           dueDateHasTime: false,
           dueReminderMinutes: null,
+          dueReminderCustom: null,
           recurrenceRule: null,
           recurrenceTimezone: null,
         };
@@ -346,6 +351,22 @@ export function NewCardForm({
   };
 
   const onSubmit = async (data: NewCardFormInput) => {
+    if (
+      data.dueDate &&
+      data.dueReminderCustom &&
+      !validCustomReminder(
+        data.dueDate,
+        data.dueDateHasTime,
+        data.dueReminderCustom,
+      )
+    ) {
+      showPopup({
+        header: t`Invalid reminder time`,
+        message: t`Choose a valid time zone and a reminder no later than the due time.`,
+        icon: "error",
+      });
+      return;
+    }
     const filesToUpload = pendingFiles;
     setPendingFiles([]);
 
@@ -364,6 +385,7 @@ export function NewCardForm({
         dueDateHasTime: data.dueDateHasTime,
         dueReminderMinutes:
           data.dueDate && data.dueDateHasTime ? data.dueReminderMinutes : null,
+        dueReminderCustom: data.dueDate ? data.dueReminderCustom : null,
         recurrenceRule: data.dueDate ? data.recurrenceRule : null,
         recurrenceTimezone:
           data.dueDate && data.recurrenceRule
@@ -738,6 +760,7 @@ export function NewCardForm({
                       if (!date) {
                         setValue("recurrenceRule", null);
                         setValue("dueReminderMinutes", null);
+                        setValue("dueReminderCustom", null);
                       }
                     }}
                     weekStartsOn={workspace.weekStartDay}
@@ -775,11 +798,14 @@ export function NewCardForm({
                   <div className="px-4 pb-4">
                     <ReminderSelect
                       value={dueReminderMinutes}
-                      enabled={!!dueDate && dueDateHasTime}
+                      custom={dueReminderCustom}
+                      enabled={!!dueDate}
+                      timeEnabled={dueDateHasTime}
                       dueDate={dueDate}
-                      onChange={(value) =>
-                        setValue("dueReminderMinutes", value)
-                      }
+                      onChange={(value, custom) => {
+                        setValue("dueReminderMinutes", value);
+                        setValue("dueReminderCustom", custom);
+                      }}
                     />
                   </div>
                 </div>

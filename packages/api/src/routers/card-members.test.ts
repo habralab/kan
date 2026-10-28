@@ -656,6 +656,7 @@ describe("card member workspace scoping", () => {
             startDate: null,
             dueDateHasTime: false,
             dueReminderMinutes: null,
+            dueReminderCustom: null,
             dueReminderAt: null,
             completed: false,
             recurrenceRule: null,

@@ -60,7 +60,7 @@ export const cardDueReminder: JobHandler = async (data) => {
       !current ||
       current.completed ||
       current.dueReminderAt?.getTime() !== expectedTime.getTime() ||
-      current.dueReminderMinutes === null
+      (current.dueReminderMinutes === null && !current.dueReminderCustom)
     )
       return;
     if (
@@ -75,9 +75,16 @@ export const cardDueReminder: JobHandler = async (data) => {
     });
     if (!deliveryId) continue;
     try {
-      const dueAt = new Date(
-        expectedTime.getTime() + current.dueReminderMinutes * 60_000,
-      );
+      const dueAt = current.dueDate;
+      if (!dueAt) throw new Error("Reminder card has no due date");
+      const dueAtText = current.dueDateHasTime
+        ? `${dueAtFormatter.format(dueAt)} UTC`
+        : new Intl.DateTimeFormat("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            timeZone: current.dueReminderCustom?.timezone ?? "UTC",
+          }).format(dueAt);
       await sendEmail(
         recipient.email,
         `Card due reminder: ${card.title}`,
@@ -86,7 +93,7 @@ export const cardDueReminder: JobHandler = async (data) => {
           cardTitle: card.title,
           boardName: card.boardName,
           cardUrl,
-          dueAtText: `${dueAtFormatter.format(dueAt)} UTC`,
+          dueAtText,
         },
       );
       await markDelivered(db, deliveryId);

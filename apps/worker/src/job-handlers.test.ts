@@ -31,6 +31,7 @@ const card = {
   workspaceId: 2,
   completed: false,
   dueDate: new Date(Date.now() + 60_000),
+  dueReminderMinutes: 5,
   dueReminderAt: expectedAt,
   recipients: [{ userId: "user-1", email: "user@example.test" }],
 };
@@ -76,6 +77,30 @@ describe("card due reminder", () => {
       }),
     );
     expect(markDelivered).toHaveBeenCalledWith(expect.anything(), 3);
+  });
+
+  it("includes the due time with an explicit UTC timezone", async () => {
+    const reminderAt = new Date("2026-10-28T15:40:00.000Z");
+    vi.mocked(getDueReminder).mockResolvedValue({
+      ...card,
+      dueReminderAt: reminderAt,
+    });
+    const now = vi.spyOn(Date, "now").mockReturnValue(reminderAt.getTime());
+    try {
+      const { cardDueReminder } = await import("./job-handlers");
+      await cardDueReminder(
+        { cardPublicId: card.publicId, expectedAt: reminderAt.toISOString() },
+        "job-1",
+      );
+      expect(sendEmail).toHaveBeenCalledWith(
+        "user@example.test",
+        expect.any(String),
+        "DUE_REMINDER",
+        expect.objectContaining({ dueAtText: "28 Oct 2026, 15:45 UTC" }),
+      );
+    } finally {
+      now.mockRestore();
+    }
   });
 
   it("does not send a duplicate after a recipient was already claimed", async () => {

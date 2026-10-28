@@ -1,0 +1,13 @@
+{
+  "extends": "@kan/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "noEmit": false,
+    "declaration": false,
+    "tsBuildInfoFile": ".cache/tsbuildinfo.json"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

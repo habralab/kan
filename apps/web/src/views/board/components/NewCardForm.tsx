@@ -723,7 +723,7 @@ export function NewCardForm({
                   onClick={() => setIsDateSelectorOpen(false)}
                 />
                 <div
-                  className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 shadow-lg dark:border-dark-200 dark:bg-dark-100"
+                  className="absolute left-0 top-full z-20 mt-2 rounded-md border border-light-200 bg-light-50 pb-6 shadow-lg dark:border-dark-200 dark:bg-dark-100"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}

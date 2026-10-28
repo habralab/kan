@@ -11,6 +11,15 @@ import { requirePostgresUrl } from "@kan/jobs";
 
 requirePostgresUrl();
 const db = createDrizzleClient();
+const dueAtFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+  timeZone: "UTC",
+});
 
 export async function closeJobHandlers() {
   await db.$client.end();
@@ -50,7 +59,8 @@ export const cardDueReminder: JobHandler = async (data) => {
     if (
       !current ||
       current.completed ||
-      current.dueReminderAt?.getTime() !== expectedTime.getTime()
+      current.dueReminderAt?.getTime() !== expectedTime.getTime() ||
+      current.dueReminderMinutes === null
     )
       return;
     if (
@@ -65,6 +75,9 @@ export const cardDueReminder: JobHandler = async (data) => {
     });
     if (!deliveryId) continue;
     try {
+      const dueAt = new Date(
+        expectedTime.getTime() + current.dueReminderMinutes * 60_000,
+      );
       await sendEmail(
         recipient.email,
         `Card due reminder: ${card.title}`,
@@ -73,6 +86,7 @@ export const cardDueReminder: JobHandler = async (data) => {
           cardTitle: card.title,
           boardName: card.boardName,
           cardUrl,
+          dueAtText: `${dueAtFormatter.format(dueAt)} UTC`,
         },
       );
       await markDelivered(db, deliveryId);

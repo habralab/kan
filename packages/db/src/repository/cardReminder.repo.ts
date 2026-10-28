@@ -19,6 +19,7 @@ export async function getDueReminder(db: dbClient, cardPublicId: string) {
       publicId: cards.publicId,
       title: cards.title,
       completed: cards.completed,
+      dueReminderMinutes: cards.dueReminderMinutes,
       dueReminderAt: cards.dueReminderAt,
       boardName: boards.name,
       workspaceId: boards.workspaceId,

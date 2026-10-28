@@ -7,6 +7,7 @@ import {
   check,
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -16,6 +17,8 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
+import type { CardReminderCustom } from "@kan/shared/utils";
 
 import { boards } from "./boards";
 import { checklists } from "./checklists";
@@ -118,6 +121,7 @@ export const cards = pgTable(
     coverSize: cardCoverSizeEnum("coverSize").notNull().default("normal"),
     dueDateHasTime: boolean("dueDateHasTime").notNull().default(false),
     dueReminderMinutes: integer("dueReminderMinutes"),
+    dueReminderCustom: jsonb("dueReminderCustom").$type<CardReminderCustom>(),
     dueReminderAt: timestamp("dueReminderAt", { withTimezone: true }),
     recurrenceRule: cardRecurrenceRuleEnum("recurrenceRule"),
     recurrenceTimezone: varchar("recurrenceTimezone", { length: 255 }),
@@ -140,7 +144,7 @@ export const cards = pgTable(
     ),
     check(
       "card_due_reminder_configuration_check",
-      sql`(${table.dueReminderMinutes} IS NULL AND ${table.dueReminderAt} IS NULL) OR (${table.dueReminderMinutes} >= 0 AND ${table.dueReminderAt} IS NOT NULL AND ${table.dueDate} IS NOT NULL AND ${table.dueDateHasTime})`,
+      sql`(${table.dueReminderMinutes} IS NULL AND ${table.dueReminderCustom} IS NULL AND ${table.dueReminderAt} IS NULL) OR (${table.dueDate} IS NOT NULL AND ((${table.dueReminderMinutes} IS NOT NULL AND ${table.dueReminderMinutes} >= 0 AND ${table.dueReminderCustom} IS NULL AND ${table.dueDateHasTime} AND ${table.dueReminderAt} IS NOT NULL) OR (${table.dueReminderMinutes} IS NULL AND ${table.dueReminderCustom} IS NOT NULL)))`,
     ),
   ],
 ).enableRLS();

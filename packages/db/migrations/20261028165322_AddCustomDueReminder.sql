@@ -1,0 +1,3 @@
+ALTER TABLE "card" DROP CONSTRAINT "card_due_reminder_configuration_check";--> statement-breakpoint
+ALTER TABLE "card" ADD COLUMN "dueReminderCustom" jsonb;--> statement-breakpoint
+ALTER TABLE "card" ADD CONSTRAINT "card_due_reminder_configuration_check" CHECK (("card"."dueReminderMinutes" IS NULL AND "card"."dueReminderCustom" IS NULL AND "card"."dueReminderAt" IS NULL) OR ("card"."dueDate" IS NOT NULL AND (("card"."dueReminderMinutes" IS NOT NULL AND "card"."dueReminderMinutes" >= 0 AND "card"."dueReminderCustom" IS NULL AND "card"."dueDateHasTime" AND "card"."dueReminderAt" IS NOT NULL) OR ("card"."dueReminderMinutes" IS NULL AND "card"."dueReminderCustom" IS NOT NULL))));

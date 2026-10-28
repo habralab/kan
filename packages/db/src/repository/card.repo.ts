@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
-import type { CardRecurrenceRule } from "@kan/shared/utils";
+import type { CardRecurrenceRule, CardReminderCustom } from "@kan/shared/utils";
 import {
   cardActivities,
   cardAttachments,
@@ -27,7 +27,11 @@ import {
   workspaceMembers,
   workspaces,
 } from "@kan/db/schema";
-import { generateUID, getNextRecurringCardDates } from "@kan/shared/utils";
+import {
+  customReminderForOccurrence,
+  generateUID,
+  getNextRecurringCardDates,
+} from "@kan/shared/utils";
 
 import type { CustomFieldValueInput } from "./custom-field.repo";
 import {
@@ -73,6 +77,7 @@ export const create = async (
     coverSize?: "normal" | "full";
     dueDateHasTime?: boolean;
     dueReminderMinutes?: number | null;
+    dueReminderCustom?: CardReminderCustom | null;
     dueReminderAt?: Date | null;
     recurrenceRule?: CardRecurrenceRule | null;
     recurrenceTimezone?: string | null;
@@ -151,6 +156,7 @@ export const create = async (
           ? (cardInput.dueDateHasTime ?? false)
           : false,
         dueReminderMinutes: cardInput.dueReminderMinutes ?? null,
+        dueReminderCustom: cardInput.dueReminderCustom ?? null,
         dueReminderAt: cardInput.dueReminderAt ?? null,
         recurrenceRule: cardInput.recurrenceRule ?? null,
         recurrenceTimezone: cardInput.recurrenceTimezone ?? null,
@@ -385,6 +391,7 @@ export const update = async (
     completed?: boolean;
     dueDateHasTime?: boolean;
     dueReminderMinutes?: number | null;
+    dueReminderCustom?: CardReminderCustom | null;
     dueReminderAt?: Date | null;
     recurrenceRule?: CardRecurrenceRule | null;
     recurrenceTimezone?: string | null;
@@ -409,6 +416,7 @@ export const update = async (
             ? (cardInput.dueDateHasTime ?? false)
             : undefined,
       dueReminderMinutes: cardInput.dueReminderMinutes,
+      dueReminderCustom: cardInput.dueReminderCustom,
       dueReminderAt: cardInput.dueReminderAt,
       recurrenceRule: cardInput.recurrenceRule,
       recurrenceTimezone: cardInput.recurrenceTimezone,
@@ -426,6 +434,7 @@ export const update = async (
       completed: cards.completed,
       dueDateHasTime: cards.dueDateHasTime,
       dueReminderMinutes: cards.dueReminderMinutes,
+      dueReminderCustom: cards.dueReminderCustom,
       dueReminderAt: cards.dueReminderAt,
       recurrenceRule: cards.recurrenceRule,
       recurrenceTimezone: cards.recurrenceTimezone,
@@ -461,6 +470,7 @@ export const completeRecurringOccurrence = async (
         completed: cards.completed,
         dueDateHasTime: cards.dueDateHasTime,
         dueReminderMinutes: cards.dueReminderMinutes,
+        dueReminderCustom: cards.dueReminderCustom,
         dueReminderAt: cards.dueReminderAt,
         recurrenceRule: cards.recurrenceRule,
         recurrenceTimezone: cards.recurrenceTimezone,
@@ -492,8 +502,13 @@ export const completeRecurringOccurrence = async (
       recurrenceRule: card.recurrenceRule,
       recurrenceTimezone: card.recurrenceTimezone,
     });
-    const dueReminderAt =
-      card.dueDateHasTime && card.dueReminderMinutes !== null
+    const dueReminderAt = card.dueReminderCustom
+      ? customReminderForOccurrence(
+          nextDates.dueDate,
+          card.dueDateHasTime,
+          card.dueReminderCustom,
+        )
+      : card.dueDateHasTime && card.dueReminderMinutes !== null
         ? new Date(
             nextDates.dueDate.getTime() - card.dueReminderMinutes * 60_000,
           )
@@ -518,6 +533,7 @@ export const completeRecurringOccurrence = async (
         completed: cards.completed,
         dueDateHasTime: cards.dueDateHasTime,
         dueReminderMinutes: cards.dueReminderMinutes,
+        dueReminderCustom: cards.dueReminderCustom,
         dueReminderAt: cards.dueReminderAt,
         recurrenceRule: cards.recurrenceRule,
         recurrenceTimezone: cards.recurrenceTimezone,
@@ -657,6 +673,7 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       completed: true,
       dueDateHasTime: true,
       dueReminderMinutes: true,
+      dueReminderCustom: true,
       dueReminderAt: true,
       recurrenceRule: true,
       recurrenceTimezone: true,
@@ -918,6 +935,7 @@ export const getWithListAndMembersByPublicId = async (
       completed: true,
       dueDateHasTime: true,
       dueReminderMinutes: true,
+      dueReminderCustom: true,
       dueReminderAt: true,
       recurrenceRule: true,
       recurrenceTimezone: true,
@@ -1375,6 +1393,7 @@ export const reorder = async (
         completed: true,
         dueDateHasTime: true,
         dueReminderMinutes: true,
+        dueReminderCustom: true,
         dueReminderAt: true,
         recurrenceRule: true,
         recurrenceTimezone: true,

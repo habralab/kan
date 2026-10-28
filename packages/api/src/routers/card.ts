@@ -14,6 +14,8 @@ import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import { isValidIanaTimezone } from "@kan/db/repository/timeTracking.utils";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import {
+  customReminderForOccurrence,
+  customReminderInstant,
   generateAttachmentUrl,
   normalizeDescription,
 } from "@kan/shared/utils";
@@ -68,6 +70,31 @@ const throwCustomFieldRepositoryError = (error: unknown): never => {
   });
 };
 
+const customReminderSchema = z.object({
+  daysBefore: z.number().int().min(0).max(365),
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  timezone: z.string().refine(isValidIanaTimezone),
+});
+
+function resolveCustomReminder(
+  dueDate: Date,
+  hasTime: boolean,
+  config: z.infer<typeof customReminderSchema>,
+): Date {
+  try {
+    const instant = customReminderInstant(dueDate, config);
+    if (hasTime && instant > dueDate)
+      throw new RangeError("Reminder must not be after due date");
+    return instant;
+  } catch (error) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message:
+        error instanceof Error ? error.message : "Invalid custom reminder",
+    });
+  }
+}
+
 export const cardRouter = createTRPCRouter({
   create: protectedProcedure
     .meta({
@@ -106,6 +133,7 @@ export const cardRouter = createTRPCRouter({
             )
             .default([]),
           dueDateHasTime: z.boolean().optional(),
+          dueReminderCustom: customReminderSchema.nullable().optional(),
           dueReminderMinutes: z
             .number()
             .int()
@@ -218,12 +246,27 @@ export const cardRouter = createTRPCRouter({
           code: "BAD_REQUEST",
         });
 
+      if (
+        input.dueReminderCustom &&
+        (!input.dueDate || input.dueReminderMinutes != null)
+      )
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Custom reminder requires a due date and excludes minute offsets",
+        });
       const dueReminderAt =
-        input.dueDate &&
-        input.dueDateHasTime &&
-        input.dueReminderMinutes != null
-          ? reminderInstant(input.dueDate, input.dueReminderMinutes)
-          : null;
+        input.dueDate && input.dueReminderCustom
+          ? resolveCustomReminder(
+              input.dueDate,
+              input.dueDateHasTime ?? false,
+              input.dueReminderCustom,
+            )
+          : input.dueDate &&
+              input.dueDateHasTime &&
+              input.dueReminderMinutes != null
+            ? reminderInstant(input.dueDate, input.dueReminderMinutes)
+            : null;
       const producer =
         dueReminderAt && dueReminderAt.getTime() > Date.now()
           ? await getJobProducer()
@@ -245,6 +288,7 @@ export const cardRouter = createTRPCRouter({
               ? (input.dueDateHasTime ?? false)
               : false,
             dueReminderMinutes: dueReminderAt ? input.dueReminderMinutes : null,
+            dueReminderCustom: dueReminderAt ? input.dueReminderCustom : null,
             dueReminderAt,
             ...(input.dueDate && input.recurrenceRule
               ? {
@@ -1292,6 +1336,7 @@ export const cardRouter = createTRPCRouter({
           dueDate: z.date().nullable().optional(),
           startDate: z.date().nullable().optional(),
           dueDateHasTime: z.boolean().optional(),
+          dueReminderCustom: customReminderSchema.nullable().optional(),
           dueReminderMinutes: z
             .number()
             .int()
@@ -1447,18 +1492,61 @@ export const cardRouter = createTRPCRouter({
           : input.dueDate !== undefined
             ? (input.dueDateHasTime ?? false)
             : existingCard.dueDateHasTime;
+      if (input.dueReminderCustom != null && input.dueReminderMinutes != null)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Reminder modes are mutually exclusive",
+        });
       const effectiveReminderMinutes =
-        input.dueReminderMinutes !== undefined
-          ? input.dueReminderMinutes
-          : existingCard.dueReminderMinutes;
+        input.dueReminderCustom != null
+          ? null
+          : input.dueReminderMinutes !== undefined
+            ? input.dueReminderMinutes
+            : input.dueReminderCustom === null
+              ? null
+              : existingCard.dueReminderMinutes;
+      const effectiveReminderCustom =
+        input.dueReminderMinutes != null
+          ? null
+          : input.dueReminderCustom !== undefined
+            ? input.dueReminderCustom
+            : input.dueReminderMinutes === null
+              ? null
+              : existingCard.dueReminderCustom;
+      if (input.dueReminderCustom && !effectiveDueDate)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Custom reminder requires a due date",
+        });
+      const existingCustom = existingCard.dueReminderCustom;
+      const preservesCustom =
+        !!effectiveReminderCustom &&
+        !!existingCustom &&
+        effectiveReminderCustom.daysBefore === existingCustom.daysBefore &&
+        effectiveReminderCustom.time === existingCustom.time &&
+        effectiveReminderCustom.timezone === existingCustom.timezone;
       const reminderConfigurationChanged =
-        input.dueDate !== undefined || input.dueReminderMinutes !== undefined;
+        input.dueDate !== undefined ||
+        input.dueDateHasTime !== undefined ||
+        input.dueReminderMinutes !== undefined ||
+        input.dueReminderCustom !== undefined;
       const nextReminderAt =
-        reminderConfigurationChanged &&
-        effectiveDueDate &&
-        effectiveHasTime &&
-        effectiveReminderMinutes != null
-          ? reminderInstant(effectiveDueDate, effectiveReminderMinutes)
+        reminderConfigurationChanged && effectiveDueDate
+          ? effectiveReminderCustom
+            ? preservesCustom
+              ? customReminderForOccurrence(
+                  effectiveDueDate,
+                  effectiveHasTime,
+                  effectiveReminderCustom,
+                )
+              : resolveCustomReminder(
+                  effectiveDueDate,
+                  effectiveHasTime,
+                  effectiveReminderCustom,
+                )
+            : effectiveHasTime && effectiveReminderMinutes != null
+              ? reminderInstant(effectiveDueDate, effectiveReminderMinutes)
+              : null
           : null;
       const reminderScheduleChanged =
         nextReminderAt?.getTime() !== existingCard.dueReminderAt?.getTime();
@@ -1519,6 +1607,7 @@ export const cardRouter = createTRPCRouter({
             completed: boolean;
             dueDateHasTime: boolean;
             dueReminderMinutes: number | null;
+            dueReminderCustom: z.infer<typeof customReminderSchema> | null;
             dueReminderAt: Date | null;
             recurrenceRule: "daily" | "weekdays" | "weekly" | "monthly" | null;
             recurrenceTimezone: string | null;
@@ -1565,6 +1654,7 @@ export const cardRouter = createTRPCRouter({
           input.description !== undefined ||
           input.dueDate !== undefined ||
           input.dueReminderMinutes !== undefined ||
+          input.dueReminderCustom !== undefined ||
           input.startDate !== undefined ||
           input.dueDateHasTime !== undefined ||
           input.recurrenceRule !== undefined ||
@@ -1581,7 +1671,8 @@ export const cardRouter = createTRPCRouter({
         }
 
         const producer =
-          existingCard.dueReminderMinutes !== null
+          existingCard.dueReminderMinutes != null ||
+          existingCard.dueReminderCustom != null
             ? await getJobProducer()
             : null;
         const completion = await cardRepo.completeRecurringOccurrence(
@@ -1635,6 +1726,7 @@ export const cardRouter = createTRPCRouter({
           normalizedDescription !== undefined ||
           input.dueDate !== undefined ||
           input.dueReminderMinutes !== undefined ||
+          input.dueReminderCustom !== undefined ||
           input.startDate !== undefined ||
           input.completed !== undefined ||
           recurrenceWasConfigured)
@@ -1654,12 +1746,16 @@ export const cardRouter = createTRPCRouter({
               ...(input.completed !== undefined && {
                 completed: input.completed,
               }),
-              ...(input.dueDate !== undefined && {
-                dueDateHasTime: input.dueDateHasTime ?? false,
+              ...((input.dueDate !== undefined ||
+                input.dueDateHasTime !== undefined) && {
+                dueDateHasTime: effectiveHasTime,
               }),
               ...(reminderConfigurationChanged && {
                 dueReminderMinutes: nextReminderAt
                   ? effectiveReminderMinutes
+                  : null,
+                dueReminderCustom: effectiveDueDate
+                  ? effectiveReminderCustom
                   : null,
                 dueReminderAt: nextReminderAt,
               }),

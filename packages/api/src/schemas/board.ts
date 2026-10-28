@@ -65,6 +65,13 @@ const boardDetailCardSchema = z.object({
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
   dueReminderMinutes: z.number().int().nullable(),
+  dueReminderCustom: z
+    .object({
+      daysBefore: z.number().int(),
+      time: z.string(),
+      timezone: z.string(),
+    })
+    .nullable(),
   recurrenceRule: cardRecurrenceRuleSchema.nullable(),
   recurrenceTimezone: z.string().nullable(),
   recurrenceAnchorDate: z.date().nullable(),
@@ -130,6 +137,13 @@ const boardSlugCardSchema = z.object({
   completed: z.boolean(),
   dueDateHasTime: z.boolean(),
   dueReminderMinutes: z.number().int().nullable(),
+  dueReminderCustom: z
+    .object({
+      daysBefore: z.number().int(),
+      time: z.string(),
+      timezone: z.string(),
+    })
+    .nullable(),
   recurrenceRule: cardRecurrenceRuleSchema.nullable(),
   recurrenceTimezone: z.string().nullable(),
   recurrenceAnchorDate: z.date().nullable(),

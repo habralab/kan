@@ -4,7 +4,10 @@ import { useEffect, useId, useState } from "react";
 import { HiMiniPlus } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
-import type { CardRecurrenceRule } from "@kan/shared/utils";
+import type {
+  CardDueReminderCustom,
+  CardRecurrenceRule,
+} from "@kan/shared/utils";
 
 import Button from "~/components/Button";
 import {
@@ -22,6 +25,7 @@ import {
   orderCardDateRange,
 } from "~/utils/cardDates";
 import { invalidateCard } from "~/utils/cardInvalidation";
+import { validCustomReminder } from "./reminder-custom";
 import { ReminderSelect } from "./ReminderSelect";
 
 interface CardDatesSelectorProps {
@@ -33,6 +37,7 @@ interface CardDatesSelectorProps {
   recurrenceRule: CardRecurrenceRule | null;
   recurrenceTimezone: string | null;
   dueReminderMinutes: number | null;
+  dueReminderCustom: CardDueReminderCustom | null;
   isLoading?: boolean;
   disabled?: boolean;
   inlinePopover?: boolean;
@@ -58,6 +63,7 @@ export function CardDatesSelector({
   recurrenceRule,
   recurrenceTimezone,
   dueReminderMinutes,
+  dueReminderCustom,
   isLoading = false,
   disabled = false,
   inlinePopover = false,
@@ -78,6 +84,8 @@ export function CardDatesSelector({
   const [pendingReminder, setPendingReminder] = useState<number | null>(
     dueReminderMinutes,
   );
+  const [pendingCustomReminder, setPendingCustomReminder] =
+    useState<CardDueReminderCustom | null>(dueReminderCustom);
   const [startDateEnabled, setStartDateEnabled] = useState(!!startDate);
   const [rangeAnchor, setRangeAnchor] = useState<Date | null>(null);
   const [pendingRecurrenceRule, setPendingRecurrenceRule] =
@@ -92,10 +100,12 @@ export function CardDatesSelector({
     setRangeAnchor(null);
     setPendingRecurrenceRule(recurrenceRule);
     setPendingReminder(dueReminderMinutes);
+    setPendingCustomReminder(dueReminderCustom);
   }, [
     dueDate,
     dueDateHasTime,
     dueReminderMinutes,
+    dueReminderCustom,
     isOpen,
     recurrenceRule,
     startDate,
@@ -116,6 +126,7 @@ export function CardDatesSelector({
                 ? (update.dueDateHasTime ?? false)
                 : false,
               dueReminderMinutes: update.dueReminderMinutes ?? null,
+              dueReminderCustom: update.dueReminderCustom ?? null,
               recurrenceRule: update.recurrenceRule ?? null,
               recurrenceTimezone: update.recurrenceTimezone ?? null,
             }
@@ -155,6 +166,7 @@ export function CardDatesSelector({
     setRangeAnchor(startDate && !dueDate ? startDate : null);
     setPendingRecurrenceRule(recurrenceRule);
     setPendingReminder(dueReminderMinutes);
+    setPendingCustomReminder(dueReminderCustom);
     setIsOpen(true);
   };
 
@@ -209,6 +221,7 @@ export function CardDatesSelector({
       setRangeAnchor(null);
       setPendingRecurrenceRule(null);
       setPendingReminder(null);
+      setPendingCustomReminder(null);
       return;
     }
 
@@ -234,6 +247,7 @@ export function CardDatesSelector({
     setRangeAnchor(null);
     setPendingRecurrenceRule(null);
     setPendingReminder(null);
+    setPendingCustomReminder(null);
   };
 
   const save = () => {
@@ -256,6 +270,7 @@ export function CardDatesSelector({
       dueDateHasTime: nextDueDate ? pendingHasTime : false,
       dueReminderMinutes:
         nextDueDate && pendingHasTime ? pendingReminder : null,
+      dueReminderCustom: nextDueDate ? pendingCustomReminder : null,
       recurrenceRule: nextDueDate ? pendingRecurrenceRule : null,
       recurrenceTimezone:
         nextDueDate && pendingRecurrenceRule
@@ -271,9 +286,17 @@ export function CardDatesSelector({
     (!!pendingDueDate && pendingHasTime !== dueDateHasTime) ||
     pendingRecurrenceRule !== recurrenceRule ||
     (pendingDueDate && pendingHasTime ? pendingReminder : null) !==
-      dueReminderMinutes;
+      dueReminderMinutes ||
+    JSON.stringify(pendingCustomReminder) !== JSON.stringify(dueReminderCustom);
   const draftIsValid =
-    !startDateEnabled || (!!pendingStartDate && !!pendingDueDate);
+    (!startDateEnabled || (!!pendingStartDate && !!pendingDueDate)) &&
+    (!pendingCustomReminder ||
+      (!!pendingDueDate &&
+        validCustomReminder(
+          pendingDueDate,
+          pendingHasTime,
+          pendingCustomReminder,
+        )));
 
   const formattedStartDate = startDate
     ? formatCardDate(startDate, { locale: dateLocale })
@@ -371,7 +394,10 @@ export function CardDatesSelector({
                   selectedDate={pendingDueDate}
                   onDateSelect={handleCalendarSelect}
                   timeEnabled={pendingHasTime}
-                  onTimeEnabledChange={setPendingHasTime}
+                  onTimeEnabledChange={(enabled) => {
+                    setPendingHasTime(enabled);
+                    if (!enabled) setPendingReminder(null);
+                  }}
                 />
               )}
               <div className="space-y-2">
@@ -434,9 +460,14 @@ export function CardDatesSelector({
               </label>
               <ReminderSelect
                 value={pendingReminder}
-                enabled={!!pendingDueDate && pendingHasTime}
+                custom={pendingCustomReminder}
+                enabled={!!pendingDueDate}
+                timeEnabled={pendingHasTime}
                 dueDate={pendingDueDate}
-                onChange={setPendingReminder}
+                onChange={(value, custom) => {
+                  setPendingReminder(value);
+                  setPendingCustomReminder(custom);
+                }}
               />
             </div>
             <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">

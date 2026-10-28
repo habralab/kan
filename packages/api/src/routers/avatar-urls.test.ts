@@ -174,6 +174,7 @@ describe("avatar URL resolution in routers", () => {
       completed: false,
       dueDateHasTime: false,
       dueReminderMinutes: null,
+      dueReminderCustom: null,
       dueReminderAt: null,
       recurrenceRule: null,
       recurrenceTimezone: null,

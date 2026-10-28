@@ -202,6 +202,7 @@ describe("card member workspace scoping", () => {
       expect(mockCardCreate).toHaveBeenCalledWith(
         mockDb,
         expect.objectContaining({ customFieldValues }),
+        expect.objectContaining({ afterCreate: undefined }),
       );
     });
 
@@ -562,6 +563,8 @@ describe("card member workspace scoping", () => {
             dueDate: null,
             startDate: null,
             dueDateHasTime: false,
+            dueReminderMinutes: null,
+            dueReminderAt: null,
             completed: false,
             recurrenceRule: null,
             recurrenceTimezone: null,

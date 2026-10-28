@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
 
+import { getJobProducer } from "../utils/job-producer";
 import { sendMentionEmails } from "../utils/notifications";
 import { assertCanEdit } from "../utils/permissions";
 import {
@@ -23,6 +24,7 @@ vi.mock("@kan/db/repository/cardActivity.repo", () => ({
 vi.mock("../utils/notifications", () => ({
   sendMentionEmails: vi.fn(),
 }));
+vi.mock("../utils/job-producer", () => ({ getJobProducer: vi.fn() }));
 vi.mock("../utils/permissions", () => ({
   assertCanDelete: vi.fn(),
   assertCanEdit: vi.fn(),
@@ -54,6 +56,8 @@ const mockExistingCard = (completed = false) => {
     dueDate: null,
     startDate: null,
     dueDateHasTime: false,
+    dueReminderMinutes: null,
+    dueReminderAt: null,
     completed,
     recurrenceRule: null,
     recurrenceTimezone: null,
@@ -80,6 +84,8 @@ const mockUpdatedCard = (completed = false) => {
     dueDate: null,
     startDate: null,
     dueDateHasTime: false,
+    dueReminderMinutes: null,
+    dueReminderAt: null,
     completed,
     recurrenceRule: null,
     recurrenceTimezone: null,
@@ -106,6 +112,66 @@ describe("card updates", () => {
     vi.mocked(sendWebhooksForWorkspace).mockResolvedValue(undefined);
   });
 
+  it("stores a timed reminder and its job in the same transaction", async () => {
+    const dueDate = new Date(Date.now() + 60 * 60_000);
+    const expectedAt = new Date(dueDate.getTime() - 5 * 60_000);
+    const existing = mockExistingCard();
+    const transaction = { update: vi.fn() };
+    const db = {
+      transaction: vi.fn(
+        async (callback: (tx: typeof transaction) => Promise<unknown>) =>
+          callback(transaction),
+      ),
+    };
+    const enqueue = vi.fn().mockResolvedValue("job-1");
+    vi.mocked(getJobProducer).mockResolvedValue({ enqueue } as never);
+    vi.mocked(cardRepo.getByPublicId).mockResolvedValue(existing);
+    vi.mocked(cardRepo.update).mockResolvedValue({
+      id: 1,
+      publicId: cardPublicId,
+      title: "Card",
+      description: null,
+      dueDate,
+      startDate: null,
+      dueDateHasTime: true,
+      dueReminderMinutes: 5,
+      dueReminderAt: expectedAt,
+      completed: false,
+      recurrenceRule: null,
+      recurrenceTimezone: null,
+      recurrenceAnchorDate: null,
+    });
+
+    const { cardRouter } = await import("./card");
+    await cardRouter
+      .createCaller({
+        user: { id: "user-123", name: "Test User", email: "test@example.com" },
+        db,
+      } as never)
+      .update({
+        cardPublicId,
+        dueDate,
+        dueDateHasTime: true,
+        dueReminderMinutes: 5,
+      });
+
+    expect(cardRepo.update).toHaveBeenCalledWith(
+      transaction,
+      expect.objectContaining({
+        dueReminderMinutes: 5,
+        dueReminderAt: expectedAt,
+      }),
+      { cardPublicId },
+    );
+    expect(enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "card-due-reminder",
+        startAfter: expectedAt,
+        transaction,
+      }),
+    );
+  });
+
   it("records a start date change without changing the due date", async () => {
     const startDate = new Date("2026-09-13T05:00:00.000Z");
     mockExistingCard();
@@ -118,6 +184,8 @@ describe("card updates", () => {
       dueDate: null,
       startDate,
       dueDateHasTime: false,
+      dueReminderMinutes: null,
+      dueReminderAt: null,
       completed: false,
       recurrenceRule: null,
       recurrenceTimezone: null,
@@ -273,6 +341,8 @@ describe("card updates", () => {
         startDate: null,
         completed: false,
         dueDateHasTime: true,
+        dueReminderMinutes: null,
+        dueReminderAt: null,
         recurrenceRule: "weekly",
         recurrenceTimezone: "UTC",
         recurrenceAnchorDate: dueDate,
@@ -323,6 +393,8 @@ describe("card updates", () => {
         startDate: null,
         completed: false,
         dueDateHasTime: true,
+        dueReminderMinutes: null,
+        dueReminderAt: null,
         recurrenceRule: "weekly",
         recurrenceTimezone: "UTC",
         recurrenceAnchorDate: dueDate,
@@ -354,6 +426,8 @@ describe("card updates", () => {
       startDate: null,
       completed: false,
       dueDateHasTime: true,
+      dueReminderMinutes: null,
+      dueReminderAt: null,
       recurrenceRule: "weekly",
       recurrenceTimezone: "UTC",
       recurrenceAnchorDate: dueDate,
@@ -373,6 +447,8 @@ describe("card updates", () => {
       expect.objectContaining({
         dueDate,
         dueDateHasTime: true,
+        dueReminderMinutes: null,
+        dueReminderAt: null,
         recurrenceRule: "weekly",
         recurrenceTimezone: "UTC",
         recurrenceAnchorDate: dueDate,
@@ -454,6 +530,8 @@ describe("card updates", () => {
       dueDate,
       startDate: null,
       dueDateHasTime: false,
+      dueReminderMinutes: null,
+      dueReminderAt: null,
       completed: false,
       recurrenceRule: null,
       recurrenceTimezone: null,
@@ -475,6 +553,8 @@ describe("card updates", () => {
       dueDate,
       startDate: null,
       dueDateHasTime: true,
+      dueReminderMinutes: null,
+      dueReminderAt: null,
       completed: false,
       recurrenceRule: null,
       recurrenceTimezone: null,
@@ -492,7 +572,12 @@ describe("card updates", () => {
 
     expect(cardRepo.update).toHaveBeenCalledWith(
       mockDb,
-      { dueDate, dueDateHasTime: true },
+      {
+        dueDate,
+        dueDateHasTime: true,
+        dueReminderMinutes: null,
+        dueReminderAt: null,
+      },
       { cardPublicId },
     );
     expect(cardActivityRepo.bulkCreate).toHaveBeenCalledWith(mockDb, [

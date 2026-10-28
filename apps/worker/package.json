@@ -8,14 +8,20 @@
   },
   "scripts": {
     "build": "tsc --noEmit false --declaration false --emitDeclarationOnly false --outDir dist",
-    "start": "node dist/index.js",
+    "start": "node --import tsx dist/index.js",
+    "migrate:queues": "node dist/migrate-queues.js",
     "typecheck": "tsc --noEmit",
+    "test": "pnpm --filter @kan/jobs build && vitest run",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint"
   },
   "dependencies": {
+    "@kan/db": "workspace:^",
+    "@kan/email": "workspace:^",
     "@kan/jobs": "workspace:^",
-    "@kan/logger": "workspace:^"
+    "@kan/logger": "workspace:^",
+    "pg-boss": "12.38.0",
+    "tsx": "^4.20.5"
   },
   "devDependencies": {
     "@kan/eslint-config": "workspace:*",
@@ -23,7 +29,8 @@
     "@kan/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.0.0"
   },
   "prettier": "@kan/prettier-config"
 }

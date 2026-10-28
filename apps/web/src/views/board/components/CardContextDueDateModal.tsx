@@ -30,6 +30,7 @@ export function CardContextDueDateModal() {
           completed={card?.completed ?? false}
           recurrenceRule={card?.recurrenceRule ?? null}
           recurrenceTimezone={card?.recurrenceTimezone ?? null}
+          dueReminderMinutes={card?.dueReminderMinutes ?? null}
         />
       )}
       <div className="mt-4 flex justify-end">

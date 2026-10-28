@@ -12,6 +12,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -116,6 +117,8 @@ export const cards = pgTable(
     }),
     coverSize: cardCoverSizeEnum("coverSize").notNull().default("normal"),
     dueDateHasTime: boolean("dueDateHasTime").notNull().default(false),
+    dueReminderMinutes: integer("dueReminderMinutes"),
+    dueReminderAt: timestamp("dueReminderAt", { withTimezone: true }),
     recurrenceRule: cardRecurrenceRuleEnum("recurrenceRule"),
     recurrenceTimezone: varchar("recurrenceTimezone", { length: 255 }),
     recurrenceAnchorDate: timestamp("recurrenceAnchorDate"),
@@ -134,6 +137,33 @@ export const cards = pgTable(
     check(
       "card_recurrence_configuration_check",
       sql`(${table.recurrenceRule} IS NULL AND ${table.recurrenceTimezone} IS NULL AND ${table.recurrenceAnchorDate} IS NULL) OR (${table.recurrenceRule} IS NOT NULL AND ${table.dueDate} IS NOT NULL AND ${table.recurrenceTimezone} IS NOT NULL AND ${table.recurrenceAnchorDate} IS NOT NULL)`,
+    ),
+    check(
+      "card_due_reminder_configuration_check",
+      sql`(${table.dueReminderMinutes} IS NULL AND ${table.dueReminderAt} IS NULL) OR (${table.dueReminderMinutes} >= 0 AND ${table.dueReminderAt} IS NOT NULL AND ${table.dueDate} IS NOT NULL AND ${table.dueDateHasTime})`,
+    ),
+  ],
+).enableRLS();
+
+export const cardReminderDeliveries = pgTable(
+  "card_reminder_delivery",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    cardId: bigint("cardId", { mode: "number" })
+      .notNull()
+      .references(() => cards.id, { onDelete: "cascade" }),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    reminderAt: timestamp("reminderAt", { withTimezone: true }).notNull(),
+    claimUntil: timestamp("claimUntil", { withTimezone: true }),
+    sentAt: timestamp("sentAt", { withTimezone: true }),
+  },
+  (table) => [
+    uniqueIndex("card_reminder_delivery_unique_idx").on(
+      table.cardId,
+      table.userId,
+      table.reminderAt,
     ),
   ],
 ).enableRLS();

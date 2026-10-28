@@ -2,8 +2,8 @@
 
 `@kan/jobs` owns the PostgreSQL job queue. Producers and the independent
 `apps/worker` process use the same package; card and checklist logic should
-depend on this small API rather than on pg-boss directly. No product job is
-registered yet, so starting the worker currently processes nothing.
+depend on this small API rather than on pg-boss directly. Product-specific
+queue creation and handlers live in `apps/worker`.
 
 The worker requires `POSTGRES_URL` and fails if it is absent. It does not fall
 back to PGlite. Web producers and workers never migrate the job schema during
@@ -12,8 +12,10 @@ startup. Apply the separately invoked schema migration first:
 ```sh
 pnpm --filter @kan/jobs build
 POSTGRES_URL=postgresql://... pnpm --filter @kan/jobs migrate
+POSTGRES_URL=postgresql://... pnpm --filter @kan/worker migrate:queues
 pnpm --filter @kan/worker... build
-POSTGRES_URL=postgresql://... pnpm --filter @kan/worker start
+POSTGRES_URL=postgresql://... NEXT_PUBLIC_BASE_URL=https://kan.example.com \
+  pnpm --filter @kan/worker start
 ```
 
 The migration is managed by pinned pg-boss 12.38.0 in the dedicated `kan_jobs`

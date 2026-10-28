@@ -31,6 +31,7 @@ import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import { formatCardDate } from "~/utils/cardDates";
 import { formatMemberDisplayName, getAvatarUrl } from "~/utils/helpers";
+import { ReminderSelect } from "../../card/components/ReminderSelect";
 import { CustomFieldDraftInput } from "./custom-fields/custom-field-draft-input";
 
 type NewCardFormInput = NewCardInput & {
@@ -85,6 +86,7 @@ export function NewCardForm({
       dueDate: initialDueDate,
       startDate: null,
       dueDateHasTime: false,
+      dueReminderMinutes: null,
       recurrenceRule: null,
       recurrenceTimezone: null,
     },
@@ -107,6 +109,7 @@ export function NewCardForm({
   const startDate = watch("startDate");
   const dueDateHasTime = watch("dueDateHasTime");
   const recurrenceRule = watch("recurrenceRule");
+  const dueReminderMinutes = watch("dueReminderMinutes") ?? null;
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [isStartDateSelectorOpen, setIsStartDateSelectorOpen] = useState(false);
 
@@ -172,6 +175,7 @@ export function NewCardForm({
               startDate: args.startDate ?? null,
               completed: false,
               dueDateHasTime: args.dueDateHasTime ?? false,
+              dueReminderMinutes: args.dueReminderMinutes ?? null,
               recurrenceRule: args.recurrenceRule ?? null,
               recurrenceTimezone: args.recurrenceTimezone ?? null,
               recurrenceAnchorDate:
@@ -249,6 +253,7 @@ export function NewCardForm({
           dueDate: null,
           startDate: null,
           dueDateHasTime: false,
+          dueReminderMinutes: null,
           recurrenceRule: null,
           recurrenceTimezone: null,
         };
@@ -357,6 +362,8 @@ export function NewCardForm({
         startDate: data.startDate ?? null,
         customFieldValues: data.customFieldValues,
         dueDateHasTime: data.dueDateHasTime,
+        dueReminderMinutes:
+          data.dueDate && data.dueDateHasTime ? data.dueReminderMinutes : null,
         recurrenceRule: data.dueDate ? data.recurrenceRule : null,
         recurrenceTimezone:
           data.dueDate && data.recurrenceRule
@@ -728,14 +735,18 @@ export function NewCardForm({
                     selectedDate={dueDate ?? undefined}
                     onDateSelect={(date) => {
                       setValue("dueDate", date ?? null);
-                      if (!date) setValue("recurrenceRule", null);
+                      if (!date) {
+                        setValue("recurrenceRule", null);
+                        setValue("dueReminderMinutes", null);
+                      }
                     }}
                     weekStartsOn={workspace.weekStartDay}
                     showTime
                     timeEnabled={dueDateHasTime}
-                    onTimeEnabledChange={(enabled) =>
-                      setValue("dueDateHasTime", enabled)
-                    }
+                    onTimeEnabledChange={(enabled) => {
+                      setValue("dueDateHasTime", enabled);
+                      if (!enabled) setValue("dueReminderMinutes", null);
+                    }}
                   />
                   <label className="flex items-center justify-between gap-3 border-t border-light-200 px-4 py-3 text-sm dark:border-dark-200">
                     <span>{t`Repeat`}</span>
@@ -761,6 +772,16 @@ export function NewCardForm({
                       <option value="monthly">{t`Monthly`}</option>
                     </select>
                   </label>
+                  <div className="px-4 pb-4">
+                    <ReminderSelect
+                      value={dueReminderMinutes}
+                      enabled={!!dueDate && dueDateHasTime}
+                      dueDate={dueDate}
+                      onChange={(value) =>
+                        setValue("dueReminderMinutes", value)
+                      }
+                    />
+                  </div>
                 </div>
               </>
             )}

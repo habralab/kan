@@ -72,9 +72,17 @@ export const create = async (
     coverColourCode?: string | null;
     coverSize?: "normal" | "full";
     dueDateHasTime?: boolean;
+    dueReminderMinutes?: number | null;
+    dueReminderAt?: Date | null;
     recurrenceRule?: CardRecurrenceRule | null;
     recurrenceTimezone?: string | null;
     recurrenceAnchorDate?: Date | null;
+  },
+  options?: {
+    afterCreate?: (
+      transaction: dbTransaction,
+      card: { id: number; publicId: string },
+    ) => Promise<void>;
   },
 ) => {
   return db.transaction(async (tx) => {
@@ -142,6 +150,8 @@ export const create = async (
         dueDateHasTime: cardInput.dueDate
           ? (cardInput.dueDateHasTime ?? false)
           : false,
+        dueReminderMinutes: cardInput.dueReminderMinutes ?? null,
+        dueReminderAt: cardInput.dueReminderAt ?? null,
         recurrenceRule: cardInput.recurrenceRule ?? null,
         recurrenceTimezone: cardInput.recurrenceTimezone ?? null,
         recurrenceAnchorDate: cardInput.recurrenceAnchorDate ?? null,
@@ -209,6 +219,8 @@ export const create = async (
         );
       }
     }
+
+    await options?.afterCreate?.(tx, result[0]);
 
     return result[0];
   });
@@ -364,7 +376,7 @@ export const bulkCreateCardWorkspaceMemberRelationships = async (
 };
 
 export const update = async (
-  db: dbClient,
+  db: Pick<dbClient, "update">,
   cardInput: {
     title?: string;
     description?: string | null;
@@ -372,6 +384,8 @@ export const update = async (
     startDate?: Date | null;
     completed?: boolean;
     dueDateHasTime?: boolean;
+    dueReminderMinutes?: number | null;
+    dueReminderAt?: Date | null;
     recurrenceRule?: CardRecurrenceRule | null;
     recurrenceTimezone?: string | null;
     recurrenceAnchorDate?: Date | null;
@@ -394,6 +408,8 @@ export const update = async (
           : cardInput.dueDate !== undefined
             ? (cardInput.dueDateHasTime ?? false)
             : undefined,
+      dueReminderMinutes: cardInput.dueReminderMinutes,
+      dueReminderAt: cardInput.dueReminderAt,
       recurrenceRule: cardInput.recurrenceRule,
       recurrenceTimezone: cardInput.recurrenceTimezone,
       recurrenceAnchorDate: cardInput.recurrenceAnchorDate,
@@ -409,6 +425,8 @@ export const update = async (
       startDate: cards.startDate,
       completed: cards.completed,
       dueDateHasTime: cards.dueDateHasTime,
+      dueReminderMinutes: cards.dueReminderMinutes,
+      dueReminderAt: cards.dueReminderAt,
       recurrenceRule: cards.recurrenceRule,
       recurrenceTimezone: cards.recurrenceTimezone,
       recurrenceAnchorDate: cards.recurrenceAnchorDate,
@@ -424,6 +442,12 @@ export const completeRecurringOccurrence = async (
     expectedDueDate: Date;
     createdBy: string;
   },
+  options?: {
+    afterAdvance?: (
+      transaction: dbTransaction,
+      card: { publicId: string; dueReminderAt: Date | null },
+    ) => Promise<void>;
+  },
 ) =>
   db.transaction(async (tx) => {
     const [card] = await tx
@@ -436,6 +460,8 @@ export const completeRecurringOccurrence = async (
         startDate: cards.startDate,
         completed: cards.completed,
         dueDateHasTime: cards.dueDateHasTime,
+        dueReminderMinutes: cards.dueReminderMinutes,
+        dueReminderAt: cards.dueReminderAt,
         recurrenceRule: cards.recurrenceRule,
         recurrenceTimezone: cards.recurrenceTimezone,
         recurrenceAnchorDate: cards.recurrenceAnchorDate,
@@ -466,11 +492,18 @@ export const completeRecurringOccurrence = async (
       recurrenceRule: card.recurrenceRule,
       recurrenceTimezone: card.recurrenceTimezone,
     });
+    const dueReminderAt =
+      card.dueDateHasTime && card.dueReminderMinutes !== null
+        ? new Date(
+            nextDates.dueDate.getTime() - card.dueReminderMinutes * 60_000,
+          )
+        : null;
     const [updatedCard] = await tx
       .update(cards)
       .set({
         dueDate: nextDates.dueDate,
         startDate: nextDates.startDate,
+        dueReminderAt,
         completed: false,
         updatedAt: new Date(),
       })
@@ -484,6 +517,8 @@ export const completeRecurringOccurrence = async (
         startDate: cards.startDate,
         completed: cards.completed,
         dueDateHasTime: cards.dueDateHasTime,
+        dueReminderMinutes: cards.dueReminderMinutes,
+        dueReminderAt: cards.dueReminderAt,
         recurrenceRule: cards.recurrenceRule,
         recurrenceTimezone: cards.recurrenceTimezone,
         recurrenceAnchorDate: cards.recurrenceAnchorDate,
@@ -502,6 +537,8 @@ export const completeRecurringOccurrence = async (
       fromStartDate: card.startDate,
       toStartDate: updatedCard.startDate,
     });
+
+    await options?.afterAdvance?.(tx, updatedCard);
 
     return {
       card: updatedCard,
@@ -619,6 +656,8 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       coverSize: true,
       completed: true,
       dueDateHasTime: true,
+      dueReminderMinutes: true,
+      dueReminderAt: true,
       recurrenceRule: true,
       recurrenceTimezone: true,
       recurrenceAnchorDate: true,
@@ -878,6 +917,8 @@ export const getWithListAndMembersByPublicId = async (
       coverSize: true,
       completed: true,
       dueDateHasTime: true,
+      dueReminderMinutes: true,
+      dueReminderAt: true,
       recurrenceRule: true,
       recurrenceTimezone: true,
       recurrenceAnchorDate: true,
@@ -1333,6 +1374,8 @@ export const reorder = async (
         startDate: true,
         completed: true,
         dueDateHasTime: true,
+        dueReminderMinutes: true,
+        dueReminderAt: true,
         recurrenceRule: true,
         recurrenceTimezone: true,
         recurrenceAnchorDate: true,

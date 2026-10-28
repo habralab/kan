@@ -22,6 +22,7 @@ import {
   orderCardDateRange,
 } from "~/utils/cardDates";
 import { invalidateCard } from "~/utils/cardInvalidation";
+import { ReminderSelect } from "./ReminderSelect";
 
 interface CardDatesSelectorProps {
   cardPublicId: string;
@@ -31,6 +32,7 @@ interface CardDatesSelectorProps {
   completed: boolean;
   recurrenceRule: CardRecurrenceRule | null;
   recurrenceTimezone: string | null;
+  dueReminderMinutes: number | null;
   isLoading?: boolean;
   disabled?: boolean;
 }
@@ -54,6 +56,7 @@ export function CardDatesSelector({
   completed,
   recurrenceRule,
   recurrenceTimezone,
+  dueReminderMinutes,
   isLoading = false,
   disabled = false,
 }: CardDatesSelectorProps) {
@@ -70,6 +73,9 @@ export function CardDatesSelector({
     dueDate ?? null,
   );
   const [pendingHasTime, setPendingHasTime] = useState(dueDateHasTime);
+  const [pendingReminder, setPendingReminder] = useState<number | null>(
+    dueReminderMinutes,
+  );
   const [startDateEnabled, setStartDateEnabled] = useState(!!startDate);
   const [rangeAnchor, setRangeAnchor] = useState<Date | null>(null);
   const [pendingRecurrenceRule, setPendingRecurrenceRule] =
@@ -83,7 +89,15 @@ export function CardDatesSelector({
     setStartDateEnabled(!!startDate);
     setRangeAnchor(null);
     setPendingRecurrenceRule(recurrenceRule);
-  }, [dueDate, dueDateHasTime, isOpen, recurrenceRule, startDate]);
+    setPendingReminder(dueReminderMinutes);
+  }, [
+    dueDate,
+    dueDateHasTime,
+    dueReminderMinutes,
+    isOpen,
+    recurrenceRule,
+    startDate,
+  ]);
 
   const updateDates = api.card.update.useMutation({
     onMutate: async (update) => {
@@ -99,6 +113,7 @@ export function CardDatesSelector({
               dueDateHasTime: update.dueDate
                 ? (update.dueDateHasTime ?? false)
                 : false,
+              dueReminderMinutes: update.dueReminderMinutes ?? null,
               recurrenceRule: update.recurrenceRule ?? null,
               recurrenceTimezone: update.recurrenceTimezone ?? null,
             }
@@ -137,6 +152,7 @@ export function CardDatesSelector({
     setStartDateEnabled(!!startDate);
     setRangeAnchor(startDate && !dueDate ? startDate : null);
     setPendingRecurrenceRule(recurrenceRule);
+    setPendingReminder(dueReminderMinutes);
     setIsOpen(true);
   };
 
@@ -190,6 +206,7 @@ export function CardDatesSelector({
       setStartDateEnabled(false);
       setRangeAnchor(null);
       setPendingRecurrenceRule(null);
+      setPendingReminder(null);
       return;
     }
 
@@ -214,6 +231,7 @@ export function CardDatesSelector({
     setStartDateEnabled(false);
     setRangeAnchor(null);
     setPendingRecurrenceRule(null);
+    setPendingReminder(null);
   };
 
   const save = () => {
@@ -234,6 +252,8 @@ export function CardDatesSelector({
       startDate: nextStartDate,
       dueDate: nextDueDate,
       dueDateHasTime: nextDueDate ? pendingHasTime : false,
+      dueReminderMinutes:
+        nextDueDate && pendingHasTime ? pendingReminder : null,
       recurrenceRule: nextDueDate ? pendingRecurrenceRule : null,
       recurrenceTimezone:
         nextDueDate && pendingRecurrenceRule
@@ -247,7 +267,9 @@ export function CardDatesSelector({
     !datesMatch(pendingStartDate, startDate) ||
     !datesMatch(pendingDueDate, dueDate) ||
     (!!pendingDueDate && pendingHasTime !== dueDateHasTime) ||
-    pendingRecurrenceRule !== recurrenceRule;
+    pendingRecurrenceRule !== recurrenceRule ||
+    (pendingDueDate && pendingHasTime ? pendingReminder : null) !==
+      dueReminderMinutes;
   const draftIsValid =
     !startDateEnabled || (!!pendingStartDate && !!pendingDueDate);
 
@@ -399,6 +421,12 @@ export function CardDatesSelector({
                   <option value="monthly">{t`Monthly`}</option>
                 </select>
               </label>
+              <ReminderSelect
+                value={pendingReminder}
+                enabled={!!pendingDueDate && pendingHasTime}
+                dueDate={pendingDueDate}
+                onChange={setPendingReminder}
+              />
             </div>
             <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
               <Button

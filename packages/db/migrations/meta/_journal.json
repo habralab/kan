@@ -379,6 +379,13 @@
       "when": 1789652981143,
       "tag": "20260917134941_AddCardRecurrence",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1793193061384,
+      "tag": "20261028131101_AddCardDueReminders",
+      "breakpoints": true
     }
   ]
 }

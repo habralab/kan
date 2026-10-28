@@ -33,11 +33,16 @@ import {
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { mergeActivities } from "../utils/activities";
 import { createAvatarUrlResolver } from "../utils/avatarUrls";
+import {
+  CARD_DUE_REMINDER_QUEUE,
+  reminderInstant,
+} from "../utils/card-reminders";
 import { formatCardCover } from "../utils/cardCover";
 import {
   CardCoverPreviewError,
   ensureCardCoverPreviews,
 } from "../utils/cardCoverPreview";
+import { getJobProducer } from "../utils/job-producer";
 import { sendMentionEmails } from "../utils/notifications";
 import {
   assertBoardAccess,
@@ -103,6 +108,13 @@ export const cardRouter = createTRPCRouter({
             )
             .default([]),
           dueDateHasTime: z.boolean().optional(),
+          dueReminderMinutes: z
+            .number()
+            .int()
+            .min(0)
+            .max(10080)
+            .nullable()
+            .optional(),
           recurrenceRule: cardRecurrenceRuleSchema.nullable().optional(),
           recurrenceTimezone: z
             .string()
@@ -110,6 +122,15 @@ export const cardRouter = createTRPCRouter({
             .nullable()
             .optional(),
         })
+        .refine(
+          (input) =>
+            input.dueReminderMinutes == null ||
+            (!!input.dueDate && input.dueDateHasTime === true),
+          {
+            message: "A reminder requires a due date with a time",
+            path: ["dueReminderMinutes"],
+          },
+        )
         .refine(
           (input) =>
             !input.recurrenceRule ||
@@ -216,28 +237,60 @@ export const cardRouter = createTRPCRouter({
           code: "BAD_REQUEST",
         });
 
+      const dueReminderAt =
+        input.dueDate &&
+        input.dueDateHasTime &&
+        input.dueReminderMinutes != null
+          ? reminderInstant(input.dueDate, input.dueReminderMinutes)
+          : null;
+      const producer =
+        dueReminderAt && dueReminderAt.getTime() > Date.now()
+          ? await getJobProducer()
+          : null;
+
       const newCard = await cardRepo
-        .create(ctx.db, {
-          title: input.title,
-          description: normalizeDescription(input.description),
-          createdBy: userId,
-          listId: list.id,
-          workspaceId: list.workspaceId,
-          position: input.position,
-          dueDate: input.dueDate ?? null,
-          startDate: input.startDate ?? null,
-          dueDateHasTime: input.dueDate
-            ? (input.dueDateHasTime ?? false)
-            : false,
-          ...(input.dueDate && input.recurrenceRule
-            ? {
-                recurrenceRule: input.recurrenceRule,
-                recurrenceTimezone: input.recurrenceTimezone,
-                recurrenceAnchorDate: input.dueDate,
-              }
-            : {}),
-          customFieldValues: input.customFieldValues,
-        })
+        .create(
+          ctx.db,
+          {
+            title: input.title,
+            description: normalizeDescription(input.description),
+            createdBy: userId,
+            listId: list.id,
+            workspaceId: list.workspaceId,
+            position: input.position,
+            dueDate: input.dueDate ?? null,
+            startDate: input.startDate ?? null,
+            dueDateHasTime: input.dueDate
+              ? (input.dueDateHasTime ?? false)
+              : false,
+            dueReminderMinutes: dueReminderAt ? input.dueReminderMinutes : null,
+            dueReminderAt,
+            ...(input.dueDate && input.recurrenceRule
+              ? {
+                  recurrenceRule: input.recurrenceRule,
+                  recurrenceTimezone: input.recurrenceTimezone,
+                  recurrenceAnchorDate: input.dueDate,
+                }
+              : {}),
+            customFieldValues: input.customFieldValues,
+          },
+          {
+            afterCreate:
+              producer && dueReminderAt
+                ? async (transaction, card) => {
+                    await producer.enqueue({
+                      name: CARD_DUE_REMINDER_QUEUE,
+                      data: {
+                        cardPublicId: card.publicId,
+                        expectedAt: dueReminderAt.toISOString(),
+                      },
+                      startAfter: dueReminderAt,
+                      transaction,
+                    });
+                  }
+                : undefined,
+          },
+        )
         .catch(throwCustomFieldRepositoryError);
 
       const newCardId = newCard.id;
@@ -1313,6 +1366,13 @@ export const cardRouter = createTRPCRouter({
           dueDate: z.date().nullable().optional(),
           startDate: z.date().nullable().optional(),
           dueDateHasTime: z.boolean().optional(),
+          dueReminderMinutes: z
+            .number()
+            .int()
+            .min(0)
+            .max(10080)
+            .nullable()
+            .optional(),
           completed: z.boolean().optional(),
           recurrenceRule: cardRecurrenceRuleSchema.nullable().optional(),
           recurrenceTimezone: z
@@ -1321,6 +1381,15 @@ export const cardRouter = createTRPCRouter({
             .nullable()
             .optional(),
         })
+        .refine(
+          (input) =>
+            input.dueReminderMinutes == null ||
+            (!!input.dueDate && input.dueDateHasTime === true),
+          {
+            message: "A reminder requires a due date with a time",
+            path: ["dueReminderMinutes"],
+          },
+        )
         .refine(
           (input) =>
             input.dueDateHasTime === undefined ||
@@ -1458,6 +1527,27 @@ export const cardRouter = createTRPCRouter({
 
       const effectiveDueDate =
         input.dueDate !== undefined ? input.dueDate : existingCard.dueDate;
+      const effectiveHasTime =
+        input.dueDate === null
+          ? false
+          : input.dueDate !== undefined
+            ? (input.dueDateHasTime ?? false)
+            : existingCard.dueDateHasTime;
+      const effectiveReminderMinutes =
+        input.dueReminderMinutes !== undefined
+          ? input.dueReminderMinutes
+          : existingCard.dueReminderMinutes;
+      const reminderConfigurationChanged =
+        input.dueDate !== undefined || input.dueReminderMinutes !== undefined;
+      const nextReminderAt =
+        reminderConfigurationChanged &&
+        effectiveDueDate &&
+        effectiveHasTime &&
+        effectiveReminderMinutes != null
+          ? reminderInstant(effectiveDueDate, effectiveReminderMinutes)
+          : null;
+      const reminderScheduleChanged =
+        nextReminderAt?.getTime() !== existingCard.dueReminderAt?.getTime();
       const recurrenceWasDisabled =
         input.dueDate === null || input.recurrenceRule === null;
       const recurrenceWasConfigured = input.recurrenceRule !== undefined;
@@ -1514,6 +1604,8 @@ export const cardRouter = createTRPCRouter({
             startDate: Date | null;
             completed: boolean;
             dueDateHasTime: boolean;
+            dueReminderMinutes: number | null;
+            dueReminderAt: Date | null;
             recurrenceRule: "daily" | "weekdays" | "weekly" | "monthly" | null;
             recurrenceTimezone: string | null;
             recurrenceAnchorDate: Date | null;
@@ -1558,6 +1650,7 @@ export const cardRouter = createTRPCRouter({
           input.title !== undefined ||
           input.description !== undefined ||
           input.dueDate !== undefined ||
+          input.dueReminderMinutes !== undefined ||
           input.startDate !== undefined ||
           input.dueDateHasTime !== undefined ||
           input.recurrenceRule !== undefined ||
@@ -1573,11 +1666,38 @@ export const cardRouter = createTRPCRouter({
           });
         }
 
-        const completion = await cardRepo.completeRecurringOccurrence(ctx.db, {
-          cardPublicId: input.cardPublicId,
-          expectedDueDate: previousDueDate,
-          createdBy: userId,
-        });
+        const producer =
+          existingCard.dueReminderMinutes !== null
+            ? await getJobProducer()
+            : null;
+        const completion = await cardRepo.completeRecurringOccurrence(
+          ctx.db,
+          {
+            cardPublicId: input.cardPublicId,
+            expectedDueDate: previousDueDate,
+            createdBy: userId,
+          },
+          {
+            afterAdvance: producer
+              ? async (transaction, card) => {
+                  if (
+                    !card.dueReminderAt ||
+                    card.dueReminderAt.getTime() <= Date.now()
+                  )
+                    return;
+                  await producer.enqueue({
+                    name: CARD_DUE_REMINDER_QUEUE,
+                    data: {
+                      cardPublicId: card.publicId,
+                      expectedAt: card.dueReminderAt.toISOString(),
+                    },
+                    startAfter: card.dueReminderAt,
+                    transaction,
+                  });
+                }
+              : undefined,
+          },
+        );
 
         if (!completion) {
           throw new TRPCError({
@@ -1600,31 +1720,62 @@ export const cardRouter = createTRPCRouter({
         (input.title ||
           normalizedDescription !== undefined ||
           input.dueDate !== undefined ||
+          input.dueReminderMinutes !== undefined ||
           input.startDate !== undefined ||
           input.completed !== undefined ||
           recurrenceWasConfigured)
       ) {
-        result = await cardRepo.update(
-          ctx.db,
-          {
-            ...(input.title && { title: input.title }),
-            ...(normalizedDescription !== undefined && {
-              description: normalizedDescription,
-            }),
-            ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
-            ...(input.startDate !== undefined && {
-              startDate: input.startDate,
-            }),
-            ...(input.completed !== undefined && {
-              completed: input.completed,
-            }),
-            ...(input.dueDate !== undefined && {
-              dueDateHasTime: input.dueDateHasTime ?? false,
-            }),
-            ...recurrenceConfiguration,
-          },
-          { cardPublicId: input.cardPublicId },
-        );
+        const updateCard = (db: Parameters<typeof cardRepo.update>[0]) =>
+          cardRepo.update(
+            db,
+            {
+              ...(input.title && { title: input.title }),
+              ...(normalizedDescription !== undefined && {
+                description: normalizedDescription,
+              }),
+              ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
+              ...(input.startDate !== undefined && {
+                startDate: input.startDate,
+              }),
+              ...(input.completed !== undefined && {
+                completed: input.completed,
+              }),
+              ...(input.dueDate !== undefined && {
+                dueDateHasTime: input.dueDateHasTime ?? false,
+              }),
+              ...(reminderConfigurationChanged && {
+                dueReminderMinutes: nextReminderAt
+                  ? effectiveReminderMinutes
+                  : null,
+                dueReminderAt: nextReminderAt,
+              }),
+              ...recurrenceConfiguration,
+            },
+            { cardPublicId: input.cardPublicId },
+          );
+        if (
+          reminderScheduleChanged &&
+          nextReminderAt &&
+          nextReminderAt.getTime() > Date.now()
+        ) {
+          const producer = await getJobProducer();
+          result = await ctx.db.transaction(async (transaction) => {
+            const updated = await updateCard(transaction);
+            if (!updated) return updated;
+            await producer.enqueue({
+              name: CARD_DUE_REMINDER_QUEUE,
+              data: {
+                cardPublicId: input.cardPublicId,
+                expectedAt: nextReminderAt.toISOString(),
+              },
+              startAfter: nextReminderAt,
+              transaction,
+            });
+            return updated;
+          });
+        } else {
+          result = await updateCard(ctx.db);
+        }
       }
 
       if (input.index !== undefined || newListId !== undefined) {

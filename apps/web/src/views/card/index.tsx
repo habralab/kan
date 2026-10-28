@@ -188,6 +188,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
       <div className="mb-4 flex w-full flex-row">
         <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Dates`}</p>
         <CardDatesSelector
+          dueReminderMinutes={card?.dueReminderMinutes ?? null}
           cardPublicId={cardId ?? ""}
           startDate={card?.startDate}
           dueDate={card?.dueDate}

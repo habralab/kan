@@ -70,6 +70,8 @@ const existingCard = {
   dueDate: null,
   startDate: null,
   dueDateHasTime: false,
+  dueReminderMinutes: null,
+  dueReminderAt: null,
   completed: false,
   recurrenceRule: null,
   recurrenceTimezone: null,

@@ -1,7 +1,7 @@
 import { JobScheduler, requirePostgresUrl } from "@kan/jobs";
 import { createLogger } from "@kan/logger";
 
-import { jobHandlers } from "./job-handlers.js";
+import { closeJobHandlers, jobHandlers } from "./job-handlers.js";
 
 const log = createLogger("worker");
 const scheduler = new JobScheduler({
@@ -28,6 +28,7 @@ try {
       "Job worker failed to stop after startup error",
     );
   }
+  await closeJobHandlers();
 }
 
 let stopping = false;
@@ -41,6 +42,7 @@ async function stop(signal: string) {
     log.error({ err: error }, "Job worker failed to stop");
     process.exitCode = 1;
   }
+  await closeJobHandlers();
 }
 
 process.once("SIGINT", () => void stop("SIGINT"));

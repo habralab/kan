@@ -11,7 +11,6 @@ import {
   isNull,
   lt,
   or,
-  sql,
 } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
@@ -319,9 +318,10 @@ export const getByPublicId = async (
         with: {
           cards: {
             columns: {
+              id: true,
               publicId: true,
               title: true,
-              description: false,
+              description: includeCardDetails,
               listId: true,
               index: true,
               dueDate: true,
@@ -337,36 +337,6 @@ export const getByPublicId = async (
               coverColourCode: true,
               coverSize: true,
             },
-            extras: (card) => ({
-              // Drizzle rewrites interpolated columns in relational extras to
-              // the outer card alias, so inner table aliases stay static SQL.
-              description: (includeCardDetails
-                ? sql<string | null>`${card.description}`
-                : sql<string | null>`NULL::text`
-              ).as("description"),
-              hasDescription: (includeCardDetails
-                ? sql<boolean>`FALSE`
-                : sql<boolean>`COALESCE(BTRIM(REGEXP_REPLACE(COALESCE(${card.description}, ''), '<[^>]*>', '', 'g')), '') <> ''`
-              ).as("has_description"),
-              attachmentCount: (includeCardDetails
-                ? sql<number>`0`
-                : sql<number>`(SELECT COUNT(*)::int FROM "card_attachment" AS attachment WHERE attachment."cardId" = ${card.id} AND attachment."deletedAt" IS NULL)`
-              ).as("attachment_count"),
-              hasComments: (includeCardDetails
-                ? sql<boolean>`FALSE`
-                : sql<boolean>`EXISTS (SELECT 1 FROM "card_comments" AS comment WHERE comment."cardId" = ${card.id} AND comment."deletedAt" IS NULL)`
-              ).as("has_comments"),
-              checklistSummary: (includeCardDetails
-                ? sql<{
-                    itemCount: number;
-                    completedItemCount: number;
-                  } | null>`NULL::json`
-                : sql<{
-                    itemCount: number;
-                    completedItemCount: number;
-                  }>`(SELECT JSON_BUILD_OBJECT('itemCount', COUNT(*)::int, 'completedItemCount', COUNT(*) FILTER (WHERE checklist_item.completed)::int) FROM "card_checklist_item" AS checklist_item INNER JOIN "card_checklist" AS checklist ON checklist_item."checklistId" = checklist.id WHERE checklist."cardId" = ${card.id} AND checklist."deletedAt" IS NULL AND checklist_item."deletedAt" IS NULL)`
-              ).as("checklist_summary"),
-            }),
             with: {
               coverAttachment: {
                 columns: {
@@ -406,60 +376,61 @@ export const getByPublicId = async (
                   },
                 },
               },
-              attachments: {
-                columns: {
-                  publicId: true,
+              ...(includeCardDetails && {
+                attachments: {
+                  columns: {
+                    publicId: true,
+                  },
+                  where: isNull(cardAttachments.deletedAt),
+                  orderBy: asc(cardAttachments.createdAt),
                 },
-                where: and(
-                  isNull(cardAttachments.deletedAt),
-                  includeCardDetails ? undefined : sql`FALSE`,
-                ),
-                orderBy: asc(cardAttachments.createdAt),
-              },
-              checklists: {
-                columns: {
-                  publicId: true,
-                  name: true,
-                  index: true,
-                },
-                where: and(
-                  isNull(checklists.deletedAt),
-                  includeCardDetails ? undefined : sql`FALSE`,
-                ),
-                orderBy: asc(checklists.index),
-                with: {
-                  items: {
-                    columns: {
-                      publicId: true,
-                      title: true,
-                      completed: true,
-                      index: true,
-                      dueDate: true,
-                      dueDateHasTime: true,
-                    },
-                    where: isNull(checklistItems.deletedAt),
-                    orderBy: asc(checklistItems.index),
-                    with: {
-                      assignee: {
-                        columns: { publicId: true, email: true, status: true },
-                        with: {
-                          user: { columns: { name: true } },
+              }),
+              ...(includeCardDetails && {
+                checklists: {
+                  columns: {
+                    publicId: true,
+                    name: true,
+                    index: true,
+                  },
+                  where: isNull(checklists.deletedAt),
+                  orderBy: asc(checklists.index),
+                  with: {
+                    items: {
+                      columns: {
+                        publicId: true,
+                        title: true,
+                        completed: true,
+                        index: true,
+                        dueDate: true,
+                        dueDateHasTime: true,
+                      },
+                      where: isNull(checklistItems.deletedAt),
+                      orderBy: asc(checklistItems.index),
+                      with: {
+                        assignee: {
+                          columns: {
+                            publicId: true,
+                            email: true,
+                            status: true,
+                          },
+                          with: {
+                            user: { columns: { name: true } },
+                          },
                         },
                       },
                     },
                   },
                 },
-              },
-              comments: {
-                columns: {
-                  publicId: true,
+              }),
+              ...(includeCardDetails && {
+                comments: {
+                  columns: {
+                    publicId: true,
+                  },
+                  where: isNull(comments.deletedAt),
+                  limit: 1,
                 },
-                where: and(
-                  isNull(comments.deletedAt),
-                  includeCardDetails ? undefined : sql`FALSE`,
-                ),
-                limit: 1,
-              },
+              }),
             },
             where: and(
               cardIds ? inArray(cards.publicId, cardIds) : undefined,
@@ -506,6 +477,104 @@ export const getByPublicId = async (
     board.publicId,
     board.lists.flatMap((list) => list.cards.map((card) => card.publicId)),
   );
+  const summaryByCardId = new Map<
+    number,
+    {
+      hasDescription: boolean;
+      attachmentCount: number;
+      hasComments: boolean;
+      checklistItemCount: number;
+      completedChecklistItemCount: number;
+    }
+  >();
+
+  if (!includeCardDetails) {
+    const ids = board.lists.flatMap((list) =>
+      list.cards.map((card) => card.id),
+    );
+
+    if (ids.length > 0) {
+      const [descriptions, attachments, cardComments, items, completedItems] =
+        await Promise.all([
+          db
+            .select({ id: cards.id })
+            .from(cards)
+            .where(and(inArray(cards.id, ids), isNotNull(cards.description))),
+          db
+            .select({ cardId: cardAttachments.cardId, count: count() })
+            .from(cardAttachments)
+            .where(
+              and(
+                inArray(cardAttachments.cardId, ids),
+                isNull(cardAttachments.deletedAt),
+              ),
+            )
+            .groupBy(cardAttachments.cardId),
+          db
+            .select({ cardId: comments.cardId, count: count() })
+            .from(comments)
+            .where(
+              and(inArray(comments.cardId, ids), isNull(comments.deletedAt)),
+            )
+            .groupBy(comments.cardId),
+          db
+            .select({ cardId: checklists.cardId, count: count() })
+            .from(checklistItems)
+            .innerJoin(
+              checklists,
+              eq(checklistItems.checklistId, checklists.id),
+            )
+            .where(
+              and(
+                inArray(checklists.cardId, ids),
+                isNull(checklists.deletedAt),
+                isNull(checklistItems.deletedAt),
+              ),
+            )
+            .groupBy(checklists.cardId),
+          db
+            .select({ cardId: checklists.cardId, count: count() })
+            .from(checklistItems)
+            .innerJoin(
+              checklists,
+              eq(checklistItems.checklistId, checklists.id),
+            )
+            .where(
+              and(
+                inArray(checklists.cardId, ids),
+                isNull(checklists.deletedAt),
+                isNull(checklistItems.deletedAt),
+                eq(checklistItems.completed, true),
+              ),
+            )
+            .groupBy(checklists.cardId),
+        ]);
+
+      const attachmentCounts = new Map(
+        attachments.map(({ cardId, count }) => [cardId, count]),
+      );
+      const commentCounts = new Map(
+        cardComments.map(({ cardId, count }) => [cardId, count]),
+      );
+      const itemCounts = new Map(
+        items.map(({ cardId, count }) => [cardId, count]),
+      );
+      const completedItemCounts = new Map(
+        completedItems.map(({ cardId, count }) => [cardId, count]),
+      );
+
+      const cardsWithDescription = new Set(descriptions.map(({ id }) => id));
+      for (const id of ids) {
+        summaryByCardId.set(id, {
+          hasDescription: cardsWithDescription.has(id),
+          attachmentCount: attachmentCounts.get(id) ?? 0,
+          hasComments: (commentCounts.get(id) ?? 0) > 0,
+          checklistItemCount: itemCounts.get(id) ?? 0,
+          completedChecklistItemCount: completedItemCounts.get(id) ?? 0,
+        });
+      }
+    }
+  }
 
   const formattedResult = {
     ...board,
@@ -516,24 +585,25 @@ export const getByPublicId = async (
     lists: board.lists.map((list) => ({
       ...list,
       cards: list.cards.map((card) => {
+        const { id: _id, ...cardWithoutId } = card;
         return {
-          ...card,
+          ...cardWithoutId,
           customFieldValues:
             customFieldProjection.valuesByCardPublicId[card.publicId] ?? [],
           ...(filters.cardView === "summary" && {
-            summary: {
-              hasDescription: card.hasDescription,
-              attachmentCount: card.attachmentCount,
-              hasComments: card.hasComments,
-              checklistItemCount: card.checklistSummary?.itemCount ?? 0,
-              completedChecklistItemCount:
-                card.checklistSummary?.completedItemCount ?? 0,
-            },
+            summary: summaryByCardId.get(card.id),
           }),
-          hasDescription: undefined,
-          attachmentCount: undefined,
-          hasComments: undefined,
-          checklistSummary: undefined,
+          description: includeCardDetails
+            ? ((card as { description?: string | null }).description ?? null)
+            : null,
+          attachments: includeCardDetails ? card.attachments : [],
+          checklists: includeCardDetails
+            ? card.checklists.map((checklist) => ({
+                ...checklist,
+                items: "items" in checklist ? checklist.items : [],
+              }))
+            : [],
+          comments: includeCardDetails ? card.comments : [],
           labels: card.labels.map((label) => label.label),
           members: card.members
             .map((member) => member.member)

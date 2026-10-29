@@ -1143,6 +1143,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                   <>
                     <ViewToggle view={view} onChange={handleViewChange} />
                     <Filters
+                      position="left"
                       labels={boardData.labels}
                       members={boardData.workspace.members.filter(
                         (member) => member.user !== null,

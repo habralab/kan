@@ -18,6 +18,8 @@ export function permissionCategoryLabel(
       return t`Comments`;
     case "Members":
       return t`Members`;
+    case "Time tracking":
+      return t`Time tracking`;
     default:
       return label;
   }

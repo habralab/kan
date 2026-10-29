@@ -55,8 +55,20 @@ export const getAvatarUrl = (imageOrKey: string | null) => {
     return imageOrKey;
   }
 
+  if (imageOrKey.startsWith("/api/storage/read?")) {
+    return imageOrKey;
+  }
+
+  if (env("NEXT_PUBLIC_STORAGE_READ_MODE") === "proxy") {
+    const bucket = env("NEXT_PUBLIC_AVATAR_BUCKET_NAME");
+    if (!bucket) return "";
+    const query = new URLSearchParams({ bucket, key: imageOrKey });
+    return `/api/storage/read?${query}`;
+  }
+
   // Construct URL from S3 key
-  const useVirtualHosted = env("NEXT_PUBLIC_USE_VIRTUAL_HOSTED_URLS") === "true";
+  const useVirtualHosted =
+    env("NEXT_PUBLIC_USE_VIRTUAL_HOSTED_URLS") === "true";
   const storageDomain = env("NEXT_PUBLIC_STORAGE_DOMAIN");
   const storageUrl = env("NEXT_PUBLIC_STORAGE_URL");
   const bucket = env("NEXT_PUBLIC_AVATAR_BUCKET_NAME");

@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import {
   CopyObjectCommand,
   DeleteObjectCommand,
@@ -8,6 +9,53 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { env } from "next-runtime-env";
+
+const STORAGE_READ_PATH = "/api/storage/read";
+
+export const getStorageReadMode = () =>
+  env("NEXT_PUBLIC_STORAGE_READ_MODE") === "proxy" ? "proxy" : "direct";
+
+export function signStorageRead(bucket: string, key: string, expires: number) {
+  const secret = process.env.BETTER_AUTH_SECRET;
+  if (!secret) {
+    throw new Error("BETTER_AUTH_SECRET is required for storage proxy reads");
+  }
+
+  return createHmac("sha256", secret)
+    .update(JSON.stringify(["storage-read-v1", bucket, key, expires]))
+    .digest("hex");
+}
+
+export function createStorageReadUrl(
+  bucket: string,
+  key: string,
+  expiresIn: number,
+) {
+  const baseUrl = env("NEXT_PUBLIC_BASE_URL");
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_BASE_URL is required for storage proxy reads");
+  }
+
+  const expires = Math.floor(Date.now() / 1000) + expiresIn;
+  const url = new URL(STORAGE_READ_PATH, baseUrl);
+  url.searchParams.set("bucket", bucket);
+  url.searchParams.set("key", key);
+  url.searchParams.set("expires", String(expires));
+  url.searchParams.set("signature", signStorageRead(bucket, key, expires));
+  return url.toString();
+}
+
+function createPublicAvatarReadUrl(bucket: string, key: string) {
+  const baseUrl = env("NEXT_PUBLIC_BASE_URL");
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_BASE_URL is required for storage proxy reads");
+  }
+
+  const url = new URL(STORAGE_READ_PATH, baseUrl);
+  url.searchParams.set("bucket", bucket);
+  url.searchParams.set("key", key);
+  return url.toString();
+}
 
 export function createS3Client() {
   const region =
@@ -63,6 +111,10 @@ export async function generateDownloadUrl(
   key: string,
   expiresIn = 3600,
 ) {
+  if (getStorageReadMode() === "proxy") {
+    return createStorageReadUrl(bucket, key, expiresIn);
+  }
+
   const client = createS3Client();
   return getSignedUrl(
     client,
@@ -187,6 +239,9 @@ export async function generateAvatarUrl(
   }
 
   try {
+    if (getStorageReadMode() === "proxy") {
+      return createPublicAvatarReadUrl(bucket, imageKey);
+    }
     return await generateDownloadUrl(bucket, imageKey, expiresIn);
   } catch {
     // If URL generation fails, return null

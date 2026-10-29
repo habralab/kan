@@ -46,7 +46,7 @@ const config = {
 
   images: {
     remotePatterns: (() => {
-      /** @type {Array<{protocol: "http" | "https", hostname: string}>} */
+      /** @type {Array<{protocol: "http" | "https", hostname: string, port?: string}>} */
       const patterns = [
         { protocol: "https", hostname: "**" },
         {
@@ -54,6 +54,19 @@ const config = {
           hostname: "localhost",
         },
       ];
+
+      // Proxy URLs use the Kan origin, including on HTTP self-hosted installs.
+      const baseUrl = env("NEXT_PUBLIC_BASE_URL");
+      if (baseUrl) {
+        const origin = new URL(baseUrl);
+        if (origin.protocol === "http:") {
+          patterns.push({
+            protocol: "http",
+            hostname: origin.hostname,
+            port: origin.port,
+          });
+        }
+      }
 
       return patterns;
     })(),

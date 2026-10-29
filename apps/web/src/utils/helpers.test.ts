@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { env } from "next-runtime-env";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { getAvatarUrl, isPlaceholderPublicId } from "./helpers";
 
 vi.mock("next-runtime-env", () => ({
   env: vi.fn(),
 }));
-
-import { env } from "next-runtime-env";
-import { getAvatarUrl, isPlaceholderPublicId } from "./helpers";
 
 const mockEnv = env as ReturnType<typeof vi.fn>;
 
@@ -39,6 +39,21 @@ describe("getAvatarUrl", () => {
     expect(getAvatarUrl("https://example.com/avatar.jpg")).toBe(
       "https://example.com/avatar.jpg",
     );
+  });
+
+  it("uses the same-origin avatar route in proxy mode", () => {
+    mockEnv.mockImplementation((key: string) => {
+      if (key === "NEXT_PUBLIC_STORAGE_READ_MODE") return "proxy";
+      if (key === "NEXT_PUBLIC_AVATAR_BUCKET_NAME") return "avatars";
+      return undefined;
+    });
+
+    expect(getAvatarUrl("user/avatar 1.png")).toBe(
+      "/api/storage/read?bucket=avatars&key=user%2Favatar+1.png",
+    );
+    expect(
+      getAvatarUrl("/api/storage/read?bucket=avatars&key=user%2Favatar.png"),
+    ).toBe("/api/storage/read?bucket=avatars&key=user%2Favatar.png");
   });
 
   describe("path-style URLs (MinIO/LocalStack)", () => {

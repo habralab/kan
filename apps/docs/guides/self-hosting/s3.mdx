@@ -27,6 +27,20 @@ Deploy Kan with PostgreSQL and MinIO (S3-compatible storage) using Docker Compos
 - The browser fetches public files directly from MinIO’s public URL.
 - The Next.js image optimizer in Kan must be explicitly allowed to fetch from your storage host.
 
+For storage that the browser cannot reach, set
+<code>NEXT_PUBLIC_STORAGE_READ_MODE=proxy</code>. Kan will read objects from
+<code>S3_ENDPOINT</code> and serve them from its own origin. The default,
+<code>direct</code>, keeps browser reads on the storage URL. Uploads use the
+existing Kan upload endpoint in either mode.
+
+Proxy mode needs <code>NEXT_PUBLIC_BASE_URL</code>,
+<code>BETTER_AUTH_SECRET</code>, and separate avatar and attachment buckets.
+Attachment links are signed and expire after their normal lifetime. Avatar
+images remain publicly readable, as they are in direct mode. Keep
+<code>S3_ENDPOINT</code> reachable from the Kan server; it need not be reachable
+from browsers. Serving files through Kan adds application bandwidth and should
+be accounted for when sizing the server.
+
 Key domain settings:
 
 - <code>NEXT_PUBLIC_BASE_URL</code> → the Kan site

@@ -25,6 +25,8 @@ vi.mock("@kan/email", () => ({
 
 vi.mock("@kan/shared", () => ({
   createS3Client: vi.fn(),
+  getStorageReadMode: vi.fn(() => "direct"),
+  generateAvatarUrl: vi.fn(),
 }));
 
 vi.mock("@aws-sdk/client-s3", () => ({

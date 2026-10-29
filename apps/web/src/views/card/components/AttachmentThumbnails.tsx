@@ -24,6 +24,12 @@ interface Attachment {
   size?: number | null;
 }
 
+const getDownloadUrl = (url: string, filename: string | null) =>
+  `/api/download/attatchment?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename ?? "attachment")}`;
+
+const isSvg = (contentType: string) =>
+  contentType.split(";", 1)[0]?.trim().toLowerCase() === "image/svg+xml";
+
 export function AttachmentThumbnails({
   attachments,
   cardPublicId,
@@ -146,13 +152,21 @@ export function AttachmentThumbnails({
       return;
     }
 
-    const downloadUrl = `/api/download/attatchment?url=${encodeURIComponent(attachment.url)}&filename=${encodeURIComponent(attachment.originalFilename ?? "attachment")}`;
-
     const link = document.createElement("a");
-    link.href = downloadUrl;
+    const readUrl = new URL(attachment.url, window.location.href);
+    if (
+      readUrl.origin === window.location.origin &&
+      readUrl.pathname === "/api/storage/read"
+    ) {
+      link.href = readUrl.toString();
+      link.download = attachment.originalFilename ?? "attachment";
+    } else {
+      link.href = getDownloadUrl(attachment.url, attachment.originalFilename);
+    }
     link.style.display = "none";
     document.body.appendChild(link);
     link.click();
+    link.remove();
   };
 
   const selectedAttachment =
@@ -335,16 +349,33 @@ export function AttachmentThumbnails({
                   {selectedAttachment?.url && (
                     <div className="relative">
                       <div className="relative mx-auto max-h-[90vh] w-full">
-                        <Image
-                          src={selectedAttachment.url}
-                          alt={
-                            selectedAttachment.originalFilename ?? "Attachment"
-                          }
-                          width={1920}
-                          height={1080}
-                          className="mx-auto max-h-[90vh] w-auto object-contain"
-                          unoptimized
-                        />
+                        {isSvg(selectedAttachment.contentType) ? (
+                          // SVGs cannot use Next's image optimizer.
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={selectedAttachment.url}
+                            loading="lazy"
+                            alt={
+                              selectedAttachment.originalFilename ??
+                              "Attachment"
+                            }
+                            width={1920}
+                            height={1080}
+                            className="mx-auto max-h-[90vh] w-auto object-contain"
+                          />
+                        ) : (
+                          <Image
+                            src={selectedAttachment.url}
+                            unoptimized
+                            alt={
+                              selectedAttachment.originalFilename ??
+                              "Attachment"
+                            }
+                            width={1920}
+                            height={1080}
+                            className="mx-auto max-h-[90vh] w-auto object-contain"
+                          />
+                        )}
                       </div>
 
                       {imageAttachments.length > 1 && (
@@ -385,7 +416,15 @@ function AttachmentThumbnail({
       className="relative h-16 w-16 overflow-hidden rounded-xl border border-light-300 transition-transform hover:scale-105 dark:border-dark-300"
       aria-label={`View ${attachment.originalFilename}`}
     >
-      {isImage ? (
+      {isImage && isSvg(attachment.contentType) ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={attachment.url}
+          loading="lazy"
+          alt={attachment.originalFilename}
+          className="h-full w-full object-cover"
+        />
+      ) : isImage ? (
         <Image
           src={attachment.url}
           alt={attachment.originalFilename}

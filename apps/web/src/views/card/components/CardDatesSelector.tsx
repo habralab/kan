@@ -390,7 +390,7 @@ export function CardDatesSelector({
             className={twMerge(
               "w-[282px] rounded-md border border-light-200 bg-light-50 pb-6 shadow-lg dark:border-dark-200 dark:bg-dark-100",
               fixedPopover
-                ? "fixed z-20 overflow-y-auto"
+                ? "fixed z-20 overflow-y-auto overflow-x-hidden"
                 : "absolute right-0 top-full z-20 mt-2",
             )}
             style={
@@ -483,7 +483,7 @@ export function CardDatesSelector({
                         : event.target.value) as CardRecurrenceRule | null,
                     )
                   }
-                  className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
+                  className="min-w-0 flex-1 rounded-md border border-light-300 bg-light-50 py-1 pl-2 pr-7 text-sm text-light-1000 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
                 >
                   <option value="">{t`Never`}</option>
                   <option value="daily">{t`Daily`}</option>
@@ -514,7 +514,7 @@ export function CardDatesSelector({
               >
                 {t`Clear dates`}
               </Button>
-              <div className="flex items-center gap-2 self-end">
+              <div className="flex items-center gap-2">
                 <Button
                   type="button"
                   variant="secondary"

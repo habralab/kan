@@ -43,6 +43,26 @@ test(
       .filter({ visible: true })
       .first();
     const popup = page.locator("div.fixed").filter({ has: dueDateInput });
+    await dueDateInput.fill("2026-11-30");
+    const repeat = popup.getByRole("combobox", { name: "Повторять" });
+    await repeat.selectOption("monthly");
+    const repeatFit = await repeat.evaluate((element) => {
+      const style = getComputedStyle(element);
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Canvas context is unavailable");
+      context.font = style.font;
+      const selected = (element as HTMLSelectElement).selectedOptions[0];
+      if (!selected) throw new Error("Repeat option is missing");
+      return {
+        textWidth: context.measureText(selected.text).width,
+        textSpace:
+          element.clientWidth -
+          parseFloat(style.paddingLeft) -
+          parseFloat(style.paddingRight),
+      };
+    });
+    expect(repeatFit.textWidth).toBeLessThanOrEqual(repeatFit.textSpace);
     const width = await popup.evaluate((element) => ({
       client: element.clientWidth,
       content: element.scrollWidth,
@@ -58,6 +78,13 @@ test(
     expect((saveBox?.x ?? 0) + (saveBox?.width ?? 0)).toBeLessThanOrEqual(
       (popupBox?.x ?? 0) + (popupBox?.width ?? 0),
     );
+    const clearBox = await popup
+      .getByRole("button", { name: "Очистить даты" })
+      .boundingBox();
+    const cancelBox = await popup
+      .getByRole("button", { name: "Отмена" })
+      .boundingBox();
+    expect(Math.abs((clearBox?.x ?? 0) - (cancelBox?.x ?? 0))).toBeLessThan(2);
   },
 );
 

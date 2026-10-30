@@ -504,7 +504,7 @@ export function CardDatesSelector({
                 }}
               />
             </div>
-            <div className="flex items-center justify-between gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
+            <div className="flex flex-col items-start gap-2 border-t border-light-200 px-4 py-3 dark:border-dark-200">
               <Button
                 type="button"
                 variant="ghost"
@@ -514,7 +514,7 @@ export function CardDatesSelector({
               >
                 {t`Clear dates`}
               </Button>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 self-end">
                 <Button
                   type="button"
                   variant="secondary"

@@ -9,6 +9,59 @@ import { createTestUser } from "../support/test-user";
 import { waitForTrpcMutation } from "../support/wait-for-trpc";
 
 test(
+  "the Russian card date menu keeps every action inside its narrow popup",
+  { tag: "@self-hosted" },
+  async ({ page }) => {
+    const user = createTestUser();
+    const auth = new AuthPage(page);
+    const onboarding = new SelfHostedOnboardingPage(page);
+    const board = new BoardPage(page);
+
+    await auth.signUp(user);
+    await onboarding.createFirstWorkspace("E2E Test Workspace");
+    await board.createBoard("Date popup test board");
+    await board.createList("To do");
+    await board.createCard("Date popup test card");
+    await board.openCard("Date popup test card");
+    await page.setViewportSize({ width: 1440, height: 480 });
+    await page.evaluate(() => localStorage.setItem("locale", "ru"));
+    await page.reload();
+
+    const datesLabel = page
+      .getByText("Даты", { exact: true })
+      .filter({ visible: true })
+      .first();
+    const coverLabel = page
+      .getByText("Обложка", { exact: true })
+      .filter({ visible: true })
+      .first();
+    const coverBefore = await coverLabel.boundingBox();
+    await datesLabel.locator("..").getByRole("button").first().click();
+
+    const dueDateInput = page
+      .locator('input[type="date"]')
+      .filter({ visible: true })
+      .first();
+    const popup = page.locator("div.fixed").filter({ has: dueDateInput });
+    const width = await popup.evaluate((element) => ({
+      client: element.clientWidth,
+      content: element.scrollWidth,
+    }));
+    expect(width.content).toBeLessThanOrEqual(width.client);
+    expect((await coverLabel.boundingBox())?.y).toBe(coverBefore?.y);
+
+    const save = popup.getByRole("button", { name: "Сохранить" });
+    await save.scrollIntoViewIfNeeded();
+    await expect(save).toBeInViewport();
+    const popupBox = await popup.boundingBox();
+    const saveBox = await save.boundingBox();
+    expect((saveBox?.x ?? 0) + (saveBox?.width ?? 0)).toBeLessThanOrEqual(
+      (popupBox?.x ?? 0) + (popupBox?.width ?? 0),
+    );
+  },
+);
+
+test(
   "comments, checklists, member assignment, and due dates can be managed on a card",
   { tag: "@self-hosted" },
   async ({ page }) => {
@@ -182,6 +235,11 @@ test(
     expect(
       (popoverBox?.y ?? 0) + (popoverBox?.height ?? 0),
     ).toBeLessThanOrEqual(page.viewportSize()?.height ?? 0);
+    const popoverWidth = await datePopover.evaluate((element) => ({
+      client: element.clientWidth,
+      content: element.scrollWidth,
+    }));
+    expect(popoverWidth.content).toBeLessThanOrEqual(popoverWidth.client);
     const startDateCheckbox = page.getByRole("checkbox", {
       name: "Start date",
       exact: true,

@@ -247,17 +247,20 @@ export const DateSelectorTimeControl = ({
         />
         {t`Time`}
       </label>
-      {timeEnabled && (
-        <input
-          id={timeInputId}
-          aria-label={t`Time`}
-          type="time"
-          value={selectedDate ? format(selectedDate, "HH:mm") : defaultTime}
-          disabled={!selectedDate}
-          onChange={(event) => handleTimeChange(event.target.value)}
-          className="rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
-        />
-      )}
+      <input
+        id={timeInputId}
+        aria-label={t`Time`}
+        aria-hidden={!timeEnabled}
+        tabIndex={timeEnabled ? undefined : -1}
+        type="time"
+        value={selectedDate ? format(selectedDate, "HH:mm") : defaultTime}
+        disabled={!selectedDate || !timeEnabled}
+        onChange={(event) => handleTimeChange(event.target.value)}
+        className={twMerge(
+          "rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000",
+          !timeEnabled && "invisible",
+        )}
+      />
     </div>
   );
 };

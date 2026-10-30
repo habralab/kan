@@ -434,11 +434,11 @@ export function CardDatesSelector({
                   }}
                 />
               )}
-              <div className="space-y-2">
-                <label
-                  htmlFor={startDateCheckboxId}
-                  className="inline-flex items-center gap-2"
-                >
+              <div className="space-y-1">
+                <label htmlFor={startDateCheckboxId} className="block">
+                  {t`Start date`}
+                </label>
+                <div className="flex items-center gap-3">
                   <input
                     id={startDateCheckboxId}
                     type="checkbox"
@@ -452,9 +452,6 @@ export function CardDatesSelector({
                       setRangeAnchor(enabled ? pendingDueDate : null);
                     }}
                   />
-                  {t`Start date`}
-                </label>
-                {startDateEnabled && (
                   <input
                     aria-label={t`Start date`}
                     type="date"
@@ -466,9 +463,10 @@ export function CardDatesSelector({
                     onChange={(event) =>
                       handleStartDateInput(event.target.value)
                     }
-                    className="w-full rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
+                    disabled={!startDateEnabled || !pendingDueDate}
+                    className="min-w-0 flex-1 rounded-md border border-light-300 bg-light-50 px-2 py-1 text-sm text-light-1000 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-300 dark:bg-dark-100 dark:text-dark-1000"
                   />
-                )}
+                </div>
               </div>
               <label className="flex items-center justify-between gap-3">
                 <span>{t`Repeat`}</span>

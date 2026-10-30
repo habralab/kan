@@ -166,12 +166,22 @@ test(
     await expect(removableItem).toHaveCount(0);
 
     await card.assignMember(user.name);
+    const coverLabel = page.getByText("Cover", { exact: true }).first();
+    const coverBefore = await coverLabel.boundingBox();
     await page
       .getByRole("button", { name: "Set dates", exact: true })
       .filter({ visible: true })
       .click();
+    expect((await coverLabel.boundingBox())?.y).toBe(coverBefore?.y);
     const calendarDay = page.locator("time").filter({ visible: true }).first();
     const dueDateInput = page.getByLabel("Due date", { exact: true });
+    const datePopover = page.locator("div.fixed").filter({ has: dueDateInput });
+    const popoverBox = await datePopover.boundingBox();
+    expect(popoverBox).not.toBeNull();
+    expect(popoverBox?.y ?? -1).toBeGreaterThanOrEqual(0);
+    expect(
+      (popoverBox?.y ?? 0) + (popoverBox?.height ?? 0),
+    ).toBeLessThanOrEqual(page.viewportSize()?.height ?? 0);
     const startDateCheckbox = page.getByRole("checkbox", {
       name: "Start date",
       exact: true,

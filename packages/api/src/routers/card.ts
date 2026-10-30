@@ -1639,6 +1639,13 @@ export const cardRouter = createTRPCRouter({
       const recurrenceWasDisabled =
         input.dueDate === null || input.recurrenceRule === null;
       const recurrenceWasConfigured = input.recurrenceRule !== undefined;
+      const resetMonthlyAnchor =
+        !recurrenceWasDisabled &&
+        (recurrenceWasConfigured
+          ? input.recurrenceRule
+          : existingCard.recurrenceRule) === "monthly" &&
+        input.dueDate != null &&
+        input.dueDate.getTime() !== existingCard.dueDate?.getTime();
       const recurrenceConfiguration = recurrenceWasDisabled
         ? {
             recurrenceRule: null,
@@ -1650,13 +1657,16 @@ export const cardRouter = createTRPCRouter({
               recurrenceRule: input.recurrenceRule,
               recurrenceTimezone: input.recurrenceTimezone ?? null,
               recurrenceAnchorDate:
+                !resetMonthlyAnchor &&
                 input.recurrenceRule === existingCard.recurrenceRule &&
                 input.recurrenceTimezone === existingCard.recurrenceTimezone &&
                 existingCard.recurrenceAnchorDate
                   ? existingCard.recurrenceAnchorDate
                   : effectiveDueDate,
             }
-          : {};
+          : resetMonthlyAnchor
+            ? { recurrenceAnchorDate: input.dueDate }
+            : {};
       const nextRecurrenceRule = recurrenceWasDisabled
         ? null
         : recurrenceWasConfigured

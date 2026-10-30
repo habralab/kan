@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
+import { getNextRecurringCardDates } from "@kan/shared/utils";
 
 import { getJobProducer } from "../utils/job-producer";
 import { sendMentionEmails } from "../utils/notifications";
@@ -661,6 +662,67 @@ describe("card updates", () => {
       }),
     );
   });
+
+  it.each([
+    { rule: "monthly" as const, changed: true, configured: false },
+    { rule: "monthly" as const, changed: true, configured: true },
+    { rule: "monthly" as const, changed: false, configured: false },
+    { rule: "monthly" as const, changed: false, configured: true },
+    { rule: "weekly" as const, changed: true, configured: false },
+    { rule: "weekly" as const, changed: true, configured: true },
+  ])(
+    "updates the anchor for $rule, changed=$changed, configured=$configured",
+    async ({ rule, changed, configured }) => {
+      const anchor = new Date("2026-10-31T12:00:00.000Z");
+      const dueDate = changed
+        ? new Date("2026-10-30T12:00:00.000Z")
+        : new Date(anchor);
+      const existing = mockExistingCard();
+      vi.mocked(cardRepo.getByPublicId).mockResolvedValueOnce({
+        ...existing,
+        dueDate: anchor,
+        dueDateHasTime: true,
+        recurrenceRule: rule,
+        recurrenceTimezone: "UTC",
+        recurrenceAnchorDate: anchor,
+      });
+      mockUpdatedCard();
+
+      const { cardRouter } = await import("./card");
+      await cardRouter.createCaller(ctx).update({
+        cardPublicId,
+        dueDate,
+        dueDateHasTime: true,
+        ...(configured
+          ? { recurrenceRule: rule, recurrenceTimezone: "UTC" }
+          : {}),
+      });
+
+      const updateCall = vi.mocked(cardRepo.update).mock.calls[0];
+      if (!updateCall) throw new Error("Expected card update");
+      const update = updateCall[1];
+      const expectedAnchor = rule === "monthly" && changed ? dueDate : anchor;
+      if (configured || (rule === "monthly" && changed)) {
+        expect(update.recurrenceAnchorDate).toEqual(expectedAnchor);
+      } else {
+        expect(update).not.toHaveProperty("recurrenceAnchorDate");
+      }
+      if (rule === "monthly" && changed) {
+        const nextAnchor = update.recurrenceAnchorDate;
+        expect(nextAnchor).toEqual(dueDate);
+        if (!nextAnchor) throw new Error("Expected monthly recurrence anchor");
+        expect(
+          getNextRecurringCardDates({
+            dueDate,
+            startDate: null,
+            recurrenceAnchorDate: nextAnchor,
+            recurrenceRule: rule,
+            recurrenceTimezone: "UTC",
+          }).dueDate,
+        ).toEqual(new Date("2026-11-30T12:00:00.000Z"));
+      }
+    },
+  );
 
   it("rejects a recurrence timezone without a recurrence rule", async () => {
     const { cardRouter } = await import("./card");

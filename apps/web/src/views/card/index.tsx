@@ -199,7 +199,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
           recurrenceTimezone={card?.recurrenceTimezone ?? null}
           isLoading={!card}
           disabled={!canEdit}
-          inlinePopover
+          fixedPopover
         />
       </div>
       {canEdit && (

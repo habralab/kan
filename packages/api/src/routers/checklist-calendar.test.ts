@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as boardRepo from "@kan/db/repository/board.repo";
 import * as checklistRepo from "@kan/db/repository/checklist.repo";
 
-import { assertPermission } from "../utils/permissions";
+import { assertBoardAccess, assertPermission } from "../utils/permissions";
 
 vi.mock("@kan/db/repository/board.repo", () => ({
   getWorkspaceAndBoardIdByBoardPublicId: vi.fn(),
@@ -11,7 +11,10 @@ vi.mock("@kan/db/repository/board.repo", () => ({
 vi.mock("@kan/db/repository/checklist.repo", () => ({
   getCalendarItemsByBoardPublicId: vi.fn(),
 }));
-vi.mock("../utils/permissions", () => ({ assertPermission: vi.fn() }));
+vi.mock("../utils/permissions", () => ({
+  assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
+}));
 
 const db = {} as never;
 const boardPublicId = "board1234567";
@@ -22,7 +25,7 @@ describe("calendar checklist items", () => {
     vi.clearAllMocks();
     vi.mocked(
       boardRepo.getWorkspaceAndBoardIdByBoardPublicId,
-    ).mockResolvedValue({ workspaceId: 3 } as never);
+    ).mockResolvedValue({ id: 4, workspaceId: 3, type: "regular" } as never);
     vi.mocked(assertPermission).mockResolvedValue(undefined);
   });
 
@@ -65,6 +68,25 @@ describe("calendar checklist items", () => {
     await expect(
       checklistRouter.createCaller(context).calendarByBoard({ boardPublicId }),
     ).rejects.toThrow("Forbidden");
+    expect(
+      checklistRepo.getCalendarItemsByBoardPublicId,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("hides checklist dates on boards without membership", async () => {
+    vi.mocked(assertBoardAccess).mockRejectedValueOnce(
+      new Error("Board not found"),
+    );
+
+    const { checklistRouter } = await import("./checklist");
+    await expect(
+      checklistRouter.createCaller(context).calendarByBoard({ boardPublicId }),
+    ).rejects.toThrow("Board not found");
+    expect(assertBoardAccess).toHaveBeenCalledWith(db, "user-1", {
+      id: 4,
+      workspaceId: 3,
+      type: "regular",
+    });
     expect(
       checklistRepo.getCalendarItemsByBoardPublicId,
     ).not.toHaveBeenCalled();

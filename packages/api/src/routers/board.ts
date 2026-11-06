@@ -48,6 +48,7 @@ import {
   filterBoardAssignable,
   isWorkspaceAdmin,
 } from "../utils/permissions";
+
 const logger = createLogger("board");
 
 export const boardRouter = createTRPCRouter({
@@ -389,15 +390,19 @@ export const boardRouter = createTRPCRouter({
       // Generate presigned URLs for workspace member avatars
       const workspaceWithAvatarUrls = result.workspace
         ? {
-          ...result.workspace,
-          // Only offer people who belong on this board as assignees/filters.
-          members: await Promise.all(
-            (
-              await filterBoardAssignable(ctx.db, board, result.workspace.members)
-            ).map(async (member) => {
-              if (!member.user?.image) {
-                return member;
-              }
+            ...result.workspace,
+            // Only offer people who belong on this board as assignees/filters.
+            members: await Promise.all(
+              (
+                await filterBoardAssignable(
+                  ctx.db,
+                  board,
+                  result.workspace.members,
+                )
+              ).map(async (member) => {
+                if (!member.user?.image) {
+                  return member;
+                }
 
                 const avatarUrl = await resolveAvatarUrl(member.user.image);
                 return {

@@ -2,7 +2,7 @@ import { EventEmitter } from "node:events";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createNextApiContext } from "@kan/api/trpc-context";
-import { assertPermission } from "@kan/api/utils/permissions";
+import { assertPermission, hasBoardAccess } from "@kan/api/utils/permissions";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 
 import handler from "../pages/api/time-tracking/export";
@@ -13,6 +13,7 @@ vi.mock("@kan/api/utils/apiLogging", () => ({
 }));
 vi.mock("@kan/api/utils/permissions", () => ({
   assertPermission: vi.fn(),
+  hasBoardAccess: vi.fn(() => Promise.resolve(true)),
 }));
 vi.mock("@kan/api/utils/rateLimit", () => ({
   withRateLimit: <T>(_options: unknown, handler: T) => handler,
@@ -27,10 +28,12 @@ vi.mock("~/server/timeTrackingCsv", () => import("./timeTrackingCsv"));
 
 const mockCreateNextApiContext = vi.mocked(createNextApiContext);
 const mockAssertPermission = vi.mocked(assertPermission);
+const mockHasBoardAccess = vi.mocked(hasBoardAccess);
 const mockRepo = vi.mocked(timeTrackingRepo);
 
 const board = {
   boardId: 10,
+  type: "regular",
   boardPublicId: "board1234567",
   boardName: "Reporting",
   workspaceId: 20,
@@ -113,6 +116,7 @@ describe("time tracking export route", () => {
       db: {},
     } as never);
     mockAssertPermission.mockResolvedValue(undefined);
+    mockHasBoardAccess.mockResolvedValue(true);
     mockRepo.getBoardSettings.mockResolvedValue(board as never);
     mockRepo.getActiveWorkspaceMemberForUser.mockResolvedValue({
       id: 30,
@@ -133,6 +137,18 @@ describe("time tracking export route", () => {
     expect(response.statusCode).toBe(401);
     expect(response.body).toEqual({ error: "Unauthorized" });
     expect(mockRepo.getBoardSettings).not.toHaveBeenCalled();
+  });
+
+  it("does not stream time entries from an uninvited board", async () => {
+    mockHasBoardAccess.mockResolvedValueOnce(false);
+    const response = createResponse();
+
+    await handler(createRequest(validQuery), response as never);
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toEqual({ error: "Board not found" });
+    expect(response.chunks).toEqual([]);
+    expect(mockRepo.listBoardWorklogs).not.toHaveBeenCalled();
   });
 
   it("rejects invalid filters before running an export query", async () => {

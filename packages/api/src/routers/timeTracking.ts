@@ -20,8 +20,10 @@ import {
 } from "../schemas";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import {
+  assertBoardAccess,
   assertCanEdit,
   assertPermission,
+  hasBoardAccess,
   hasPermission,
 } from "../utils/permissions";
 
@@ -288,6 +290,28 @@ const requireActiveWorkspaceMember = async (
   return member;
 };
 
+const assertTrackingBoardAccess = (
+  db: Parameters<typeof assertBoardAccess>[0],
+  userId: string,
+  board: { boardId: number; workspaceId: number; type: string },
+) =>
+  assertBoardAccess(db, userId, {
+    id: board.boardId,
+    workspaceId: board.workspaceId,
+    type: board.type,
+  });
+
+const assertTrackingCardAccess = (
+  db: Parameters<typeof assertBoardAccess>[0],
+  userId: string,
+  card: { boardId: number; workspaceId: number; boardType: string },
+) =>
+  assertTrackingBoardAccess(db, userId, {
+    boardId: card.boardId,
+    workspaceId: card.workspaceId,
+    type: card.boardType,
+  });
+
 const getReportBoardContext = async (
   db: Parameters<typeof hasPermission>[0],
   userId: string,
@@ -298,6 +322,7 @@ const getReportBoardContext = async (
     throw new TRPCError({ code: "NOT_FOUND", message: "BOARD_NOT_FOUND" });
   await requireActiveWorkspaceMember(db, board.workspaceId, userId);
   await assertPermission(db, userId, board.workspaceId, "board:view");
+  await assertTrackingBoardAccess(db, userId, board);
   await assertPermission(db, userId, board.workspaceId, "worklog:view");
   return board;
 };
@@ -316,7 +341,12 @@ const canAccessTimerMetadata = async (
   timer.boardDeletedAt === null &&
   timer.listDeletedAt === null &&
   timer.cardDeletedAt === null &&
-  (await hasPermission(db, userId, timer.workspaceId, "board:view"));
+  (await hasPermission(db, userId, timer.workspaceId, "board:view")) &&
+  (await hasBoardAccess(db, userId, {
+    id: timer.boardId,
+    workspaceId: timer.workspaceId,
+    type: timer.boardType,
+  }));
 
 const getVisibleTimer = async (
   db: Parameters<typeof hasPermission>[0],
@@ -392,6 +422,7 @@ export const timeTrackingRouter = createTRPCRouter({
         settings.workspaceId,
         "board:view",
       );
+      await assertTrackingBoardAccess(ctx.db, userId, settings);
       const canUpdate = await hasPermission(
         ctx.db,
         userId,
@@ -426,6 +457,7 @@ export const timeTrackingRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "BOARD_NOT_FOUND" });
       await requireActiveWorkspaceMember(ctx.db, current.workspaceId, userId);
       await assertPermission(ctx.db, userId, current.workspaceId, "board:view");
+      await assertTrackingBoardAccess(ctx.db, userId, current);
       await assertCanEdit(
         ctx.db,
         userId,
@@ -489,6 +521,7 @@ export const timeTrackingRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
       await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, card);
       await assertPermission(ctx.db, userId, card.workspaceId, "worklog:view");
       const [result, capabilities] = await Promise.all([
         timeTrackingRepo.listWorklogsByCard(ctx.db, {
@@ -539,6 +572,7 @@ export const timeTrackingRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
       await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, card);
       await assertPermission(ctx.db, userId, card.workspaceId, "worklog:view");
       const [summary, canCreate, canManage] = await Promise.all([
         timeTrackingRepo.getCardWorklogSummary(
@@ -629,6 +663,7 @@ export const timeTrackingRouter = createTRPCRouter({
         userId,
       );
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, card);
       const [canCreate, canManage] = await Promise.all([
         hasPermission(ctx.db, userId, card.workspaceId, "worklog:create"),
         hasPermission(ctx.db, userId, card.workspaceId, "worklog:manage"),
@@ -819,6 +854,7 @@ export const timeTrackingRouter = createTRPCRouter({
       if (!card)
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, card);
       const member = await requireActiveWorkspaceMember(
         ctx.db,
         card.workspaceId,
@@ -903,6 +939,7 @@ export const timeTrackingRouter = createTRPCRouter({
         });
       await requireActiveWorkspaceMember(ctx.db, context.workspaceId, userId);
       await assertPermission(ctx.db, userId, context.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, context);
       const capabilities = await getCapabilities(
         ctx.db,
         userId,
@@ -963,6 +1000,7 @@ export const timeTrackingRouter = createTRPCRouter({
         });
       await requireActiveWorkspaceMember(ctx.db, context.workspaceId, userId);
       await assertPermission(ctx.db, userId, context.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, context);
       const capabilities = await getCapabilities(
         ctx.db,
         userId,
@@ -1032,6 +1070,7 @@ export const timeTrackingRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "CARD_NOT_FOUND" });
       await requireActiveWorkspaceMember(ctx.db, card.workspaceId, userId);
       await assertPermission(ctx.db, userId, card.workspaceId, "board:view");
+      await assertTrackingCardAccess(ctx.db, userId, card);
       await assertPermission(
         ctx.db,
         userId,
@@ -1066,7 +1105,12 @@ export const timeTrackingRouter = createTRPCRouter({
             userId,
             worklogContext.workspaceId,
             "board:view",
-          ))
+          )) &&
+          (await hasBoardAccess(ctx.db, userId, {
+            id: worklogContext.boardId,
+            workspaceId: worklogContext.workspaceId,
+            type: worklogContext.boardType,
+          }))
         ) {
           const [worklog, capabilities] = await Promise.all([
             getWorklogOrThrow(ctx.db, result.autoStoppedWorklog.publicId),

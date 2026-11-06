@@ -70,6 +70,7 @@ export const checklistRouter = createTRPCRouter({
       }
 
       await assertPermission(ctx.db, userId, board.workspaceId, "board:view");
+      await assertBoardAccess(ctx.db, userId, board);
 
       return checklistRepo.getCalendarItemsByBoardPublicId(
         ctx.db,

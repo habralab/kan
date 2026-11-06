@@ -4,8 +4,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 
 import {
+  assertBoardAccess,
   assertCanEdit,
   assertPermission,
+  hasBoardAccess,
   hasPermission,
 } from "../utils/permissions";
 import { timeTrackingRouter } from "./timeTracking";
@@ -40,15 +42,19 @@ vi.mock("@kan/db/repository/timeTracking.repo", () => ({
 }));
 
 vi.mock("../utils/permissions", () => ({
+  assertBoardAccess: vi.fn(),
   assertCanEdit: vi.fn(),
   assertPermission: vi.fn(),
+  hasBoardAccess: vi.fn(() => Promise.resolve(true)),
   hasPermission: vi.fn(),
 }));
 
 const mockRepo = vi.mocked(timeTrackingRepo);
+const mockAssertBoardAccess = vi.mocked(assertBoardAccess);
 const mockAssertCanEdit = vi.mocked(assertCanEdit);
 const mockAssertPermission = vi.mocked(assertPermission);
 const mockHasPermission = vi.mocked(hasPermission);
+const mockHasBoardAccess = vi.mocked(hasBoardAccess);
 
 describe("time tracking router", () => {
   const db = {} as never;
@@ -62,6 +68,8 @@ describe("time tracking router", () => {
     cardId: 11,
     cardPublicId: "card12345678",
     boardPublicId: "board1234567",
+    boardId: 10,
+    boardType: "regular" as const,
     workspaceId: 42,
     isArchived: false,
     settingsEnabled: true,
@@ -112,6 +120,8 @@ describe("time tracking router", () => {
     memberDeletedAt: null,
     workspaceId: 42,
     workspaceDeletedAt: null,
+    boardId: 10,
+    boardType: "regular" as const,
     cardPublicId: "card12345678",
     cardTitle: "Sensitive card",
     cardNumber: 10,
@@ -127,7 +137,9 @@ describe("time tracking router", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockAssertCanEdit.mockResolvedValue(undefined);
+    mockAssertBoardAccess.mockResolvedValue(undefined);
     mockAssertPermission.mockResolvedValue(undefined);
+    mockHasBoardAccess.mockResolvedValue(true);
     mockHasPermission.mockResolvedValue(false);
     mockRepo.getCardTimeTrackingContext.mockResolvedValue(cardContext);
     mockRepo.getActiveWorkspaceMemberForUser.mockResolvedValue({
@@ -135,6 +147,65 @@ describe("time tracking router", () => {
       publicId: "member123456",
     });
     mockRepo.getWorklogByPublicId.mockResolvedValue(worklog);
+  });
+
+  it("hides card time entries from a workspace member outside the board", async () => {
+    mockAssertBoardAccess.mockRejectedValueOnce(
+      new TRPCError({ code: "NOT_FOUND" }),
+    );
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).listWorklogs({
+        cardPublicId: cardContext.cardPublicId,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mockAssertBoardAccess).toHaveBeenCalledWith(db, user.id, {
+      id: cardContext.boardId,
+      workspaceId: cardContext.workspaceId,
+      type: "regular",
+    });
+    expect(mockRepo.listWorklogsByCard).not.toHaveBeenCalled();
+  });
+
+  it("hides board reports before reading totals", async () => {
+    mockRepo.getBoardSettings.mockResolvedValue({
+      boardId: 10,
+      workspaceId: 42,
+      type: "regular",
+    } as never);
+    mockAssertBoardAccess.mockRejectedValueOnce(
+      new TRPCError({ code: "NOT_FOUND" }),
+    );
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).getBoardCardTotals({
+        boardPublicId: cardContext.boardPublicId,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mockRepo.getBoardCardTotals).not.toHaveBeenCalled();
+  });
+
+  it("hides worklog mutations on boards the actor cannot access", async () => {
+    mockRepo.getWorklogContext.mockResolvedValue({
+      boardId: 10,
+      boardType: "regular",
+      workspaceId: 42,
+      memberUserId: user.id,
+      memberStatus: "active",
+      memberDeletedAt: null,
+      deletedAt: null,
+    });
+    mockAssertBoardAccess.mockRejectedValueOnce(
+      new TRPCError({ code: "NOT_FOUND" }),
+    );
+
+    await expect(
+      timeTrackingRouter.createCaller(ctx).updateWorklog({
+        worklogPublicId: worklog.publicId,
+        durationSeconds: 60,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mockRepo.updateWorklog).not.toHaveBeenCalled();
   });
 
   it("requires authentication", async () => {
@@ -858,6 +929,8 @@ describe("time tracking router", () => {
 
   it("does not let an owner reassign an entry without worklog:manage", async () => {
     mockRepo.getWorklogContext.mockResolvedValue({
+      boardId: 10,
+      boardType: "regular",
       workspaceId: 42,
       memberUserId: user.id,
       memberStatus: "active",
@@ -880,6 +953,8 @@ describe("time tracking router", () => {
 
   it("normalizes an owner's update with worklog:edit", async () => {
     mockRepo.getWorklogContext.mockResolvedValue({
+      boardId: 10,
+      boardType: "regular",
       workspaceId: 42,
       memberUserId: user.id,
       memberStatus: "active",
@@ -911,6 +986,8 @@ describe("time tracking router", () => {
 
   it("does not delete another member's entry without worklog:manage", async () => {
     mockRepo.getWorklogContext.mockResolvedValue({
+      boardId: 10,
+      boardType: "regular",
       workspaceId: 42,
       memberUserId: "00000000-0000-0000-0000-000000000002",
       memberStatus: "active",
@@ -932,6 +1009,8 @@ describe("time tracking router", () => {
 
   it("rechecks ownership when deleting an owner's entry", async () => {
     mockRepo.getWorklogContext.mockResolvedValue({
+      boardId: 10,
+      boardType: "regular",
       workspaceId: 42,
       memberUserId: user.id,
       memberStatus: "active",

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createNextApiContext } from "@kan/api/trpc-context";
 import { withApiLogging } from "@kan/api/utils/apiLogging";
-import { assertPermission } from "@kan/api/utils/permissions";
+import { assertPermission, hasBoardAccess } from "@kan/api/utils/permissions";
 import { withRateLimit } from "@kan/api/utils/rateLimit";
 import * as timeTrackingRepo from "@kan/db/repository/timeTracking.repo";
 import { isValidWorkDate } from "@kan/db/repository/timeTracking.utils";
@@ -162,6 +162,14 @@ export default withRateLimit(
       } catch {
         return res.status(403).json({ error: "Permission denied" });
       }
+      if (
+        !(await hasBoardAccess(db, user.id, {
+          id: board.boardId,
+          workspaceId: board.workspaceId,
+          type: board.type,
+        }))
+      )
+        return res.status(404).json({ error: "Board not found" });
 
       const filters = {
         ...(dateFrom && dateTo ? { dateFrom, dateTo } : {}),

@@ -150,6 +150,8 @@ export const getCardTimeTrackingContext = async (
       cardId: cards.id,
       cardPublicId: cards.publicId,
       boardPublicId: boards.publicId,
+      boardId: boards.id,
+      boardType: boards.type,
       workspaceId: boards.workspaceId,
       isArchived: boards.isArchived,
       settingsEnabled: timeTrackingBoardSettings.enabled,
@@ -289,6 +291,8 @@ export const getWorklogContext = async (
 ) => {
   const [worklog] = await db
     .select({
+      boardId: boards.id,
+      boardType: boards.type,
       workspaceId: boards.workspaceId,
       memberUserId: workspaceMembers.userId,
       memberStatus: workspaceMembers.status,
@@ -1245,6 +1249,8 @@ export const getActiveTimer = async (db: dbClient, userId: string) => {
       memberDeletedAt: workspaceMembers.deletedAt,
       workspaceId: boards.workspaceId,
       workspaceDeletedAt: workspaces.deletedAt,
+      boardId: boards.id,
+      boardType: boards.type,
       cardPublicId: cards.publicId,
       cardTitle: cards.title,
       cardNumber: cards.cardNumber,

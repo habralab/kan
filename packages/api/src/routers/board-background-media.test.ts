@@ -36,6 +36,7 @@ vi.mock("@kan/shared/utils", () => ({
 vi.mock("../utils/permissions", () => ({
   assertCanEdit: vi.fn(),
   assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
 }));
 
 vi.mock("../utils/boardBackgroundPreview", async (importOriginal) => ({
@@ -212,6 +213,8 @@ describe("board background media", () => {
   it("serves public board previews without a session", async () => {
     getBackgrounds.mockResolvedValue([
       {
+        id: board.id,
+        type: "regular",
         publicId: boardPublicId,
         workspaceId: board.workspaceId,
         visibility: "public",
@@ -231,6 +234,8 @@ describe("board background media", () => {
   it("does not expose private board previews without a session", async () => {
     getBackgrounds.mockResolvedValue([
       {
+        id: board.id,
+        type: "regular",
         publicId: boardPublicId,
         workspaceId: board.workspaceId,
         visibility: "private",
@@ -250,12 +255,16 @@ describe("board background media", () => {
   it("checks each private workspace once for a signed-in user", async () => {
     getBackgrounds.mockResolvedValue([
       {
+        id: board.id,
+        type: "regular",
         publicId: boardPublicId,
         workspaceId: board.workspaceId,
         visibility: "private",
         backgroundImageKey: uploadKey,
       },
       {
+        id: 3,
+        type: "regular",
         publicId: "board7654321",
         workspaceId: board.workspaceId,
         visibility: "private",

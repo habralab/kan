@@ -34,6 +34,7 @@ vi.mock("../utils/permissions", () => ({
   assertCanDelete: vi.fn(),
   assertCanEdit: vi.fn(),
   assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
 }));
 
 const boardPublicId = "board-1234567";
@@ -49,6 +50,7 @@ describe("board card cover URL resolution", () => {
       id: 1,
       workspaceId: 2,
       visibility: "public",
+      type: "regular",
     });
     vi.mocked(
       cardAttachmentRepo.getSelectedCoverAttachmentsByBoardPublicId,
@@ -109,6 +111,7 @@ describe("board card cover URL resolution", () => {
       id: 1,
       workspaceId: 2,
       visibility: "private",
+      type: "regular",
     });
     const { boardRouter } = await import("./board");
 
@@ -153,6 +156,7 @@ describe("board card cover URL resolution", () => {
       id: 1,
       workspaceId: 2,
       visibility: "private",
+      type: "regular",
     });
     vi.mocked(assertPermission).mockResolvedValue(undefined);
     const { boardRouter } = await import("./board");

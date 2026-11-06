@@ -544,7 +544,9 @@ describe("card member workspace scoping", () => {
         publicId: "list-target12",
         name: "Target",
         boardId: 4,
-        index: 0,
+        boardPublicId: "board-target1",
+        boardName: "Target board",
+        createdBy: "user-1",
         workspaceId: 7,
         boardType: "regular",
       });

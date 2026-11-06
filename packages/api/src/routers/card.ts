@@ -1242,6 +1242,12 @@ export const cardRouter = createTRPCRouter({
         card.createdBy,
       );
 
+      await assertBoardAccess(ctx.db, userId, {
+        id: card.boardId,
+        workspaceId: card.workspaceId,
+        type: card.boardType,
+      });
+
       const existingCard = await cardRepo.getByPublicId(
         ctx.db,
         input.cardPublicId,

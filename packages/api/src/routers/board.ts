@@ -106,6 +106,7 @@ export const boardRouter = createTRPCRouter({
         });
 
       await assertPermission(ctx.db, userId, board.workspaceId, "board:view");
+      await assertBoardAccess(ctx.db, userId, board);
 
       const result = await boardRepo.searchCardsByBoardPublicId(ctx.db, input);
 
@@ -156,6 +157,7 @@ export const boardRouter = createTRPCRouter({
             code: "UNAUTHORIZED",
           });
         await assertPermission(ctx.db, userId, board.workspaceId, "board:view");
+        await assertBoardAccess(ctx.db, userId, board);
       }
 
       const attachmentPublicIds = [...new Set(input.attachmentPublicIds)];

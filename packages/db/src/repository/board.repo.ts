@@ -1130,6 +1130,7 @@ export const getCoverAccessByPublicId = async (
       id: boards.id,
       workspaceId: boards.workspaceId,
       visibility: boards.visibility,
+      type: boards.type,
     })
     .from(boards)
     .innerJoin(workspaces, eq(workspaces.id, boards.workspaceId))
@@ -1152,6 +1153,8 @@ export const getBackgroundsByPublicIds = async (
 
   return db
     .select({
+      id: boards.id,
+      type: boards.type,
       publicId: boards.publicId,
       workspaceId: boards.workspaceId,
       visibility: boards.visibility,

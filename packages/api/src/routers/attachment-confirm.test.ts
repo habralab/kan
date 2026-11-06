@@ -71,6 +71,8 @@ describe("attachment confirmation", () => {
       workspaceVisibility: "private",
       listPublicId: "list-12345678",
       listName: "Todo",
+      boardId: 3,
+      boardType: "regular",
       boardPublicId: "board-1234567",
       boardName: "Board",
     });

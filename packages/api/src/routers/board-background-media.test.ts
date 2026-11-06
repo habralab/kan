@@ -70,6 +70,9 @@ describe("board background media", () => {
   const board = {
     id: 1,
     workspaceId: 2,
+    type: "regular" as const,
+    visibility: "private" as const,
+    deletedAt: null,
     createdBy: user.id,
     backgroundImageKey: null,
   };

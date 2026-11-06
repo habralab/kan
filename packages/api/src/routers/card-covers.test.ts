@@ -57,6 +57,8 @@ const cardMeta = {
   workspaceVisibility: "private" as const,
   listPublicId: "list-12345678",
   listName: "Todo",
+  boardId: 3,
+  boardType: "regular" as const,
   boardPublicId: "board-1234567",
   boardName: "Board",
 };

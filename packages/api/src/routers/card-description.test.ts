@@ -763,6 +763,8 @@ describe("card updates", () => {
       workspaceVisibility: "private",
       listPublicId: "list-12345678",
       listName: "Todo",
+      boardId: 5,
+      boardType: "regular",
       boardPublicId: "board-1234567",
       boardName: "Board",
     });

@@ -54,6 +54,9 @@ describe("board background updates", () => {
   const board = {
     id: 1,
     workspaceId: 2,
+    type: "regular" as const,
+    visibility: "private" as const,
+    deletedAt: null,
     createdBy: "user-123",
     backgroundImageKey: null,
   };

@@ -37,6 +37,9 @@ describe("board card search", () => {
     getBoard.mockResolvedValue({
       id: 1,
       workspaceId: 2,
+      type: "regular",
+      visibility: "private",
+      deletedAt: null,
       createdBy: null,
       backgroundImageKey: null,
     });

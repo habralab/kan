@@ -14,7 +14,10 @@ vi.mock("@kan/db/repository/checklist.repo", () => ({
 vi.mock("@kan/db/repository/workspace.repo", () => ({
   getMemberByPublicId: vi.fn(),
 }));
-vi.mock("../utils/permissions", () => ({ assertPermission: vi.fn() }));
+vi.mock("../utils/permissions", () => ({
+  assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
+}));
 
 const db = {} as never;
 const itemPublicId = "item12345678";

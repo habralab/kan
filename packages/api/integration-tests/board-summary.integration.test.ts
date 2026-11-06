@@ -91,7 +91,7 @@ describe("board summary repository view", () => {
     await db.insert(cards).values({
       publicId: "empty1234567",
       title: "Empty summary",
-      description: "<p> </p>",
+      description: null,
       index: 1,
       listId: list!.id,
       createdBy: user.id,
@@ -263,12 +263,13 @@ describe("board summary repository view", () => {
       labels: [],
       lists: ["emptylist123"],
       dueDate: [],
+      customFields: [],
       type: "regular",
       cardView: "summary",
     });
 
     expect(summary?.lists).toHaveLength(1);
     expect(summary?.lists[0]?.cards).toEqual([]);
-    expect(() => boardDetailSchema.parse(summary)).not.toThrow();
+    expect(() => boardDetailSchema.parse(formatBoardCovers(summary!))).not.toThrow();
   });
 });

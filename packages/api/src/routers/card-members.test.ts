@@ -539,7 +539,7 @@ describe("card member workspace scoping", () => {
         description: "",
         list: { publicId: "list-source12", name: "Source" },
       } as never);
-      vi.mocked(listRepo.getByPublicId).mockResolvedValueOnce({
+      vi.mocked(listRepo.getWorkspaceAndListIdByListPublicId).mockResolvedValueOnce({
         id: 2,
         publicId: "list-target12",
         name: "Target",
@@ -553,7 +553,16 @@ describe("card member workspace scoping", () => {
         title: "Card",
         description: "",
         publicId: "card-12345678",
+        startDate: null,
         dueDate: null,
+        dueDateHasTime: false,
+        dueReminderMinutes: null,
+        dueReminderCustom: null,
+        dueReminderAt: null,
+        completed: false,
+        recurrenceRule: null,
+        recurrenceTimezone: null,
+        recurrenceAnchorDate: null,
       } as never);
       const stays = { id: 21, role: "member" };
       const leaves = { id: 22, role: "member" };
@@ -599,6 +608,7 @@ describe("card member workspace scoping", () => {
         listId: 10,
         list: { publicId: "source-list1", name: "Source", boardId: 20 },
       });
+      vi.mocked(cardRepo.getAssignees).mockResolvedValue([]);
     });
 
     it("rejects a target list from another workspace", async () => {

@@ -41,7 +41,10 @@ vi.mock("../utils/cardCoverPreview", async (importOriginal) => ({
   ...(await importOriginal()),
   inspectStoredObject: vi.fn(),
 }));
-vi.mock("../utils/permissions", () => ({ assertPermission: vi.fn() }));
+vi.mock("../utils/permissions", () => ({
+  assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
+}));
 
 const cardPublicId = "card-12345678";
 const workspacePublicId = "workspace123";

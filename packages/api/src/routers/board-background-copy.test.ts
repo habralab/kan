@@ -13,6 +13,7 @@ import { boardRouter } from "./board";
 vi.mock("@kan/db/repository/board.repo", () => ({
   getIdByPublicId: vi.fn(),
   getByPublicId: vi.fn(),
+  getWorkspaceAndBoardIdByBoardPublicId: vi.fn(),
   isSlugUnique: vi.fn(),
   createFromSnapshot: vi.fn(),
 }));
@@ -28,6 +29,7 @@ vi.mock("../utils/permissions", () => ({
   assertCanEdit: vi.fn(),
   assertCanDelete: vi.fn(),
   assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
 }));
 vi.mock("@kan/shared/utils", () => ({
   convertDueDateFiltersToRanges: vi.fn(),
@@ -44,6 +46,9 @@ vi.mock("../utils/boardBackgroundPreview", () => ({
 
 const getWorkspace = vi.mocked(workspaceRepo.getByPublicId);
 const getSourceBoardInfo = vi.mocked(boardRepo.getIdByPublicId);
+const getSourceBoardAccess = vi.mocked(
+  boardRepo.getWorkspaceAndBoardIdByBoardPublicId,
+);
 const getSourceBoard = vi.mocked(boardRepo.getByPublicId);
 const isSlugUnique = vi.mocked(boardRepo.isSlugUnique);
 const createFromSnapshot = vi.mocked(boardRepo.createFromSnapshot);
@@ -86,6 +91,15 @@ describe("board background copying", () => {
       id: 2,
       type: "regular",
       isArchived: false,
+    });
+    getSourceBoardAccess.mockResolvedValue({
+      id: 2,
+      workspaceId: workspace.id,
+      type: "regular",
+      visibility: "private",
+      deletedAt: null,
+      createdBy: user.id,
+      backgroundImageKey: null,
     });
     getSourceBoard.mockResolvedValue(sourceBoard as never);
     isSlugUnique.mockResolvedValue(true);

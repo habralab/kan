@@ -24,6 +24,7 @@ vi.mock("../utils/permissions", () => ({
   assertCanEdit: vi.fn(),
   assertCanDelete: vi.fn(),
   assertPermission: vi.fn(),
+  assertBoardAccess: vi.fn(),
 }));
 
 vi.mock("@kan/shared/utils", () => ({
